@@ -1,0 +1,13 @@
+# git-ls-files --others --exclude-from=.git/info/exclude
+.vs/
+bin
+obj
+build
+*.suo
+*.vsp
+*.psess
+.DS_Store
+*.userprefs
+*.bin
+.idea
+packages
