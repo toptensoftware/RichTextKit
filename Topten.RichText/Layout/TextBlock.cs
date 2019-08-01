@@ -548,7 +548,8 @@ namespace Topten.RichText
                     var frPrior = _fontRuns[frIndex - 1];
                     if (frPrior.Direction == TextDirection.RTL && frPrior.End == codePointIndex)
                     {
-                        ci.FontRun = frPrior;
+                        if (frPrior.RunKind != FontRunKind.TrailingWhitespace)
+                            ci.FontRun = frPrior;
                     }
                 }
             }

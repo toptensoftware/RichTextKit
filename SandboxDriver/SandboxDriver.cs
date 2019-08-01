@@ -132,7 +132,7 @@ namespace SandboxDriver
                     break;
 
                 case 6:
-                    tle.AddText("The quick brown fox jumps over             the lazy dog.", styleUnderline);
+                    tle.AddText("The quick brown fox jumps over the lazy dog.", styleUnderline);
                     tle.AddText(" ", styleNormal);
                     tle.AddText("Strike Through", styleStrike);
                     break;
