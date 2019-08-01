@@ -63,6 +63,12 @@ namespace Topten.RichText
                 rect.Top = fr.Line.YPosition + fr.Line.BaseLine + fr.Ascent;
                 rect.Right = rect.Left;
                 rect.Bottom = fr.Line.YPosition + fr.Line.BaseLine + fr.Descent;
+
+                if (fr.Style.FontItalic)
+                {
+                    rect.Left -= rect.Height / 14;
+                    rect.Right = rect.Left + rect.Height / 5;
+                }
                 return rect;
             }
         }

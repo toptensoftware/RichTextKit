@@ -470,6 +470,8 @@ namespace Topten.RichText
             if (htr.OverLine < 0)
                 htr.OverCharacter = -1;
 
+            System.Diagnostics.Debug.Assert(htr.ClosestCharacter >= 0);
+
             return htr;
         }
 
@@ -535,10 +537,12 @@ namespace Topten.RichText
             ci.PreviousCodePointIndex = cpii > 0 ? _cursorIndicies[cpii - 1] : 0;
 
             var frIndex = FindFontRunForCodePointIndex(codePointIndex);
-            if (frIndex > 0)
-            {
+
+            if (frIndex >= 0)
                 ci.FontRun = _fontRuns[frIndex];
 
+            if (frIndex > 0)
+            {
                 if (ci.FontRun.Start == codePointIndex && frIndex > 0)
                 {
                     var frPrior = _fontRuns[frIndex - 1];
@@ -999,8 +1003,11 @@ namespace Topten.RichText
             }
 
             // Build the final line
-            BuildLine(frIndexStartOfLine, _fontRuns.Count, _fontRuns.Count);
-            CheckHeightConstraints();
+            if (frIndexStartOfLine < _fontRuns.Count)
+            {
+                BuildLine(frIndexStartOfLine, _fontRuns.Count, _fontRuns.Count);
+                CheckHeightConstraints();
+            }
         }
 
         /// <summary>

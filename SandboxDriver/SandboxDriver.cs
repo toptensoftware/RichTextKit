@@ -113,7 +113,7 @@ namespace SandboxDriver
                     break;
 
                 case 3:
-                    tle.AddText("مرحبا بالعالم.  هذا هو اختبار التفاف الخط للتأكد من أنه يعمل للغات من اليمين إلى اليسار.", styleNormal);
+                    tle.AddText("مرحبا بالعالم.  هذا هو اختبار التفاف \nالخط للتأكد من أنه يعمل للغات من اليمين إلى اليسار.", styleNormal);
                     break;
 
                 case 4:
@@ -132,7 +132,7 @@ namespace SandboxDriver
                     break;
 
                 case 6:
-                    tle.AddText("The quick brown fox jumps over the lazy dog.", styleUnderline);
+                    tle.AddText("The quick brown fox jumps over             the lazy dog.", styleUnderline);
                     tle.AddText(" ", styleNormal);
                     tle.AddText("Strike Through", styleStrike);
                     break;
@@ -202,12 +202,13 @@ namespace SandboxDriver
                 {
                     Color = new SKColor(0xFF000000),
                     IsStroke = true,
+                    IsAntialias = true,
                     StrokeWidth = Scale,
                 })
                 {
                     var rect = ci.Value.CursorRectangle;
                     rect.Offset(margin, margin);
-                    canvas.DrawLine(rect.Left, rect.Top, rect.Left, rect.Bottom, paint);
+                    canvas.DrawLine(rect.Right, rect.Top, rect.Left, rect.Bottom, paint);
                 }
             }
 

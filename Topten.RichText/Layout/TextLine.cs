@@ -136,141 +136,140 @@ namespace Topten.RichText
         internal void HitTest(float x, ref HitTestResult htr)
         {
             float closestXPosition = 0;
-            float closestXDelta = float.MaxValue;
             int closestCodePointIndex = -1;
             TextDirection closestDirection = TextDirection.LTR;
 
-            void updateClosest(float xPosition, int codePointIndex, TextDirection dir)
+            // Special handling for clicking after a soft line break
+            if (Runs.Count > 0)
             {
-                var delta = x - xPosition;
-
-                // First time?
-                if (closestCodePointIndex < 0)
+                var lastRun = Runs[Runs.Count - 1];
+                if (lastRun.RunKind == FontRunKind.TrailingWhitespace)
                 {
-                    closestXPosition = xPosition;
-                    closestXDelta = delta;
-                    closestCodePointIndex = codePointIndex;
-                    closestDirection = dir;
-                    return;
-                }
-
-                // Same direction as current closest?
-                if (closestDirection == dir)
-                {
-                    if (Math.Abs(delta) < Math.Abs(closestXDelta))
+                    if ((lastRun.Direction == TextDirection.LTR && x >= lastRun.XPosition + lastRun.Width) ||
+                        (lastRun.Direction == TextDirection.RTL && x < lastRun.XPosition))
                     {
-                        closestXPosition = xPosition;
-                        closestXDelta = delta;
-                        closestCodePointIndex = codePointIndex;
-                        closestDirection = dir;
+                        if (lastRun.CodePoints.Length > 0 && lastRun.CodePoints[lastRun.CodePoints.Length - 1] == '\n')
+                        {
+                            htr.ClosestCharacter = lastRun.End - 1;
+                            return;
+                        }
                     }
-                    return;
                 }
-
-                if (closestDirection == TextDirection.LTR && 
-                    closestXPosition > x && 
-                    x < xPosition)
-                {
-                    closestXPosition = xPosition;
-                    closestXDelta = delta;
-                    closestCodePointIndex = codePointIndex;
-                    closestDirection = dir;
-                    return;
-                }
-
-                if (closestDirection == TextDirection.LTR && 
-                    closestXPosition < x && 
-                    x > xPosition)
-                {
-                    closestXPosition = xPosition;
-                    closestXDelta = delta;
-                    closestCodePointIndex = codePointIndex;
-                    closestDirection = dir;
-                    return;
-                }
-
             }
 
             foreach (var r in Runs)
             {
-                if (x >= r.XPosition && x < r.XPosition + r.Width)
+                if (x < r.XPosition)
                 {
-                    int xx = 3;
+                    updateClosest(r.XPosition, r.Direction == TextDirection.LTR ? r.Start : r.End, r.Direction);
                 }
-
-                if (r.Direction == TextDirection.LTR)
+                else if (x >= r.XPosition + r.Width)
                 {
-                    updateClosest(r.XPosition, r.Start, r.Direction);
-                    updateClosest(r.XPosition + r.Width, r.End, r.Direction);
+                    updateClosest(r.XPosition + r.Width, r.Direction == TextDirection.RTL ? r.Start : r.End, r.Direction);
                 }
                 else
                 {
-                    updateClosest(r.XPosition + r.Width, r.Start, r.Direction);
-                    updateClosest(r.XPosition, r.End, r.Direction);
-                }
-
-                for (int i = 0; i < r.Clusters.Length;)
-                {
-                    // Get the xcoord of this cluster
-                    var codePointIndex = r.Clusters[i];
-                    var xcoord = r.XPosition + r.RelativeCodePointXCoords[codePointIndex - r.Start];
-                    updateClosest(xcoord, codePointIndex, r.Direction);
-
-                    // Find the code point of the next cluster
-                    var j = i;
-                    while (j < r.Clusters.Length && r.Clusters[j] == r.Clusters[i])
-                        j++;
-
-                    // Look for exact character we're over
-                    if (htr.OverCharacter < 0)
+                    for (int i = 0; i < r.Clusters.Length;)
                     {
-                        // Get it's xcoord
-                        float xcoord2;
+                        // Get the xcoord of this cluster
+                        var codePointIndex = r.Clusters[i];
+                        var xcoord1 = r.GetCodePointXCoord(codePointIndex);
+
+                        // Find the code point of the next cluster
+                        var j = i;
+                        while (j < r.Clusters.Length && r.Clusters[j] == r.Clusters[i])
+                            j++;
+
+                        // Get the xcoord of other side
+                        int codePointIndexOther;
                         if (r.Direction == TextDirection.LTR)
                         {
                             if (j == r.Clusters.Length)
                             {
-                                xcoord2 = r.XPosition + r.Width;
+                                codePointIndexOther = r.End;
                             }
                             else
                             {
-                                xcoord2 = r.XPosition + r.RelativeCodePointXCoords[r.Clusters[j] - r.Start];
+                                codePointIndexOther = r.Clusters[j];
                             }
                         }
                         else
                         {
                             if (i > 0)
                             {
-                                xcoord2 = r.XPosition + r.RelativeCodePointXCoords[r.Clusters[i - 1] - r.Start];
+                                codePointIndexOther = r.Clusters[i - 1];
                             }
                             else
                             {
-                                xcoord2 = r.XPosition;
+                                codePointIndexOther = r.End;
                             }
                         }
 
-                        if (xcoord2 > xcoord)
+                        var xcoord2 = r.GetCodePointXCoord(codePointIndexOther);
+
+                        // Ensure order
+                        if (xcoord1 > xcoord2)
                         {
-                            if (x >= xcoord && x < xcoord2)
-                            {
-                                htr.OverCharacter = r.Clusters[i];
-                            }
+                            var temp = xcoord1;
+                            xcoord1 = xcoord2;
+                            xcoord2 = temp;
                         }
-                        else
+
+                        // On the character?
+                        if (x >= xcoord1 && x < xcoord2)
                         {
-                            if (x >= xcoord2 && x < xcoord)
+                            htr.OverCharacter = codePointIndex;
+
+                            // Don't move to the rhs (or lhs) of a line break
+                            if (r.CodePoints[codePointIndex - r.Start] == '\n')
                             {
-                                htr.OverCharacter = r.Clusters[i];
+                                htr.ClosestCharacter = codePointIndex;
                             }
+                            else
+                            {
+                                if (x < (xcoord1 + xcoord2) / 2)
+                                {
+                                    htr.ClosestCharacter = r.Direction == TextDirection.LTR ? codePointIndex : codePointIndexOther;
+                                }
+                                else
+                                {
+                                    htr.ClosestCharacter = r.Direction == TextDirection.LTR ? codePointIndexOther : codePointIndex;
+                                }
+                            }
+                            return;
                         }
+
+                        // Move to the next cluster
+                        i = j;
                     }
-
-                    // Continue with the next cluster
-                    i = j;
                 }
             }
 
+            // Store closest character
             htr.ClosestCharacter = closestCodePointIndex;
+
+
+
+            void updateClosest(float xPosition, int codePointIndex, TextDirection dir)
+            {
+                bool closest = false;
+
+                if (closestCodePointIndex == -1)
+                {
+                    closest = true;
+                }
+                else if (Math.Abs(xPosition - x) < Math.Abs(closestXPosition - x))
+                {
+                    closest = true;
+                }
+
+                if (closest)
+                {
+                    closestXPosition = xPosition;
+                    closestCodePointIndex = codePointIndex;
+                    closestDirection = dir;
+                }
+            }
         }
     }
 }
