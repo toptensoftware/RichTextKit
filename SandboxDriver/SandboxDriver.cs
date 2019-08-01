@@ -23,14 +23,16 @@ namespace SandboxDriver
 
             const float margin = 80;
 
+
             float? height = (float)(canvasHeight - margin * 2);
             float? width = (float)(canvasWidth - margin * 2);
+            //width = 25;
 
             if (!UseMaxHeight)
                 height = null;
             if (!UseMaxWidth)
                 width = null;
-            
+
             using (var gridlinePaint = new SKPaint() { Color = new SKColor(0xFFFF0000), StrokeWidth = 1 })
             {
                 canvas.DrawLine(new SKPoint(margin, 0), new SKPoint(margin, (float)canvasHeight), gridlinePaint);
@@ -44,12 +46,12 @@ namespace SandboxDriver
             //string typefaceName = "Times New Roman";
             string typefaceName = "Segoe UI";
 
-            var styleNormal = new Style() { FontFamily = typefaceName, FontSize = 18  * Scale, LineHeight = 1.0f };
+            var styleNormal = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, LineHeight = 1.0f };
             var styleUnderline = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, Underline = UnderlineStyle.Gapped, TextColor = new SKColor(0xFF0000FF) };
             var styleStrike = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, StrikeThrough = StrikeThroughStyle.Solid, TextColor = new SKColor(0xFFFF0000) };
-            var styleSubScript = new Style() { FontFamily = typefaceName, FontSize = 18  * Scale, FontVariant = FontVariant.SubScript };
-            var styleSuperScript = new Style() { FontFamily = typefaceName, FontSize = 18  * Scale, FontVariant = FontVariant.SuperScript };
-            var styleItalic = new Style() { FontFamily = typefaceName, FontItalic = true, FontSize = 18  * Scale };
+            var styleSubScript = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, FontVariant = FontVariant.SubScript };
+            var styleSuperScript = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, FontVariant = FontVariant.SuperScript };
+            var styleItalic = new Style() { FontFamily = typefaceName, FontItalic = true, FontSize = 18 * Scale };
             var styleBold = new Style() { FontFamily = typefaceName, FontSize = 28 * Scale, FontWeight = 700 };
             var styleRed = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, TextColor = new SKColor(0xFFFF0000) };
 
@@ -94,10 +96,13 @@ namespace SandboxDriver
                     tle.AddText("This is italic", styleItalic);
                     tle.AddText(".\nThis is ", styleNormal);
                     tle.AddText("red", styleRed);
+                    /*
                     tle.AddText(".\nThis is Arabic: (", styleNormal);
                     tle.AddText("تسجّل ", styleNormal);
                     tle.AddText("يتكلّم", styleNormal);
                     tle.AddText("), Hindi: ", styleNormal);
+                    */
+                    tle.AddText(".\nThis is Arabic: (تسجّل يتكلّم), Hindi: ", styleNormal);
                     tle.AddText("हालाँकि प्रचलित रूप पूज", styleNormal);
                     tle.AddText(", Han: ", styleNormal);
                     tle.AddText("緳 踥踕", styleNormal);
@@ -112,7 +117,7 @@ namespace SandboxDriver
                     break;
 
                 case 4:
-                    tle.AddText("مرحبا بالعالم.  هذا هو اختبار التفاف الخط للتأكد من Hello World أنه يعمل للغات من اليمين إلى اليسار.", styleNormal);
+                    tle.AddText("مرحبا بالعالم.  هذا هو اختبار التفاف الخط للتأكد من \u2066ACME Inc.\u2069 أنه يعمل للغات من اليمين إلى اليسار.", styleNormal);
                     break;
 
                 case 5:
@@ -149,6 +154,25 @@ namespace SandboxDriver
             tle.Layout();
             var elapsed = sw.ElapsedMilliseconds;
 
+            var options = new TextPaintOptions()
+            {
+                SelectionColor = new SKColor(0x60FF0000),
+            };
+
+            HitTestResult? htr = null;
+            CursorInfo? ci = null;
+            if (_showHitTest)
+            {
+                htr = tle.HitTest(_hitTestX - margin, _hitTestY - margin);
+                if (htr.Value.OverCharacter >= 0)
+                {
+                    options.SelectionStart = htr.Value.OverCharacter;
+                    options.SelectionEnd = tle.CursorIndicies[tle.LookupCursorIndex(htr.Value.OverCharacter) + 1];
+                }
+
+                ci = tle.GetCursorInfo(htr.Value.ClosestCharacter);
+            }
+
             if (ShowMeasuredSize)
             {
                 using (var paint = new SKPaint()
@@ -162,15 +186,6 @@ namespace SandboxDriver
                 }
             }
 
-            var options = new TextPaintOptions()
-            {
-                /*
-                SelectionStart = 10,
-                SelectionEnd = 50,
-                SelectionColor = Color.Orange.WithAlpha(0.2f).ToSK(),
-                */
-            };
-
             if (tle.RequiredLeftMargin > 0)
             {
                 using (var paint = new SKPaint() { Color = new SKColor(0xFFf0f0f0), StrokeWidth = 1 })
@@ -181,12 +196,46 @@ namespace SandboxDriver
 
             tle.Paint(canvas, new SKPoint(margin, margin), options);
 
+            if (ci != null)
+            {
+                using (var paint = new SKPaint()
+                {
+                    Color = new SKColor(0xFF000000),
+                    IsStroke = true,
+                    StrokeWidth = Scale,
+                })
+                {
+                    var rect = ci.Value.CursorRectangle;
+                    rect.Offset(margin, margin);
+                    canvas.DrawLine(rect.Left, rect.Top, rect.Left, rect.Bottom, paint);
+                }
+            }
+
             var state = $"Size: {width} x {height} Base Direction: {BaseDirection} Alignment: {TextAlignment} Content: {ContentMode} scale: {Scale} time: {elapsed} msword: {UseMSWordStyleRTLLayout}";
             canvas.DrawText(state, margin, 20, new SKPaint()
             {
                 Typeface = SKTypeface.FromFamilyName("Arial"),
                 TextSize = 12,
             });
+
+            state = $"Selection: {options.SelectionStart}-{options.SelectionEnd} Closest: {(htr.HasValue ? htr.Value.ClosestCharacter.ToString() : "-")}";
+            canvas.DrawText(state, margin, 40, new SKPaint()
+            {
+                Typeface = SKTypeface.FromFamilyName("Arial"),
+                TextSize = 12,
+            });
         }
-    }
+
+        float _hitTestX;
+        float _hitTestY;
+        bool _showHitTest;
+
+        public void HitTest(float x, float y)
+        {
+            _hitTestX = x;
+            _hitTestY = y;
+            _showHitTest = true;
+        }
+
+    }   
 }

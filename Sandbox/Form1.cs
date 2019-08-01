@@ -123,5 +123,17 @@ namespace Sandbox
 
             }
         }
+
+        private void Form1_MouseDown(object sender, MouseEventArgs e)
+        {
+            _driver.HitTest(e.X * 96.0f / DeviceDpi, e.Y * 96.0f / DeviceDpi);
+            Invalidate();
+        }
+
+        private void Form1_MouseMove(object sender, MouseEventArgs e)
+        {
+            _driver.HitTest(e.X * 96.0f / DeviceDpi, e.Y * 96.0f / DeviceDpi);
+            Invalidate();
+        }
     }
 }

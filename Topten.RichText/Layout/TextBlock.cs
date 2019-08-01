@@ -209,6 +209,7 @@ namespace Topten.RichText
             // Reset layout state
             _fontRuns.Clear();
             _lines.Clear();
+            _cursorIndicies.Clear();
             _measuredHeight = 0;
             _measuredWidth = 0;
             _minLeftMargin = 0;
@@ -283,8 +284,8 @@ namespace Topten.RichText
             // Prepare selection
             if (options.SelectionStart.HasValue && options.SelectionEnd.HasValue)
             {
-                ctx.SelectionStart = _codePoints.Utf16OffsetToUtf32Offset(Math.Min(options.SelectionStart.Value, options.SelectionEnd.Value));
-                ctx.SelectionEnd = _codePoints.Utf16OffsetToUtf32Offset(Math.Max(options.SelectionStart.Value, options.SelectionEnd.Value));
+                ctx.SelectionStart = Math.Min(options.SelectionStart.Value, options.SelectionEnd.Value);
+                ctx.SelectionEnd = Math.Max(options.SelectionStart.Value, options.SelectionEnd.Value);
                 ctx.PaintSelectionBackground = new SKPaint()
                 {
                     Color = options.SelectionColor,
@@ -420,6 +421,167 @@ namespace Topten.RichText
         }
 
         /// <summary>
+        /// Hit test this block of text
+        /// </summary>
+        /// <param name="x">The x-coordinate relative to top left of the block</param>
+        /// <param name="y">The x-coordinate relative to top left of the block</param>
+        /// <returns>A HitTestResult</returns>
+        public HitTestResult HitTest(float x, float y)
+        {
+            Layout();
+
+            var htr = new HitTestResult();
+
+            // Work out which line number we're over
+            htr.OverLine = -1;
+            htr.OverCharacter = -1;
+            for (int i = 0; i < _lines.Count; i++)
+            {
+                var l = _lines[i];
+                if (y >= l.YPosition && y < l.YPosition + l.Height)
+                {
+                    htr.OverLine = i;
+                }
+            }
+
+            // Work out the closest line
+            if (htr.OverLine >= 0)
+            {
+                htr.ClosestLine = htr.OverLine;
+            }
+            else if (y < 0)
+            {
+                htr.ClosestLine = 0;
+            }
+            else
+            {
+                htr.ClosestLine = _lines.Count - 1;
+            }
+
+            // Hit test each cluster
+            if (htr.ClosestLine >= 0 && htr.ClosestLine < _lines.Count)
+            {
+                // Hit test the line
+                var l = _lines[htr.ClosestLine];
+                l.HitTest(x, ref htr);
+            }
+
+            // If we're not over the line, we're also not over the character
+            if (htr.OverLine < 0)
+                htr.OverCharacter = -1;
+
+            return htr;
+        }
+
+
+        // Build map of all cursor positions
+        void BuildCursorIndicies()
+        {
+            Layout();
+            if (_cursorIndicies.Count == 0)
+            {
+                foreach (var r in _lines.SelectMany(x => x.Runs))
+                {
+                    for (int i = 0; i < r.Clusters.Length; i++)
+                    {
+                        _cursorIndicies.Add(r.Clusters[i]);
+                    }
+                }
+                _cursorIndicies.Add(_codePoints.Length);
+                _cursorIndicies = _cursorIndicies.OrderBy(x => x).Distinct().ToList();
+            }
+        }
+
+        /// <summary>
+        /// Retrieves a list of all valid cursor positions
+        /// </summary>
+        public IReadOnlyList<int> CursorIndicies
+        {
+            get
+            {
+                BuildCursorIndicies();
+                return _cursorIndicies;
+            }
+        }
+
+        /// <summary>
+        /// Given a code point index, find the index in the CursorIndicies
+        /// </summary>
+        /// <param name="codePointIndex">The code point index to lookup</param>
+        /// <returns>The index in the code point idnex in the CursorIndicies array</returns>
+        public int LookupCursorIndex(int codePointIndex)
+        {
+            BuildCursorIndicies();
+            int index = _cursorIndicies.BinarySearch(codePointIndex);
+            if (index < 0)
+                index = ~index;
+            return index;
+        }
+
+        /// <summary>
+        /// Calculates useful information for displaying a cursor
+        /// </summary>
+        /// <param name="codePointIndex">The code point index of the cursor</param>
+        /// <returns>A CursorInfo struct</returns>
+        public CursorInfo GetCursorInfo(int codePointIndex)
+        {
+            // Look up the cursor index
+            int cpii = LookupCursorIndex(codePointIndex);
+
+            // Create cursor info
+            var ci = new CursorInfo();
+            ci.CodePointIndex = _cursorIndicies[cpii];
+            ci.NextCodePointIndex = cpii + 1 < _cursorIndicies.Count ? _cursorIndicies[cpii+1] : ci.CodePointIndex;
+            ci.PreviousCodePointIndex = cpii > 0 ? _cursorIndicies[cpii - 1] : 0;
+
+            var frIndex = FindFontRunForCodePointIndex(codePointIndex);
+            if (frIndex > 0)
+            {
+                ci.FontRun = _fontRuns[frIndex];
+
+                if (ci.FontRun.Start == codePointIndex && frIndex > 0)
+                {
+                    var frPrior = _fontRuns[frIndex - 1];
+                    if (frPrior.Direction == TextDirection.RTL && frPrior.End == codePointIndex)
+                    {
+                        ci.FontRun = frPrior;
+                    }
+                }
+            }
+
+            if (ci.FontRun == null)
+                ci.FontRun = _fontRuns[_fontRuns.Count - 1];
+
+            return ci;
+        }
+
+        /// <summary>
+        /// Find the font run holding a code point index
+        /// </summary>
+        /// <param name="codePointIndex"></param>
+        /// <returns></returns>
+        public int FindFontRunForCodePointIndex(int codePointIndex)
+        {
+            // Past end of text?
+            if (codePointIndex >= _codePoints.Length)
+                return -1;
+
+            // Look up font run
+            int frIndex = FontRuns.BinarySearch(codePointIndex, (run, value) =>
+            {
+                return (run.End - 1) - codePointIndex;
+            });
+            if (frIndex < 0)
+                frIndex = ~frIndex;
+
+            // Return the font run
+            var fr = _fontRuns[frIndex];
+            System.Diagnostics.Debug.Assert(codePointIndex >= fr.Start);
+            System.Diagnostics.Debug.Assert(codePointIndex < fr.End);
+            return frIndex;
+        }
+
+        /// <summary>
         /// The minimum required right margin to ensure overhanging glyphs aren't cropped
         /// </summary>
         public float MinRightMargin => 0;
@@ -531,6 +693,11 @@ namespace Topten.RichText
         /// True to use MS Word style RTL layout
         /// </summary>
         bool _useMSWordStyleRtlLayout = false;
+
+        /// <summary>
+        /// Calculate cursor positions
+        /// </summary>
+        List<int> _cursorIndicies = new List<int>();
 
         /// <summary>
         /// Resolve the text alignment when set to Auto
@@ -692,7 +859,7 @@ namespace Topten.RichText
                 Typeface = typeface,
                 Glyphs = new Slice<ushort>(shaped.GlyphIndicies),
                 GlyphPositions = new Slice<SKPoint>(shaped.Points),
-                CodePointPositions = new Slice<float>(shaped.CodePointPositions),
+                RelativeCodePointXCoords = new Slice<float>(shaped.CodePointPositions),
                 Clusters = new Slice<int>(shaped.Clusters),
                 Ascent = shaped.Ascent,
                 Descent = shaped.Descent,
@@ -776,8 +943,10 @@ namespace Topten.RichText
                 if (frSplitIndex < 0)
                 {
                     // Get the last run that partially fitted
+                    frIndex = frIndexStartOfLine;
+                    fr = _fontRuns[frIndex];
                     var room = _maxWidthResolved - fr.XPosition;
-                    frSplitIndex = frIndex ;
+                    frSplitIndex = frIndex;
                     codePointIndexSplit = fr.FindBreakPosition(room, frSplitIndex == frIndexStartOfLine);
                     codePointIndexWrap = codePointIndexSplit;
                     while (codePointIndexWrap < _codePoints.Length && UnicodeClasses.LineBreakClass(_codePoints[codePointIndexWrap]) == LineBreakClass.SP)
@@ -844,6 +1013,7 @@ namespace Topten.RichText
         {
             // Create the line
             var line = new TextLine();
+            line.TextBlock = this;
             line.YPosition = _measuredHeight;
 
             // Add runs
@@ -852,8 +1022,13 @@ namespace Topten.RichText
                 // Tag trailing whitespace appropriately
                 if (i >= frSplitIndex)
                 {
-                    _fontRuns[i].RunKind = FontRunKind.TrailingWhitespace;
-                    _fontRuns[i].Direction = BaseDirection;
+                    var fr = _fontRuns[i];
+                    fr.RunKind = FontRunKind.TrailingWhitespace;
+                    if (fr.Direction != BaseDirection)
+                    {
+                        // Create a new font run over the same text span but using the base direction
+                        _fontRuns[i] = CreateFontRun(fr.StyledRun, fr.CodePoints, BaseDirection, fr.Style, fr.Typeface);
+                    }
                 }
 
                 line.Runs.Add(_fontRuns[i]);

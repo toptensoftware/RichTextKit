@@ -129,7 +129,7 @@ namespace Topten.RichText
         // Temporary hack until newer HarfBuzzSharp is released with support for AddUtf32
         [DllImport("libHarfBuzzSharp", CallingConvention = CallingConvention.Cdecl)]
 		public extern static void hb_buffer_add_utf32 (IntPtr buffer, IntPtr text, int text_length, int item_offset, int item_length);
-		
+
 
         /// <summary>
         /// Shape an array of utf32- code points
@@ -205,8 +205,16 @@ namespace Topten.RichText
                 for (int i = 0; i < buffer.Length; i++)
                 {
                     // Update code point positions
-                    if (!rtl && r.CodePointPositions[r.Clusters[i] - clusterAdjustment] == 0)
-                        r.CodePointPositions[r.Clusters[i] - clusterAdjustment] = cursorX;
+                    if (!rtl)
+                    {
+                        // First cluster, different cluster, or same cluster with lower x-coord
+                        if ( i == 0 ||
+                            (r.Clusters[i] != r.Clusters[i - 1]) || 
+                            (cursorX < r.CodePointPositions[r.Clusters[i] - clusterAdjustment]))
+                        {
+                            r.CodePointPositions[r.Clusters[i] - clusterAdjustment] = cursorX;
+                        }
+                    }
     
                     // Get the position
                     var pos = gp[i];
@@ -223,7 +231,15 @@ namespace Topten.RichText
 
                     // Store RTL cursor position
                     if (rtl)
-                        r.CodePointPositions[r.Clusters[i] - clusterAdjustment] = cursorX;
+                    {
+                        // First cluster, different cluster, or same cluster with lower x-coord
+                        if (i == 0 ||
+                            (r.Clusters[i] != r.Clusters[i - 1]) ||
+                            (cursorX > r.CodePointPositions[r.Clusters[i] - clusterAdjustment]))
+                        {
+                            r.CodePointPositions[r.Clusters[i] - clusterAdjustment] = cursorX;
+                        }
+                    }
                 }
 
                 // Finalize cursor positions by filling in any that weren't

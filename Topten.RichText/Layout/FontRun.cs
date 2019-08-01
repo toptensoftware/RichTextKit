@@ -1,5 +1,6 @@
 ﻿using SkiaSharp;
 using System;
+using System.Collections.Generic;
 
 namespace Topten.RichText
 {
@@ -69,9 +70,28 @@ namespace Topten.RichText
         public Slice<int> Clusters;
 
         /// <summary>
-        /// The position of each code point, relative to this text run
+        /// The x-coords of each code point, relative to this text run
         /// </summary>
-        public Slice<float> CodePointPositions;
+        public Slice<float> RelativeCodePointXCoords;
+
+        /// <summary>
+        /// Get the x-coord of a code point
+        /// </summary>
+        /// <param name="codePointIndex"></param>
+        /// <returns>The x-coord relative to the paragaph</returns>
+        public float GetCodePointXCoord(int codePointIndex)
+        {
+            // Check in range
+            if (codePointIndex < Start || codePointIndex > End)
+                throw new ArgumentOutOfRangeException(nameof(codePointIndex));
+
+            // End of run?
+            if (codePointIndex == End)
+                return XPosition + (Direction == TextDirection.LTR ? Width : 0);
+
+            // Lookup
+            return XPosition + RelativeCodePointXCoords[codePointIndex - Start];
+        }
 
         /// <summary>
         /// The ascent of the font used in this run
@@ -108,6 +128,36 @@ namespace Topten.RichText
         /// The line that owns this font run 
         /// </summary>
         public TextLine Line { get; internal set; }
+
+        /// <summary>
+        /// Get the next font run from this one
+        /// </summary>
+        public FontRun NextRun
+        {
+            get
+            {
+                var allRuns = Line.TextBlock.FontRuns as List<FontRun>; 
+                int index = allRuns.IndexOf(this);
+                if (index < 0 || index + 1 >= Line.Runs.Count)
+                    return null;
+                return Line.Runs[index + 1];
+            }
+        }
+
+        /// <summary>
+        /// Get the previous font run from this one
+        /// </summary>
+        public FontRun PreviousRun
+        {
+            get
+            {
+                var allRuns = Line.TextBlock.FontRuns as List<FontRun>; 
+                int index = allRuns.IndexOf(this);
+                if (index <= 0)
+                    return null;
+                return Line.Runs[index + 1];
+            }
+        }
 
         /// <summary>
         /// For debugging
@@ -150,11 +200,11 @@ namespace Topten.RichText
             int codePointIndex = codePoint - this.Start;
             if (this.Direction == TextDirection.LTR)
             {
-                return this.CodePointPositions[codePointIndex];
+                return this.RelativeCodePointXCoords[codePointIndex];
             }
             else
             {
-                return this.Width - this.CodePointPositions[codePointIndex];
+                return this.Width - this.RelativeCodePointXCoords[codePointIndex];
             }
 
         }
@@ -237,7 +287,7 @@ namespace Topten.RichText
             int codePointSplitPos = splitAtCodePoint - this.Start;
 
             // Work out the width that we're slicing off
-            float sliceLeftWidth = this.CodePointPositions[codePointSplitPos];
+            float sliceLeftWidth = this.RelativeCodePointXCoords[codePointSplitPos];
             float sliceRightWidth = this.Width - sliceLeftWidth;
 
             // Work out the glyph split position
@@ -262,16 +312,16 @@ namespace Topten.RichText
                 Start = splitAtCodePoint,
                 Length = this.End - splitAtCodePoint,
                 Width = sliceRightWidth,
-                CodePointPositions = this.CodePointPositions.SubSlice(codePointSplitPos),
+                RelativeCodePointXCoords = this.RelativeCodePointXCoords.SubSlice(codePointSplitPos),
                 GlyphPositions = this.GlyphPositions.SubSlice(glyphSplitPos),
                 Glyphs = this.Glyphs.SubSlice(glyphSplitPos),
                 Clusters = this.Clusters.SubSlice(glyphSplitPos),
             };
 
             // Adjust code point positions
-            for (int i = 0; i < newRun.CodePointPositions.Length; i++)
+            for (int i = 0; i < newRun.RelativeCodePointXCoords.Length; i++)
             {
-                newRun.CodePointPositions[i] -= sliceLeftWidth;
+                newRun.RelativeCodePointXCoords[i] -= sliceLeftWidth;
             }
 
             // Adjust glyph positions
@@ -281,7 +331,7 @@ namespace Topten.RichText
             }
 
             // Update this run
-            this.CodePointPositions = this.CodePointPositions.SubSlice(0, codePointSplitPos);
+            this.RelativeCodePointXCoords = this.RelativeCodePointXCoords.SubSlice(0, codePointSplitPos);
             this.Glyphs = this.Glyphs.SubSlice(0, glyphSplitPos);
             this.GlyphPositions = this.GlyphPositions.SubSlice(0, glyphSplitPos);
             this.Clusters = this.Clusters.SubSlice(0, glyphSplitPos);
@@ -310,7 +360,7 @@ namespace Topten.RichText
             int codePointSplitPos = splitAtCodePoint - this.Start;
 
             // Work out the width that we're slicing off
-            float sliceLeftWidth = this.CodePointPositions[codePointSplitPos];
+            float sliceLeftWidth = this.RelativeCodePointXCoords[codePointSplitPos];
             float sliceRightWidth = this.Width - sliceLeftWidth;
 
             // Work out the glyph split position
@@ -335,14 +385,14 @@ namespace Topten.RichText
                 Start = splitAtCodePoint,
                 Length = this.End - splitAtCodePoint,
                 Width = sliceLeftWidth,
-                CodePointPositions = this.CodePointPositions.SubSlice(codePointSplitPos),
+                RelativeCodePointXCoords = this.RelativeCodePointXCoords.SubSlice(codePointSplitPos),
                 GlyphPositions = this.GlyphPositions.SubSlice(0, glyphSplitPos),
                 Glyphs = this.Glyphs.SubSlice(0, glyphSplitPos),
                 Clusters = this.Clusters.SubSlice(0, glyphSplitPos),
             };
 
             // Update this run
-            this.CodePointPositions = this.CodePointPositions.SubSlice(0, codePointSplitPos);
+            this.RelativeCodePointXCoords = this.RelativeCodePointXCoords.SubSlice(0, codePointSplitPos);
             this.Glyphs = this.Glyphs.SubSlice(glyphSplitPos);
             this.GlyphPositions = this.GlyphPositions.SubSlice(glyphSplitPos);
             this.Clusters = this.Clusters.SubSlice(glyphSplitPos);
@@ -350,9 +400,9 @@ namespace Topten.RichText
             this.Length = codePointSplitPos;
 
             // Adjust code point positions
-            for (int i = 0; i < this.CodePointPositions.Length; i++)
+            for (int i = 0; i < this.RelativeCodePointXCoords.Length; i++)
             {
-                this.CodePointPositions[i] -= sliceLeftWidth;
+                this.RelativeCodePointXCoords[i] -= sliceLeftWidth;
             }
 
             // Adjust glyph positions
@@ -423,19 +473,19 @@ namespace Topten.RichText
             {
                 float startSelPos;
                 if (ctx.SelectionStart < Start)
-                    startSelPos = 0;
+                    startSelPos = Direction == TextDirection.LTR ? 0 : Width;
                 else if (ctx.SelectionStart >= End)
-                    startSelPos = Width;
+                    startSelPos = Direction == TextDirection.LTR ? Width : 0;
                 else
-                    startSelPos = CodePointPositions[ctx.SelectionStart - this.Start];
+                    startSelPos = RelativeCodePointXCoords[ctx.SelectionStart - this.Start];
 
                 float selEndPos;
                 if (ctx.SelectionEnd < Start)
-                    selEndPos = 0;
+                    selEndPos = Direction == TextDirection.LTR ? 0 : Width;
                 else if (ctx.SelectionEnd >= End)
-                    selEndPos = Width;
+                    selEndPos = Direction == TextDirection.LTR ? Width : 0;
                 else
-                    selEndPos = CodePointPositions[ctx.SelectionEnd - this.Start];
+                    selEndPos = RelativeCodePointXCoords[ctx.SelectionEnd - this.Start];
 
                 if (startSelPos != selEndPos)
                 {
