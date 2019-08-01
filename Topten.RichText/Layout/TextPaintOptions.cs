@@ -47,12 +47,18 @@ namespace Topten.RichText
             set;
         }
 
+        /// <summary>
+        /// Render with anti aliasing
+        /// </summary>
         public bool IsAntialias
         {
             get;
             set;
         } = true;
 
+        /// <summary>
+        /// Use LCD text rendering
+        /// </summary>
         public bool LcdRenderText
         {
             get;
@@ -63,6 +69,5 @@ namespace Topten.RichText
         /// Default paint options (no selection)
         /// </summary>
         public static TextPaintOptions Default = new TextPaintOptions();
-
     }
 }

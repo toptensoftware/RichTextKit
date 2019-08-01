@@ -12,19 +12,20 @@ namespace Topten.RichText
         public int OverLine;
 
         /// <summary>
-        /// The closed line of the hit test
+        /// The closest line of the hit test
         /// </summary>
         public int ClosestLine;
 
         /// <summary>
-        /// The code point index of the character the point is over
+        /// The code point index of the cluster the point is over, or -1 if not over
+        /// any cluster
         /// </summary>
-        public int OverCharacter;
+        public int OverCluster;
 
         /// <summary>
-        /// The code point index where the cursor should be placed if the
+        /// The code point index where the caret should be placed if the
         /// user was to click at that location
         /// </summary>
-        public int ClosestCharacter;
+        public int ClosestCluster;
     }
 }

@@ -12,6 +12,15 @@ namespace Topten.RichText
     public class StyledRun
     {
         /// <summary>
+        /// The owning text block
+        /// </summary>
+        public TextBlock TextBlock
+        {
+            get;
+            internal set;
+        }
+
+        /// <summary>
         /// Get the code points of this run
         /// </summary>
         public Slice<int> CodePoints => CodePointBuffer.SubSlice(Start, Length);
@@ -19,12 +28,20 @@ namespace Topten.RichText
         /// <summary>
         /// Index into _codePoints buffer of the start of this run
         /// </summary>
-        public int Start;
+        public int Start
+        {
+            get;
+            internal set;
+        }
 
         /// <summary>
         /// The length of this run (in codepoints)
         /// </summary>
-        public int Length;
+        public int Length
+        {
+            get;
+            internal set;
+        }
 
         /// <summary>
         /// The index of the first code point after this run
@@ -34,7 +51,11 @@ namespace Topten.RichText
         /// <summary>
         /// The style of this run
         /// </summary>
-        public IStyle Style;
+        public IStyle Style
+        {
+            get;
+            internal set;
+        }
 
         /// <summary>
         /// The global list of code points

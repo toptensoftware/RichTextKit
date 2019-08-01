@@ -160,17 +160,17 @@ namespace SandboxDriver
             };
 
             HitTestResult? htr = null;
-            CursorInfo? ci = null;
+            CaretInfo? ci = null;
             if (_showHitTest)
             {
                 htr = tle.HitTest(_hitTestX - margin, _hitTestY - margin);
-                if (htr.Value.OverCharacter >= 0)
+                if (htr.Value.OverCluster >= 0)
                 {
-                    options.SelectionStart = htr.Value.OverCharacter;
-                    options.SelectionEnd = tle.CursorIndicies[tle.LookupCursorIndex(htr.Value.OverCharacter) + 1];
+                    options.SelectionStart = htr.Value.OverCluster;
+                    options.SelectionEnd = tle.CursorIndicies[tle.LookupCursorIndex(htr.Value.OverCluster) + 1];
                 }
 
-                ci = tle.GetCursorInfo(htr.Value.ClosestCharacter);
+                ci = tle.GetCursorInfo(htr.Value.ClosestCluster);
             }
 
             if (ShowMeasuredSize)
@@ -206,7 +206,7 @@ namespace SandboxDriver
                     StrokeWidth = Scale,
                 })
                 {
-                    var rect = ci.Value.CursorRectangle;
+                    var rect = ci.Value.CaretRectangle;
                     rect.Offset(margin, margin);
                     canvas.DrawLine(rect.Right, rect.Top, rect.Left, rect.Bottom, paint);
                 }
@@ -219,7 +219,7 @@ namespace SandboxDriver
                 TextSize = 12,
             });
 
-            state = $"Selection: {options.SelectionStart}-{options.SelectionEnd} Closest: {(htr.HasValue ? htr.Value.ClosestCharacter.ToString() : "-")}";
+            state = $"Selection: {options.SelectionStart}-{options.SelectionEnd} Closest: {(htr.HasValue ? htr.Value.ClosestCluster.ToString() : "-")}";
             canvas.DrawText(state, margin, 40, new SKPaint()
             {
                 Typeface = SKTypeface.FromFamilyName("Arial"),

@@ -60,7 +60,7 @@ namespace Topten.RichText
         public Slice<ushort> Glyphs;
 
         /// <summary>
-        /// The glyph positions
+        /// The glyph positions (relative to the entire text block)
         /// </summary>
         public Slice<SKPoint> GlyphPositions;
 
@@ -77,9 +77,13 @@ namespace Topten.RichText
         /// <summary>
         /// Get the x-coord of a code point
         /// </summary>
-        /// <param name="codePointIndex"></param>
-        /// <returns>The x-coord relative to the paragaph</returns>
-        public float GetCodePointXCoord(int codePointIndex)
+        /// <remarks>
+        /// For LTR runs this will be the x-coordinate to the left, or RTL
+        /// runs it will be the x-coordinate to the right.
+        /// </remarks>
+        /// <param name="codePointIndex">The code point index (relative to the entire text block)</param>
+        /// <returns>The x-coord relative to the entire text block</returns>
+        public float GetXCoordOfCodePointIndex(int codePointIndex)
         {
             // Check in range
             if (codePointIndex < Start || codePointIndex > End)
@@ -87,10 +91,10 @@ namespace Topten.RichText
 
             // End of run?
             if (codePointIndex == End)
-                return XPosition + (Direction == TextDirection.LTR ? Width : 0);
+                return XCoord + (Direction == TextDirection.LTR ? Width : 0);
 
             // Lookup
-            return XPosition + RelativeCodePointXCoords[codePointIndex - Start];
+            return XCoord + RelativeCodePointXCoords[codePointIndex - Start];
         }
 
         /// <summary>
@@ -122,7 +126,7 @@ namespace Topten.RichText
         /// <summary>
         /// Horizontal position of this run, relative to the left margin
         /// </summary>
-        public float XPosition;
+        public float XCoord;
 
         /// <summary>
         /// The line that owns this font run 
@@ -165,7 +169,7 @@ namespace Topten.RichText
         /// <returns>Debug string</returns>
         public override string ToString()
         {
-            return $"{Start} - {End} @ {XPosition} - {XPosition + Width} = '{Utf32Utils.FromUtf32(CodePoints)}'";
+            return $"{Start} - {End} @ {XCoord} - {XCoord + Width} = '{Utf32Utils.FromUtf32(CodePoints)}'";
         }
 
         /// <summary>
@@ -291,7 +295,6 @@ namespace Topten.RichText
             float sliceRightWidth = this.Width - sliceLeftWidth;
 
             // Work out the glyph split position
-            // TODO: Optimize this
             int glyphSplitPos = 0;
             for (glyphSplitPos = 0; glyphSplitPos < this.Clusters.Length; glyphSplitPos++)
             {
@@ -364,7 +367,6 @@ namespace Topten.RichText
             float sliceRightWidth = this.Width - sliceLeftWidth;
 
             // Work out the glyph split position
-            // TODO: Optimize this
             int glyphSplitPos = 0;
             for (glyphSplitPos = this.Clusters.Length; glyphSplitPos > 0; glyphSplitPos--)
             {
@@ -420,6 +422,10 @@ namespace Topten.RichText
         /// </summary>
         internal Buffer<int> CodePointBuffer;
 
+        /// <summary>
+        /// Calculate how by how much text at the left margin overhangs the margin
+        /// </summary>
+        /// <returns>The amount of overhang</returns>
         internal float CalculateRequiredLeftMargin()
         {
             if (Glyphs.Length == 0)
@@ -451,7 +457,7 @@ namespace Topten.RichText
                         paint.GetGlyphWidths((IntPtr)(pGlyphs + Start), sizeof(ushort), out var bounds);
                         if (bounds != null && bounds.Length >= 1)
                         {
-                            var lhs = XPosition + bounds[0].Left;
+                            var lhs = XCoord + bounds[0].Left;
                             if (lhs < 0)
                                 return -lhs;
                         }
@@ -471,36 +477,38 @@ namespace Topten.RichText
             // Paint selection?
             if (ctx.PaintSelectionBackground != null)
             {
-                float startSelPos;
+                float selStartXCoord;
                 if (ctx.SelectionStart < Start)
-                    startSelPos = Direction == TextDirection.LTR ? 0 : Width;
+                    selStartXCoord = Direction == TextDirection.LTR ? 0 : Width;
                 else if (ctx.SelectionStart >= End)
-                    startSelPos = Direction == TextDirection.LTR ? Width : 0;
+                    selStartXCoord = Direction == TextDirection.LTR ? Width : 0;
                 else
-                    startSelPos = RelativeCodePointXCoords[ctx.SelectionStart - this.Start];
+                    selStartXCoord = RelativeCodePointXCoords[ctx.SelectionStart - this.Start];
 
-                float selEndPos;
+                float selEndXCoord;
                 if (ctx.SelectionEnd < Start)
-                    selEndPos = Direction == TextDirection.LTR ? 0 : Width;
+                    selEndXCoord = Direction == TextDirection.LTR ? 0 : Width;
                 else if (ctx.SelectionEnd >= End)
-                    selEndPos = Direction == TextDirection.LTR ? Width : 0;
+                    selEndXCoord = Direction == TextDirection.LTR ? Width : 0;
                 else
-                    selEndPos = RelativeCodePointXCoords[ctx.SelectionEnd - this.Start];
+                    selEndXCoord = RelativeCodePointXCoords[ctx.SelectionEnd - this.Start];
 
-                if (startSelPos != selEndPos)
+                if (selStartXCoord != selEndXCoord)
                 {
-                    var rect = new SKRect(this.XPosition + startSelPos, Line.YPosition, 
-                                            this.XPosition + selEndPos, Line.YPosition + Line.Height);
+                    var rect = new SKRect(this.XCoord + selStartXCoord, Line.YPosition, 
+                                            this.XCoord + selEndXCoord, Line.YPosition + Line.Height);
                     ctx.Canvas.DrawRect(rect, ctx.PaintSelectionBackground);
                 }
             }
 
+            // Don't paint trailing whitespace runs
             if (RunKind == FontRunKind.TrailingWhitespace)
                 return;
 
             // Text 
             using (var paint = new SKPaint())
             {
+                // Work out font variant adjustments
                 float glyphScale = 1;
                 float glyphVOffset = 0;
                 if (Style.FontVariant == FontVariant.SuperScript)
@@ -514,6 +522,7 @@ namespace Topten.RichText
                     glyphVOffset = Style.FontSize * 0.1f;
                 }
 
+                // Setup SKPaint
                 paint.Color = Style.TextColor;
                 paint.TextEncoding = SKTextEncoding.GlyphId;
                 paint.Typeface = Typeface;
@@ -546,7 +555,8 @@ namespace Topten.RichText
                                     Glyphs.Length * sizeof(ushort),
                                     glyphPositions, underlineYPos - paint.StrokeWidth / 2, underlineYPos + paint.StrokeWidth);
 
-                                float x = XPosition;
+                                // Paint gapped underlinline
+                                float x = XCoord;
                                 for (int i = 0; i < interceptPositions.Length; i += 2)
                                 {
                                     float b = interceptPositions[i] - paint.StrokeWidth;
@@ -556,18 +566,19 @@ namespace Topten.RichText
                                     }
                                     x = interceptPositions[i + 1] + paint.StrokeWidth;
                                 }
-
-                                if (x < XPosition + Width)
+                                if (x < XCoord + Width)
                                 {
-                                    ctx.Canvas.DrawLine(new SKPoint(x, underlineYPos), new SKPoint(XPosition + Width, underlineYPos), paint);
+                                    ctx.Canvas.DrawLine(new SKPoint(x, underlineYPos), new SKPoint(XCoord + Width, underlineYPos), paint);
                                 }
                             }
                             else
                             {
-                                ctx.Canvas.DrawLine(new SKPoint(XPosition, underlineYPos), new SKPoint(XPosition + Width, underlineYPos), paint);
+                                // Paint solid underline
+                                ctx.Canvas.DrawLine(new SKPoint(XCoord, underlineYPos), new SKPoint(XCoord + Width, underlineYPos), paint);
                             }
                         }
 
+                        // Draw the text
                         ctx.Canvas.DrawPositionedText((IntPtr)(pGlyphs + Glyphs.Start), Glyphs.Length * sizeof(ushort), glyphPositions, paint);
                     }
                 }
@@ -577,7 +588,7 @@ namespace Topten.RichText
                 {
                     paint.StrokeWidth = paint.FontMetrics.StrikeoutThickness ?? 0;
                     float strikeYPos = Line.YPosition + Line.BaseLine + (paint.FontMetrics.StrikeoutPosition ?? 0) + glyphVOffset;
-                    ctx.Canvas.DrawLine(new SKPoint(XPosition, strikeYPos), new SKPoint(XPosition + Width, strikeYPos), paint);
+                    ctx.Canvas.DrawLine(new SKPoint(XCoord, strikeYPos), new SKPoint(XCoord + Width, strikeYPos), paint);
                 }
             }
         }

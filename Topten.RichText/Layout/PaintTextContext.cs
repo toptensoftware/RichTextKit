@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Topten.RichText
 {
+    /// <summary>
+    /// Resolved, internal class used to pass paint context info
+    /// </summary>
     class PaintTextContext
     {
         public SKCanvas Canvas;

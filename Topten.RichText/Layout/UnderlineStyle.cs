@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Topten.RichText
 {
     /// <summary>
-    /// Enumeration of different underline styles
+    /// Underline styles
     /// </summary>
     public enum UnderlineStyle
     {

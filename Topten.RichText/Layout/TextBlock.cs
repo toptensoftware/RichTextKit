@@ -150,6 +150,7 @@ namespace Topten.RichText
             // Create a run
             var run = new StyledRun()
             {
+                TextBlock = this,
                 CodePointBuffer = _codePoints,
                 Start = utf32.Start,
                 Length = utf32.Length,
@@ -178,6 +179,7 @@ namespace Topten.RichText
             // Create a run
             var run = new StyledRun()
             {
+                TextBlock = this,
                 CodePointBuffer = _codePoints,
                 Start = utf32.Start,
                 Length = utf32.Length,
@@ -290,6 +292,7 @@ namespace Topten.RichText
                 {
                     Color = options.SelectionColor,
                     IsStroke = false,
+                    IsAntialias = options.IsAntialias,
                 };
             }
             else
@@ -434,7 +437,7 @@ namespace Topten.RichText
 
             // Work out which line number we're over
             htr.OverLine = -1;
-            htr.OverCharacter = -1;
+            htr.OverCluster = -1;
             for (int i = 0; i < _lines.Count; i++)
             {
                 var l = _lines[i];
@@ -468,9 +471,9 @@ namespace Topten.RichText
 
             // If we're not over the line, we're also not over the character
             if (htr.OverLine < 0)
-                htr.OverCharacter = -1;
+                htr.OverCluster = -1;
 
-            System.Diagnostics.Debug.Assert(htr.ClosestCharacter >= 0);
+            System.Diagnostics.Debug.Assert(htr.ClosestCluster >= 0);
 
             return htr;
         }
@@ -525,13 +528,13 @@ namespace Topten.RichText
         /// </summary>
         /// <param name="codePointIndex">The code point index of the cursor</param>
         /// <returns>A CursorInfo struct</returns>
-        public CursorInfo GetCursorInfo(int codePointIndex)
+        public CaretInfo GetCursorInfo(int codePointIndex)
         {
             // Look up the cursor index
             int cpii = LookupCursorIndex(codePointIndex);
 
             // Create cursor info
-            var ci = new CursorInfo();
+            var ci = new CaretInfo();
             ci.CodePointIndex = _cursorIndicies[cpii];
             ci.NextCodePointIndex = cpii + 1 < _cursorIndicies.Count ? _cursorIndicies[cpii+1] : ci.CodePointIndex;
             ci.PreviousCodePointIndex = cpii > 0 ? _cursorIndicies[cpii - 1] : 0;
@@ -894,7 +897,7 @@ namespace Topten.RichText
                 // Get the font run, update it's position
                 // and move to next
                 var fr = _fontRuns[frIndex];
-                fr.XPosition = consumedWidth;
+                fr.XCoord = consumedWidth;
                 consumedWidth += fr.Width;
 
                 // Skip line breaks
@@ -912,7 +915,7 @@ namespace Topten.RichText
                         break;
 
                     // Do we need to break
-                    var totalWidthToThisBreakPoint = fr.XPosition + fr.LeadingWidth(lbr.PositionMeasure);
+                    var totalWidthToThisBreakPoint = fr.XCoord + fr.LeadingWidth(lbr.PositionMeasure);
                     if (totalWidthToThisBreakPoint > _maxWidthResolved)
                     {
                         breakLine = true;
@@ -950,7 +953,7 @@ namespace Topten.RichText
                     // Get the last run that partially fitted
                     frIndex = frIndexStartOfLine;
                     fr = _fontRuns[frIndex];
-                    var room = _maxWidthResolved - fr.XPosition;
+                    var room = _maxWidthResolved - fr.XCoord;
                     frSplitIndex = frIndex;
                     codePointIndexSplit = fr.FindBreakPosition(room, frSplitIndex == frIndexStartOfLine);
                     codePointIndexWrap = codePointIndexSplit;
@@ -1039,7 +1042,7 @@ namespace Topten.RichText
                     }
                 }
 
-                line.Runs.Add(_fontRuns[i]);
+                line.RunsInternal.Add(_fontRuns[i]);
             }
 
             // Add the line to the collection
@@ -1090,7 +1093,7 @@ namespace Topten.RichText
                 var fr = line.Runs[frIndex];
 
                 // Adjust run position
-                fr.XPosition += xAdjust;
+                fr.XCoord += xAdjust;
 
                 var above = -fr.Ascent + fr.HalfLeading;
                 var below = fr.Descent + fr.HalfLeading;
@@ -1128,7 +1131,7 @@ namespace Topten.RichText
                 var fr = line.Runs[i];
                 if (fr.Direction == TextDirection.LTR)
                 {
-                    fr.XPosition = x;
+                    fr.XCoord = x;
                     x += fr.Width;
 
                     if (fr.RunKind == FontRunKind.TrailingWhitespace)
@@ -1147,7 +1150,7 @@ namespace Topten.RichText
                     while (j >= i)
                     {
                         fr = line.Runs[j];
-                        fr.XPosition = x;
+                        fr.XCoord = x;
                         x += fr.Width;
                         j--;
                     }
@@ -1172,7 +1175,7 @@ namespace Topten.RichText
                 if (fr.Direction == TextDirection.RTL)
                 {
                     x -= fr.Width;
-                    fr.XPosition = x;
+                    fr.XCoord = x;
 
                     if (fr.RunKind == FontRunKind.TrailingWhitespace)
                         trailingWhitespaceWidth += fr.Width;
@@ -1191,7 +1194,7 @@ namespace Topten.RichText
                     {
                         fr = line.Runs[j];
                         x -= fr.Width;
-                        fr.XPosition = x;
+                        fr.XCoord = x;
                         j--;
                     }
 
@@ -1243,7 +1246,7 @@ namespace Topten.RichText
                     // Left to right group
                     for (; i < j; i++)
                     {
-                        line.Runs[i].XPosition = xPos;
+                        line.Runs[i].XCoord = xPos;
                         xPos += line.Runs[i].Width;
                     }
                 }
@@ -1255,7 +1258,7 @@ namespace Topten.RichText
                     for (; i < j; i++)
                     {
                         x -= line.Runs[i].Width;
-                        line.Runs[i].XPosition = x;
+                        line.Runs[i].XCoord = x;
                     }
                 }
 
@@ -1302,8 +1305,8 @@ namespace Topten.RichText
                 {
                     var fr = line.Runs[frIndex];
                     fr.Line = line;
-                    fr.XPosition += xAdjust;
-                    fr.MoveGlyphs(fr.XPosition, line.YPosition + line.BaseLine);
+                    fr.XCoord += xAdjust;
+                    fr.MoveGlyphs(fr.XCoord, line.YPosition + line.BaseLine);
                 }
             }
         }
@@ -1381,7 +1384,7 @@ namespace Topten.RichText
             for (int i = line.Runs.Count - 1; i >= 0; i--)
             {
                 if (line.Runs[i].RunKind == FontRunKind.TrailingWhitespace)
-                    line.Runs.RemoveAt(i);
+                    line.RunsInternal.RemoveAt(i);
             }
 
             // Calculate the total width of the line
@@ -1411,7 +1414,7 @@ namespace Topten.RichText
                     if (fr.Width < removeWidth)
                     {
                         removeWidth -= fr.Width;
-                        line.Runs.RemoveAt(i);
+                        line.RunsInternal.RemoveAt(i);
                         continue;
                     }
 
@@ -1420,7 +1423,7 @@ namespace Topten.RichText
                     if (pos == fr.Start)
                     {
                         // Nothing fits, remove it all
-                        line.Runs.RemoveAt(i);
+                        line.RunsInternal.RemoveAt(i);
                     }
                     else
                     {
@@ -1437,7 +1440,7 @@ namespace Topten.RichText
             }
 
             // Add it to the line
-            line.Runs.Add(ellipsisRun);
+            line.RunsInternal.Add(ellipsisRun);
 
             // Remember old line height
             var oldHeight = line.Height;

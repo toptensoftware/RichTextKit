@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Topten.RichText
 {
+    /// <summary>
+    /// A standard implementation of IStyle
+    /// </summary>
     public class Style : IStyle
     {
         public string FontFamily

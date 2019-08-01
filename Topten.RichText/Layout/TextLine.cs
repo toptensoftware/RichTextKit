@@ -22,7 +22,7 @@ namespace Topten.RichText
         /// <summary>
         /// List of text runs in this line
         /// </summary>
-        public List<FontRun> Runs = new List<FontRun>();
+        public IReadOnlyList<FontRun> Runs => RunsInternal;
 
         /// <summary>
         /// Get the text block that owns this line
@@ -124,7 +124,7 @@ namespace Topten.RichText
         /// <summary>
         /// Paint this line
         /// </summary>
-        /// <param name="canvas"></param>
+        /// <param name="ctx">The paint context</param>
         internal void Paint(PaintTextContext ctx)
         {
             foreach (var r in Runs)
@@ -133,54 +133,66 @@ namespace Topten.RichText
             }
         }
 
+        /// <summary>
+        /// Hit test this line, working out the cluster the x position is over
+        /// and closest to.
+        /// </summary>
+        /// <param name="x">The xcoord relative to the text block</param>
+        /// <param name="htr">HitTestResult to be filled out</param>
         internal void HitTest(float x, ref HitTestResult htr)
         {
+            // Working variables
             float closestXPosition = 0;
             int closestCodePointIndex = -1;
-            TextDirection closestDirection = TextDirection.LTR;
 
-            // Special handling for clicking after a soft line break
+            // Special handling for clicking after a soft line break in which case
+            // the cursor should be positions before the new line, not after it (as this
+            // would cause the cursor to appear on the next line).
             if (Runs.Count > 0)
             {
                 var lastRun = Runs[Runs.Count - 1];
                 if (lastRun.RunKind == FontRunKind.TrailingWhitespace)
                 {
-                    if ((lastRun.Direction == TextDirection.LTR && x >= lastRun.XPosition + lastRun.Width) ||
-                        (lastRun.Direction == TextDirection.RTL && x < lastRun.XPosition))
+                    if ((lastRun.Direction == TextDirection.LTR && x >= lastRun.XCoord + lastRun.Width) ||
+                        (lastRun.Direction == TextDirection.RTL && x < lastRun.XCoord))
                     {
                         if (lastRun.CodePoints.Length > 0 && lastRun.CodePoints[lastRun.CodePoints.Length - 1] == '\n')
                         {
-                            htr.ClosestCharacter = lastRun.End - 1;
+                            htr.ClosestCluster = lastRun.End - 1;
                             return;
                         }
                     }
                 }
             }
 
+            // Check all runs
             foreach (var r in Runs)
             {
-                if (x < r.XPosition)
+                if (x < r.XCoord)
                 {
-                    updateClosest(r.XPosition, r.Direction == TextDirection.LTR ? r.Start : r.End, r.Direction);
+                    // Before the run...
+                    updateClosest(r.XCoord, r.Direction == TextDirection.LTR ? r.Start : r.End, r.Direction);
                 }
-                else if (x >= r.XPosition + r.Width)
+                else if (x >= r.XCoord + r.Width)
                 {
-                    updateClosest(r.XPosition + r.Width, r.Direction == TextDirection.RTL ? r.Start : r.End, r.Direction);
+                    // After the run...
+                    updateClosest(r.XCoord + r.Width, r.Direction == TextDirection.RTL ? r.Start : r.End, r.Direction);
                 }
                 else
                 {
+                    // Inside the run
                     for (int i = 0; i < r.Clusters.Length;)
                     {
                         // Get the xcoord of this cluster
                         var codePointIndex = r.Clusters[i];
-                        var xcoord1 = r.GetCodePointXCoord(codePointIndex);
+                        var xcoord1 = r.GetXCoordOfCodePointIndex(codePointIndex);
 
                         // Find the code point of the next cluster
                         var j = i;
                         while (j < r.Clusters.Length && r.Clusters[j] == r.Clusters[i])
                             j++;
 
-                        // Get the xcoord of other side
+                        // Get the xcoord of other side of this cluster
                         int codePointIndexOther;
                         if (r.Direction == TextDirection.LTR)
                         {
@@ -205,9 +217,10 @@ namespace Topten.RichText
                             }
                         }
 
-                        var xcoord2 = r.GetCodePointXCoord(codePointIndexOther);
+                        // Gethte xcoord of the other side of the cluster
+                        var xcoord2 = r.GetXCoordOfCodePointIndex(codePointIndexOther);
 
-                        // Ensure order
+                        // Ensure order correct for easier in-range check
                         if (xcoord1 > xcoord2)
                         {
                             var temp = xcoord1;
@@ -218,22 +231,24 @@ namespace Topten.RichText
                         // On the character?
                         if (x >= xcoord1 && x < xcoord2)
                         {
-                            htr.OverCharacter = codePointIndex;
+                            // Store this as the cluster the point is over
+                            htr.OverCluster = codePointIndex;
 
                             // Don't move to the rhs (or lhs) of a line break
                             if (r.CodePoints[codePointIndex - r.Start] == '\n')
                             {
-                                htr.ClosestCharacter = codePointIndex;
+                                htr.ClosestCluster = codePointIndex;
                             }
                             else
                             {
+                                // Work out if position is closer to the left or right side of the cluster
                                 if (x < (xcoord1 + xcoord2) / 2)
                                 {
-                                    htr.ClosestCharacter = r.Direction == TextDirection.LTR ? codePointIndex : codePointIndexOther;
+                                    htr.ClosestCluster = r.Direction == TextDirection.LTR ? codePointIndex : codePointIndexOther;
                                 }
                                 else
                                 {
-                                    htr.ClosestCharacter = r.Direction == TextDirection.LTR ? codePointIndexOther : codePointIndex;
+                                    htr.ClosestCluster = r.Direction == TextDirection.LTR ? codePointIndexOther : codePointIndex;
                                 }
                             }
                             return;
@@ -246,30 +261,22 @@ namespace Topten.RichText
             }
 
             // Store closest character
-            htr.ClosestCharacter = closestCodePointIndex;
+            htr.ClosestCluster = closestCodePointIndex;
 
-
-
+            // Helper for updating closest cursor position
             void updateClosest(float xPosition, int codePointIndex, TextDirection dir)
             {
-                bool closest = false;
-
-                if (closestCodePointIndex == -1)
-                {
-                    closest = true;
-                }
-                else if (Math.Abs(xPosition - x) < Math.Abs(closestXPosition - x))
-                {
-                    closest = true;
-                }
-
-                if (closest)
+                if (closestCodePointIndex == -1 || Math.Abs(xPosition - x) < Math.Abs(closestXPosition - x))
                 {
                     closestXPosition = xPosition;
                     closestCodePointIndex = codePointIndex;
-                    closestDirection = dir;
                 }
             }
         }
+
+        /// <summary>
+        /// Internal List of runs
+        /// </summary>
+        internal List<FontRun> RunsInternal = new List<FontRun>();
     }
 }
