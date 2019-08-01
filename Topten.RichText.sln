@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Topten.RichText", "Topten.R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox", "Sandbox\Sandbox.csproj", "{A8440E53-0D1E-477B-81B3-7916ECAF2EF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SandboxDriver", "SandboxDriver\SandboxDriver.csproj", "{76AE34F1-D8B7-4593-A9FA-A82CDB438A5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandboxDriver", "SandboxDriver\SandboxDriver.csproj", "{76AE34F1-D8B7-4593-A9FA-A82CDB438A5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Topten.RichText.Test", "Topten.RichText.Test\Topten.RichText.Test.csproj", "{44AE4B31-855E-41C5-8AAE-B7E6227EE3E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{76AE34F1-D8B7-4593-A9FA-A82CDB438A5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76AE34F1-D8B7-4593-A9FA-A82CDB438A5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76AE34F1-D8B7-4593-A9FA-A82CDB438A5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44AE4B31-855E-41C5-8AAE-B7E6227EE3E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44AE4B31-855E-41C5-8AAE-B7E6227EE3E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44AE4B31-855E-41C5-8AAE-B7E6227EE3E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44AE4B31-855E-41C5-8AAE-B7E6227EE3E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
