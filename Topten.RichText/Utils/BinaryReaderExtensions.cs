@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Topten.RichText
 {
-    public static class BinaryUtils
+    static class BinaryReaderExtensions
     {
         public static int ReadInt32BE(this BinaryReader reader)
         {

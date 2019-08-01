@@ -9,10 +9,21 @@ using System.Runtime.InteropServices;
 
 namespace Topten.RichText
 {
+    /// <summary>
+    /// Helper class for shaping text
+    /// </summary>
     public class TextShaper : IDisposable
     {
+        /// <summary>
+        /// Cache of shapers for typefaces
+        /// </summary>
         static Dictionary<SKTypeface, TextShaper> _shapers = new Dictionary<SKTypeface, TextShaper>();
 
+        /// <summary>
+        /// Get the text shaper for a particular type face
+        /// </summary>
+        /// <param name="typeface">The typeface being queried for</param>
+        /// <returns>A TextShaper</returns>
         public static TextShaper ForTypeface(SKTypeface typeface)
         {
             lock (_shapers)
@@ -27,8 +38,13 @@ namespace Topten.RichText
             }
         }
 
+        /// <summary>
+        /// Constructs a new TextShaper 
+        /// </summary>
+        /// <param name="typeface">The typeface of this shaper</param>
         private TextShaper(SKTypeface typeface)
         {
+            // Load the typeface stream to a HarfBuzz font
             int index;
             using (var blob = typeface.OpenStream(out index).ToHarfBuzzBlob())
             using (var face = new Face(blob, (uint)index))
@@ -40,6 +56,7 @@ namespace Topten.RichText
                 _font.SetFunctionsOpenType();
             }
 
+            // Get font metrics for this typeface
             using (var paint = new SKPaint())
             {
                 paint.Typeface = typeface;
@@ -48,6 +65,9 @@ namespace Topten.RichText
             }
         }
 
+        /// <summary>
+        /// Dispose this text shaper
+        /// </summary>
         public void Dispose()
         {
             if (_font != null)
@@ -57,29 +77,25 @@ namespace Topten.RichText
             }
         }
 
+        /// <summary>
+        /// The HarfBuzz font for this shaper
+        /// </summary>
         HarfBuzzSharp.Font _font;
+
+        /// <summary>
+        /// Font metrics for the font
+        /// </summary>
         SKFontMetrics _fontMetrics;
 
+        /// <summary>
+        /// Returned as the result of a text shaping operation
+        /// </summary>
         public struct Result
         {
             /// <summary>
             /// The glyph indicies of all glyphs required to render the shaped text
             /// </summary>
             public ushort[] GlyphIndicies;
-
-            /// <summary>
-            /// Get the index of the code point represents by the glyph at a specified index
-            /// </summary>
-            /// <param name="glyphIndex">The glyph index</param>
-            /// <returns>The index into the original code point array</returns>
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public int CodePointIndexFromGlyphIndex(int glyphIndex)
-            {
-                if (glyphIndex < Clusters.Length)
-                    return Clusters[glyphIndex];
-                else
-                    return CodePointPositions.Length - 1;
-            }
 
             /// <summary>
             /// The position of each glyph
@@ -95,18 +111,12 @@ namespace Topten.RichText
             /// <summary>
             /// The end position of the rendered text
             /// </summary>
-            public SKPoint EndPoint;
+            public SKPoint EndXCoord;
 
             /// <summary>
             /// The X-Position of each passed code point
             /// </summary>
-            public float[] CodePointPositions;
-
-            /// <summary>
-            /// The indicies into the original code points array
-            /// of all valid cursor stops
-            /// </summary>
-            public int[] CursorIndicies;
+            public float[] CodePointXCoords;
 
             /// <summary>
             /// The ascent of the font
@@ -124,15 +134,17 @@ namespace Topten.RichText
             public float XMin;
         }
 
+        /// <summary>
+        /// Over scale used for all font operations
+        /// </summary>
         const int overScale = 512;
 
         // Temporary hack until newer HarfBuzzSharp is released with support for AddUtf32
         [DllImport("libHarfBuzzSharp", CallingConvention = CallingConvention.Cdecl)]
 		public extern static void hb_buffer_add_utf32 (IntPtr buffer, IntPtr text, int text_length, int item_offset, int item_length);
 
-
         /// <summary>
-        /// Shape an array of utf32- code points
+        /// Shape an array of utf-32 code points
         /// </summary>
         /// <param name="codePoints">The utf-32 code points to be shaped</param>
         /// <param name="style">The user style for the text</param>
@@ -177,8 +189,7 @@ namespace Topten.RichText
                 var r = new Result();
                 r.GlyphIndicies = buffer.GlyphInfos.Select(x => (ushort)x.Codepoint).ToArray();
                 r.Clusters = buffer.GlyphInfos.Select(x => (int)x.Cluster + clusterAdjustment).ToArray();
-                r.CursorIndicies = r.Clusters.Distinct().OrderBy(x => x).Select(x => (int)x).ToArray();
-                r.CodePointPositions = new float[codePoints.Length];
+                r.CodePointXCoords = new float[codePoints.Length];
                 r.Points = new SKPoint[buffer.Length];
 
                 // RTL?
@@ -210,9 +221,9 @@ namespace Topten.RichText
                         // First cluster, different cluster, or same cluster with lower x-coord
                         if ( i == 0 ||
                             (r.Clusters[i] != r.Clusters[i - 1]) || 
-                            (cursorX < r.CodePointPositions[r.Clusters[i] - clusterAdjustment]))
+                            (cursorX < r.CodePointXCoords[r.Clusters[i] - clusterAdjustment]))
                         {
-                            r.CodePointPositions[r.Clusters[i] - clusterAdjustment] = cursorX;
+                            r.CodePointXCoords[r.Clusters[i] - clusterAdjustment] = cursorX;
                         }
                     }
     
@@ -235,9 +246,9 @@ namespace Topten.RichText
                         // First cluster, different cluster, or same cluster with lower x-coord
                         if (i == 0 ||
                             (r.Clusters[i] != r.Clusters[i - 1]) ||
-                            (cursorX > r.CodePointPositions[r.Clusters[i] - clusterAdjustment]))
+                            (cursorX > r.CodePointXCoords[r.Clusters[i] - clusterAdjustment]))
                         {
-                            r.CodePointPositions[r.Clusters[i] - clusterAdjustment] = cursorX;
+                            r.CodePointXCoords[r.Clusters[i] - clusterAdjustment] = cursorX;
                         }
                     }
                 }
@@ -246,24 +257,24 @@ namespace Topten.RichText
                 // referenced by a cluster
                 if (rtl)
                 {
-                    r.CodePointPositions[0] = cursorX;
+                    r.CodePointXCoords[0] = cursorX;
                     for (int i = codePoints.Length - 2;  i >= 0; i--)
                     {
-                        if (r.CodePointPositions[i] == 0)
-                            r.CodePointPositions[i] = r.CodePointPositions[i + 1];
+                        if (r.CodePointXCoords[i] == 0)
+                            r.CodePointXCoords[i] = r.CodePointXCoords[i + 1];
                     }
                 }
                 else
                 {
                     for (int i = 1; i < codePoints.Length; i++)
                     {
-                        if (r.CodePointPositions[i] == 0)
-                            r.CodePointPositions[i] = r.CodePointPositions[i - 1];
+                        if (r.CodePointXCoords[i] == 0)
+                            r.CodePointXCoords[i] = r.CodePointXCoords[i - 1];
                     }
                 }
 
                 // Also return the end cursor position
-                r.EndPoint = new SKPoint(cursorX, cursorY);
+                r.EndXCoord = new SKPoint(cursorX, cursorY);
 
                 // And some other useful metrics
                 r.Ascent = _fontMetrics.Ascent * style.FontSize / overScale;

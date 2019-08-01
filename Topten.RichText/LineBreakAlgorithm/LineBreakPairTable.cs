@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-// Ported from: https://github.com/foliojs/linebreak
+﻿// Ported from: https://github.com/foliojs/linebreak
 
 namespace Topten.RichText
 {

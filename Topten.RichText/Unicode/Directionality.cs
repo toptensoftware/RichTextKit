@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace Topten.RichText
 {
+    /// <summary>
+    /// Unicode directionality classes
+    /// </summary>
+    /// <remarks>
+    /// Note, these need to match those used by the JavaScript script that
+    /// generates the .trie resources
+    /// </remarks>
     enum Directionality : byte
     {
         // Strong types

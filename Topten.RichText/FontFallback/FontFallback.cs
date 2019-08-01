@@ -1,12 +1,14 @@
 ﻿using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Topten.RichText
 {
+    /// <summary>
+    /// Helper to split a run of code points based on a particular typeface
+    /// into a series of runs where unsupported code points are mapped to a
+    /// fallback font.
+    /// </summary>
     class FontFallback
     {
         public struct Run

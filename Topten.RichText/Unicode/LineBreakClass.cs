@@ -2,6 +2,13 @@
 
 namespace Topten.RichText
 {
+    /// <summary>
+    /// Unicode line break classes
+    /// </summary>
+    /// <remarks>
+    /// Note, these need to match those used by the JavaScript script that
+    /// generates the .trie resources
+    /// </remarks>
     enum LineBreakClass
     {
         // The following break classes are handled by the pair table

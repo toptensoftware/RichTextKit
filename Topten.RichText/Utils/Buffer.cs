@@ -136,7 +136,7 @@ namespace Topten.RichText
         /// </summary>
         /// <param name="start">Start offset of the slice</param>
         /// <param name="length">Length of the slice</param>
-        /// <returns></returns>
+        /// <returns>A Slice for the specified sub-range</returns>
         public Slice<T> SubSlice(int start, int length)
         {
             if (start < 0)
@@ -147,7 +147,10 @@ namespace Topten.RichText
             return new Slice<T>(_data, start, length);
         }
 
-        // Get the entire buffer contents as a slice
+        /// <summary>
+        /// Get the entire buffer contents as a slice
+        /// </summary>
+        /// <returns>A Slice</returns>
         public Slice<T> AsSlice()
         {
             return SubSlice(0, _length);

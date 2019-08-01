@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "request": "^2.88.0",
+    "unicode-trie": "^1.0.0"
+  },
+  "main": "generate.js"
+}

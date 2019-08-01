@@ -1,24 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-// Ported from: https://github.com/foliojs/linebreak
+﻿// Ported from: https://github.com/foliojs/linebreak
 
 namespace Topten.RichText
 {
+    /// <summary>
+    /// Information about a potential line break position
+    /// </summary>
     public class LineBreak
     {
-        public LineBreak()
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="positionMeasure">The code point index to measure to</param>
+        /// <param name="positionWrap">The code point index to actually break the line at</param>
+        /// <param name="required">True if this is a required line break; otherwise false</param>
+        public LineBreak(int positionMeasure, int positionWrap, bool required = false)
         {
-        }
-
-        public LineBreak(int positionA, int positionB, bool required = false)
-        {
-            this.PositionMeasure = positionA;
-            this.PositionWrap = positionB;
+            this.PositionMeasure = positionMeasure;
+            this.PositionWrap = positionWrap;
             this.Required = required;
         }
 
+        // Debug helper
         public override string ToString()
         {
             return $"{PositionMeasure}/{PositionWrap} @ {Required}";
@@ -37,7 +39,7 @@ namespace Topten.RichText
         /// The break position, after any trailing whitespace
         /// </summary>
         /// <remarks>
-        /// This include trailing whitespace
+        /// This includes trailing whitespace
         /// </remarks>
         public int PositionWrap;
 

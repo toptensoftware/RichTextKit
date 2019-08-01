@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Topten.RichText
+﻿namespace Topten.RichText
 {
+    /// <summary>
+    /// Helper for looking up unicode character class information
+    /// </summary>
     static class UnicodeClasses
     {
         static UnicodeClasses()
         {
+            // Load trie resources
             _bidiTrie = new UnicodeTrie(typeof(LineBreaker).Assembly.GetManifestResourceStream("Topten.RichText.Resources.BidiData.trie"));
             _classesTrie = new UnicodeTrie(typeof(LineBreaker).Assembly.GetManifestResourceStream("Topten.RichText.Resources.LineBreakClasses.trie"));
         }

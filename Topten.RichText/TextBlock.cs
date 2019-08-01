@@ -867,11 +867,11 @@ namespace Topten.RichText
                 Typeface = typeface,
                 Glyphs = new Slice<ushort>(shaped.GlyphIndicies),
                 GlyphPositions = new Slice<SKPoint>(shaped.Points),
-                RelativeCodePointXCoords = new Slice<float>(shaped.CodePointPositions),
+                RelativeCodePointXCoords = new Slice<float>(shaped.CodePointXCoords),
                 Clusters = new Slice<int>(shaped.Clusters),
                 Ascent = shaped.Ascent,
                 Descent = shaped.Descent,
-                Width = shaped.EndPoint.X,
+                Width = shaped.EndXCoord.X,
             };        
         }
 

@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Topten.RichText
 {
+    /// <summary>
+    /// Helpers for binary searching IReadOnlyList
+    /// </summary>
     public static class BinarySearchExtension
     {
         private static int GetMedian(int low, int hi)
