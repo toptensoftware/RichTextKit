@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Topten.RichText
 {
-    public class UnicodeTrie
+    internal class UnicodeTrie
     {
         public UnicodeTrie(Stream stream)
         {

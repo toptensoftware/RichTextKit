@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Topten.RichText
 {
-    public class UnicodeTrieBuilder
+    internal class UnicodeTrieBuilder
     {
         // Shift size for getting the index-1 table offset.
         internal const int SHIFT_1 = 6 + 5;

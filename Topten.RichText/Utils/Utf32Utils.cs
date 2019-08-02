@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Topten.RichText
 {
+    /// <summary>
+    /// Miscellaneous utility functions for working with UTF-32 data
+    /// </summary>
     public static class Utf32Utils
     {
         /// <summary>

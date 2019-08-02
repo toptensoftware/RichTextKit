@@ -277,7 +277,6 @@ namespace Topten.RichText
         /// Split a LTR typeface run into two separate runs, truncating the passed
         /// run (LHS) and returning a new run containing the split off part (RHS)
         /// </summary>
-        /// <param name="run">The run to split</param>
         /// <param name="splitAtCodePoint">To code point position to split at</param>
         /// <returns>The RHS run after splitting</returns>
         private FontRun SplitLTR(int splitAtCodePoint)
@@ -349,7 +348,6 @@ namespace Topten.RichText
         /// Split a RTL typeface run into two separate runs, truncating the passed
         /// run (RHS) and returning a new run containing the split off part (LHS)
         /// </summary>
-        /// <param name="run">The run to split</param>
         /// <param name="splitAtCodePoint">To code point position to split at</param>
         /// <returns>The LHS run after splitting</returns>
         private FontRun SplitRTL(int splitAtCodePoint)

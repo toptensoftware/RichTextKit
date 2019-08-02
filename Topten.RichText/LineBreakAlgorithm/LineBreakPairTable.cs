@@ -2,7 +2,7 @@
 
 namespace Topten.RichText
 {
-    public static class LineBreakPairTable
+    internal static class LineBreakPairTable
     {
         public const byte DI_BRK = 0; // Direct break opportunity
         public const byte IN_BRK = 1; // Indirect break opportunity

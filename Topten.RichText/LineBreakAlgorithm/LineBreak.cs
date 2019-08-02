@@ -1,10 +1,13 @@
 ﻿// Ported from: https://github.com/foliojs/linebreak
 
+using System.Diagnostics;
+
 namespace Topten.RichText
 {
     /// <summary>
     /// Information about a potential line break position
     /// </summary>
+    [DebuggerDisplay("{PositionMeasure}/{PositionWrap} @ {Required}")]
     public class LineBreak
     {
         /// <summary>
@@ -18,12 +21,6 @@ namespace Topten.RichText
             this.PositionMeasure = positionMeasure;
             this.PositionWrap = positionWrap;
             this.Required = required;
-        }
-
-        // Debug helper
-        public override string ToString()
-        {
-            return $"{PositionMeasure}/{PositionWrap} @ {Required}";
         }
 
 

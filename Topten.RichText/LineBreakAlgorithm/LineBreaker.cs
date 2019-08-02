@@ -51,7 +51,11 @@ namespace Topten.RichText
             return list;
         }
 
-        // Find the next line break
+        /// <summary>
+        /// Get the next line break info
+        /// </summary>
+        /// <param name="lineBreak">A LineBreak structure returned by this method</param>
+        /// <returns>True if there was another line break</returns>
         public bool NextBreak(out LineBreak lineBreak)
         {
             // get the first char if we're at the beginning of the string

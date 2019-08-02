@@ -24,7 +24,7 @@
  */
 
 
-/**
+/*
  * Reference implementation of the BPA algorithm of the Unicode 6.3 Bidi algorithm.
  *
  * <p>

@@ -31,7 +31,8 @@ namespace Topten.RichText
         /// <summary>
         /// Initialize with an array of Unicode code points
         /// </summary>
-        /// <param name="codePoints"></param>
+        /// <param name="codePoints">The unicode code points to be processed</param>
+        /// <param name="paragraphEmbeddingLevel">The paragraph embedding level</param>
         public void Init(Slice<int> codePoints, byte paragraphEmbeddingLevel)
         {
             // Set working buffer sizes

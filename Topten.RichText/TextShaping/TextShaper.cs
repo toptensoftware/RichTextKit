@@ -141,7 +141,7 @@ namespace Topten.RichText
 
         // Temporary hack until newer HarfBuzzSharp is released with support for AddUtf32
         [DllImport("libHarfBuzzSharp", CallingConvention = CallingConvention.Cdecl)]
-		public extern static void hb_buffer_add_utf32 (IntPtr buffer, IntPtr text, int text_length, int item_offset, int item_length);
+		private extern static void hb_buffer_add_utf32 (IntPtr buffer, IntPtr text, int text_length, int item_offset, int item_length);
 
         /// <summary>
         /// Shape an array of utf-32 code points

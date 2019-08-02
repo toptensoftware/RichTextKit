@@ -40,7 +40,7 @@
  */
 
 
-/**
+/*
  * Reference implementation of the Unicode Bidirectional Algorithm (UAX #9).
  *
  * <p>
@@ -112,7 +112,7 @@ namespace Topten.RichText
         {
         }
 
-        /**
+        /*
          * Initialize using several arrays, then run the algorithm
          * @param types
          *            Array of types ranging from TYPE_MIN to TYPE_MAX inclusive 
@@ -139,7 +139,7 @@ namespace Topten.RichText
             runAlgorithm();
         }
 
-        /**
+        /*
          * Initialize using several arrays of direction and other types and an externally supplied
          * paragraph embedding level. The embedding level may be  0, 1 or 2.
          * <p>
@@ -254,7 +254,7 @@ namespace Topten.RichText
         public BidiPBA _pba; // to allow access to internal pba state for diagnostics
 
 
-        /** Shorthand names of bidi type values, for error reporting. */
+        /* Shorthand names of bidi type values, for error reporting. */
         public static string[] typenames = {
             "L",
             "LRE",
@@ -281,7 +281,7 @@ namespace Topten.RichText
             "PDI"
         };
 
-        /**
+        /*
          * The algorithm. Does not include line-based processing (Rules L1, L2).
          * These are applied later in the line-based phase of the algorithm.
          */
@@ -352,7 +352,7 @@ namespace Topten.RichText
             assignLevelsToCharactersRemovedByX9();
         }
 
-        /**
+        /*
          * Determine the matching PDI for each isolate initiator and vice versa.
          * <p>
          * Definition BD9.
@@ -413,7 +413,7 @@ namespace Topten.RichText
             }
         }
 
-        /**
+        /*
          * Determines the paragraph level based on rules P2, P3. This is also used
          * in rule X5c to find if an FSI should resolve to LRI or RLI.
          *
@@ -511,7 +511,7 @@ namespace Topten.RichText
             }
         }
 
-        /**
+        /*
          * Determine explicit levels using rules X1 - X8
          */
         private void determineExplicitEmbeddingLevels()
@@ -688,7 +688,7 @@ namespace Topten.RichText
             private Directionality sos, eos;
             private Bidi owner;
 
-            /**
+            /*
              * Rule X10, second bullet: Determine the start-of-sequence (sos) and end-of-sequence (eos) types,
              * 			 either L or R, for each isolating run sequence.
              * @param inputIndexes
@@ -736,7 +736,7 @@ namespace Topten.RichText
                 eos = typeForLevel(Math.Max(succLevel, level));
             }
 
-            /**
+            /*
              * Resolving bidi paired brackets  Rule N0
              */
 
@@ -755,7 +755,7 @@ namespace Topten.RichText
             }
 
 
-            /**
+            /*
              * Resolving weak types Rules W1-W7.
              *
              * Note that some weak types (EN, AN) remain after this processing is
@@ -926,7 +926,7 @@ namespace Topten.RichText
                 }
             }
 
-            /**
+            /*
              * 6) resolving neutral types Rules N1-N2.
              */
             public void resolveNeutralTypes()
@@ -1021,7 +1021,7 @@ namespace Topten.RichText
                 }
             }
 
-            /**
+            /*
              * 7) resolving implicit embedding levels Rules I1, I2.
              */
             public void resolveImplicitLevels()
@@ -1090,7 +1090,7 @@ namespace Topten.RichText
                 }
             }
 
-            /**
+            /*
              * Return the limit of the run consisting only of the types in validSet
              * starting at index. This checks the value at index, and will return
              * index if that value is not in validSet.
@@ -1114,7 +1114,7 @@ namespace Topten.RichText
                 return limit;
             }
 
-            /**
+            /*
              * Set types from start up to (but not including) limit to newType.
              */
             private void setTypes(int start, int limit, Directionality newType)
@@ -1125,7 +1125,7 @@ namespace Topten.RichText
                 }
             }
 
-            /**
+            /*
              * Algorithm validation. Assert that all values in types are in the
              * provided set.
              */
@@ -1147,7 +1147,7 @@ namespace Topten.RichText
             return newArray;
         }
 
-        /**
+        /*
          * Determines the level runs. Rule X9 will be applied in determining the
          * runs, in the way that makes sure the characters that are supposed to be
          * removed are not included in the runs.
@@ -1198,7 +1198,7 @@ namespace Topten.RichText
             return copyArray(allRuns, numRuns);
         }
 
-        /**
+        /*
          * Definition BD13. Determine isolating run sequences.
          *
          * @return an array of isolating run sequences.
@@ -1256,7 +1256,7 @@ namespace Topten.RichText
             return copyArray(sequences, numSequences);
         }
 
-        /**
+        /*
          * Assign level information to characters removed by rule X9. This is for
          * ease of relating the level information to the original input data. Note
          * that the levels assigned to these codes are arbitrary, they're chosen so
@@ -1304,7 +1304,7 @@ namespace Topten.RichText
         // Output
         //
 
-        /**
+        /*
          * Return levels array breaking lines at offsets in linebreaks. <br>
          * Rule L1.
          * <p>
@@ -1388,7 +1388,7 @@ namespace Topten.RichText
             return result;
         }
 
-        /**
+        /*
          * Return reordering array breaking lines at offsets in linebreaks.
          * <p>
          * The reordering array maps from a visual index to a logical index. Lines
@@ -1419,7 +1419,7 @@ namespace Topten.RichText
             return computeMultilineReordering(levels, linebreaks);
         }
 
-        /**
+        /*
          * Return multiline reordering array for a given level array. Reordering
          * does not occur across a line break.
          */
@@ -1447,7 +1447,7 @@ namespace Topten.RichText
             return result;
         }
 
-        /**
+        /*
          * Return reordering array for a given level array. This reorders a single
          * line. The reordering is a visual to logical map. For example, the
          * leftmost char is string.charAt(order[0]). Rule L2.
@@ -1513,7 +1513,7 @@ namespace Topten.RichText
             return result;
         }
 
-        /**
+        /*
          * Return the base level of the paragraph.
          */
         public byte getBaseLevel()
@@ -1523,7 +1523,7 @@ namespace Topten.RichText
 
         // --- internal utilities -------------------------------------------------
 
-        /**
+        /*
          * Return true if the type is considered a whitespace type for the line
          * break rules.
          */
@@ -1548,7 +1548,7 @@ namespace Topten.RichText
             }
         }
 
-        /**
+        /*
          * Return true if the type is one of the types removed in X9.
          * Made public so callers can duplicate the effect.
          */
@@ -1568,7 +1568,7 @@ namespace Topten.RichText
             }
         }
 
-        /**
+        /*
          * Return the strong type (L or R) corresponding to the level.
          */
         private static Directionality typeForLevel(int level)
@@ -1576,7 +1576,7 @@ namespace Topten.RichText
             return ((level & 0x1) == 0) ? Directionality.L : Directionality.R;
         }
 
-        /**
+        /*
          * Set levels from start up to (but not including) limit to newLevel.
          */
         private void setLevels(byte[] levels, int start, int limit, byte newLevel)
@@ -1589,7 +1589,7 @@ namespace Topten.RichText
 
         // --- input validation ---------------------------------------------------
 
-        /**
+        /*
          * Throw exception if type array is invalid.
          */
         private static void validateTypes(Slice<Directionality> types)
@@ -1610,7 +1610,7 @@ namespace Topten.RichText
             }
         }
 
-        /**
+        /*
          * Throw exception if paragraph embedding level is invalid. Special
          * allowance for implicitEmbeddinglevel so that default processing of the
          * paragraph embedding level as implicit can still be performed when
@@ -1626,7 +1626,7 @@ namespace Topten.RichText
             }
         }
 
-        /**
+        /*
          * Throw exception if line breaks array is invalid.
          */
         private static void validateLineBreaks(int[] linebreaks, int textLength)
@@ -1647,7 +1647,7 @@ namespace Topten.RichText
             }
         }
 
-        /**
+        /*
          * Throw exception if pairTypes array is invalid
          */
         private static void validatePbTypes(Slice<PairedBracketType> pairTypes)
@@ -1661,7 +1661,7 @@ namespace Topten.RichText
             }
         }
 
-        /**
+        /*
          * Throw exception if pairValues array is invalid or doesn't match pairTypes in length
          * Unfortunately there's little we can do in terms of validating the values themselves
          */
@@ -1673,7 +1673,7 @@ namespace Topten.RichText
             }
         }
 
-        /**
+        /*
          * static entry point for testing using several arrays of direction and other types and an externally supplied
          * paragraph embedding level. The embedding level may be 0, 1 or 2.
          * <p>

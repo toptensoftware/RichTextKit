@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Topten.RichText
 {
+    /// <summary>
+    /// Describes the results of hit testing a <see cref="TextBlock"/>
+    /// </summary>
     public struct HitTestResult
     {
         /// <summary>

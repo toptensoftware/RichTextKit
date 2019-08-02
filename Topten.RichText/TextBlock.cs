@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Topten.RichText
 {
+    /// <summary>
+    /// Represents a block of formatted, laid out and measurable text
+    /// </summary>
     public class TextBlock
     {
         /// <summary>
@@ -793,6 +796,7 @@ namespace Topten.RichText
         /// <summary>
         /// Adds a run of directional text
         /// </summary>
+        /// <param name="styledRun">The styled run the directional run was created from</param>
         /// <param name="start">Index of the first code point _codePoints buffer</param>
         /// <param name="length">Number of code points in this run</param>
         /// <param name="direction">The direction of the text</param>
@@ -820,6 +824,7 @@ namespace Topten.RichText
         /// <summary>
         /// Adds a run of single font text
         /// </summary>
+        /// <param name="styledRun">The styled run the directional run was created from</param>
         /// <param name="start">Index of the first code point _codePoints buffer</param>
         /// <param name="length">Number of code points in this run</param>
         /// <param name="direction">The direction of the text</param>
@@ -1119,9 +1124,8 @@ namespace Topten.RichText
         /// <summary>
         /// Layout a line (LTR edition)
         /// </summary>
-        /// <param name="line"></param>
-        /// <param name="xAdjust"></param>
-        /// <returns></returns>
+        /// <param name="line">The line to be laid out</param>
+        /// <returns>A final x-adjustment to be applied to the line's font runs</returns>
         private float LayoutLineLTR(TextLine line)
         {
             float x = 0;
@@ -1165,6 +1169,11 @@ namespace Topten.RichText
             return 0;
         }
 
+        /// <summary>
+        /// Layout a line (RTL edition)
+        /// </summary>
+        /// <param name="line">The line to be laid out</param>
+        /// <returns>A final x-adjustment to be applied to the line's font runs</returns>
         private float LayoutLineRTL(TextLine line)
         {
             float x = 0;
@@ -1213,6 +1222,11 @@ namespace Topten.RichText
             return totalWidth;
         }
 
+        /// <summary>
+        /// Layout a line (MS Word RTL edition)
+        /// </summary>
+        /// <param name="line">The line to be laid out</param>
+        /// <returns>A final x-adjustment to be applied to the line's font runs</returns>
         private float LayoutLineRTLWordStyle(TextLine line)
         {
             float xPos = 0;
