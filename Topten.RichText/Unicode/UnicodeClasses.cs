@@ -3,7 +3,7 @@
     /// <summary>
     /// Helper for looking up unicode character class information
     /// </summary>
-    static class UnicodeClasses
+    internal static class UnicodeClasses
     {
         static UnicodeClasses()
         {
