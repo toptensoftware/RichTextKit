@@ -1,0 +1,13 @@
+<Project>
+  <Import Project="version.props" />
+  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateFullPaths>True</GenerateFullPaths>
+    <LangVersion>latest</LangVersion>
+    <OutputPath>..\Build\$(Configuration)\$(MSBuildProjectName)</OutputPath>
+    <IntermediateOutputPath>..\Build\$(Configuration)\$(MSBuildProjectName)\$(TargetFramework)\obj</IntermediateOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\version.cs" Link="version.cs" />
+  </ItemGroup>
+</Project>
