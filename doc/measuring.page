@@ -1,8 +1,19 @@
 ---
-title: Measuring Text
+title: "Measuring Text"
+isMarkdown: false
 ---
-
-# Measuring Text
-
-TODO!
+<h1 id="measuring-text">Measuring Text</h1>
+<p>The <code>TextBlock</code> class provides various measurements of its contained text.</p>
+<ul>
+<li><a href="./ref/Topten.RichTextKit.TextBlock.MeasuredWidth">Topten.RichTextKit.TextBlock.MeasuredWidth</a></li>
+<li><a href="./ref/Topten.RichTextKit.TextBlock.MeasuredHeight">Topten.RichTextKit.TextBlock.MeasuredHeight</a></li>
+<li><a href="./ref/Topten.RichTextKit.TextBlock.MeasuredPadding">Topten.RichTextKit.TextBlock.MeasuredPadding</a></li>
+<li><a href="./ref/Topten.RichTextKit.TextBlock.MaxOverhang">Topten.RichTextKit.TextBlock.MaxOverhang</a></li>
+<li><a href="./ref/Topten.RichTextKit.TextBlock.MeasuredOverhang">Topten.RichTextKit.TextBlock.MeasuredOverhang</a></li>
+</ul>
+<h2 id="going-deeper">Going Deeper</h2>
+<p>In addition to these basic measurements you can also inspect the text block's
+<a href="./ref/Topten.RichTextKit.TextBlock.Lines">Lines</a> collection and each line's
+<a href="ref/Topten.RichTextKit.TextBlock.FontRuns">FontRuns</a> collection to get detailed
+information about the final layout of each line and font run.</p>
 

@@ -19,11 +19,19 @@ import: "../.common.page"
 
 
 
-<p>Set the left/right/center alignment of text in this paragraph</p>
+<p>Sets the left, right or center alignment of the text block.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public TextAlignment Alignment { get; set; }</code></pre>
 
+<h2 id="remarks">Remarks</h2><p>Set this property to <a href="./../ref/Topten.RichTextKit.TextAlignment#Topten.RichTextKit-TextAlignment-Auto">TextAlignment.Auto</a> to align
+the paragraph according to the <a href="./../ref/Topten.RichTextKit.TextBlock.BaseDirection">BaseDirection</a>.</p>
+<ul>
+<li>If the <a href="./../ref/Topten.RichTextKit.TextBlock.MaxWidth">MaxWidth</a> property has been set this will
+be used for alignment calculations.</li>
+<li>If the <a href="./../ref/Topten.RichTextKit.TextBlock.MaxWidth">MaxWidth</a> property has not been set, the
+width of the longest line will be used.</li>
+</ul>
 
 <h2 id="property-type">Property Type</h2>    <table class="name-description">
         <tr>

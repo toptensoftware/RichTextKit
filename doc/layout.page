@@ -1,0 +1,14 @@
+---
+title: "Controlling Layout"
+isMarkdown: false
+---
+<h1 id="controlling-layout">Controlling Layout</h1>
+<p>The following  properties can be used to control the layout of a text block:</p>
+<ul>
+<li><a href="./ref/Topten.RichTextKit.TextBlock.MaxWidth">Topten.RichTextKit.TextBlock.MaxWidth</a></li>
+<li><a href="./ref/Topten.RichTextKit.TextBlock.MaxHeight">Topten.RichTextKit.TextBlock.MaxHeight</a></li>
+<li><a href="./ref/Topten.RichTextKit.TextBlock.MaxLines">Topten.RichTextKit.TextBlock.MaxLines</a></li>
+<li><a href="./ref/Topten.RichTextKit.TextBlock.Alignment">Topten.RichTextKit.TextBlock.Alignment</a></li>
+<li><a href="./ref/Topten.RichTextKit.TextBlock.BaseDirection">Topten.RichTextKit.TextBlock.BaseDirection</a></li>
+</ul>
+

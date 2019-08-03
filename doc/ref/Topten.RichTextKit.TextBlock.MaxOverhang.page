@@ -1,0 +1,47 @@
+---
+title: "TextBlock.MaxOverhang"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 data-nav-secondary-text="Definition" id="definition">TextBlock.MaxOverhang Property</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.TextBlock">TextBlock</a><br />
+                        </small>
+</p>
+
+
+
+
+<p>Returns the maximum possible overhang based on the fonts used in this text block</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public SkiaSharp.SKRect MaxOverhang { get; }</code></pre>
+
+<h2 id="remarks">Remarks</h2><p>Some font's can overhang the left and right margins.  eg: a lowercase 'j' at
+the start of a line will often overhang to the left of the left margin.</p>
+<p>This property returns the maximum overhang in each direction based on the fonts
+used, but not the actual text or final layout.  This can be useful to get a
+consistent maximum possible overhang, although the returned value is often
+excessive (depending on the font).</p>
+<p>Currently only the left overhang is calculated.</p>
+<p>The return rectangle describes overhang amounts for each edge - not rectangle
+co-ordinates.</p>
+
+<h2 id="property-type">Property Type</h2>    <table class="name-description">
+        <tr>
+            <td>SkiaSharp.SKRect</td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+

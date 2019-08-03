@@ -21,8 +21,12 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// The width of available space for layout.  Set to null to disable line wrapping
+        /// The max width property sets the maximum width of a line, after which 
+        /// the line will be wrapped onto the next line.
         /// </summary>
+        /// <remarks>
+        /// This property can be set to null, in which case lines won't be wrapped.
+        /// </remarks>
         public float? MaxWidth
         {
             get => _maxWidth;
@@ -39,8 +43,14 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// The height of available space for layout (set to null to disable ellipsis cropping)
+        /// The maximum height of the TextBlock after which lines will be 
+        /// truncated and the final line will be appended with an 
+        /// ellipsis (`...`) character.
         /// </summary>
+        /// <remarks>
+        /// This property can be set to null, in which the vertical height of the text block
+        /// won't be capped.
+        /// </remarks>
         public float? MaxHeight
         {
             get => _maxHeight;
@@ -58,8 +68,14 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// The maximum number of allowed lines (set to null to disable ellipsis cropping)
+        /// The maximum number of lines after which lines will be 
+        /// truncated and the final line will be appended with an 
+        /// ellipsis (`...`) character.
         /// </summary>
+        /// <remarks>
+        /// This property can be set to null, in which the vertical height of 
+        /// the text block won't be capped.
+        /// </remarks>
         public int? MaxLines
         {
             get => _maxLinesResolved;
@@ -77,8 +93,17 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// Set the left/right/center alignment of text in this paragraph
+        /// Sets the left, right or center alignment of the text block.
         /// </summary>
+        /// <remarks>
+        /// Set this property to <see cref="TextAlignment.Auto"/> to align
+        /// the paragraph according to the <see cref="BaseDirection"/>.
+        /// 
+        /// * If the <see cref="MaxWidth"/> property has been set this will 
+        ///   be used for alignment calculations.  
+        /// * If the <see cref="MaxWidth"/> property has not been set, the 
+        ///   width of the longest line will be used.
+        /// </remarks>
         public TextAlignment Alignment
         {
             get => _textAlignment;
@@ -93,7 +118,8 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// The base directionality (whether text is laid out left to right, or right to left)
+        /// The base directionality of this text block (whether text is laid out 
+        /// left to right, or right to left)
         /// </summary>
         public TextDirection BaseDirection
         {
@@ -335,7 +361,7 @@ namespace Topten.RichTextKit
         }
     
         /// <summary>
-        /// Get the measured height of the text
+        /// The total height of all lines.
         /// </summary>
         public float MeasuredHeight
         {
@@ -347,8 +373,11 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// Get the measured width of the text
+        /// The width of the widest line of text.
         /// </summary>
+        /// <remarks>
+        /// The returned width does not include any overhang.
+        /// </remarks>
         public float MeasuredWidth
         {
             get
@@ -359,14 +388,17 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// Gets the measured padding around the text
+        /// Gets the size of any unused space around the text.
         /// </summary>
         /// <remarks>
-        /// This property returns any padding (ie: unused space)
-        /// around the text within the bounds of MaxWidth and/or MaxHeight
+        /// If MaxWidth is not set, the left and right padding will always be zero.
         /// 
-        /// The returned rectangle represents left/right padding 
-        /// amounts, not rectangle coordinates.
+        /// This property also returns a bottom padding amount if MaxHeight is set.
+        /// 
+        /// The returned top padding is always zero.
+        /// 
+        /// The return rectangle describes padding amounts for each edge - not 
+        /// rectangle co-ordinates.
         /// </remarks>
         public SKRect MeasuredPadding
         {
@@ -409,14 +441,21 @@ namespace Topten.RichTextKit
 
 
         /// <summary>
-        /// Gets the possible overhang in each direction based on the 
-        /// fonts used in the supplied text.
+        /// Returns the maximum possible overhang based on the fonts used in this text block
         /// </summary>
         /// <remarks>
-        /// Currently this method only returns left margin overhang.
+        /// Some font's can overhang the left and right margins.  eg: a lowercase 'j' at 
+        /// the start of a line will often overhang to the left of the left margin.
         /// 
-        /// The returned rectangle represents overhang amounts 
-        /// not rectangle coordinates.
+        /// This property returns the maximum overhang in each direction based on the fonts 
+        /// used, but not the actual text or final layout.  This can be useful to get a 
+        /// consistent maximum possible overhang, although the returned value is often 
+        /// excessive (depending on the font).
+        /// 
+        /// Currently only the left overhang is calculated.
+        /// 
+        /// The return rectangle describes overhang amounts for each edge - not rectangle 
+        /// co-ordinates.
         /// </remarks>
         public SKRect MaxOverhang
         {
@@ -432,10 +471,10 @@ namespace Topten.RichTextKit
         /// fonts used, and the supplied text.
         /// </summary>
         /// <remarks>
-        /// Currently this method only returns left margin overhang.
+        /// Currently only the left overhang is calculated.
         /// 
-        /// The returned rectangle represents overhang amounts 
-        /// not rectangle coordinates.
+        /// The return rectangle describes overhang amounts for each edge - not 
+        /// rectangle co-ordinates.
         /// </remarks>
         public SKRect MeasuredOverhang
         {

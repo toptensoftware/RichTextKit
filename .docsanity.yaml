@@ -44,24 +44,24 @@ toc:
   - text: Guides
     href: .
     subItems:
-      - text: Introduction
+      - text: Overview
         href: .
-      - text: Getting Started
-        href: gettingStarted
-      - text: Creating a TextBlock
-        href: createTextBlock
+      - text: Installation
+        href: install
+      - text: Basic Concepts
+        href: basics
+      - text: Creating a Text Block
+        href: textBlock
+      - text: Controlling Layout
+        href: layout
       - text: Rendering Text
         href: rendering
       - text: Measuring Text
         href: measuring
-      - text: Bidirectional Text
-        href: bidi
-      - text: Text Limits
-        href: limits
       - text: Hit Testing
         href: hittesting
-      - text: Styles
-        href: styles
+      - text: Caret Information
+        href: caret
       - text: License
         href: license
 

@@ -15,7 +15,7 @@ import: "../.common.page"
 </p>
 
 
-<p>Useful information for cursor calculations</p>
+<p>Useful information for caret calculations</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public struct CaretInfo</code></pre>
@@ -60,12 +60,14 @@ import: "../.common.page"
     <table class="name-description">
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.CaretInfo.CaretRectangle">CaretRectangle</a></td>
-                <td><p>Get the recommended rectangle to draw a caret.</p>
+                <td><p>A rectangle describing where the caret should be drawn, relative to the top-left
+corner of the text block. The caret should be drawn from the returned rectangle's
+top-right to bottom-left.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.CaretInfo.CaretXCoord">CaretXCoord</a></td>
-                <td><p>The X-coordinate where the cursor should be displayed for this code point</p>
+                <td><p>The X-coordinate where the caret should be displayed for this code point</p>
 </td>
             </tr>
             <tr>

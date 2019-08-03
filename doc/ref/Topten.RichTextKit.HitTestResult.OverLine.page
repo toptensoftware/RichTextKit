@@ -19,11 +19,15 @@ import: "../.common.page"
 
 
 
-<p>The line number of the hit test, or -1 if not on any line</p>
+<p>The zero based index of the line number the y-coordinate is directly
+over, or -1 if the y-coordinate is above the first line, or below the
+last line.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public int OverLine;</code></pre>
 
+<h2 id="remarks">Remarks</h2><p>The x-coordinate isn't used in calculating which line the point is over
+and the left/right limits aren't checked.</p>
 
 <h2 id="field-type">Field Type</h2>    <table class="name-description">
         <tr>

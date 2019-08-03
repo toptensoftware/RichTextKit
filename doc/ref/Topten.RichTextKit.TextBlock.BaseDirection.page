@@ -19,7 +19,8 @@ import: "../.common.page"
 
 
 
-<p>The base directionality (whether text is laid out left to right, or right to left)</p>
+<p>The base directionality of this text block (whether text is laid out
+left to right, or right to left)</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public TextDirection BaseDirection { get; set; }</code></pre>

@@ -1,0 +1,64 @@
+---
+title: "Utf32Buffer.Clear"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">Utf32Buffer.Clear Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.Utf32Buffer">Utf32Buffer</a><br />
+                        </small>
+</p>
+
+
+
+
+
+    <h2 id="overloads">Overloads</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="#Topten.RichTextKit.Utils-Utf32Buffer.Clear-">Clear()</a></td>
+                <td><p>Clear this text buffer</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="#Topten.RichTextKit.Utils-Buffer`1.Clear-">Clear()</a></td>
+                <td><p>Clear the buffer (keep internal allocated memory)</p>
+</td>
+            </tr>
+    </table>
+
+
+    <h2 id="Topten.RichTextKit.Utils-Utf32Buffer.Clear-">Clear()</h2>
+
+<p>Clear this text buffer</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void Clear();</code></pre>
+
+
+
+
+
+
+    <h2 id="Topten.RichTextKit.Utils-Buffer`1.Clear-">Clear()</h2>
+
+<p>Clear the buffer (keep internal allocated memory)</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void Clear();</code></pre>
+
+
+
+
+
+
+
+
+

@@ -19,15 +19,24 @@ import: "../.common.page"
 
 
 
-<p>Get the recommended rectangle to draw a caret.</p>
+<p>A rectangle describing where the caret should be drawn, relative to the top-left
+corner of the text block. The caret should be drawn from the returned rectangle's
+top-right to bottom-left.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public SkiaSharp.SKRect CaretRectangle { get; }</code></pre>
 
 <h2 id="remarks">Remarks</h2><p>This will be based on the <em>previous</em> character on this line (or the same character
-if this is first character in the line). The caret should be drawn as a line from
-the rectangle's top-right to bottom-left.  Usually the rectangle will be zero width
-(ie: a vertical line), except when over italic text in which case it will be slanted.</p>
+if this is first character in the line).</p>
+<p>Usually this will be a zero-width rectangle describing the x, top and bottom
+coordinates of where the caret should be drawn.  The width of the drawn caret
+isn't provided and should be determined by the client.</p>
+<p>When the caret is immediately following an italic character, the returned
+rectangle will be sloped to the right and should be drawn from the top-right
+coordinate to the bottom-left coordinate.</p>
+<p>If you don't want to draw a sloped caret for italics, use the top and bottom
+coordinates of the returned rectangle and get the x-coordinate from the
+<a href="./../ref/Topten.RichTextKit.CaretInfo.CaretXCoord">CaretXCoord</a> property.</p>
 
 <h2 id="property-type">Property Type</h2>    <table class="name-description">
         <tr>

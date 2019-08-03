@@ -19,11 +19,13 @@ import: "../.common.page"
 
 
 
-<p>The width of available space for layout.  Set to null to disable line wrapping</p>
+<p>The max width property sets the maximum width of a line, after which
+the line will be wrapped onto the next line.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public Nullable&lt;float&gt; MaxWidth { get; set; }</code></pre>
 
+<h2 id="remarks">Remarks</h2><p>This property can be set to null, in which case lines won't be wrapped.</p>
 
 <h2 id="property-type">Property Type</h2>    <table class="name-description">
         <tr>

@@ -41,13 +41,25 @@ namespace Topten.RichTextKit
         public float CaretXCoord => FontRun.GetXCoordOfCodePointIndex(CodePointIndex);
 
         /// <summary>
-        /// Get the recommended rectangle to draw a caret.  
+        /// A rectangle describing where the caret should be drawn, relative to the top-left
+        /// corner of the text block. The caret should be drawn from the returned rectangle's
+        /// top-right to bottom-left.
         /// </summary>
         /// <remarks>
         /// This will be based on the *previous* character on this line (or the same character 
-        /// if this is first character in the line). The caret should be drawn as a line from 
-        /// the rectangle's top-right to bottom-left.  Usually the rectangle will be zero width
-        /// (ie: a vertical line), except when over italic text in which case it will be slanted.
+        /// if this is first character in the line). 
+        /// 
+        /// Usually this will be a zero-width rectangle describing the x, top and bottom 
+        /// coordinates of where the caret should be drawn.  The width of the drawn caret
+        /// isn't provided and should be determined by the client.
+        /// 
+        /// When the caret is immediately following an italic character, the returned
+        /// rectangle will be sloped to the right and should be drawn from the top-right
+        /// coordinate to the bottom-left coordinate.  
+        /// 
+        /// If you don't want to draw a sloped caret for italics, use the top and bottom 
+        /// coordinates of the returned rectangle and get the x-coordinate from the 
+        /// <see cref="CaretXCoord"/> property.
         /// </remarks>
         public SKRect CaretRectangle
         {

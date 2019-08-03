@@ -1,0 +1,45 @@
+---
+title: "HitTestResult.ClosestCodePointIndex"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 data-nav-secondary-text="Definition" id="definition">HitTestResult.ClosestCodePointIndex Field</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.HitTestResult">HitTestResult</a><br />
+                        </small>
+</p>
+
+
+
+
+<p>The code point index of the first code point in the cluster that the
+point is closest to.</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public int ClosestCodePointIndex;</code></pre>
+
+<h2 id="remarks">Remarks</h2><p>If the point is over a cluster, the returned code point index will vary
+depending whether the point is in the left or right half of the cluster
+and the text direction of that cluster.</p>
+<p>This value represents the code point index that the caret should be moved to
+if the user clicked the mouse at this position.  To determine the co-ordinates
+and shape of the caret, see <a href="./../caret">Caret Information</a>.</p>
+
+<h2 id="field-type">Field Type</h2>    <table class="name-description">
+        <tr>
+            <td><a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+

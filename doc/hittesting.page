@@ -1,7 +1,18 @@
 ---
-title: Hit Testing
+title: "Hit Testing"
+isMarkdown: false
 ---
+<h1 id="hit-testing">Hit Testing</h1>
+<p>Hit testing lets you find the line and character cluster that a coordinate
+is either over and/or closest to.  This can be used to be build a range
+selection feature and/or as part of a more comprehensive editor.</p>
+<pre class="language-csharp"><code class="language-csharp">// Hit test a mouse co-ordinate for example
+var htr = tb.HitTest(x, y);
+</code></pre>
+<p>The co-ordinates passed to the <a href="./ref/Topten.RichTextKit.TextBlock.HitTest">HitTest</a>
+method must be relative to the top-left corner of the text block so typically you'll
+need to adjust the co-ordinates by subtracting the top-left position of where you're
+displaying the text block.</p>
+<p>The returned <a href="./ref/Topten.RichTextKit.HitTestResult">HitTestResult</a> structure describes the line
+and code point cluster the point is either directly over and/or closest to.</p>
 
-# Hit Testing
-
-TODO!

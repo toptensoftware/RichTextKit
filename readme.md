@@ -1,4 +1,4 @@
-![Banner](./Artwork/banner.png)
+![Banner](./Artwork/banner@2x.png)
 
 # RichTextKit
 

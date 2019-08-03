@@ -1,0 +1,38 @@
+---
+title: "Slice&lt;T&gt;.Clear"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">Slice&lt;T&gt;.Clear Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Clear the entire slice content</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void Clear();</code></pre>
+
+
+
+
+
+
+
+
+

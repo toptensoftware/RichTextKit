@@ -97,7 +97,7 @@ import: "../.common.page"
 </td>
             </tr>
             <tr>
-                <td><a href="./../ref/Topten.RichTextKit.FontRun.StyledRun">StyledRun</a></td>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.StyleRun">StyleRun</a></td>
                 <td><p>The user run this typeface run was derived from</p>
 </td>
             </tr>

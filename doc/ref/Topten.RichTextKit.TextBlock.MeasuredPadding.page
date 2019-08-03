@@ -1,0 +1,43 @@
+---
+title: "TextBlock.MeasuredPadding"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 data-nav-secondary-text="Definition" id="definition">TextBlock.MeasuredPadding Property</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.TextBlock">TextBlock</a><br />
+                        </small>
+</p>
+
+
+
+
+<p>Gets the size of any unused space around the text.</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public SkiaSharp.SKRect MeasuredPadding { get; }</code></pre>
+
+<h2 id="remarks">Remarks</h2><p>If MaxWidth is not set, the left and right padding will always be zero.</p>
+<p>This property also returns a bottom padding amount if MaxHeight is set.</p>
+<p>The returned top padding is always zero.</p>
+<p>The return rectangle describes padding amounts for each edge - not
+rectangle co-ordinates.</p>
+
+<h2 id="property-type">Property Type</h2>    <table class="name-description">
+        <tr>
+            <td>SkiaSharp.SKRect</td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+
