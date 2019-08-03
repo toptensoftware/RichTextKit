@@ -181,16 +181,16 @@ namespace SandboxDriver
                     IsStroke = false,
                 })
                 {
-                    var rect = new SKRect(margin + tle.MeasuredInset, margin, margin + tle.MeasureWidth + tle.MeasuredInset, margin + tle.MeasureHeight);
+                    var rect = new SKRect(margin + tle.MeasuredPadding.Left, margin, margin + tle.MeasuredWidth + tle.MeasuredPadding.Left, margin + tle.MeasuredHeight);
                     canvas.DrawRect(rect, paint);
                 }
             }
 
-            if (tle.RequiredLeftMargin > 0)
+            if (tle.MeasuredOverhang.Left > 0)
             {
                 using (var paint = new SKPaint() { Color = new SKColor(0xFFf0f0f0), StrokeWidth = 1 })
                 {
-                    canvas.DrawLine(new SKPoint(margin - tle.RequiredLeftMargin, 0), new SKPoint(margin - tle.RequiredLeftMargin, (float)canvasHeight), paint);
+                    canvas.DrawLine(new SKPoint(margin - tle.MeasuredOverhang.Left, 0), new SKPoint(margin - tle.MeasuredOverhang.Left, (float)canvasHeight), paint);
                 }
             }
 

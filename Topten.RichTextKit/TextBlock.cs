@@ -337,7 +337,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Get the measured height of the text
         /// </summary>
-        public float MeasureHeight
+        public float MeasuredHeight
         {
             get
             {
@@ -347,9 +347,9 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// Get the measured width of the text (excluding required left margin)
+        /// Get the measured width of the text
         /// </summary>
-        public float MeasureWidth
+        public float MeasuredWidth
         {
             get
             {
@@ -359,50 +359,85 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// Returns the inset amount from the left hand side
-        /// to any actual drawn content when text is right or center aligned.
+        /// Gets the measured padding around the text
         /// </summary>
-        public float MeasuredInset
+        /// <remarks>
+        /// This property returns any padding (ie: unused space)
+        /// around the text within the bounds of MaxWidth and/or MaxHeight
+        /// 
+        /// The returned rectangle represents left/right padding 
+        /// amounts, not rectangle coordinates.
+        /// </remarks>
+        public SKRect MeasuredPadding
         {
             get
             {
+                var r = new SKRect();
+
+                // Bottom padding?
+                if (_maxHeight.HasValue)
+                {
+                    r.Bottom = _maxHeight.Value - _measuredHeight;
+                }
+
                 if (!_maxWidth.HasValue)
-                    return 0;
+                    return r;
 
                 Layout();
 
                 switch (ResolveTextAlignment())
                 {
                     case TextAlignment.Left:
-                        return 0;
+                        r.Left = 0;
+                        r.Right = _maxWidthResolved - _measuredWidth;
+                        return r;
 
                     case TextAlignment.Right:
-                        return _maxWidthResolved - _measuredWidth;
+                        r.Left = _maxWidthResolved - _measuredWidth;
+                        r.Right = 0;
+                        return r;
 
                     case TextAlignment.Center:
-                        return (_maxWidthResolved - _measuredWidth) / 2;
+                        r.Left = (_maxWidthResolved - _measuredWidth) / 2;
+                        r.Right = (_maxWidthResolved - _measuredWidth) / 2;
+                        return r;
                 }
 
                 throw new InvalidOperationException();
             }
         }
 
+
         /// <summary>
-        /// The minimum required left margin to ensure that underhangin glyphs aren't cropped
+        /// Gets the possible overhang in each direction based on the 
+        /// fonts used in the supplied text.
         /// </summary>
-        public float MinLeftMargin
+        /// <remarks>
+        /// Currently this method only returns left margin overhang.
+        /// 
+        /// The returned rectangle represents overhang amounts 
+        /// not rectangle coordinates.
+        /// </remarks>
+        public SKRect MaxOverhang
         {
             get
             {
                 Layout();
-                return _minLeftMargin;
+                return new SKRect(_minLeftMargin, 0, 0, 0);
             }
         }
 
         /// <summary>
-        /// Get the required left margin - how much the text actually overhangs the left margin
+        /// Gets the actual measured overhang in each direction based on the 
+        /// fonts used, and the supplied text.
         /// </summary>
-        public float RequiredLeftMargin
+        /// <remarks>
+        /// Currently this method only returns left margin overhang.
+        /// 
+        /// The returned rectangle represents overhang amounts 
+        /// not rectangle coordinates.
+        /// </remarks>
+        public SKRect MeasuredOverhang
         {
             get
             {
@@ -423,7 +458,7 @@ namespace Topten.RichTextKit
                     }
                     _requiredLeftMargin = required;
                 }
-                return _requiredLeftMargin.Value;
+                return new SKRect(_requiredLeftMargin.Value, 0, 0, 0);
             }
         }
 
