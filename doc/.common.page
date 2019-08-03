@@ -1,10 +1,33 @@
 ---
-projectTitle: Topten.RichTextKit
+projectTitle: RichTextKit
 projectSubTitle: v0.1
 projectUrlPrefix: /richtextkit/
 prismLanguages:
   - csharp
 navTree:
+  - text: Guides
+    href: .
+    subItems:
+      - text: Introduction
+        href: .
+      - text: Getting Started
+        href: gettingStarted
+      - text: Creating a TextBlock
+        href: createTextBlock
+      - text: Rendering Text
+        href: rendering
+      - text: Measuring Text
+        href: measuring
+      - text: Bidirectional Text
+        href: bidi
+      - text: Text Limits
+        href: limits
+      - text: Hit Testing
+        href: hittesting
+      - text: Styles
+        href: styles
+      - text: License
+        href: license
   - text: Topten.RichTextKit
     href: ./ref/Topten.RichTextKit
     subItems:
