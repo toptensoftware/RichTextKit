@@ -23,12 +23,12 @@ namespace Topten.RichTextKit
         /// The code point index of the cluster the point is over, or -1 if not over
         /// any cluster
         /// </summary>
-        public int OverCluster;
+        public int OverCodePointIndex;
 
         /// <summary>
         /// The code point index where the caret should be placed if the
         /// user was to click at that location
         /// </summary>
-        public int ClosestCluster;
+        public int ClosestCodePointIndex;
     }
 }

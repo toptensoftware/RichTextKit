@@ -146,7 +146,7 @@ namespace Topten.RichTextKit
             int closestCodePointIndex = -1;
 
             // Special handling for clicking after a soft line break in which case
-            // the cursor should be positions before the new line, not after it (as this
+            // the caret should be positioned before the new line, not after it (as this
             // would cause the cursor to appear on the next line).
             if (Runs.Count > 0)
             {
@@ -158,7 +158,7 @@ namespace Topten.RichTextKit
                     {
                         if (lastRun.CodePoints.Length > 0 && lastRun.CodePoints[lastRun.CodePoints.Length - 1] == '\n')
                         {
-                            htr.ClosestCluster = lastRun.End - 1;
+                            htr.ClosestCodePointIndex = lastRun.End - 1;
                             return;
                         }
                     }
@@ -232,23 +232,23 @@ namespace Topten.RichTextKit
                         if (x >= xcoord1 && x < xcoord2)
                         {
                             // Store this as the cluster the point is over
-                            htr.OverCluster = codePointIndex;
+                            htr.OverCodePointIndex = codePointIndex;
 
                             // Don't move to the rhs (or lhs) of a line break
                             if (r.CodePoints[codePointIndex - r.Start] == '\n')
                             {
-                                htr.ClosestCluster = codePointIndex;
+                                htr.ClosestCodePointIndex = codePointIndex;
                             }
                             else
                             {
                                 // Work out if position is closer to the left or right side of the cluster
                                 if (x < (xcoord1 + xcoord2) / 2)
                                 {
-                                    htr.ClosestCluster = r.Direction == TextDirection.LTR ? codePointIndex : codePointIndexOther;
+                                    htr.ClosestCodePointIndex = r.Direction == TextDirection.LTR ? codePointIndex : codePointIndexOther;
                                 }
                                 else
                                 {
-                                    htr.ClosestCluster = r.Direction == TextDirection.LTR ? codePointIndexOther : codePointIndex;
+                                    htr.ClosestCodePointIndex = r.Direction == TextDirection.LTR ? codePointIndexOther : codePointIndex;
                                 }
                             }
                             return;
@@ -261,9 +261,9 @@ namespace Topten.RichTextKit
             }
 
             // Store closest character
-            htr.ClosestCluster = closestCodePointIndex;
+            htr.ClosestCodePointIndex = closestCodePointIndex;
 
-            // Helper for updating closest cursor position
+            // Helper for updating closest caret position
             void updateClosest(float xPosition, int codePointIndex, TextDirection dir)
             {
                 if (closestCodePointIndex == -1 || Math.Abs(xPosition - x) < Math.Abs(closestXPosition - x))

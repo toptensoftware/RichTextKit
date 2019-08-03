@@ -6,7 +6,7 @@ using System.Text;
 namespace Topten.RichTextKit
 {
     /// <summary>
-    /// Useful information for cursor calculations
+    /// Useful information for caret calculations
     /// </summary>
     public struct CaretInfo
     {
@@ -36,7 +36,7 @@ namespace Topten.RichTextKit
         public FontRun FontRun;
 
         /// <summary>
-        /// The X-coordinate where the cursor should be displayed for this code point
+        /// The X-coordinate where the caret should be displayed for this code point
         /// </summary>
         public float CaretXCoord => FontRun.GetXCoordOfCodePointIndex(CodePointIndex);
 

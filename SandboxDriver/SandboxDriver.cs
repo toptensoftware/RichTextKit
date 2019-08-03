@@ -164,13 +164,13 @@ namespace SandboxDriver
             if (_showHitTest)
             {
                 htr = tle.HitTest(_hitTestX - margin, _hitTestY - margin);
-                if (htr.Value.OverCluster >= 0)
+                if (htr.Value.OverCodePointIndex >= 0)
                 {
-                    options.SelectionStart = htr.Value.OverCluster;
-                    options.SelectionEnd = tle.CursorIndicies[tle.LookupCursorIndex(htr.Value.OverCluster) + 1];
+                    options.SelectionStart = htr.Value.OverCodePointIndex;
+                    options.SelectionEnd = tle.CaretIndicies[tle.LookupCaretIndex(htr.Value.OverCodePointIndex) + 1];
                 }
 
-                ci = tle.GetCursorInfo(htr.Value.ClosestCluster);
+                ci = tle.GetCaretInfo(htr.Value.ClosestCodePointIndex);
             }
 
             if (ShowMeasuredSize)
@@ -219,7 +219,7 @@ namespace SandboxDriver
                 TextSize = 12,
             });
 
-            state = $"Selection: {options.SelectionStart}-{options.SelectionEnd} Closest: {(htr.HasValue ? htr.Value.ClosestCluster.ToString() : "-")}";
+            state = $"Selection: {options.SelectionStart}-{options.SelectionEnd} Closest: {(htr.HasValue ? htr.Value.ClosestCodePointIndex.ToString() : "-")}";
             canvas.DrawText(state, margin, 40, new SKPaint()
             {
                 Typeface = SKTypeface.FromFamilyName("Arial"),

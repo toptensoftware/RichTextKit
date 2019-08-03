@@ -215,7 +215,7 @@ namespace Topten.RichTextKit
             // Reset layout state
             _fontRuns.Clear();
             _lines.Clear();
-            _cursorIndicies.Clear();
+            _caretIndicies.Clear();
             _measuredHeight = 0;
             _measuredWidth = 0;
             _minLeftMargin = 0;
@@ -441,7 +441,7 @@ namespace Topten.RichTextKit
 
             // Work out which line number we're over
             htr.OverLine = -1;
-            htr.OverCluster = -1;
+            htr.OverCodePointIndex = -1;
             for (int i = 0; i < _lines.Count; i++)
             {
                 var l = _lines[i];
@@ -475,73 +475,73 @@ namespace Topten.RichTextKit
 
             // If we're not over the line, we're also not over the character
             if (htr.OverLine < 0)
-                htr.OverCluster = -1;
+                htr.OverCodePointIndex = -1;
 
-            System.Diagnostics.Debug.Assert(htr.ClosestCluster >= 0);
+            System.Diagnostics.Debug.Assert(htr.ClosestCodePointIndex >= 0);
 
             return htr;
         }
 
 
-        // Build map of all cursor positions
-        void BuildCursorIndicies()
+        // Build map of all caret positions
+        void BuildCaretIndicies()
         {
             Layout();
-            if (_cursorIndicies.Count == 0)
+            if (_caretIndicies.Count == 0)
             {
                 foreach (var r in _lines.SelectMany(x => x.Runs))
                 {
                     for (int i = 0; i < r.Clusters.Length; i++)
                     {
-                        _cursorIndicies.Add(r.Clusters[i]);
+                        _caretIndicies.Add(r.Clusters[i]);
                     }
                 }
-                _cursorIndicies.Add(_codePoints.Length);
-                _cursorIndicies = _cursorIndicies.OrderBy(x => x).Distinct().ToList();
+                _caretIndicies.Add(_codePoints.Length);
+                _caretIndicies = _caretIndicies.OrderBy(x => x).Distinct().ToList();
             }
         }
 
         /// <summary>
-        /// Retrieves a list of all valid cursor positions
+        /// Retrieves a list of all valid caret positions
         /// </summary>
-        public IReadOnlyList<int> CursorIndicies
+        public IReadOnlyList<int> CaretIndicies
         {
             get
             {
-                BuildCursorIndicies();
-                return _cursorIndicies;
+                BuildCaretIndicies();
+                return _caretIndicies;
             }
         }
 
         /// <summary>
-        /// Given a code point index, find the index in the CursorIndicies
+        /// Given a code point index, find the index in the CaretIndicies
         /// </summary>
         /// <param name="codePointIndex">The code point index to lookup</param>
-        /// <returns>The index in the code point idnex in the CursorIndicies array</returns>
-        public int LookupCursorIndex(int codePointIndex)
+        /// <returns>The index in the code point idnex in the CaretIndicies array</returns>
+        public int LookupCaretIndex(int codePointIndex)
         {
-            BuildCursorIndicies();
-            int index = _cursorIndicies.BinarySearch(codePointIndex);
+            BuildCaretIndicies();
+            int index = _caretIndicies.BinarySearch(codePointIndex);
             if (index < 0)
                 index = ~index;
             return index;
         }
 
         /// <summary>
-        /// Calculates useful information for displaying a cursor
+        /// Calculates useful information for displaying a caret
         /// </summary>
-        /// <param name="codePointIndex">The code point index of the cursor</param>
-        /// <returns>A CursorInfo struct</returns>
-        public CaretInfo GetCursorInfo(int codePointIndex)
+        /// <param name="codePointIndex">The code point index of the caret</param>
+        /// <returns>A CaretInfo struct</returns>
+        public CaretInfo GetCaretInfo(int codePointIndex)
         {
-            // Look up the cursor index
-            int cpii = LookupCursorIndex(codePointIndex);
+            // Look up the caret index
+            int cpii = LookupCaretIndex(codePointIndex);
 
-            // Create cursor info
+            // Create caret info
             var ci = new CaretInfo();
-            ci.CodePointIndex = _cursorIndicies[cpii];
-            ci.NextCodePointIndex = cpii + 1 < _cursorIndicies.Count ? _cursorIndicies[cpii+1] : ci.CodePointIndex;
-            ci.PreviousCodePointIndex = cpii > 0 ? _cursorIndicies[cpii - 1] : 0;
+            ci.CodePointIndex = _caretIndicies[cpii];
+            ci.NextCodePointIndex = cpii + 1 < _caretIndicies.Count ? _caretIndicies[cpii+1] : ci.CodePointIndex;
+            ci.PreviousCodePointIndex = cpii > 0 ? _caretIndicies[cpii - 1] : 0;
 
             var frIndex = FindFontRunForCodePointIndex(codePointIndex);
 
@@ -707,9 +707,9 @@ namespace Topten.RichTextKit
         bool _useMSWordStyleRtlLayout = false;
 
         /// <summary>
-        /// Calculate cursor positions
+        /// Calculated valid caret indicies
         /// </summary>
-        List<int> _cursorIndicies = new List<int>();
+        List<int> _caretIndicies = new List<int>();
 
         /// <summary>
         /// Resolve the text alignment when set to Auto
