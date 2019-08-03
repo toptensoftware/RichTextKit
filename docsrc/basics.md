@@ -7,6 +7,7 @@ title: Basic Concepts
 The page describes some basic concepts that are important to understand
 when working with RichTextKit.
 
+
 ## Text Blocks
 
 RichTextKit primarily works with text blocks.  A text block represents
