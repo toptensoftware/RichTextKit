@@ -629,11 +629,6 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// The minimum required right margin to ensure overhanging glyphs aren't cropped
-        /// </summary>
-        public float MinRightMargin => 0;
-
-        /// <summary>
         /// Invalidate the layout
         /// </summary>
         void InvalidateLayout()
