@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Topten.RichTextKit
+namespace Topten.RichTextKit.Utils
 {
     /// <summary>
     /// Helpers for binary searching IReadOnlyList

@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Topten.RichTextKit.Utils;
 
 namespace Topten.RichTextKit
 {
     /// <summary>
     /// Represets a styled run of text as provided by the client
     /// </summary>
-    public class StyledRun
+    public class StyleRun
     {
         /// <summary>
         /// The owning text block

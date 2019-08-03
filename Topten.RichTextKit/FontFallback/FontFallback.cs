@@ -1,6 +1,7 @@
 ﻿using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using Topten.RichTextKit.Utils;
 
 namespace Topten.RichTextKit
 {

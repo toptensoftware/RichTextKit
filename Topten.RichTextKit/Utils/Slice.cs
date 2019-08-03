@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Topten.RichTextKit
+namespace Topten.RichTextKit.Utils
 {
     /// <summary>
     /// Represents a slice of an array
     /// </summary>
     /// <typeparam name="T">The array type</typeparam>
-    public struct Slice<T>
+    [DebuggerDisplay("Length = {Length}")]
+    public struct Slice<T> : IEnumerable<T>, System.Collections.IEnumerable
     {
         /// <summary>
         /// Constructs a new array slice covering the entire array
@@ -77,8 +79,13 @@ namespace Topten.RichTextKit
             }
         }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         T[] _array;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         int _start;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         int _length;
 
         /// <summary>
@@ -122,5 +129,15 @@ namespace Topten.RichTextKit
         /// Get the offset of this slice within the underlying array
         /// </summary>
         public int Start => _start;
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            return new ArraySliceEnumerator<T>(_array, _start, _length);
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return new ArraySliceEnumerator<T>(_array, _start, _length);
+        }
     }
 }

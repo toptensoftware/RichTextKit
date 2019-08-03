@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Topten.RichTextKit.Utils;
 
 
 // Ported from: https://github.com/foliojs/linebreak
@@ -8,7 +9,7 @@ namespace Topten.RichTextKit
     /// <summary>
     /// Implementation of the Unicode Line Break Algorithm
     /// </summary>
-    public class LineBreaker
+    internal class LineBreaker
     {
         /// <summary>
         /// Constructor

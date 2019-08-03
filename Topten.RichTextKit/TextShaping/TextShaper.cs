@@ -6,13 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Topten.RichTextKit.Utils;
 
 namespace Topten.RichTextKit
 {
     /// <summary>
     /// Helper class for shaping text
     /// </summary>
-    public class TextShaper : IDisposable
+    internal class TextShaper : IDisposable
     {
         /// <summary>
         /// Cache of shapers for typefaces

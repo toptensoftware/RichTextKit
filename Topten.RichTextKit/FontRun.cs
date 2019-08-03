@@ -1,6 +1,7 @@
 ﻿using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using Topten.RichTextKit.Utils;
 
 namespace Topten.RichTextKit
 {
@@ -17,7 +18,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// The user run this typeface run was derived from
         /// </summary>
-        public StyledRun StyledRun;
+        public StyleRun StyleRun;
 
         /// <summary>
         /// Get the code points of this run
@@ -304,7 +305,7 @@ namespace Topten.RichTextKit
             // Create the other run
             var newRun = new FontRun()
             {
-                StyledRun = this.StyledRun,
+                StyleRun = this.StyleRun,
                 CodePointBuffer = this.CodePointBuffer,
                 Direction = this.Direction,
                 Ascent = this.Ascent,
@@ -375,7 +376,7 @@ namespace Topten.RichTextKit
             // Create the other run
             var newRun = new FontRun()
             {
-                StyledRun = this.StyledRun,
+                StyleRun = this.StyleRun,
                 CodePointBuffer = this.CodePointBuffer,
                 Direction = this.Direction,
                 Ascent = this.Ascent,

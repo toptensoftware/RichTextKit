@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Topten.RichTextKit.Utils;
 
 namespace Topten.RichTextKit
 {
@@ -130,7 +131,7 @@ namespace Topten.RichTextKit
         {
             // Reset everything
             _codePoints.Clear();
-            _styledRuns.Clear();
+            _styleRuns.Clear();
             _fontRuns.Clear();
             _lines.Clear();
             InvalidateLayout();
@@ -141,7 +142,7 @@ namespace Topten.RichTextKit
         /// </summary>
         /// <param name="text">The text to add</param>
         /// <param name="style">The style of the text</param>
-        public StyledRun AddText(string text, IStyle style)
+        public StyleRun AddText(string text, IStyle style)
         {
             // Quit if redundant
             if (string.IsNullOrEmpty(text))
@@ -151,7 +152,7 @@ namespace Topten.RichTextKit
             var utf32 = _codePoints.Add(text);
 
             // Create a run
-            var run = new StyledRun()
+            var run = new StyleRun()
             {
                 TextBlock = this,
                 CodePointBuffer = _codePoints,
@@ -161,7 +162,7 @@ namespace Topten.RichTextKit
             };
 
             // Add run
-            _styledRuns.Add(run);
+            _styleRuns.Add(run);
 
             return run;
         }
@@ -171,7 +172,7 @@ namespace Topten.RichTextKit
         /// </summary>
         /// <param name="text">The text to add</param>
         /// <param name="style">The style of the text</param>
-        public StyledRun AddText(Slice<int> text, IStyle style)
+        public StyleRun AddText(Slice<int> text, IStyle style)
         {
             if (text.Length == 0)
                 return null;
@@ -180,7 +181,7 @@ namespace Topten.RichTextKit
             var utf32 = _codePoints.Add(text);
 
             // Create a run
-            var run = new StyledRun()
+            var run = new StyleRun()
             {
                 TextBlock = this,
                 CodePointBuffer = _codePoints,
@@ -190,7 +191,7 @@ namespace Topten.RichTextKit
             };
 
             // Add run
-            _styledRuns.Add(run);
+            _styleRuns.Add(run);
 
             return run;
         }
@@ -233,11 +234,11 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Get the text runs as added by AddText
         /// </summary>
-        public IReadOnlyList<StyledRun> StyledRuns
+        public IReadOnlyList<StyleRun> StyleRuns
         {
             get
             {
-                return _styledRuns;
+                return _styleRuns;
             }
         }
 
@@ -663,7 +664,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// A list of styled runs, as supplied by user
         /// </summary>
-        List<StyledRun> _styledRuns = new List<StyledRun>();
+        List<StyleRun> _styleRuns = new List<StyleRun>();
 
         /// <summary>
         /// A list of font runs, after splitting by directionality, user styles and font fallback
@@ -747,26 +748,26 @@ namespace Topten.RichTextKit
                 // Move to next bidi/style run
                 if (pos == bidiRuns[bidiRun].End)
                     bidiRun++;
-                if (pos == _styledRuns[styleRun].End)
+                if (pos == _styleRuns[styleRun].End)
                     styleRun++;
 
                 // Work out where this run ends
-                int nextPos = Math.Min(bidiRuns[bidiRun].End, _styledRuns[styleRun].End);
+                int nextPos = Math.Min(bidiRuns[bidiRun].End, _styleRuns[styleRun].End);
 
                 // Add the run
                 var dir = bidiRuns[bidiRun].Direction == Directionality.L ? TextDirection.LTR : TextDirection.RTL;
-                AddDirectionalRun(_styledRuns[styleRun], pos, nextPos - pos, dir, _styledRuns[styleRun].Style);
+                AddDirectionalRun(_styleRuns[styleRun], pos, nextPos - pos, dir, _styleRuns[styleRun].Style);
 
                 // Move to next position
                 pos = nextPos;
             }
 
             System.Diagnostics.Debug.Assert(bidiRun == bidiRuns.Count - 1);
-            System.Diagnostics.Debug.Assert(styleRun == _styledRuns.Count - 1);
+            System.Diagnostics.Debug.Assert(styleRun == _styleRuns.Count - 1);
 
             // Add the final run
             var dir2 = bidiRuns[bidiRun].Direction == Directionality.L ? TextDirection.LTR : TextDirection.RTL;
-            AddDirectionalRun(_styledRuns[_styledRuns.Count-1], pos, _codePoints.Length - pos, dir2, _styledRuns[styleRun].Style);
+            AddDirectionalRun(_styleRuns[_styleRuns.Count-1], pos, _codePoints.Length - pos, dir2, _styleRuns[styleRun].Style);
         }
 
         /// <summary>
@@ -796,12 +797,12 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Adds a run of directional text
         /// </summary>
-        /// <param name="styledRun">The styled run the directional run was created from</param>
+        /// <param name="styleRun">The styled run the directional run was created from</param>
         /// <param name="start">Index of the first code point _codePoints buffer</param>
         /// <param name="length">Number of code points in this run</param>
         /// <param name="direction">The direction of the text</param>
         /// <param name="style">The user supplied style for this run</param>
-        void AddDirectionalRun(StyledRun styledRun, int start, int length, TextDirection direction, IStyle style)
+        void AddDirectionalRun(StyleRun styleRun, int start, int length, TextDirection direction, IStyle style)
         {
             // Quit if redundant...
             if (length == 0)
@@ -817,38 +818,38 @@ namespace Topten.RichTextKit
             foreach (var fontRun in FontFallback.GetFontRuns(codePointsSlice, typeface))
             {
                 // Add this run
-                AddFontRun(styledRun, start + fontRun.Start, fontRun.Length, direction, style, fontRun.Typeface);
+                AddFontRun(styleRun, start + fontRun.Start, fontRun.Length, direction, style, fontRun.Typeface);
             }
         }
 
         /// <summary>
         /// Adds a run of single font text
         /// </summary>
-        /// <param name="styledRun">The styled run the directional run was created from</param>
+        /// <param name="styleRun">The styled run the directional run was created from</param>
         /// <param name="start">Index of the first code point _codePoints buffer</param>
         /// <param name="length">Number of code points in this run</param>
         /// <param name="direction">The direction of the text</param>
         /// <param name="style">The user supplied style for this run</param>
         /// <param name="typeface">The typeface of the run</param>
-        void AddFontRun(StyledRun styledRun, int start, int length, TextDirection direction, IStyle style, SKTypeface typeface)
+        void AddFontRun(StyleRun styleRun, int start, int length, TextDirection direction, IStyle style, SKTypeface typeface)
         {
             // Get code points slice
             var codePoints = _codePoints.SubSlice(start, length);
 
             // Add the font face run
-            _fontRuns.Add(CreateFontRun(styledRun, codePoints, direction, style, typeface));
+            _fontRuns.Add(CreateFontRun(styleRun, codePoints, direction, style, typeface));
         }
 
         /// <summary>
         /// Helper to create a font run
         /// </summary>
-        /// <param name="styledRun">The user styled run owning this font run</param>
+        /// <param name="styleRun">The user styled run owning this font run</param>
         /// <param name="codePoints">The code points of the run</param>
         /// <param name="direction">The run direction</param>
         /// <param name="style">The user supplied style for this run</param>
         /// <param name="typeface">The typeface of the run</param>
         /// <returns>A FontRun</returns>
-        FontRun CreateFontRun(StyledRun styledRun, Slice<int> codePoints, TextDirection direction, IStyle style, SKTypeface typeface)
+        FontRun CreateFontRun(StyleRun styleRun, Slice<int> codePoints, TextDirection direction, IStyle style, SKTypeface typeface)
         {
             // Shape the text
             var shaper = TextShaper.ForTypeface(typeface);
@@ -863,7 +864,7 @@ namespace Topten.RichTextKit
             // Create the run
             return new FontRun()
             {
-                StyledRun = styledRun,
+                StyleRun = styleRun,
                 CodePointBuffer = _codePoints,
                 Start = codePoints.Start,
                 Length = codePoints.Length,
@@ -1043,7 +1044,7 @@ namespace Topten.RichTextKit
                     if (fr.Direction != BaseDirection)
                     {
                         // Create a new font run over the same text span but using the base direction
-                        _fontRuns[i] = CreateFontRun(fr.StyledRun, fr.CodePoints, BaseDirection, fr.Style, fr.Typeface);
+                        _fontRuns[i] = CreateFontRun(fr.StyleRun, fr.CodePoints, BaseDirection, fr.Style, fr.Typeface);
                     }
                 }
 
@@ -1379,7 +1380,7 @@ namespace Topten.RichTextKit
             var fontRun = FontFallback.GetFontRuns(ellipsis.AsSlice(), typeface).Single();
 
             // Create the new run and mark is as a special run type for ellipsis
-            var fr = CreateFontRun(basedOn.StyledRun, ellipsis.SubSlice(fontRun.Start, fontRun.Length), BaseDirection, basedOn.Style, fontRun.Typeface);
+            var fr = CreateFontRun(basedOn.StyleRun, ellipsis.SubSlice(fontRun.Start, fontRun.Length), BaseDirection, basedOn.Style, fontRun.Typeface);
             fr.RunKind = FontRunKind.Ellipsis;
 
             // Done

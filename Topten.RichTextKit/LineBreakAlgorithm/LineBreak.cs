@@ -8,7 +8,7 @@ namespace Topten.RichTextKit
     /// Information about a potential line break position
     /// </summary>
     [DebuggerDisplay("{PositionMeasure}/{PositionWrap} @ {Required}")]
-    public class LineBreak
+    internal class LineBreak
     {
         /// <summary>
         /// Constructor

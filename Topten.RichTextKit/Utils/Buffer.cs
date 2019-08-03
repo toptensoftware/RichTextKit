@@ -1,17 +1,20 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Topten.RichTextKit
+namespace Topten.RichTextKit.Utils
 {
     /// <summary>
     /// A buffer of T
     /// </summary>
     /// <typeparam name="T">The buffer element type</typeparam>
-    public class Buffer<T>
+    [DebuggerDisplay("Length = {Length}")]
+    public class Buffer<T> : IEnumerable<T>, IEnumerable
     {
         /// <summary>
         /// Constructs a new buffer
@@ -25,11 +28,13 @@ namespace Topten.RichTextKit
         /// <summary>
         /// The data held by this buffer
         /// </summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         T[] _data;
 
         /// <summary>
         /// The used length of the buffer
         /// </summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         int _length;
 
         /// <summary>
@@ -154,6 +159,16 @@ namespace Topten.RichTextKit
         public Slice<T> AsSlice()
         {
             return SubSlice(0, _length);
+        }
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            return new ArraySliceEnumerator<T>(_data, 0, _length);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return new ArraySliceEnumerator<T>(_data, 0, _length);
         }
     }
 }
