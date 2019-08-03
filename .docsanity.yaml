@@ -15,8 +15,8 @@ importedMembers: false
 # Information about the project.  By default these will be taken
 # from the assembly information of the first assembly.  Uncomment
 # and update the following lines to override
-# project:
-#     name: MyProject
+project:
+    name: RichTextKit
 #     version: 1.9
 
 # The assemblies for which documentation should be generated, 
@@ -24,7 +24,7 @@ importedMembers: false
 assemblies:
   - ./Build/Release/Topten.RichTextKit/netcoreapp2.1/Topten.RichTextKit.dll
 
-# Namespaces to assumed when formatting fully qualified type names
+# Namespaces to be assumed when formatting fully qualified type names
 namespaces:
   - System
   - System.Collections.Generic
@@ -33,50 +33,39 @@ namespaces:
 # The template and content files to be processed/copied
 content:
   - src: LosAngeles
-#  - del: /index.cshtml
-#  - src: ./readme.md
-#    dst: /index.md
-#  - src: /path/to/your/logo.png
-#    dst: /static/
-#  - src: /path/to/your/icon.png
-#    dst: /static/
-#  - src: /path/to/your/license.md
-#    dst: /
-
-# Optional links to be shown in the header
-# headers:
-#   - text: Your Site
-#     href: http://www.yoursite.com
-
-# Optional links to be shown in the footer
-# footers:
-#   - text: GitHub
-#     href: http://github.com/yourcompany/yourproject
-#   - text: License
-#     href: /license.html
-
-# Optional logo to be shown in header
-# logo:
-#     image: /static/logo.png
-#     href: /index.html
-
-# Smaller logo to be shown in header
-# icon:
-#     image: /static/icon.png
-#     href: /index.html
+  - dst: /index.md
+  - src: ./docsrc/
+  - src: ./Artwork/banner@2x.png
+    dst: /Artwork/
+  
 
 # Optional entries to go at the top of the table of contents
-#toc:
-#  - text: Getting Started
-#    href: .
-#    subItems:
-#      - text: Introduction
-#        href: .
+toc:
+  - text: Guides
+    href: .
+    subItems:
+      - text: Introduction
+        href: .
+      - text: Getting Started
+        href: gettingStarted
+      - text: Creating a TextBlock
+        href: createTextBlock
+      - text: Rendering Text
+        href: rendering
+      - text: Measuring Text
+        href: measuring
+      - text: Bidirectional Text
+        href: bidi
+      - text: Text Limits
+        href: limits
+      - text: Hit Testing
+        href: hittesting
+      - text: Styles
+        href: styles
+      - text: License
+        href: license
 
-# Optional arbitary data that will be available to templates 
-# via the `Settings.Data` property
-# data:
-#     anything: you like can go here
 
+# Optional data to pass to template
 data:
   projectUrlPrefix: "/richtextkit/"

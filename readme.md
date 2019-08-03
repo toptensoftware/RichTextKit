@@ -16,6 +16,7 @@ RichTextKit is a rich-text layout, measurement and rendering library for SkiaSha
 * Truncate with ellipsis support
 * Text measurement support
 * Hit testing and caret position information
+* Ability to paint selection range highlight
 * Easy to use
 * Minimal dependencies (just SkiaSharp and HarfBuzzSharp)
 
