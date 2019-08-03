@@ -1,0 +1,195 @@
+---
+title: "Topten.RichTextKit.FontRun"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">FontRun Class</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+            </small>
+</p>
+
+
+<p>Represents a single font run</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public class FontRun</code></pre>
+
+    <h2 id="inherits">Inheritance</h2>
+    <p>
+        FontRun
+ &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.Object">object</a>    </p>
+
+
+
+
+
+    <h2 id="constructors">Constructors</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun..ctor">FontRun()</a></td>
+                <td></td>
+            </tr>
+    </table>
+
+
+
+    <h2 id="fields">Fields</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.Ascent">Ascent</a></td>
+                <td><p>The ascent of the font used in this run</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.Clusters">Clusters</a></td>
+                <td><p>The cluster numbers for each glyph</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.Descent">Descent</a></td>
+                <td><p>The descent of the font used in this run</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.Direction">Direction</a></td>
+                <td><p>The direction of this run</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.GlyphPositions">GlyphPositions</a></td>
+                <td><p>The glyph positions (relative to the entire text block)</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.Glyphs">Glyphs</a></td>
+                <td><p>The glyph indicies</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.Length">Length</a></td>
+                <td><p>The length of this run (in codepoints)</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.RelativeCodePointXCoords">RelativeCodePointXCoords</a></td>
+                <td><p>The x-coords of each code point, relative to this text run</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.RunKind">RunKind</a></td>
+                <td><p>The kind of run</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.Start">Start</a></td>
+                <td><p>Index into _codePoints buffer of the start of this run</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.Style">Style</a></td>
+                <td><p>The user supplied style for this run</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.StyledRun">StyledRun</a></td>
+                <td><p>The user run this typeface run was derived from</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.Typeface">Typeface</a></td>
+                <td><p>The typeface of this run (use this over Style.Fontface)</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.Width">Width</a></td>
+                <td><p>Width of this typeface run</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.XCoord">XCoord</a></td>
+                <td><p>Horizontal position of this run, relative to the left margin</p>
+</td>
+            </tr>
+    </table>
+
+    <h2 id="properties">Properties</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.CodePoints">CodePoints</a></td>
+                <td><p>Get the code points of this run</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.End">End</a></td>
+                <td><p>The index of the first character after this run</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.HalfLeading">HalfLeading</a></td>
+                <td><p>Calculate the half leading height for text in this run</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.Line">Line</a></td>
+                <td><p>The line that owns this font run</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.NextRun">NextRun</a></td>
+                <td><p>Get the next font run from this one</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.PreviousRun">PreviousRun</a></td>
+                <td><p>Get the previous font run from this one</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.TextHeight">TextHeight</a></td>
+                <td><p>The height of text in this run (ascent + descent)</p>
+</td>
+            </tr>
+    </table>
+
+    <h2 id="methods">Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.GetXCoordOfCodePointIndex">GetXCoordOfCodePointIndex(int)</a></td>
+                <td><p>Get the x-coord of a code point</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.LeadingWidth">LeadingWidth(int)</a></td>
+                <td><p>Calculates the leading width of all character from the start of the run (either
+the left or right depending on run direction) to the specified code point</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.MoveGlyphs">MoveGlyphs(float, float)</a></td>
+                <td><p>Moves all glyphs by the specified offset amount</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+    <h2 id="nested-types">Overridden &amp Inherited</h2>
+    <table class="name-description">
+        <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.ToString">ToString()</a></td>
+                <td><p>For debugging</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+

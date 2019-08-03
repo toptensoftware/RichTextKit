@@ -1,0 +1,190 @@
+---
+title: "Topten.RichTextKit.TextBlock"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">TextBlock Class</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+            </small>
+</p>
+
+
+<p>Represents a block of formatted, laid out and measurable text</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public class TextBlock</code></pre>
+
+    <h2 id="inherits">Inheritance</h2>
+    <p>
+        TextBlock
+ &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.Object">object</a>    </p>
+
+
+
+
+
+    <h2 id="constructors">Constructors</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock..ctor">TextBlock()</a></td>
+                <td><p>Constructor</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+    <h2 id="properties">Properties</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.Alignment">Alignment</a></td>
+                <td><p>Set the left/right/center alignment of text in this paragraph</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.BaseDirection">BaseDirection</a></td>
+                <td><p>The base directionality (whether text is laid out left to right, or right to left)</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.CursorIndicies">CursorIndicies</a></td>
+                <td><p>Retrieves a list of all valid cursor positions</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.FontRuns">FontRuns</a></td>
+                <td><p>Get all font runs for this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.Lines">Lines</a></td>
+                <td><p>Get all the lines for this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.MaxHeight">MaxHeight</a></td>
+                <td><p>The height of available space for layout (set to null to disable ellipsis cropping)</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.MaxLines">MaxLines</a></td>
+                <td><p>The maximum number of allowed lines (set to null to disable ellipsis cropping)</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.MaxWidth">MaxWidth</a></td>
+                <td><p>The width of available space for layout.  Set to null to disable line wrapping</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.MeasuredInset">MeasuredInset</a></td>
+                <td><p>Returns the inset amount from the left hand side
+to any actual drawn content when text is right or center aligned.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.MeasureHeight">MeasureHeight</a></td>
+                <td><p>Get the measured height of the text</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.MeasureWidth">MeasureWidth</a></td>
+                <td><p>Get the measured width of the text (excluding required left margin)</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.MinLeftMargin">MinLeftMargin</a></td>
+                <td><p>The minimum required left margin to ensure that underhangin glyphs aren't cropped</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.MinRightMargin">MinRightMargin</a></td>
+                <td><p>The minimum required right margin to ensure overhanging glyphs aren't cropped</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.RequiredLeftMargin">RequiredLeftMargin</a></td>
+                <td><p>Get the required left margin - how much the text actually overhangs the left margin</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.StyledRuns">StyledRuns</a></td>
+                <td><p>Get the text runs as added by AddText</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.UseMSWordStyleRTLLayout">UseMSWordStyleRTLLayout</a></td>
+                <td><p>Use MS Word style RTL layout</p>
+</td>
+            </tr>
+    </table>
+
+    <h2 id="methods">Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.AddText#Topten.RichTextKit-TextBlock.AddText-System-String-Topten.RichTextKit-IStyle">AddText(string, IStyle)</a></td>
+                <td><p>Add text to this paragraph</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.AddText#Topten.RichTextKit-TextBlock.AddText-Topten.RichTextKit-Slice-System-Int32--Topten.RichTextKit-IStyle">AddText(Slice&lt;int&gt;, IStyle)</a></td>
+                <td><p>Add text to this paragraph</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.Clear">Clear()</a></td>
+                <td><p>Clear the content of this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.FindFontRunForCodePointIndex">FindFontRunForCodePointIndex(int)</a></td>
+                <td><p>Find the font run holding a code point index</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.GetCursorInfo">GetCursorInfo(int)</a></td>
+                <td><p>Calculates useful information for displaying a cursor</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.HitTest">HitTest(float, float)</a></td>
+                <td><p>Hit test this block of text</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.Layout">Layout()</a></td>
+                <td><p>Lays out the provided text and returns paragraph</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.LookupCursorIndex">LookupCursorIndex(int)</a></td>
+                <td><p>Given a code point index, find the index in the CursorIndicies</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.Paint#Topten.RichTextKit-TextBlock.Paint-SkiaSharp-SKCanvas-Topten.RichTextKit-TextPaintOptions">Paint(SkiaSharp.SKCanvas, TextPaintOptions)</a></td>
+                <td><p>Paint this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.Paint#Topten.RichTextKit-TextBlock.Paint-SkiaSharp-SKCanvas-SkiaSharp-SKPoint-Topten.RichTextKit-TextPaintOptions">Paint(SkiaSharp.SKCanvas, SkiaSharp.SKPoint, TextPaintOptions)</a></td>
+                <td><p>Paint this text block</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+

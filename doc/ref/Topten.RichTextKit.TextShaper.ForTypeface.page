@@ -1,0 +1,55 @@
+---
+title: "TextShaper.ForTypeface"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">TextShaper.ForTypeface Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.TextShaper">TextShaper</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Get the text shaper for a particular type face</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public static TextShaper ForTypeface(SkiaSharp.SKTypeface typeface);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    SkiaSharp.SKTypeface typeface
+                </td>
+                <td><p>The typeface being queried for</p>
+</td>
+            </tr>
+    </table>
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.TextShaper">TextShaper</a></td>
+            <td><p>A TextShaper</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

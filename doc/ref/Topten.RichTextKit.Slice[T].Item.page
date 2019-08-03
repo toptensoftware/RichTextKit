@@ -1,0 +1,48 @@
+---
+title: "Slice&lt;T&gt;.Item"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 data-nav-secondary-text="Definition" id="definition">Slice&lt;T&gt;.Item Property</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Slice[T]">Slice&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+<p>Get/set an element in the slice</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public ref T this[int index] { get; }</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> index
+                </td>
+                <td><p>The element index</p>
+</td>
+            </tr>
+    </table>
+<h2 id="property-type">Property Type</h2>    <table class="name-description">
+        <tr>
+            <td>ref T</td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+

@@ -1,0 +1,86 @@
+---
+title: "Topten.RichTextKit.CaretInfo"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">CaretInfo Struct</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+            </small>
+</p>
+
+
+<p>Useful information for cursor calculations</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public struct CaretInfo</code></pre>
+
+    <h2 id="inherits">Inheritance</h2>
+    <p>
+        CaretInfo
+ &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.ValueType">ValueType</a> &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.Object">object</a>    </p>
+
+
+
+
+
+
+
+
+    <h2 id="fields">Fields</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.CaretInfo.CodePointIndex">CodePointIndex</a></td>
+                <td><p>Index of the code point this caret info refers to</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.CaretInfo.FontRun">FontRun</a></td>
+                <td><p>The font run that displays this cluster</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.CaretInfo.NextCodePointIndex">NextCodePointIndex</a></td>
+                <td><p>The next code point index (same as CodePointIndex if last)</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.CaretInfo.PreviousCodePointIndex">PreviousCodePointIndex</a></td>
+                <td><p>The previous code point index (same as CodePointIndex if first)</p>
+</td>
+            </tr>
+    </table>
+
+    <h2 id="properties">Properties</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.CaretInfo.CaretRectangle">CaretRectangle</a></td>
+                <td><p>Get the recommended rectangle to draw a caret.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.CaretInfo.CaretXCoord">CaretXCoord</a></td>
+                <td><p>The X-coordinate where the cursor should be displayed for this code point</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.CaretInfo.CodePointCount">CodePointCount</a></td>
+                <td><p>The number of code points in this cluster</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+
+

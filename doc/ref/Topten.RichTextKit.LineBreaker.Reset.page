@@ -1,0 +1,84 @@
+---
+title: "LineBreaker.Reset"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">LineBreaker.Reset Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.LineBreaker">LineBreaker</a><br />
+                        </small>
+</p>
+
+
+
+
+
+    <h2 id="overloads">Overloads</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="#Topten.RichTextKit-LineBreaker.Reset-System-String">Reset(string)</a></td>
+                <td><p>Reset this line breaker</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="#Topten.RichTextKit-LineBreaker.Reset-Topten.RichTextKit-Slice-System-Int32-">Reset(Slice&lt;int&gt;)</a></td>
+                <td><p>Reset this line breaker</p>
+</td>
+            </tr>
+    </table>
+
+
+    <h2 id="Topten.RichTextKit-LineBreaker.Reset-System-String">Reset(string)</h2>
+
+<p>Reset this line breaker</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void Reset(string str);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.String">string</a> str
+                </td>
+                <td><p>The string to be broken</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+    <h2 id="Topten.RichTextKit-LineBreaker.Reset-Topten.RichTextKit-Slice-System-Int32-">Reset(Slice&lt;int&gt;)</h2>
+
+<p>Reset this line breaker</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void Reset(Slice&lt;int&gt; codePoints);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Slice[T]">Slice&lt;int&gt;</a> codePoints
+                </td>
+                <td><p>The code points of the string to be broken</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

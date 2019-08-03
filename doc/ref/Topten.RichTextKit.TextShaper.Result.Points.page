@@ -1,0 +1,38 @@
+---
+title: "TextShaper.Result.Points"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 data-nav-secondary-text="Definition" id="definition">TextShaper.Result.Points Field</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.TextShaper.Result">TextShaper.Result</a><br />
+                        </small>
+</p>
+
+
+
+
+<p>The position of each glyph</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public SkiaSharp.SKPoint[] Points;</code></pre>
+
+
+<h2 id="field-type">Field Type</h2>    <table class="name-description">
+        <tr>
+            <td>SkiaSharp.SKPoint[]</td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+

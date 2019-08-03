@@ -1,0 +1,38 @@
+---
+title: "TextShaper.Dispose"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">TextShaper.Dispose Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.TextShaper">TextShaper</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Dispose this text shaper</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public sealed void Dispose();</code></pre>
+
+
+
+
+
+
+
+
+

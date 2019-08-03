@@ -1,0 +1,45 @@
+---
+title: "Buffer&lt;T&gt;.AsSlice"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">Buffer&lt;T&gt;.AsSlice Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Buffer[T]">Buffer&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Get the entire buffer contents as a slice</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public Slice&lt;T&gt; AsSlice();</code></pre>
+
+
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.Slice[T]">Slice&lt;T&gt;</a></td>
+            <td><p>A Slice</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

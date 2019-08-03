@@ -1,0 +1,54 @@
+---
+title: "Topten.RichTextKit.BinarySearchExtension"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">BinarySearchExtension Class</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+            </small>
+</p>
+
+
+<p>Helpers for binary searching IReadOnlyList</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public static class BinarySearchExtension</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+    <h2 id="methods">Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.BinarySearchExtension.BinarySearch[T,U]#Topten.RichTextKit-BinarySearchExtension.BinarySearch-T-U-System.Collections.Generic-IReadOnlyList-T--U-System-Func-T-U-System-Int32-">BinarySearch&lt;T,U&gt;(this IReadOnlyList&lt;T&gt;, U, Func&lt;T,U,int&gt;)</a></td>
+                <td><p>Performs a binary search on a IReadOnlyList</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.BinarySearchExtension.BinarySearch[T,U]#Topten.RichTextKit-BinarySearchExtension.BinarySearch-T-U-System.Collections.Generic-IReadOnlyList-T--System-Int32-System-Int32-U-System-Func-T-U-System-Int32-">BinarySearch&lt;T,U&gt;(this IReadOnlyList&lt;T&gt;, int, int, U, Func&lt;T,U,int&gt;)</a></td>
+                <td><p>Performs a binary search on a IReadOnlyList</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,74 @@
+---
+title: "Utf32Buffer..ctor"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">Utf32Buffer Constructors</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utf32Buffer">Utf32Buffer</a><br />
+                        </small>
+</p>
+
+
+
+
+
+    <h2 id="overloads">Overloads</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="#Topten.RichTextKit-Utf32Buffer--ctor-">Utf32Buffer()</a></td>
+                <td><p>Constructor</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="#Topten.RichTextKit-Utf32Buffer--ctor-System-String">Utf32Buffer(string)</a></td>
+                <td><p>Constructs a UTF32 buffer with an initial string</p>
+</td>
+            </tr>
+    </table>
+
+
+    <h2 id="Topten.RichTextKit-Utf32Buffer--ctor-">Utf32Buffer()</h2>
+
+<p>Constructor</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public Utf32Buffer();</code></pre>
+
+
+
+
+
+
+    <h2 id="Topten.RichTextKit-Utf32Buffer--ctor-System-String">Utf32Buffer(string)</h2>
+
+<p>Constructs a UTF32 buffer with an initial string</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public Utf32Buffer(string str);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.String">string</a> str
+                </td>
+                <td><p>The string to initialize with</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

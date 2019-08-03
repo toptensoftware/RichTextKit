@@ -1,0 +1,62 @@
+---
+title: "Topten.RichTextKit.UnderlineStyle"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">UnderlineStyle Enum</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+            </small>
+</p>
+
+
+<p>Underline styles</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public enum UnderlineStyle</code></pre>
+
+
+
+
+
+
+
+    <h2 id="members">Members</h2>
+    <table class="name-value-description">
+            <tr>
+                <td>Gapped</td>
+                <td>1</td>
+                <td><p>Underline with gaps over descenders</p>
+</td>
+            </tr>
+            <tr>
+                <td>None</td>
+                <td>0</td>
+                <td><p>No underline</p>
+</td>
+            </tr>
+            <tr>
+                <td>Solid</td>
+                <td>2</td>
+                <td><p>Underline with no gaps over descenders</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+
+

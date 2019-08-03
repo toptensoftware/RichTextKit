@@ -1,0 +1,74 @@
+---
+title: "Topten.RichTextKit.TextShaper"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">TextShaper Class</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+            </small>
+</p>
+
+
+<p>Helper class for shaping text</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public class TextShaper :&#xA;    IDisposable</code></pre>
+
+    <h2 id="inherits">Inheritance</h2>
+    <p>
+        TextShaper
+ &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.Object">object</a>    </p>
+
+    <h2 id="interfaces">Interfaces</h2>
+    <p>
+        <a href="https://docs.microsoft.com/dotnet/api/System.IDisposable">IDisposable</a>    </p>
+
+
+
+
+
+
+
+
+
+    <h2 id="methods">Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextShaper.Dispose">Dispose()</a></td>
+                <td><p>Dispose this text shaper</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextShaper.ForTypeface">ForTypeface(SkiaSharp.SKTypeface)</a></td>
+                <td><p>Get the text shaper for a particular type face</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextShaper.Shape">Shape(Slice&lt;int&gt;, IStyle, TextDirection, int)</a></td>
+                <td><p>Shape an array of utf-32 code points</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+    <h2 id="nested-types">Nested Types</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextShaper.Result">TextShaper.Result</a></td>
+                <td><p>Returned as the result of a text shaping operation</p>
+</td>
+            </tr>
+    </table>
+
+

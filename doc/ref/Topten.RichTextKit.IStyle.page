@@ -1,0 +1,92 @@
+---
+title: "Topten.RichTextKit.IStyle"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">IStyle Interface</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+            </small>
+</p>
+
+
+<p>Represents the style of a piece of text</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public interface IStyle</code></pre>
+
+
+
+        <h2 id="derived">Implemented By</h2>
+    <p>
+        <a href="./../ref/Topten.RichTextKit.Style">Style</a>    </p>
+
+
+
+
+
+
+
+    <h2 id="properties">Properties</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.IStyle.FontFamily">FontFamily</a></td>
+                <td><p>The font family</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.IStyle.FontItalic">FontItalic</a></td>
+                <td><p>True for italic font; otherwise false</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.IStyle.FontSize">FontSize</a></td>
+                <td><p>The font size</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.IStyle.FontVariant">FontVariant</a></td>
+                <td><p>The font variant (ie: super/sub-script)</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.IStyle.FontWeight">FontWeight</a></td>
+                <td><p>The font weight</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.IStyle.LineHeight">LineHeight</a></td>
+                <td><p>The line height as a multiplier</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.IStyle.StrikeThrough">StrikeThrough</a></td>
+                <td><p>The strike through style of the text</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.IStyle.TextColor">TextColor</a></td>
+                <td><p>The text color</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.IStyle.Underline">Underline</a></td>
+                <td><p>The underline style of the text</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+
+

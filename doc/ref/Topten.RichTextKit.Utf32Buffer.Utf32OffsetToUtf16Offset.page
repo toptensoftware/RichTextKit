@@ -1,0 +1,57 @@
+---
+title: "Utf32Buffer.Utf32OffsetToUtf16Offset"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">Utf32Buffer.Utf32OffsetToUtf16Offset Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utf32Buffer">Utf32Buffer</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Convers an offset into this utf32 buffer to a utf16 offset</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public int Utf32OffsetToUtf16Offset(int utf32Offset);</code></pre>
+
+<h2 id="remarks">Remarks</h2><p>This function assumes the was text added to the buffer as utf16
+and hasn't been modified in any way since.</p>
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> utf32Offset
+                </td>
+                <td><p>The utf32 offset to convert</p>
+</td>
+            </tr>
+    </table>
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a></td>
+            <td><p>The utf16 character offset</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

@@ -1,0 +1,111 @@
+---
+title: "Topten.RichTextKit.TextLine"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">TextLine Class</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+            </small>
+</p>
+
+
+<p>Represents a laid out line of text</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public class TextLine</code></pre>
+
+    <h2 id="inherits">Inheritance</h2>
+    <p>
+        TextLine
+ &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.Object">object</a>    </p>
+
+
+
+
+
+    <h2 id="constructors">Constructors</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextLine..ctor">TextLine()</a></td>
+                <td><p>Constructor</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+    <h2 id="properties">Properties</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextLine.BaseLine">BaseLine</a></td>
+                <td><p>The base line for text in this line (relative to YPosition)</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextLine.Height">Height</a></td>
+                <td><p>Total height of this line</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextLine.MaxAscent">MaxAscent</a></td>
+                <td><p>The maximum ascent of all font runs in this line</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextLine.MaxDescent">MaxDescent</a></td>
+                <td><p>The maximum desscent of all font runs in this line</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextLine.NextLine">NextLine</a></td>
+                <td><p>Get the next line in this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextLine.PreviousLine">PreviousLine</a></td>
+                <td><p>Get the next line in this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextLine.Runs">Runs</a></td>
+                <td><p>List of text runs in this line</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextLine.TextBlock">TextBlock</a></td>
+                <td><p>Get the text block that owns this line</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextLine.TextHeight">TextHeight</a></td>
+                <td><p>The height of all text elements in this line</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextLine.Width">Width</a></td>
+                <td><p>The width of the content on this line (excluding trailing whitespace)</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextLine.YPosition">YPosition</a></td>
+                <td><p>Position of this line relative to the paragraph</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+
+

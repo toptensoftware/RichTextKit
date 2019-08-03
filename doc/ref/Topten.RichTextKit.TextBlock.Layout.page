@@ -1,0 +1,38 @@
+---
+title: "TextBlock.Layout"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">TextBlock.Layout Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.TextBlock">TextBlock</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Lays out the provided text and returns paragraph</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void Layout();</code></pre>
+
+
+
+
+
+
+
+
+

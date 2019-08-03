@@ -1,0 +1,56 @@
+---
+title: "Topten.RichTextKit.StrikeThroughStyle"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">StrikeThroughStyle Enum</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+            </small>
+</p>
+
+
+<p>Enumeration of different strike-through styles</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public enum StrikeThroughStyle</code></pre>
+
+
+
+
+
+
+
+    <h2 id="members">Members</h2>
+    <table class="name-value-description">
+            <tr>
+                <td>None</td>
+                <td>0</td>
+                <td><p>No strike through</p>
+</td>
+            </tr>
+            <tr>
+                <td>Solid</td>
+                <td>1</td>
+                <td><p>Standard strike through</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+
+

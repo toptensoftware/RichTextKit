@@ -1,0 +1,56 @@
+---
+title: "Topten.RichTextKit.TextDirection"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">TextDirection Enum</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+            </small>
+</p>
+
+
+<p>Text writing direction</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public enum TextDirection</code></pre>
+
+
+
+
+
+
+
+    <h2 id="members">Members</h2>
+    <table class="name-value-description">
+            <tr>
+                <td>LTR</td>
+                <td>0</td>
+                <td><p>Left to right</p>
+</td>
+            </tr>
+            <tr>
+                <td>RTL</td>
+                <td>1</td>
+                <td><p>Right to left</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,62 @@
+---
+title: "Topten.RichTextKit.FontVariant"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">FontVariant Enum</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+            </small>
+</p>
+
+
+<p>Enumeration for font variants, super-script and sub-script</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public enum FontVariant</code></pre>
+
+
+
+
+
+
+
+    <h2 id="members">Members</h2>
+    <table class="name-value-description">
+            <tr>
+                <td>Normal</td>
+                <td>0</td>
+                <td><p>Normal text</p>
+</td>
+            </tr>
+            <tr>
+                <td>SubScript</td>
+                <td>2</td>
+                <td><p>Sub-script Text</p>
+</td>
+            </tr>
+            <tr>
+                <td>SuperScript</td>
+                <td>1</td>
+                <td><p>Super-script Text</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+
+

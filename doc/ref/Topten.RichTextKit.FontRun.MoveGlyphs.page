@@ -1,0 +1,56 @@
+---
+title: "FontRun.MoveGlyphs"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">FontRun.MoveGlyphs Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.FontRun">FontRun</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Moves all glyphs by the specified offset amount</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void MoveGlyphs(float dx, float dy);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Single">float</a> dx
+                </td>
+                <td><p>The x-delta to move glyphs by</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Single">float</a> dy
+                </td>
+                <td><p>The y-delta to move glyphs by</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

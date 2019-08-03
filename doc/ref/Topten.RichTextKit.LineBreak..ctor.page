@@ -1,0 +1,64 @@
+---
+title: "LineBreak..ctor"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">LineBreak Constructor</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.LineBreak">LineBreak</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Constructor</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public LineBreak(int positionMeasure, int positionWrap, bool required = false);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> positionMeasure
+                </td>
+                <td><p>The code point index to measure to</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> positionWrap
+                </td>
+                <td><p>The code point index to actually break the line at</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Boolean">bool</a> required
+ = false                </td>
+                <td><p>True if this is a required line break; otherwise false</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

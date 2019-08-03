@@ -1,0 +1,38 @@
+---
+title: "TextBlock.MaxHeight"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 data-nav-secondary-text="Definition" id="definition">TextBlock.MaxHeight Property</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.TextBlock">TextBlock</a><br />
+                        </small>
+</p>
+
+
+
+
+<p>The height of available space for layout (set to null to disable ellipsis cropping)</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public Nullable&lt;float&gt; MaxHeight { get; set; }</code></pre>
+
+
+<h2 id="property-type">Property Type</h2>    <table class="name-description">
+        <tr>
+            <td><a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;float&gt;</a></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+

@@ -1,0 +1,102 @@
+---
+title: "Topten.RichTextKit.Buffer&lt;T&gt;"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">Buffer&lt;T&gt; Class</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+            </small>
+</p>
+
+
+<p>A buffer of T</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public class Buffer&lt;T&gt;</code></pre>
+
+    <h2 id="inherits">Inheritance</h2>
+    <p>
+        Buffer&lt;T&gt;
+ &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.Object">object</a>    </p>
+
+
+
+
+    <h2 id="type-parameters">Type Parameters</h2>
+    <table class="name-description">
+            <tr>
+                <td>T</td>
+                <td><p>The buffer element type</p>
+</td>
+            </tr>
+    </table>
+
+    <h2 id="constructors">Constructors</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Buffer[T]..ctor">Buffer()</a></td>
+                <td><p>Constructs a new buffer</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+    <h2 id="properties">Properties</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Buffer[T].Item">Item[int]</a></td>
+                <td><p>Get/set an element in the slice</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Buffer[T].Length">Length</a></td>
+                <td><p>Get or set the length of the buffer</p>
+</td>
+            </tr>
+    </table>
+
+    <h2 id="methods">Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Buffer[T].Add#Topten.RichTextKit-Buffer-T.Add-Topten.RichTextKit-Slice-T-">Add(Slice&lt;T&gt;)</a></td>
+                <td><p>Add a slice of data to this buffer</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Buffer[T].Add#Topten.RichTextKit-Buffer-T.Add-System-Int32-System-Boolean">Add(int, bool)</a></td>
+                <td><p>Add to the buffer, returning a slice of requested size</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Buffer[T].AsSlice">AsSlice()</a></td>
+                <td><p>Get the entire buffer contents as a slice</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Buffer[T].Clear">Clear()</a></td>
+                <td><p>Clear the buffer (keep internal allocated memory)</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Buffer[T].SubSlice">SubSlice(int, int)</a></td>
+                <td><p>Create a subslice of data from this array</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+

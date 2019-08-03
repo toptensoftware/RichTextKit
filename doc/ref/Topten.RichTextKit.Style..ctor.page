@@ -1,0 +1,37 @@
+---
+title: "Style..ctor"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">Style Constructor</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Style">Style</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+
+
+<pre class="language-csharp"><code class="language-csharp">public Style();</code></pre>
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,68 @@
+---
+title: "Topten.RichTextKit.TextAlignment"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">TextAlignment Enum</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+            </small>
+</p>
+
+
+<p>Alignment of text within a text block</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public enum TextAlignment</code></pre>
+
+
+
+
+
+
+
+    <h2 id="members">Members</h2>
+    <table class="name-value-description">
+            <tr>
+                <td>Auto</td>
+                <td>0</td>
+                <td><p>Use base direction of the text block</p>
+</td>
+            </tr>
+            <tr>
+                <td>Center</td>
+                <td>2</td>
+                <td><p>Centered</p>
+</td>
+            </tr>
+            <tr>
+                <td>Left</td>
+                <td>1</td>
+                <td><p>Left-aligned</p>
+</td>
+            </tr>
+            <tr>
+                <td>Right</td>
+                <td>3</td>
+                <td><p>Right aligneed</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
