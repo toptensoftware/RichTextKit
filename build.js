@@ -19,11 +19,11 @@ if (bt.options.official)
     bt.clean("./Build");
 
     // Run Tests
-    bt.dntest("Release", "Topten.RichText.Test");
+    bt.dntest("Release", "Topten.RichTextKit.Test");
 }
 
 // Build
-bt.dnbuild("Release", "Topten.RichText");
+bt.dnbuild("Release", "Topten.RichTextKit");
 
 if (bt.options.official)
 {
@@ -31,7 +31,7 @@ if (bt.options.official)
     bt.git_tag();
 
     // Push nuget package
-    //bt.nupush(`./build/Release/Topten.RichText/*.${bt.options.version.build}.nupkg`, "http://nuget.toptensoftware.com/v3/index.json");
+    //bt.nupush(`./build/Release/Topten.RichTextKit/*.${bt.options.version.build}.nupkg`, "http://nuget.toptensoftware.com/v3/index.json");
 }
 
 

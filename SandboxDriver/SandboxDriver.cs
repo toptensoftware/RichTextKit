@@ -1,5 +1,5 @@
 ﻿using System;
-using Topten.RichText;
+using Topten.RichTextKit;
 using SkiaSharp;
 using System.Diagnostics;
 

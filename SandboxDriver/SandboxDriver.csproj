@@ -9,7 +9,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\Topten.RichText\Topten.RichText.csproj" />
+    <ProjectReference Include="..\Topten.RichTextKit\Topten.RichTextKit.csproj" />
   </ItemGroup>
 
 </Project>

@@ -6,7 +6,7 @@ using System.Reflection;
 [assembly: AssemblyVersion("0.1.101")]
 [assembly: AssemblyFileVersion("0.1.101")]
 [assembly: AssemblyCompany("Topten Software")]
-[assembly: AssemblyProduct("Topten.RichText")]
+[assembly: AssemblyProduct("Topten.RichTextKit")]
 
 static class BuildInfo
 {

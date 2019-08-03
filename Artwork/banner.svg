@@ -17,7 +17,7 @@
    id="svg8"
    inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
    sodipodi:docname="banner.svg"
-   inkscape:export-filename="C:\Users\Brad\Projects\Topten.RichText\Artwork\banner.png"
+   inkscape:export-filename="C:\Users\Brad\Projects\Topten.RichTextKit\Artwork\banner.png"
    inkscape:export-xdpi="50.799999"
    inkscape:export-ydpi="50.799999">
   <defs
@@ -154,7 +154,7 @@
              x="-103.74442"
              y="616.4187"
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';fill:none;stroke:#ffffff;stroke-width:1.00093114;stroke-miterlimit:4;stroke-dasharray:none"
-             id="tspan1452">RichTextKit</tspan></text>
+             id="tspan1452">RichTextKitKit</tspan></text>
       </g>
     </g>
     <g
@@ -182,7 +182,7 @@
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';fill:none;stroke:#000000;stroke-width:1.00093114;stroke-miterlimit:4;stroke-dasharray:none"
              y="616.4187"
              x="-103.74442"
-             sodipodi:role="line">RichTextKit</tspan></text>
+             sodipodi:role="line">RichTextKitKit</tspan></text>
       </g>
     </g>
     <g
@@ -198,7 +198,7 @@
            x="-231.06038"
            y="147.76793"
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Bold';fill:#000000;stroke-width:2.45050049"
-           id="tspan1460">RichTextKit</tspan></text>
+           id="tspan1460">RichTextKitKit</tspan></text>
       <text
          id="text29"
          y="147.76793"
@@ -209,7 +209,7 @@
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman,  Bold';fill:#ffffff;stroke-width:2.45050049"
            y="147.76793"
            x="-231.06038"
-           sodipodi:role="line">RichTextKit</tspan></text>
+           sodipodi:role="line">RichTextKitKit</tspan></text>
     </g>
     <text
        xml:space="preserve"

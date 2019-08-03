@@ -173,7 +173,7 @@ function buildBidiTrie()
     }
   }
 
-  fs.writeFileSync(__dirname + '/../GuiKit.RichText/Resources/BidiData.trie', trie.toBuffer());
+  fs.writeFileSync(__dirname + '/../GuiKit.RichTextKit/Resources/BidiData.trie', trie.toBuffer());
 }
 
 
@@ -220,7 +220,7 @@ function buildLineBreaksTrie()
   trie.setRange(parseInt(start, 16), parseInt(end, 16), LineBreakClass[type], true);
 
   // write the trie to a file
-  fs.writeFileSync(__dirname + '/../GuiKit.RichText/Resources/LineBreakClasses.trie', trie.toBuffer());
+  fs.writeFileSync(__dirname + '/../GuiKit.RichTextKit/Resources/LineBreakClasses.trie', trie.toBuffer());
 }
 
 buildBidiTrie();

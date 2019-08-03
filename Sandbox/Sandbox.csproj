@@ -97,9 +97,9 @@
       <Project>{76ae34f1-d8b7-4593-a9fa-a82cdb438a5c}</Project>
       <Name>SandboxDriver</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Topten.RichText\Topten.RichText.csproj">
+    <ProjectReference Include="..\Topten.RichTextKit\Topten.RichTextKit.csproj">
       <Project>{6472d685-fd75-4475-8de2-53917b0ba189}</Project>
-      <Name>Topten.RichText</Name>
+      <Name>Topten.RichTextKit</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
