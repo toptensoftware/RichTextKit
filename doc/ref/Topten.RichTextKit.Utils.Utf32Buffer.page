@@ -15,7 +15,7 @@ import: "../.common.page"
 </p>
 
 
-<p>A buffer of utf-32 character data</p>
+<p>Represents a buffer of UTF-32 encoded code point data</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public class Utf32Buffer : Buffer&lt;int&gt;,&#xA;    IEnumerable&lt;int&gt;</code></pre>
@@ -36,12 +36,12 @@ import: "../.common.page"
     <table class="name-description">
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Utf32Buffer..ctor#Topten.RichTextKit.Utils-Utf32Buffer--ctor-">Utf32Buffer()</a></td>
-                <td><p>Constructor</p>
+                <td><p>Constructs a new Utf32Buffer</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Utf32Buffer..ctor#Topten.RichTextKit.Utils-Utf32Buffer--ctor-System-String">Utf32Buffer(string)</a></td>
-                <td><p>Constructs a UTF32 buffer with an initial string</p>
+                <td><p>Constructs a Utf32 buffer with an initial string</p>
 </td>
             </tr>
     </table>
@@ -54,32 +54,35 @@ import: "../.common.page"
     <table class="name-description">
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Utf32Buffer.Add#Topten.RichTextKit.Utils-Utf32Buffer.Add-System-String">Add(string)</a></td>
-                <td><p>Add text to this UTF-32 buffer</p>
+                <td><p>Adds text to this buffer, converting from UTF-16 to UTF-32 and normalizing
+line endings to <code>\n</code>.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Utf32Buffer.Clear#Topten.RichTextKit.Utils-Utf32Buffer.Clear-">Clear()</a></td>
-                <td><p>Clear this text buffer</p>
+                <td><p>Clears this buffer.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Utf32Buffer.GetString#Topten.RichTextKit.Utils-Utf32Buffer.GetString-">GetString()</a></td>
-                <td><p>Get the enture buffer's content as a string</p>
+                <td><p>Gets the enture buffer's content as a string.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Utf32Buffer.GetString#Topten.RichTextKit.Utils-Utf32Buffer.GetString-System-Int32-System-Int32">GetString(int, int)</a></td>
-                <td><p>Get a slide of the buffer as a string</p>
+                <td><p>Gets a part of the buffer as a string.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Utf32Buffer.Utf16OffsetToUtf32Offset">Utf16OffsetToUtf32Offset(int)</a></td>
-                <td><p>Given a utf-16 index, convert it to a utf-32 index</p>
+                <td><p>Converts an offset in the original UTF-16 string, a code point index into
+this UTF-32 buffer.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Utf32Buffer.Utf32OffsetToUtf16Offset">Utf32OffsetToUtf16Offset(int)</a></td>
-                <td><p>Convers an offset into this utf32 buffer to a utf16 offset</p>
+                <td><p>Convers an offset into this buffer to a UTF-16 offset in the originally
+added string.</p>
 </td>
             </tr>
     </table>
@@ -95,32 +98,32 @@ import: "../.common.page"
         </tr>
         <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Buffer`1.Add#Topten.RichTextKit.Utils-Buffer`1.Add-System-Int32-System-Boolean">Add(int, bool)</a></td>
-                <td><p>Add to the buffer, returning a slice of requested size</p>
+                <td><p>Adds to the buffer, returning a slice of requested size</p>
 </td>
         </tr>
         <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Buffer`1.AsSlice">AsSlice()</a></td>
-                <td><p>Get the entire buffer contents as a slice</p>
+                <td><p>Returns the entire buffer contents as a <a href="./../ref/Topten.RichTextKit.Utils.Slice%5BT%5D">Slice&lt;T&gt;</a></p>
 </td>
         </tr>
         <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Buffer`1.Clear#Topten.RichTextKit.Utils-Buffer`1.Clear-">Clear()</a></td>
-                <td><p>Clear the buffer (keep internal allocated memory)</p>
+                <td><p>Clears the buffer, keeping the internally allocated array.</p>
 </td>
         </tr>
         <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Buffer`1.Item">Item[int]</a></td>
-                <td><p>Get/set an element in the slice</p>
+                <td><p>Gets a reference to an element in the buffer</p>
 </td>
         </tr>
         <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Buffer`1.Length">Length</a></td>
-                <td><p>Get or set the length of the buffer</p>
+                <td><p>Gets or sets the length of the buffer</p>
 </td>
         </tr>
         <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Buffer`1.SubSlice">SubSlice(int, int)</a></td>
-                <td><p>Create a subslice of data from this array</p>
+                <td><p>Returns a range within this buffer as a <a href="./../ref/Topten.RichTextKit.Utils.Slice%5BT%5D">Slice&lt;T&gt;</a></p>
 </td>
         </tr>
     </table>

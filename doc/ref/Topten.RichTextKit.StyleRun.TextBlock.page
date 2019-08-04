@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>The owning text block</p>
+<p>Gets the text block that owns this run.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public TextBlock TextBlock { get; }</code></pre>

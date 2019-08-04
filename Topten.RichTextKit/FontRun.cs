@@ -6,17 +6,18 @@ using Topten.RichTextKit.Utils;
 namespace Topten.RichTextKit
 {
     /// <summary>
-    /// Represents a single font run
+    /// Represents a font run - a physical sequence of laid glyphs all with
+    /// the same font and style attributes.
     /// </summary>
     public class FontRun
     {
         /// <summary>
-        /// The kind of run
+        /// The kind of font run.
         /// </summary>
         public FontRunKind RunKind = FontRunKind.Normal;
 
         /// <summary>
-        /// The user run this typeface run was derived from
+        /// The style run this typeface run was derived from.
         /// </summary>
         public StyleRun StyleRun;
 
@@ -494,8 +495,8 @@ namespace Topten.RichTextKit
 
                 if (selStartXCoord != selEndXCoord)
                 {
-                    var rect = new SKRect(this.XCoord + selStartXCoord, Line.YPosition, 
-                                            this.XCoord + selEndXCoord, Line.YPosition + Line.Height);
+                    var rect = new SKRect(this.XCoord + selStartXCoord, Line.YCoord, 
+                                            this.XCoord + selEndXCoord, Line.YCoord + Line.Height);
                     ctx.Canvas.DrawRect(rect, ctx.PaintSelectionBackground);
                 }
             }
@@ -542,7 +543,7 @@ namespace Topten.RichTextKit
                         {
                             // Work out underline metrics
                             paint.TextSize = Style.FontSize;
-                            float underlineYPos = Line.YPosition + Line.BaseLine + (paint.FontMetrics.UnderlinePosition ?? 0);
+                            float underlineYPos = Line.YCoord + Line.BaseLine + (paint.FontMetrics.UnderlinePosition ?? 0);
                             paint.StrokeWidth = paint.FontMetrics.UnderlineThickness ?? 0;
                             paint.TextSize = Style.FontSize * glyphScale;
 
@@ -586,7 +587,7 @@ namespace Topten.RichTextKit
                 if (Style.StrikeThrough != StrikeThroughStyle.None && RunKind == FontRunKind.Normal)
                 {
                     paint.StrokeWidth = paint.FontMetrics.StrikeoutThickness ?? 0;
-                    float strikeYPos = Line.YPosition + Line.BaseLine + (paint.FontMetrics.StrikeoutPosition ?? 0) + glyphVOffset;
+                    float strikeYPos = Line.YCoord + Line.BaseLine + (paint.FontMetrics.StrikeoutPosition ?? 0) + glyphVOffset;
                     ctx.Canvas.DrawLine(new SKPoint(XCoord, strikeYPos), new SKPoint(XCoord + Width, strikeYPos), paint);
                 }
             }

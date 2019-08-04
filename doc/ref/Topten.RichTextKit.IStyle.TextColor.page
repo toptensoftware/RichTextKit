@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>The text color</p>
+<p>The text color for text in this run.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public SkiaSharp.SKColor TextColor { get; }</code></pre>

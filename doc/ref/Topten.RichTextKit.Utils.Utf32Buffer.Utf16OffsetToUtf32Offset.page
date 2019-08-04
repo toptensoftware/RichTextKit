@@ -23,7 +23,8 @@ import: "../.common.page"
 
 
 
-<p>Given a utf-16 index, convert it to a utf-32 index</p>
+<p>Converts an offset in the original UTF-16 string, a code point index into
+this UTF-32 buffer.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public int Utf16OffsetToUtf32Offset(int utf16Offset);</code></pre>

@@ -19,6 +19,7 @@ import: "../.common.page"
 
 
 
+<p>The text color for text in this run (defaults to black).</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public SkiaSharp.SKColor TextColor { sealed get; set; }</code></pre>

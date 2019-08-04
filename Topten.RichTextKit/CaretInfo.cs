@@ -6,37 +6,51 @@ using System.Text;
 namespace Topten.RichTextKit
 {
     /// <summary>
-    /// Useful information for caret calculations
+    /// Used to return caret positioning information from the 
+    /// <see cref="TextBlock.GetCaretInfo(int)"/> method.
     /// </summary>
     public struct CaretInfo
     {
         /// <summary>
-        /// Index of the code point this caret info refers to
+        /// Returns the index of the code point that this caret info refers to.
         /// </summary>
         public int CodePointIndex;
 
         /// <summary>
-        /// The next code point index (same as CodePointIndex if last)
+        /// The code point index of the next cluster.
         /// </summary>
+        /// <remarks>
+        /// If the code point index refers to the last code point in the
+        /// text block then this property returns the current code point index.
+        /// </remarks>
         public int NextCodePointIndex;
 
         /// <summary>
-        /// The previous code point index (same as CodePointIndex if first)
+        /// The code point index of the previous cluster.
         /// </summary>
+        /// <remarks>
+        /// If the code point index refers to the first code point in the
+        /// text block then this property returns 0.
+        /// </remarks>
         public int PreviousCodePointIndex;
 
         /// <summary>
-        /// The number of code points in this cluster
+        /// The number of code points in this cluster.
         /// </summary>
         public int CodePointCount => NextCodePointIndex - CodePointIndex;
 
         /// <summary>
-        /// The font run that displays this cluster
+        /// The font run that contains the code point.
         /// </summary>
         public FontRun FontRun;
 
         /// <summary>
-        /// The X-coordinate where the caret should be displayed for this code point
+        /// The style run that contains the code point.
+        /// </summary>
+        public StyleRun StyleRun;
+
+        /// <summary>
+        /// The X-coordinate where the caret should be displayed for this code point.
         /// </summary>
         public float CaretXCoord => FontRun.GetXCoordOfCodePointIndex(CodePointIndex);
 
@@ -71,9 +85,9 @@ namespace Topten.RichTextKit
                 // Setup the basic rectangle
                 var rect = new SKRect();
                 rect.Left = CaretXCoord;
-                rect.Top = fr.Line.YPosition + fr.Line.BaseLine + fr.Ascent;
+                rect.Top = fr.Line.YCoord + fr.Line.BaseLine + fr.Ascent;
                 rect.Right = rect.Left;
-                rect.Bottom = fr.Line.YPosition + fr.Line.BaseLine + fr.Descent;
+                rect.Bottom = fr.Line.YCoord + fr.Line.BaseLine + fr.Descent;
 
                 // Apply slant if italic
                 if (fr.Style.FontItalic)

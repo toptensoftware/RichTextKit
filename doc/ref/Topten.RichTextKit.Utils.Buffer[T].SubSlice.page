@@ -23,7 +23,7 @@ import: "../.common.page"
 
 
 
-<p>Create a subslice of data from this array</p>
+<p>Returns a range within this buffer as a <a href="./../ref/Topten.RichTextKit.Utils.Slice%5BT%5D">Slice&lt;T&gt;</a></p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public Slice&lt;T&gt; SubSlice(int start, int length);</code></pre>
@@ -50,7 +50,7 @@ import: "../.common.page"
 <h2 id="returns">Returns</h2>    <table class="name-description">
         <tr>
             <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;T&gt;</a></td>
-            <td><p>A Slice for the specified sub-range</p>
+            <td><p>A slice for the specified sub-range</p>
 </td>
         </tr>
     </table>

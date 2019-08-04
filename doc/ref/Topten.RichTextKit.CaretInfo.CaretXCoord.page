@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>The X-coordinate where the caret should be displayed for this code point</p>
+<p>The X-coordinate where the caret should be displayed for this code point.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public float CaretXCoord { get; }</code></pre>

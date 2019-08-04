@@ -19,7 +19,8 @@ import: "../.common.page"
 
 
 
-<p>True for italic font; otherwise false</p>
+<p>True if the text in this run should be displayed in an italic
+font; otherwise False.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public bool FontItalic { get; }</code></pre>

@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 namespace Topten.RichTextKit
 {
     /// <summary>
-    /// Options controlling how TextBlock is rendered
+    /// Options to control how TextBlock is rendered.
     /// </summary>
     public class TextPaintOptions
     {
         /// <summary>
-        /// Optional start selection position
+        /// An optional code point index of the start of a selection range.
         /// </summary>
         /// <remarks>
         /// Both start and end selection need to be set for selection
@@ -26,7 +26,7 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// Option end selection position
+        /// An optional code point index of the end of a selection range.
         /// </summary>
         /// <remarks>
         /// Both start and end selection need to be set for selection
@@ -39,7 +39,7 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// Color to draw selection background with
+        /// The color to draw selection background with.
         /// </summary>
         public SKColor SelectionColor
         {
@@ -48,7 +48,7 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// Render with anti aliasing
+        /// Controls whether text is rendered with anti-aliasing.
         /// </summary>
         public bool IsAntialias
         {
@@ -57,7 +57,7 @@ namespace Topten.RichTextKit
         } = true;
 
         /// <summary>
-        /// Use LCD text rendering
+        /// Controls whether text is rendered using LCD sub-pixel rendering.
         /// </summary>
         public bool LcdRenderText
         {
@@ -66,7 +66,8 @@ namespace Topten.RichTextKit
         } = false;
 
         /// <summary>
-        /// Default paint options (no selection)
+        /// A default set of paint options that renders text blocks without 
+        /// a selection range.
         /// </summary>
         public static TextPaintOptions Default = new TextPaintOptions();
     }

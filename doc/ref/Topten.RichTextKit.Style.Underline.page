@@ -19,6 +19,7 @@ import: "../.common.page"
 
 
 
+<p>The underline style for text in this run (defaults to None).</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public UnderlineStyle Underline { sealed get; set; }</code></pre>

@@ -24,12 +24,12 @@ import: "../.common.page"
     <table class="name-description">
             <tr>
                 <td><a href="#Topten.RichTextKit.Utils-BinarySearchExtension.BinarySearch-T-U-System.Collections.Generic-IReadOnlyList-T--U-System-Func-T-U-System-Int32-">BinarySearch&lt;T,U&gt;(this IReadOnlyList&lt;T&gt;, U, Func&lt;T,U,int&gt;)</a></td>
-                <td><p>Performs a binary search on a IReadOnlyList</p>
+                <td><p>Performs a binary search on the entire contents of an IReadOnlyList</p>
 </td>
             </tr>
             <tr>
                 <td><a href="#Topten.RichTextKit.Utils-BinarySearchExtension.BinarySearch-T-U-System.Collections.Generic-IReadOnlyList-T--System-Int32-System-Int32-U-System-Func-T-U-System-Int32-">BinarySearch&lt;T,U&gt;(this IReadOnlyList&lt;T&gt;, int, int, U, Func&lt;T,U,int&gt;)</a></td>
-                <td><p>Performs a binary search on a IReadOnlyList</p>
+                <td><p>Performs a binary search on a a subset of an IReadOnlyList</p>
 </td>
             </tr>
     </table>
@@ -37,7 +37,7 @@ import: "../.common.page"
 
     <h2 id="Topten.RichTextKit.Utils-BinarySearchExtension.BinarySearch-T-U-System.Collections.Generic-IReadOnlyList-T--U-System-Func-T-U-System-Int32-">BinarySearch&lt;T,U&gt;(this IReadOnlyList&lt;T&gt;, U, Func&lt;T,U,int&gt;)</h2>
 
-<p>Performs a binary search on a IReadOnlyList</p>
+<p>Performs a binary search on the entire contents of an IReadOnlyList</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public static int BinarySearch&lt;T,U&gt;(this IReadOnlyList&lt;T&gt; list, U value, Func&lt;T,U,int&gt; compare);</code></pre>
@@ -46,12 +46,12 @@ import: "../.common.page"
 <h3>Type Parameters</h3>    <table class="name-description">
             <tr>
                 <td>T</td>
-                <td><p>The list type</p>
+                <td><p>The list element type</p>
 </td>
             </tr>
             <tr>
                 <td>U</td>
-                <td><p>The member field type</p>
+                <td><p>The value type being searched for</p>
 </td>
             </tr>
     </table>
@@ -94,7 +94,7 @@ import: "../.common.page"
 
     <h2 id="Topten.RichTextKit.Utils-BinarySearchExtension.BinarySearch-T-U-System.Collections.Generic-IReadOnlyList-T--System-Int32-System-Int32-U-System-Func-T-U-System-Int32-">BinarySearch&lt;T,U&gt;(this IReadOnlyList&lt;T&gt;, int, int, U, Func&lt;T,U,int&gt;)</h2>
 
-<p>Performs a binary search on a IReadOnlyList</p>
+<p>Performs a binary search on a a subset of an IReadOnlyList</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public static int BinarySearch&lt;T,U&gt;(this IReadOnlyList&lt;T&gt; list, int index, int length, U value, Func&lt;T,U,int&gt; compare);</code></pre>
@@ -103,12 +103,12 @@ import: "../.common.page"
 <h3>Type Parameters</h3>    <table class="name-description">
             <tr>
                 <td>T</td>
-                <td><p>The list type</p>
+                <td><p>The list element type</p>
 </td>
             </tr>
             <tr>
                 <td>U</td>
-                <td><p>The member field type</p>
+                <td><p>The value type being searched for</p>
 </td>
             </tr>
     </table>

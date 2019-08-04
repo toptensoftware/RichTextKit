@@ -19,6 +19,7 @@ import: "../.common.page"
 
 
 
+<p>The font weight for text in this run (defaults to 400).</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public int FontWeight { sealed get; set; }</code></pre>

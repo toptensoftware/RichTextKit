@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>Optional start selection position</p>
+<p>An optional code point index of the start of a selection range.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public Nullable&lt;int&gt; SelectionStart { get; set; }</code></pre>

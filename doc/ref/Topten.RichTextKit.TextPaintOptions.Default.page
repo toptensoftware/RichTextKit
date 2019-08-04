@@ -19,7 +19,8 @@ import: "../.common.page"
 
 
 
-<p>Default paint options (no selection)</p>
+<p>A default set of paint options that renders text blocks without
+a selection range.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public static TextPaintOptions Default;</code></pre>

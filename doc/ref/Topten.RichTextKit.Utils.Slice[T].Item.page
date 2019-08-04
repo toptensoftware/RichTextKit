@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>Get/set an element in the slice</p>
+<p>Gets a reference to an element in the slice</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public ref T this[int index] { get; }</code></pre>

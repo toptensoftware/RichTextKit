@@ -19,11 +19,12 @@ import: "../.common.page"
 
 
 
-<p>The height of all text elements in this line</p>
+<p>Gets the text height of this line.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public float TextHeight { get; }</code></pre>
 
+<h2 id="remarks">Remarks</h2><p>The text height of a line is the sum of the ascent and desent.</p>
 
 <h2 id="property-type">Property Type</h2>    <table class="name-description">
         <tr>

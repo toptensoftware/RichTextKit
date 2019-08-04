@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>The kind of run</p>
+<p>The kind of font run.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public FontRunKind RunKind;</code></pre>

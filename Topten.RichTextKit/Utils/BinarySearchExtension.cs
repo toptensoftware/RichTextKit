@@ -5,7 +5,7 @@ using System.Text;
 namespace Topten.RichTextKit.Utils
 {
     /// <summary>
-    /// Helpers for binary searching IReadOnlyList
+    /// Extension methods for binary searching an IReadOnlyList collection
     /// </summary>
     public static class BinarySearchExtension
     {
@@ -17,10 +17,10 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Performs a binary search on a IReadOnlyList
+        /// Performs a binary search on the entire contents of an IReadOnlyList
         /// </summary>
-        /// <typeparam name="T">The list type</typeparam>
-        /// <typeparam name="U">The member field type</typeparam>
+        /// <typeparam name="T">The list element type</typeparam>
+        /// <typeparam name="U">The value type being searched for</typeparam>
         /// <param name="list">The list to be searched</param>
         /// <param name="value">The value to search for</param>
         /// <param name="compare">A comparison function</param>
@@ -31,10 +31,10 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Performs a binary search on a IReadOnlyList
+        /// Performs a binary search on a a subset of an IReadOnlyList
         /// </summary>
-        /// <typeparam name="T">The list type</typeparam>
-        /// <typeparam name="U">The member field type</typeparam>
+        /// <typeparam name="T">The list element type</typeparam>
+        /// <typeparam name="U">The value type being searched for</typeparam>
         /// <param name="list">The list to be searched</param>
         /// <param name="index">The start of the range to be searched</param>
         /// <param name="length">The length of the range to be searched</param>

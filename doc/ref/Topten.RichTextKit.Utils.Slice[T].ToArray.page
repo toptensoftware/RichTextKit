@@ -23,7 +23,7 @@ import: "../.common.page"
 
 
 
-<p>Get the slice contents as a new array</p>
+<p>Gets the slice contents as a new array</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public T[] ToArray();</code></pre>

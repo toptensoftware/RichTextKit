@@ -10,19 +10,19 @@ using System.Threading.Tasks;
 namespace Topten.RichTextKit.Utils
 {
     /// <summary>
-    /// A buffer of T
+    /// A growable array of elements of type `T`
     /// </summary>
     /// <typeparam name="T">The buffer element type</typeparam>
     [DebuggerDisplay("Length = {Length}")]
     public class Buffer<T> : IEnumerable<T>, IEnumerable
     {
         /// <summary>
-        /// Constructs a new buffer
+        /// Constructs a new buffer.
         /// </summary>
         public Buffer()
         {
             // Create initial array
-            _data = new T[1024];
+            _data = new T[32];
         }
 
         /// <summary>
@@ -38,8 +38,12 @@ namespace Topten.RichTextKit.Utils
         int _length;
 
         /// <summary>
-        /// Get or set the length of the buffer
+        /// Gets or sets the length of the buffer
         /// </summary>
+        /// <remarks>
+        /// The internal buffer will be grown if the new length is larger
+        /// than the current buffer size.
+        /// </remarks>
         public int Length
         {
             get => _length;
@@ -56,7 +60,7 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Clear the buffer (keep internal allocated memory)
+        /// Clears the buffer, keeping the internally allocated array.
         /// </summary>
         public void Clear()
         {
@@ -64,11 +68,11 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Add to the buffer, returning a slice of requested size
+        /// Adds to the buffer, returning a slice of requested size
         /// </summary>
-        /// <param name="length">Number of items to add</param>
-        /// <param name="clear">True to clear the content</param>
-        /// <returns>A slice representing the allocated area</returns>
+        /// <param name="length">Number of elements to add</param>
+        /// <param name="clear">True to clear the content; otherwise false</param>
+        /// <returns>A slice representing the allocated elements.</returns>
         public Slice<T> Add(int length, bool clear = true)
         {
             // Grow internal buffer?
@@ -94,9 +98,10 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Add a slice of data to this buffer
+        /// Add a slice of data to this buffer.
         /// </summary>
         /// <param name="slice">The slice to be added</param>
+        /// <returns>A slice representing the added elements.</returns>
         public Slice<T> Add(Slice<T> slice)
         {
             // Grow internal buffer?
@@ -121,10 +126,10 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Get/set an element in the slice
+        /// Gets a reference to an element in the buffer
         /// </summary>
         /// <param name="index">The element index</param>
-        /// <returns>The element value</returns>
+        /// <returns>A reference to the element value.</returns>
         public ref T this[int index]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -137,11 +142,11 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Create a subslice of data from this array
+        /// Returns a range within this buffer as a <see cref="Slice{T}"/>
         /// </summary>
         /// <param name="start">Start offset of the slice</param>
         /// <param name="length">Length of the slice</param>
-        /// <returns>A Slice for the specified sub-range</returns>
+        /// <returns>A slice for the specified sub-range</returns>
         public Slice<T> SubSlice(int start, int length)
         {
             if (start < 0)
@@ -153,7 +158,7 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Get the entire buffer contents as a slice
+        /// Returns the entire buffer contents as a <see cref="Slice{T}"/>
         /// </summary>
         /// <returns>A Slice</returns>
         public Slice<T> AsSlice()

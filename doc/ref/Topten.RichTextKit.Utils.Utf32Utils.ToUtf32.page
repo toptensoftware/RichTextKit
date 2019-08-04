@@ -23,7 +23,7 @@ import: "../.common.page"
 
 
 
-<p>Convert a string to an integer array of utf-32 code points</p>
+<p>Converts a string to an integer array of UTF-32 code points</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public static int[] ToUtf32(string str);</code></pre>

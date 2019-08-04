@@ -15,7 +15,7 @@ import: "../.common.page"
 </p>
 
 
-<p>Options controlling how TextBlock is rendered</p>
+<p>Options to control how TextBlock is rendered.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public class TextPaintOptions</code></pre>
@@ -43,7 +43,8 @@ import: "../.common.page"
     <table class="name-description">
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextPaintOptions.Default">Default</a></td>
-                <td><p>Default paint options (no selection)</p>
+                <td><p>A default set of paint options that renders text blocks without
+a selection range.</p>
 </td>
             </tr>
     </table>
@@ -52,27 +53,27 @@ import: "../.common.page"
     <table class="name-description">
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextPaintOptions.IsAntialias">IsAntialias</a></td>
-                <td><p>Render with anti aliasing</p>
+                <td><p>Controls whether text is rendered with anti-aliasing.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextPaintOptions.LcdRenderText">LcdRenderText</a></td>
-                <td><p>Use LCD text rendering</p>
+                <td><p>Controls whether text is rendered using LCD sub-pixel rendering.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextPaintOptions.SelectionColor">SelectionColor</a></td>
-                <td><p>Color to draw selection background with</p>
+                <td><p>The color to draw selection background with.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextPaintOptions.SelectionEnd">SelectionEnd</a></td>
-                <td><p>Option end selection position</p>
+                <td><p>An optional code point index of the end of a selection range.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextPaintOptions.SelectionStart">SelectionStart</a></td>
-                <td><p>Optional start selection position</p>
+                <td><p>An optional code point index of the start of a selection range.</p>
 </td>
             </tr>
     </table>

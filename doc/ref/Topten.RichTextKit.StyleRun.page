@@ -15,7 +15,8 @@ import: "../.common.page"
 </p>
 
 
-<p>Represets a styled run of text as provided by the client</p>
+<p>Represets a style run - a logical run of characters all with the same
+style.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public class StyleRun</code></pre>
@@ -44,32 +45,33 @@ import: "../.common.page"
     <table class="name-description">
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.StyleRun.CodePoints">CodePoints</a></td>
-                <td><p>Get the code points of this run</p>
+                <td><p>Get the code points of this run.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.StyleRun.End">End</a></td>
-                <td><p>The index of the first code point after this run</p>
+                <td><p>The index of the first code point after this run.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.StyleRun.Length">Length</a></td>
-                <td><p>The length of this run (in codepoints)</p>
+                <td><p>The number of code points this run.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.StyleRun.Start">Start</a></td>
-                <td><p>Index into _codePoints buffer of the start of this run</p>
+                <td><p>The index of the first code point in this run (relative to the text block
+as a whole).</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.StyleRun.Style">Style</a></td>
-                <td><p>The style of this run</p>
+                <td><p>The style attributes to be applied to text in this run.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.StyleRun.TextBlock">TextBlock</a></td>
-                <td><p>The owning text block</p>
+                <td><p>Gets the text block that owns this run.</p>
 </td>
             </tr>
     </table>

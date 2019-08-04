@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>Get the offset of this slice within the underlying array</p>
+<p>Gets the offset of this slice within the underlying array</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public int Start { get; }</code></pre>

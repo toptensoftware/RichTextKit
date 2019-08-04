@@ -15,7 +15,7 @@ import: "../.common.page"
 </p>
 
 
-<p>Enumeration for font variants, super-script and sub-script</p>
+<p>Describes variations to a base font for a run of text.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public enum FontVariant</code></pre>
@@ -31,7 +31,7 @@ import: "../.common.page"
             <tr>
                 <td>Normal</td>
                 <td>0</td>
-                <td><p>Normal text</p>
+                <td><p>Normal text.</p>
 </td>
             </tr>
             <tr>

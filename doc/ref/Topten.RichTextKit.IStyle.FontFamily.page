@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>The font family</p>
+<p>The font family for text this text run.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public string FontFamily { get; }</code></pre>

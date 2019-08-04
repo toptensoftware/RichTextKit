@@ -19,11 +19,13 @@ import: "../.common.page"
 
 
 
-<p>Get or set the length of the buffer</p>
+<p>Gets or sets the length of the buffer</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public int Length { get; set; }</code></pre>
 
+<h2 id="remarks">Remarks</h2><p>The internal buffer will be grown if the new length is larger
+than the current buffer size.</p>
 
 <h2 id="property-type">Property Type</h2>    <table class="name-description">
         <tr>

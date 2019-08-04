@@ -19,6 +19,7 @@ import: "../.common.page"
 
 
 
+<p>The line height for text in this run as a multiplier (defaults to 1.0).</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public float LineHeight { sealed get; set; }</code></pre>

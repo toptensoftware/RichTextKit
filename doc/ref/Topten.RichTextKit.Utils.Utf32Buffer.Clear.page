@@ -24,12 +24,12 @@ import: "../.common.page"
     <table class="name-description">
             <tr>
                 <td><a href="#Topten.RichTextKit.Utils-Utf32Buffer.Clear-">Clear()</a></td>
-                <td><p>Clear this text buffer</p>
+                <td><p>Clears this buffer.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="#Topten.RichTextKit.Utils-Buffer`1.Clear-">Clear()</a></td>
-                <td><p>Clear the buffer (keep internal allocated memory)</p>
+                <td><p>Clears the buffer, keeping the internally allocated array.</p>
 </td>
             </tr>
     </table>
@@ -37,7 +37,7 @@ import: "../.common.page"
 
     <h2 id="Topten.RichTextKit.Utils-Utf32Buffer.Clear-">Clear()</h2>
 
-<p>Clear this text buffer</p>
+<p>Clears this buffer.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public void Clear();</code></pre>
@@ -49,7 +49,7 @@ import: "../.common.page"
 
     <h2 id="Topten.RichTextKit.Utils-Buffer`1.Clear-">Clear()</h2>
 
-<p>Clear the buffer (keep internal allocated memory)</p>
+<p>Clears the buffer, keeping the internally allocated array.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public void Clear();</code></pre>

@@ -23,12 +23,13 @@ import: "../.common.page"
 
 
 
-<p>Convers an offset into this utf32 buffer to a utf16 offset</p>
+<p>Convers an offset into this buffer to a UTF-16 offset in the originally
+added string.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public int Utf32OffsetToUtf16Offset(int utf32Offset);</code></pre>
 
-<h2 id="remarks">Remarks</h2><p>This function assumes the was text added to the buffer as utf16
+<h2 id="remarks">Remarks</h2><p>This function assumes the was text added to the buffer as UTF-16
 and hasn't been modified in any way since.</p>
 
 <h2 id="parameters">Parameters</h2>    <table class="name-description">
@@ -37,14 +38,14 @@ and hasn't been modified in any way since.</p>
                     
                     <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> utf32Offset
                 </td>
-                <td><p>The utf32 offset to convert</p>
+                <td><p>The UTF-3232 offset to convert</p>
 </td>
             </tr>
     </table>
 <h2 id="returns">Returns</h2>    <table class="name-description">
         <tr>
             <td><a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a></td>
-            <td><p>The utf16 character offset</p>
+            <td><p>The converted UTF-16 character offset</p>
 </td>
         </tr>
     </table>

@@ -19,6 +19,7 @@ import: "../.common.page"
 
 
 
+<p>The font size for text in this run (defaults to 16).</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public float FontSize { sealed get; set; }</code></pre>

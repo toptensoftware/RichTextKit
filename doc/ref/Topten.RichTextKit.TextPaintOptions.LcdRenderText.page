@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>Use LCD text rendering</p>
+<p>Controls whether text is rendered using LCD sub-pixel rendering.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public bool LcdRenderText { get; set; }</code></pre>

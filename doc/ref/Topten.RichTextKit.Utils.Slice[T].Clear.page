@@ -23,7 +23,7 @@ import: "../.common.page"
 
 
 
-<p>Clear the entire slice content</p>
+<p>Clears the entire slice content</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public void Clear();</code></pre>

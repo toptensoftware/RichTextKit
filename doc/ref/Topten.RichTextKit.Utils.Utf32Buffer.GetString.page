@@ -24,12 +24,12 @@ import: "../.common.page"
     <table class="name-description">
             <tr>
                 <td><a href="#Topten.RichTextKit.Utils-Utf32Buffer.GetString-">GetString()</a></td>
-                <td><p>Get the enture buffer's content as a string</p>
+                <td><p>Gets the enture buffer's content as a string.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="#Topten.RichTextKit.Utils-Utf32Buffer.GetString-System-Int32-System-Int32">GetString(int, int)</a></td>
-                <td><p>Get a slide of the buffer as a string</p>
+                <td><p>Gets a part of the buffer as a string.</p>
 </td>
             </tr>
     </table>
@@ -37,7 +37,7 @@ import: "../.common.page"
 
     <h2 id="Topten.RichTextKit.Utils-Utf32Buffer.GetString-">GetString()</h2>
 
-<p>Get the enture buffer's content as a string</p>
+<p>Gets the enture buffer's content as a string.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public string GetString();</code></pre>
@@ -55,7 +55,7 @@ import: "../.common.page"
 
     <h2 id="Topten.RichTextKit.Utils-Utf32Buffer.GetString-System-Int32-System-Int32">GetString(int, int)</h2>
 
-<p>Get a slide of the buffer as a string</p>
+<p>Gets a part of the buffer as a string.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public string GetString(int start, int length);</code></pre>
@@ -67,7 +67,7 @@ import: "../.common.page"
                     
                     <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> start
                 </td>
-                <td><p>Start offset (in utf-32 coords)</p>
+                <td><p>The UTF-32 code point index of the first character to retrieve</p>
 </td>
             </tr>
             <tr>
@@ -75,14 +75,15 @@ import: "../.common.page"
                     
                     <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> length
                 </td>
-                <td><p>Length of the slice (in utf-32 coords)</p>
+                <td><p>The number of code points in the string to be retrieved</p>
 </td>
             </tr>
     </table>
 <h3>Returns</h3>    <table class="name-description">
         <tr>
             <td><a href="https://docs.microsoft.com/dotnet/api/System.String">string</a></td>
-            <td></td>
+            <td><p>A string equivalent to the specified code point range.</p>
+</td>
         </tr>
     </table>
 

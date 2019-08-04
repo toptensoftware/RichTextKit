@@ -19,6 +19,7 @@ import: "../.common.page"
 
 
 
+<p>The font family for text this text run (defaults to &quot;Arial&quot;).</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public string FontFamily { sealed get; set; }</code></pre>

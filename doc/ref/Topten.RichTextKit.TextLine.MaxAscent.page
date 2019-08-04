@@ -19,11 +19,12 @@ import: "../.common.page"
 
 
 
-<p>The maximum ascent of all font runs in this line</p>
+<p>Gets the maximum magnitude ascent of all font runs in this line.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public float MaxAscent { get; }</code></pre>
 
+<h2 id="remarks">Remarks</h2><p>The ascent is reported as a negative value from the base line.</p>
 
 <h2 id="property-type">Property Type</h2>    <table class="name-description">
         <tr>

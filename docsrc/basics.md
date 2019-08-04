@@ -10,10 +10,10 @@ when working with RichTextKit.
 
 ## Text Blocks
 
-RichTextKit primarily works with text blocks.  A text block represents
-a single block of text - essentially a paragraph.  
+RichTextKit primarily works with individual blocks of text where each is
+essentially a paragraph.
 
-RichTextKit doesn't provide higher level constructs like list items, 
+RichTextKit doesn't provide document level constructs like list items, 
 block quotes, tables, table cells, divs etc...  This project is strictly
 about laying out a single block of text with rich (aka attributed) text
 and then providing various functions for working with that text block.
@@ -21,9 +21,9 @@ and then providing various functions for working with that text block.
 RichTextKit doesn't have a concept of a DOM - that's a higher level concept 
 that RichTextKit is not attempting to solve.
 
-Although RichTextKit works with individual text blocks, they can contain
-carriage returns (`\n`) to force line breaks.  These should be considered as 
-in-paragraph "soft returns", as opposed to a hard paragraph terminator.
+Text blocks can contain forced line breaks with a newline character (`\n`).
+These should be considered as in-paragraph "soft returns", as opposed to
+hard paragraph terminators.
 
 Currently RichTextKit doesn't support non-text inline elements, although this
 may be added in the future.
@@ -34,13 +34,7 @@ Text blocks are represented by the [T:Topten.RichTextKit.TextBlock] class.
 
 Styles are used to describe the display attributes of text in a text block. A 
 text block is comprised of one of more runs of text each tagged with a
-single style.
-
-RichTextKit defines an interface [T:Topten.RichTextKit.IStyle] that provides the style of a
-run of text.  You can either provide your own implementation of this 
-interface (eg: suppose you have your own DOM that computes styles), or 
-you can use the built in [T:Topten.RichTextKit.Style] class which provides a simple implementation
-(but doesn't have any concept if style inheritance or cascading).
+single style and these text runs are referred to a "style runs".
 
 Style runs are represented by the [T:Topten.RichTextKit.StyleRun] class.
 
@@ -59,32 +53,32 @@ use for font fallback.
 ## Font Shaping
 
 For most Latin based languages, rendering text is simply a matter of placing one glyph 
-after another in a left-to-right manner.  
+after another in a left-to-right manner.  Other languages however require a more 
+complicated process that often involves drawing multiple glyphs for a single character.
+This process is called "font shaping".
 
-For many other languages however the process is much more complicated and often involves
-drawing multiple glyphs for a single character. This process is called "font shaping"
-
-By default Skia (and thereforce ShiaSharp) doesn't do font shaping and often displays 
-text incorrectly.  RichTextKit uses HarfBuzzSharp for text shaping.
+By default Skia (and therefore ShiaSharp) doesn't do font shaping and often displays 
+text incorrectly.  RichTextKit uses [HarfBuzz](https://www.freedesktop.org/wiki/Software/HarfBuzz/) 
+for text shaping.
 
 
 ## Font Runs
 
-A font run represents a single run of text that uses the same font and other
-style attributes for every character in the run.  Font runs are derived by 
-splitting style runs into smaller segments when when text is wrapped onto a 
-new line, or when a font fallback is required.
+Font run are derived by splitting style runs into smaller segments when text
+is wrapped onto a new line, or when a font fallback is required.
+
+Each font run represents a single run of text that uses the same font and other
+style attributes for every character in the run.  
 
 Font runs are represented by the [T:Topten.RichTextKit.FontRun] class.
 
 
 ## Style Runs vs Font Runs
 
-Style runs should be considered the client concept of a run of text.  ie: as it
-was added to the text block.  
+Style runs and font runs are similar concepts but serve two different purposes:
 
-Font runs describe how a text block is broken down after the block has been laid 
-out and can be considered the internal view of the text block.
+* Style runs describe the logical view of a text block (before layout)
+* Font runs describe the physical view of a text block (after layout)
 
 
 ## Lines
@@ -100,14 +94,14 @@ Bi-directional text is the process of correctly displaying text for mixed
 left-to-right and right-to-left based languages.
 
 RichTextKit includes an implementation of the Unicode Bi-directional Text 
-Algorithm (UAX #9) and each text block has a "base direction" that controls
-the default layout order of text in that paragraph.
+Algorithm ([UAX #9](http://www.unicode.org/reports/tr9/)) and each text block 
+has a "base direction" that controls the default layout order of text in that 
+paragraph.
 
 Embedded control characters (as specifed by UAX #9) can be used to control 
-bi-directional text formatting.  
-
-Specifying the text direction of a text run through styles is currently not
-supported and embedded control characters must be used.
+bi-directional text formatting. Specifying the text direction of a text run 
+through styles is currently not supported and embedded control characters 
+must be used.
 
 
 ## UTF-16, UTF-32, Code Points and Clusters
@@ -126,7 +120,7 @@ C# string. (although RichTextKit does provide functions to map between them).
 RichTextKit uses the term `CodePointIndex` to refer to the index of a code point 
 in a UTF-32 buffer.
 
-Also note that line endings `\r` and `\r\n` are automatically normalized to `\n`.  
+Also note that line endings `\r` and `\r\n` are automatically normalized to `\n`. 
 This conversion can also affect the mapping of code point indicies to character 
 indicies in the original string.
 
@@ -139,6 +133,8 @@ the same concept as used by HarfBuzz.
 
 ## Measurement and Size Units
 
-All measurements and sizes used by RichTextKit are logical.  The final size of the
-rendered text will depend on the configuration of the target Canvas scaling and 
-it's up to you to determine the appropriate system of measurement to use.
+All measurements and sizes used by RichTextKit are logical.  
+
+The final size of rendered text will depend on the configuration of the target 
+Canvas scaling and it's up to you to determine the appropriate system of measurement 
+to use.

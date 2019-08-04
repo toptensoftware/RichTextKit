@@ -22,6 +22,8 @@ RichTextKit is a rich-text layout, measurement and rendering library for SkiaSha
 * Easy to use
 * Minimal dependencies (just SkiaSharp and HarfBuzzSharp)
 
+![Sandbox](sandbox@2x.png)
+
 ## Under Development
 
 RichTextKit is still under development.  It works fine on Windows under net45 and 
@@ -31,7 +33,7 @@ Also, text layout in general and Unicode and international text specifically are
 complicated topics - almost certainly there are issues I'm unaware of and I'm 
 hoping the community can help improve this project over time...
 
-That said, RichTextKit certainly does a better job than Skia on it's own.
+That said, RichTextKit certainly does a better job than Skia on its own.
 
 ## Documentation
 

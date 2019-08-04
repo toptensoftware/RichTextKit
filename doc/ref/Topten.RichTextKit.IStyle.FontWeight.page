@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>The font weight</p>
+<p>The font weight for text in this run.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public int FontWeight { get; }</code></pre>

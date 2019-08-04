@@ -15,7 +15,7 @@ import: "../.common.page"
 </p>
 
 
-<p>Indicates the kind of font run</p>
+<p>Indicates the kind of font run.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public enum FontRunKind</code></pre>
@@ -31,19 +31,19 @@ import: "../.common.page"
             <tr>
                 <td>Ellipsis</td>
                 <td>2</td>
-                <td><p>This is a special font run created for the truncation ellipsis</p>
+                <td><p>This is a special font run created for the truncation ellipsis.</p>
 </td>
             </tr>
             <tr>
                 <td>Normal</td>
                 <td>0</td>
-                <td><p>This is a normal text font run</p>
+                <td><p>This is a normal text font run.</p>
 </td>
             </tr>
             <tr>
                 <td>TrailingWhitespace</td>
                 <td>1</td>
-                <td><p>This font run covers the trailing white space on a line</p>
+                <td><p>This font run covers the trailing white space on a line.</p>
 </td>
             </tr>
     </table>

@@ -23,7 +23,7 @@ import: "../.common.page"
 
 
 
-<p>Clear the buffer (keep internal allocated memory)</p>
+<p>Clears the buffer, keeping the internally allocated array.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public void Clear();</code></pre>

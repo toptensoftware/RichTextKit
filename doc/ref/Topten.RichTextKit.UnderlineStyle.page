@@ -15,7 +15,7 @@ import: "../.common.page"
 </p>
 
 
-<p>Underline styles</p>
+<p>Describes the underline style for a run of text</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public enum UnderlineStyle</code></pre>
@@ -31,19 +31,19 @@ import: "../.common.page"
             <tr>
                 <td>Gapped</td>
                 <td>1</td>
-                <td><p>Underline with gaps over descenders</p>
+                <td><p>Underline with gaps over descenders.</p>
 </td>
             </tr>
             <tr>
                 <td>None</td>
                 <td>0</td>
-                <td><p>No underline</p>
+                <td><p>No underline.</p>
 </td>
             </tr>
             <tr>
                 <td>Solid</td>
                 <td>2</td>
-                <td><p>Underline with no gaps over descenders</p>
+                <td><p>Underline with no gaps over descenders.</p>
 </td>
             </tr>
     </table>

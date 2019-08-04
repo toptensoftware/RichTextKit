@@ -19,15 +19,15 @@ import: "../.common.page"
 
 
 
-<p>The closest line to the passed y-coordinate.</p>
+<p>The zero based index of the closest line to the passed y-coordinate.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public int ClosestLine;</code></pre>
 
-<h2 id="remarks">Remarks</h2><p>If the point is directly over
-a line this value will be the same as the <code>OverLine</code> property.  If the point is
-above the first line, this value will be 0.  If the point is below the last
-line this value will be the index of the last line.</p>
+<h2 id="remarks">Remarks</h2><p>If the point is directly over a line this value will be the same as the
+<a href="./../ref/Topten.RichTextKit.HitTestResult.OverLine">OverLine</a> property.  If the point is before the first line,
+this property will be 0.  If the point is after the last line this value
+will be the index of the last line.</p>
 
 <h2 id="field-type">Field Type</h2>    <table class="name-description">
         <tr>

@@ -19,11 +19,13 @@ import: "../.common.page"
 
 
 
-<p>The previous code point index (same as CodePointIndex if first)</p>
+<p>The code point index of the previous cluster.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public int PreviousCodePointIndex;</code></pre>
 
+<h2 id="remarks">Remarks</h2><p>If the code point index refers to the first code point in the
+text block then this property returns 0.</p>
 
 <h2 id="field-type">Field Type</h2>    <table class="name-description">
         <tr>

@@ -23,7 +23,7 @@ import: "../.common.page"
 
 
 
-<p>Convert a slice of utf32 integer code points back to a string</p>
+<p>Convert a slice of UTF-32 integer code points to a string</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public static string FromUtf32(Slice&lt;int&gt; buffer);</code></pre>

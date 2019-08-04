@@ -5,17 +5,22 @@ isMarkdown: false
 <h1 id="creating-a-textblock">Creating a TextBlock</h1>
 <p>The primary class  you work with when using RichTextKit is the <a href="./ref/Topten.RichTextKit.TextBlock">TextBlock</a> class.  This section describes how to create a text block and add text to it.</p>
 <h2 id="create-a-text-block">Create a Text block</h2>
-<p>Creating a text block is simple</p>
+<p>To create a text block, simply create a new instance of the TextBlock class.  You'll
+probably also want to set some layout properties like the maximum width and the text alignment:</p>
 <pre class="language-csharp"><code class="language-csharp">// You'll need this namespace
 using Topten.RichTextKit;
 
 // Create the text block
 var tb = new TextBlock();
+
+// Configure layout properties
+tb.MaxWidth = 900;
+tb.Alignment = TextAlignment.Center;
 </code></pre>
-<h2 id="adding-text">Adding Text</h2>
-<p>Once you've created a text block, you can add text to it with the <a href="./ref/Topten.RichTextKit.TextBlock.AddText">AddText()</a> method:</p>
-<pre class="language-csharp"><code class="language-csharp">
-// Create normal style
+<h2 id="creating-styles">Creating Styles</h2>
+<p>Before you can add text to a text block, you'll need to create the styles
+that will be applied to the text:</p>
+<pre class="language-csharp"><code class="language-csharp">// Create normal style
 var styleNormal = new Style() 
 {
      FontFamily = &quot;Arial&quot;, 
@@ -30,17 +35,15 @@ var styleBoldItalic = new Style()
      FontWeight = 700,
      FontItalic = true,
 }
-
-// Add text to the text block
+</code></pre>
+<h2 id="adding-text">Adding Text</h2>
+<p>Now that you've created a text block and some styles, you can add text to the
+text block with the <a href="./ref/Topten.RichTextKit.TextBlock.AddText">AddText()</a> method:</p>
+<pre class="language-csharp"><code class="language-csharp">// Add text to the text block
 tb.AddText(&quot;Hello World.  &quot;, styleNormal);
 tb.AddText(&quot;Welcome to RichTextKit&quot;, styleBoldItalic)
-
-// Configure layout properties
-tb.MaxWidth = 900;
-tb.Alignment = TextAlignment.Center;
 </code></pre>
-<p>Now that you've created a text block, added some text to it and <a href="layout">set the layout
-properties</a>, you can <a href="rendering">render</a>, <a href="measuring">measure</a> and <a href="hittesting">hit test</a> it.</p>
+<p>That's it!  You can now use the text block to <a href="rendering">render</a>, <a href="measuring">measure</a> and <a href="hittesting">hittest</a> its content.</p>
 <h2 id="custom-istyle-implementation">Custom IStyle Implementation</h2>
 <p>The above example uses the built in <a href="./ref/Topten.RichTextKit.Style">Style</a> class to define the styles to be
 used.  The Style class is a lightweight class and is a reasonable approach for
@@ -49,20 +52,21 @@ most scenarios.</p>
 provides an easy way to plugin styling to a more comprehensive styling/DOM system should
 you need it.</p>
 <h2 id="re-using-textblocks">Re-using TextBlocks</h2>
-<p>TextBlocks are designed to be re-used.  For example suppose you have a label control
-that uses a TextBlock to render it's content, the recommended approach for this is to:</p>
+<p>Text blocks are designed to be re-used.  For example suppose you have a label control
+that uses a text Bbock to render it's content the recommended approach would be to:</p>
 <ol>
-<li><p>Create and hold a reference to a single TextBlock instance and just render it each
-time the control needs to be drawn.</p>
+<li><p>Create and initialize a <code>TextBlock</code> instance with the text to be displayed.</p>
 </li>
-<li><p>When the label's text changes, instead of creating a new TextBlock instance,
+<li><p>Render that text block instance each time the control needs to be drawn.</p>
+</li>
+<li><p>When the label's text changes, instead of creating a new text block instance,
 call the existing instance's <a href="./ref/Topten.RichTextKit.TextBlock.Clear">Clear()</a> method
 and then add the updated text to the same instance.</p>
 </li>
 </ol>
-<p>By re-using the same TextBlock instance you can avoid pressure on the garbage collector
-since the TextBlocks internally allocated arrays can be re-used.</p>
+<p>By re-using the same text block instance you can avoid pressure on the garbage collector
+since the existing text block's internally allocated arrays can be re-used.</p>
 <p>Another approach you might consider if you have many of pieces of text that rarely need
-to be redrawn, would be to create a single TextBlock element and use it to drawn multiple
-different items.</p>
+to be redrawn, would be to create a single TextBlock element and use the same instance
+to draw each piece of text.</p>
 

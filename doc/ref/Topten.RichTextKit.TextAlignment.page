@@ -15,7 +15,7 @@ import: "../.common.page"
 </p>
 
 
-<p>Alignment of text within a text block</p>
+<p>Species the alignment of text within a text block</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public enum TextAlignment</code></pre>
@@ -31,25 +31,27 @@ import: "../.common.page"
             <tr>
                 <td>Auto</td>
                 <td>0</td>
-                <td><p>Use base direction of the text block</p>
+                <td><p>Use base direction of the text block.</p>
 </td>
             </tr>
             <tr>
                 <td>Center</td>
                 <td>2</td>
-                <td><p>Centered</p>
+                <td><p>Center aligns text between 0 and <a href="./../ref/Topten.RichTextKit.TextBlock.MaxWidth">TextBlock.MaxWidth</a> unless not
+specified in which case it uses the widest line in the text block.</p>
 </td>
             </tr>
             <tr>
                 <td>Left</td>
                 <td>1</td>
-                <td><p>Left-aligned</p>
+                <td><p>Left-aligns text to a x-coord of 0.</p>
 </td>
             </tr>
             <tr>
                 <td>Right</td>
                 <td>3</td>
-                <td><p>Right aligneed</p>
+                <td><p>Right aligns text <a href="./../ref/Topten.RichTextKit.TextBlock.MaxWidth">TextBlock.MaxWidth</a> unless not
+specified in which case it right aligns to the widest line in the text block.</p>
 </td>
             </tr>
     </table>

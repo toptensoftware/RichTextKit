@@ -8,12 +8,13 @@ using Topten.RichTextKit.Utils;
 namespace Topten.RichTextKit
 {
     /// <summary>
-    /// Represets a styled run of text as provided by the client
+    /// Represets a style run - a logical run of characters all with the same
+    /// style.
     /// </summary>
     public class StyleRun
     {
         /// <summary>
-        /// The owning text block
+        /// Gets the text block that owns this run.
         /// </summary>
         public TextBlock TextBlock
         {
@@ -22,12 +23,13 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// Get the code points of this run
+        /// Get the code points of this run.
         /// </summary>
         public Slice<int> CodePoints => CodePointBuffer.SubSlice(Start, Length);
 
         /// <summary>
-        /// Index into _codePoints buffer of the start of this run
+        /// The index of the first code point in this run (relative to the text block
+        /// as a whole).
         /// </summary>
         public int Start
         {
@@ -36,7 +38,7 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// The length of this run (in codepoints)
+        /// The number of code points this run.
         /// </summary>
         public int Length
         {
@@ -45,12 +47,12 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// The index of the first code point after this run
+        /// The index of the first code point after this run.
         /// </summary>
         public int End => Start + Length;
 
         /// <summary>
-        /// The style of this run
+        /// The style attributes to be applied to text in this run.
         /// </summary>
         public IStyle Style
         {

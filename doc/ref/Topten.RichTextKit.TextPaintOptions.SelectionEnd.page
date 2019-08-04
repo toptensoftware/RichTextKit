@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>Option end selection position</p>
+<p>An optional code point index of the end of a selection range.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public Nullable&lt;int&gt; SelectionEnd { get; set; }</code></pre>

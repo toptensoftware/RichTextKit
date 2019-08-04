@@ -5,29 +5,30 @@ using System.Text;
 namespace Topten.RichTextKit
 {
     /// <summary>
-    /// Describes the results of hit testing a <see cref="TextBlock"/>
+    /// Used to return hit test information from the
+    /// <see cref="TextBlock.HitTest(float, float)"/> method.
     /// </summary>
     public struct HitTestResult
     {
         /// <summary>
         /// The zero based index of the line number the y-coordinate is directly 
-        /// over, or -1 if the y-coordinate is above the first line, or below the 
+        /// over, or -1 if the y-coordinate is before the first line, or after the 
         /// last line.
         /// </summary>
         /// <remarks>
-        /// The x-coordinate isn't used in calculating which line the point is over
-        /// and the left/right limits aren't checked.
+        /// The x-coordinate isn't used in calculating this value and the left/right 
+        /// limits aren't checked.
         /// </remarks>
         public int OverLine;
 
         /// <summary>
-        /// The closest line to the passed y-coordinate.  
+        /// The zero based index of the closest line to the passed y-coordinate.  
         /// </summary>
         /// <remarks>
-        /// If the point is directly over
-        /// a line this value will be the same as the `OverLine` property.  If the point is 
-        /// above the first line, this value will be 0.  If the point is below the last 
-        /// line this value will be the index of the last line. 
+        /// If the point is directly over a line this value will be the same as the 
+        /// <see cref="OverLine"/> property.  If the point is before the first line, 
+        /// this property will be 0.  If the point is after the last line this value 
+        /// will be the index of the last line. 
         /// </remarks>
         public int ClosestLine;
 

@@ -15,7 +15,7 @@ import: "../.common.page"
 </p>
 
 
-<p>Miscellaneous utility functions for working with UTF-32 data</p>
+<p>Miscellaneous utility functions for working with UTF-32 data.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public static class Utf32Utils</code></pre>
@@ -34,12 +34,12 @@ import: "../.common.page"
     <table class="name-description">
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Utf32Utils.FromUtf32">FromUtf32(Slice&lt;int&gt;)</a></td>
-                <td><p>Convert a slice of utf32 integer code points back to a string</p>
+                <td><p>Convert a slice of UTF-32 integer code points to a string</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Utf32Utils.ToUtf32">ToUtf32(string)</a></td>
-                <td><p>Convert a string to an integer array of utf-32 code points</p>
+                <td><p>Converts a string to an integer array of UTF-32 code points</p>
 </td>
             </tr>
     </table>

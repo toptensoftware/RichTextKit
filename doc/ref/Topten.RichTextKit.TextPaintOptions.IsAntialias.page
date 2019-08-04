@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>Render with anti aliasing</p>
+<p>Controls whether text is rendered with anti-aliasing.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public bool IsAntialias { get; set; }</code></pre>

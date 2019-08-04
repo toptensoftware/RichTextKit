@@ -19,11 +19,14 @@ import: "../.common.page"
 
 
 
-<p>List of text runs in this line</p>
+<p>Gets the set of text runs comprising this line.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public IReadOnlyList&lt;FontRun&gt; Runs { get; }</code></pre>
 
+<h2 id="remarks">Remarks</h2><p>Font runs are order logically (ie: in code point index order)
+but may have unordered <a href="./../ref/Topten.RichTextKit.FontRun.XCoord">FontRun.XCoord</a>'s when right to
+left text is in use.</p>
 
 <h2 id="property-type">Property Type</h2>    <table class="name-description">
         <tr>

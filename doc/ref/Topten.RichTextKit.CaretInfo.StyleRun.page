@@ -1,10 +1,10 @@
 ---
-title: "CaretInfo.CodePointIndex"
+title: "CaretInfo.StyleRun"
 isMarkdown: false
 import: "../.common.page"
 ---
 
-<h1 data-nav-secondary-text="Definition" id="definition">CaretInfo.CodePointIndex Field</h1>
+<h1 data-nav-secondary-text="Definition" id="definition">CaretInfo.StyleRun Field</h1>
 
 
 <p>
@@ -19,15 +19,15 @@ import: "../.common.page"
 
 
 
-<p>Returns the index of the code point that this caret info refers to.</p>
+<p>The style run that contains the code point.</p>
 
 
-<pre class="language-csharp"><code class="language-csharp">public int CodePointIndex;</code></pre>
+<pre class="language-csharp"><code class="language-csharp">public StyleRun StyleRun;</code></pre>
 
 
 <h2 id="field-type">Field Type</h2>    <table class="name-description">
         <tr>
-            <td><a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a></td>
+            <td><a href="./../ref/Topten.RichTextKit.StyleRun">StyleRun</a></td>
             <td></td>
         </tr>
     </table>

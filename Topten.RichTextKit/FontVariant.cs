@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 namespace Topten.RichTextKit
 {
     /// <summary>
-    /// Enumeration for font variants, super-script and sub-script
+    /// Describes variations to a base font for a run of text.
     /// </summary>
     public enum FontVariant
     {
         /// <summary>
-        /// Normal text
+        /// Normal text.
         /// </summary>
         Normal,
 

@@ -23,7 +23,7 @@ import: "../.common.page"
 
 
 
-<p>Constructs a new buffer</p>
+<p>Constructs a new buffer.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public Buffer();</code></pre>

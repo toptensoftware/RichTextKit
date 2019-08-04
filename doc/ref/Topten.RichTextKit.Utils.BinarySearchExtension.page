@@ -15,7 +15,7 @@ import: "../.common.page"
 </p>
 
 
-<p>Helpers for binary searching IReadOnlyList</p>
+<p>Extension methods for binary searching an IReadOnlyList collection</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public static class BinarySearchExtension</code></pre>
@@ -34,12 +34,12 @@ import: "../.common.page"
     <table class="name-description">
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.BinarySearchExtension.BinarySearch[T,U]#Topten.RichTextKit.Utils-BinarySearchExtension.BinarySearch-T-U-System.Collections.Generic-IReadOnlyList-T--U-System-Func-T-U-System-Int32-">BinarySearch&lt;T,U&gt;(this IReadOnlyList&lt;T&gt;, U, Func&lt;T,U,int&gt;)</a></td>
-                <td><p>Performs a binary search on a IReadOnlyList</p>
+                <td><p>Performs a binary search on the entire contents of an IReadOnlyList</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.BinarySearchExtension.BinarySearch[T,U]#Topten.RichTextKit.Utils-BinarySearchExtension.BinarySearch-T-U-System.Collections.Generic-IReadOnlyList-T--System-Int32-System-Int32-U-System-Func-T-U-System-Int32-">BinarySearch&lt;T,U&gt;(this IReadOnlyList&lt;T&gt;, int, int, U, Func&lt;T,U,int&gt;)</a></td>
-                <td><p>Performs a binary search on a IReadOnlyList</p>
+                <td><p>Performs a binary search on a a subset of an IReadOnlyList</p>
 </td>
             </tr>
     </table>

@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>Get the length of the array slice</p>
+<p>Gets the length of the array slice.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public int Length { get; }</code></pre>

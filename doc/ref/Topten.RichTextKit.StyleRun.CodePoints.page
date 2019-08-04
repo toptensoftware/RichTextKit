@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>Get the code points of this run</p>
+<p>Get the code points of this run.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public Utils.Slice&lt;int&gt; CodePoints { get; }</code></pre>

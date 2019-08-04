@@ -23,7 +23,7 @@ import: "../.common.page"
 
 
 
-<p>Constructor</p>
+<p>Constructs a new TextLine.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public TextLine();</code></pre>

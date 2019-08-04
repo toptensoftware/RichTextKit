@@ -26,7 +26,7 @@ ellipsis (<code>...</code>) character.</p>
 
 <pre class="language-csharp"><code class="language-csharp">public Nullable&lt;float&gt; MaxHeight { get; set; }</code></pre>
 
-<h2 id="remarks">Remarks</h2><p>This property can be set to null, in which the vertical height of the text block
+<h2 id="remarks">Remarks</h2><p>This property can be set to null, in which case the vertical height of the text block
 won't be capped.</p>
 
 <h2 id="property-type">Property Type</h2>    <table class="name-description">

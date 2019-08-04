@@ -19,6 +19,7 @@ import: "../.common.page"
 
 
 
+<p>The font variant (ie: super/sub-script) for text in this run.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public FontVariant FontVariant { sealed get; set; }</code></pre>

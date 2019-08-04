@@ -90,12 +90,12 @@ namespace Sandbox
                     break;
 
                 case Keys.Up:
-                    _driver.Scale += 0.5f;
+                    _driver.Scale += 0.1f;
                     Invalidate();
                     break;
 
                 case Keys.Down:
-                    _driver.Scale -= 0.5f;
+                    _driver.Scale -= 0.1f;
                     if (_driver.Scale < 0.5f)
                         _driver.Scale = 0.5f;
                     Invalidate();
@@ -134,6 +134,11 @@ namespace Sandbox
         {
             _driver.HitTest(e.X * 96.0f / DeviceDpi, e.Y * 96.0f / DeviceDpi);
             Invalidate();
+        }
+
+        private void Form1_Load(object sender, System.EventArgs e)
+        {
+
         }
     }
 }

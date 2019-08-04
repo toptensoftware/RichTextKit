@@ -23,7 +23,7 @@ import: "../.common.page"
 
 
 
-<p>Get the entire buffer contents as a slice</p>
+<p>Returns the entire buffer contents as a <a href="./../ref/Topten.RichTextKit.Utils.Slice%5BT%5D">Slice&lt;T&gt;</a></p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public Slice&lt;T&gt; AsSlice();</code></pre>

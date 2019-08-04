@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>Get the underlying array</p>
+<p>Gets the underlying array</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public T[] Underlying { get; }</code></pre>

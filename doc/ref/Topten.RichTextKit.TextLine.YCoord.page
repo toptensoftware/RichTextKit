@@ -1,10 +1,10 @@
 ---
-title: "TextLine.YPosition"
+title: "TextLine.YCoord"
 isMarkdown: false
 import: "../.common.page"
 ---
 
-<h1 data-nav-secondary-text="Definition" id="definition">TextLine.YPosition Property</h1>
+<h1 data-nav-secondary-text="Definition" id="definition">TextLine.YCoord Property</h1>
 
 
 <p>
@@ -19,10 +19,10 @@ import: "../.common.page"
 
 
 
-<p>Position of this line relative to the paragraph</p>
+<p>Gets the y-coordinate of the top of this line, relative to the top of the text block.</p>
 
 
-<pre class="language-csharp"><code class="language-csharp">public float YPosition { get; }</code></pre>
+<pre class="language-csharp"><code class="language-csharp">public float YCoord { get; }</code></pre>
 
 
 <h2 id="property-type">Property Type</h2>    <table class="name-description">

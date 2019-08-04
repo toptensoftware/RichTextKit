@@ -16,7 +16,7 @@ namespace Topten.RichTextKit.Utils
     public struct Slice<T> : IEnumerable<T>, System.Collections.IEnumerable
     {
         /// <summary>
-        /// Constructs a new array slice covering the entire array
+        /// Constructs a new slice covering the entire passed array.
         /// </summary>
         /// <param name="array"></param>
         public Slice(T[] array)
@@ -25,7 +25,7 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Constructs a new array slice for part of an array
+        /// Constructs a new slice for part of the passed array.
         /// </summary>
         /// <param name="array"></param>
         /// <param name="start"></param>
@@ -43,7 +43,7 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Get the length of the array slice
+        /// Gets the length of the array slice.
         /// </summary>
         public int Length
         {
@@ -56,7 +56,7 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Clear the entire slice content
+        /// Clears the entire slice content
         /// </summary>
         public void Clear()
         {
@@ -64,10 +64,10 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Get/set an element in the slice
+        /// Gets a reference to an element in the slice
         /// </summary>
         /// <param name="index">The element index</param>
-        /// <returns>The element value</returns>
+        /// <returns>A reference to the element value.</returns>
         public ref T this[int index]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -89,7 +89,7 @@ namespace Topten.RichTextKit.Utils
         int _length;
 
         /// <summary>
-        /// Create a subslice of an array slice
+        /// Creates a sub-slice of this slice
         /// </summary>
         /// <param name="start">The slice start index</param>
         /// <param name="length">The slice length</param>
@@ -100,7 +100,7 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Create a subslice of an array slice, from a specified position to the end
+        /// Creates a subslice of an array slice, from a specified position to the end
         /// </summary>
         /// <param name="start">The slice start index</param>
         /// <returns>A new array slice</returns>
@@ -110,7 +110,7 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Get the slice contents as a new array  
+        /// Gets the slice contents as a new array  
         /// </summary>
         /// <returns></returns>
         public T[] ToArray()
@@ -121,12 +121,12 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Get the underlying array
+        /// Gets the underlying array
         /// </summary>
         public T[] Underlying => _array;
 
         /// <summary>
-        /// Get the offset of this slice within the underlying array
+        /// Gets the offset of this slice within the underlying array
         /// </summary>
         public int Start => _start;
 

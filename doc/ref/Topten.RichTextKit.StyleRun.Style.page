@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>The style of this run</p>
+<p>The style attributes to be applied to text in this run.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public IStyle Style { get; }</code></pre>

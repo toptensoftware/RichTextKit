@@ -19,11 +19,13 @@ import: "../.common.page"
 
 
 
-<p>The next code point index (same as CodePointIndex if last)</p>
+<p>The code point index of the next cluster.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public int NextCodePointIndex;</code></pre>
 
+<h2 id="remarks">Remarks</h2><p>If the code point index refers to the last code point in the
+text block then this property returns the current code point index.</p>
 
 <h2 id="field-type">Field Type</h2>    <table class="name-description">
         <tr>

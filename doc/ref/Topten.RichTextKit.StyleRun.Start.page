@@ -19,7 +19,8 @@ import: "../.common.page"
 
 
 
-<p>Index into _codePoints buffer of the start of this run</p>
+<p>The index of the first code point in this run (relative to the text block
+as a whole).</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public int Start { get; }</code></pre>

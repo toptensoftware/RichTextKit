@@ -1,22 +1,22 @@
 ﻿namespace Topten.RichTextKit
 {
     /// <summary>
-    /// Indicates the kind of font run
+    /// Indicates the kind of font run.
     /// </summary>
     public enum FontRunKind
     {
         /// <summary>
-        /// This is a normal text font run
+        /// This is a normal text font run.
         /// </summary>
         Normal,
 
         /// <summary>
-        /// This font run covers the trailing white space on a line
+        /// This font run covers the trailing white space on a line.
         /// </summary>
         TrailingWhitespace,
 
         /// <summary>
-        /// This is a special font run created for the truncation ellipsis
+        /// This is a special font run created for the truncation ellipsis.
         /// </summary>
         Ellipsis,
     }

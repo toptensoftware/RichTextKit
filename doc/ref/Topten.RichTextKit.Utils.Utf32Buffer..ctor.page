@@ -24,12 +24,12 @@ import: "../.common.page"
     <table class="name-description">
             <tr>
                 <td><a href="#Topten.RichTextKit.Utils-Utf32Buffer--ctor-">Utf32Buffer()</a></td>
-                <td><p>Constructor</p>
+                <td><p>Constructs a new Utf32Buffer</p>
 </td>
             </tr>
             <tr>
                 <td><a href="#Topten.RichTextKit.Utils-Utf32Buffer--ctor-System-String">Utf32Buffer(string)</a></td>
-                <td><p>Constructs a UTF32 buffer with an initial string</p>
+                <td><p>Constructs a Utf32 buffer with an initial string</p>
 </td>
             </tr>
     </table>
@@ -37,7 +37,7 @@ import: "../.common.page"
 
     <h2 id="Topten.RichTextKit.Utils-Utf32Buffer--ctor-">Utf32Buffer()</h2>
 
-<p>Constructor</p>
+<p>Constructs a new Utf32Buffer</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public Utf32Buffer();</code></pre>
@@ -49,7 +49,7 @@ import: "../.common.page"
 
     <h2 id="Topten.RichTextKit.Utils-Utf32Buffer--ctor-System-String">Utf32Buffer(string)</h2>
 
-<p>Constructs a UTF32 buffer with an initial string</p>
+<p>Constructs a Utf32 buffer with an initial string</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public Utf32Buffer(string str);</code></pre>

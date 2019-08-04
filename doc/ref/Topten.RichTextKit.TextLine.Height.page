@@ -19,11 +19,13 @@ import: "../.common.page"
 
 
 
-<p>Total height of this line</p>
+<p>Gets the height of this line</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public float Height { get; }</code></pre>
 
+<h2 id="remarks">Remarks</h2><p>The height of a line is based on the font and <a href="./../ref/Topten.RichTextKit.IStyle.LineHeight">IStyle.LineHeight</a>
+value of all runs in this line.</p>
 
 <h2 id="property-type">Property Type</h2>    <table class="name-description">
         <tr>

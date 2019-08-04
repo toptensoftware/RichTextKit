@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>The width of the content on this line (excluding trailing whitespace)</p>
+<p>The width of the content on this line, excluding trailing whitespace and overhang.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public float Width { get; }</code></pre>

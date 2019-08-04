@@ -8,24 +8,29 @@ using System.Threading.Tasks;
 namespace Topten.RichTextKit
 {
     /// <summary>
-    /// Represents a laid out line of text
+    /// Represents a laid out line of text.
     /// </summary>
     public class TextLine
     {
         /// <summary>
-        /// Constructor
+        /// Constructs a new TextLine.
         /// </summary>
         public TextLine()
         {
         }
 
         /// <summary>
-        /// List of text runs in this line
+        /// Gets the set of text runs comprising this line.
         /// </summary>
+        /// <remarks>
+        /// Font runs are order logically (ie: in code point index order)
+        /// but may have unordered <see cref="FontRun.XCoord"/>'s when right to
+        /// left text is in use.
+        /// </remarks>
         public IReadOnlyList<FontRun> Runs => RunsInternal;
 
         /// <summary>
-        /// Get the text block that owns this line
+        /// Gets the text block that owns this line.
         /// </summary>
         public TextBlock TextBlock
         {
@@ -34,7 +39,7 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// Get the next line in this text block
+        /// Gets the next line in this text block, or null if this is the last line.
         /// </summary>
         public TextLine NextLine
         {
@@ -48,7 +53,7 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// Get the next line in this text block
+        /// Gets the previous line in this text block, or null if this is the first line.
         /// </summary>
         public TextLine PreviousLine
         {
@@ -62,16 +67,16 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// Position of this line relative to the paragraph
+        /// Gets the y-coordinate of the top of this line, relative to the top of the text block.
         /// </summary>
-        public float YPosition
+        public float YCoord
         {
             get;
             internal set;
         }
 
         /// <summary>
-        /// The base line for text in this line (relative to YPosition)
+        /// Gets the base line of this line (relative to <see cref="YCoord"/>)
         /// </summary>
         public float BaseLine
         {
@@ -80,8 +85,11 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// The maximum ascent of all font runs in this line
+        /// Gets the maximum magnitude ascent of all font runs in this line.
         /// </summary>
+        /// <remarks>
+        /// The ascent is reported as a negative value from the base line.
+        /// </remarks>
         public float MaxAscent
         {
             get;
@@ -90,8 +98,11 @@ namespace Topten.RichTextKit
 
 
         /// <summary>
-        /// The maximum desscent of all font runs in this line
+        /// Gets the maximum descent of all font runs in this line.
         /// </summary>
+        /// <remarks>
+        /// The descent is reported as a positive value from the base line.
+        /// </remarks>
         public float MaxDescent
         {
             get;
@@ -99,13 +110,20 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// The height of all text elements in this line
+        /// Gets the text height of this line.
         /// </summary>
+        /// <remarks>
+        /// The text height of a line is the sum of the ascent and desent.
+        /// </remarks>
         public float TextHeight => -MaxAscent + MaxDescent;
 
         /// <summary>
-        /// Total height of this line
+        /// Gets the height of this line
         /// </summary>
+        /// <remarks>
+        /// The height of a line is based on the font and <see cref="IStyle.LineHeight"/>
+        /// value of all runs in this line.
+        /// </remarks>
         public float Height
         {
             get;
@@ -113,7 +131,7 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// The width of the content on this line (excluding trailing whitespace)
+        /// The width of the content on this line, excluding trailing whitespace and overhang.
         /// </summary>
         public float Width
         {

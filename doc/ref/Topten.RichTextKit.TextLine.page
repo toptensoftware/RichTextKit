@@ -15,7 +15,7 @@ import: "../.common.page"
 </p>
 
 
-<p>Represents a laid out line of text</p>
+<p>Represents a laid out line of text.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public class TextLine</code></pre>
@@ -33,7 +33,7 @@ import: "../.common.page"
     <table class="name-description">
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextLine..ctor">TextLine()</a></td>
-                <td><p>Constructor</p>
+                <td><p>Constructs a new TextLine.</p>
 </td>
             </tr>
     </table>
@@ -45,57 +45,57 @@ import: "../.common.page"
     <table class="name-description">
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextLine.BaseLine">BaseLine</a></td>
-                <td><p>The base line for text in this line (relative to YPosition)</p>
+                <td><p>Gets the base line of this line (relative to <a href="./../ref/Topten.RichTextKit.TextLine.YCoord">YCoord</a>)</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextLine.Height">Height</a></td>
-                <td><p>Total height of this line</p>
+                <td><p>Gets the height of this line</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextLine.MaxAscent">MaxAscent</a></td>
-                <td><p>The maximum ascent of all font runs in this line</p>
+                <td><p>Gets the maximum magnitude ascent of all font runs in this line.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextLine.MaxDescent">MaxDescent</a></td>
-                <td><p>The maximum desscent of all font runs in this line</p>
+                <td><p>Gets the maximum descent of all font runs in this line.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextLine.NextLine">NextLine</a></td>
-                <td><p>Get the next line in this text block</p>
+                <td><p>Gets the next line in this text block, or null if this is the last line.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextLine.PreviousLine">PreviousLine</a></td>
-                <td><p>Get the next line in this text block</p>
+                <td><p>Gets the previous line in this text block, or null if this is the first line.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextLine.Runs">Runs</a></td>
-                <td><p>List of text runs in this line</p>
+                <td><p>Gets the set of text runs comprising this line.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextLine.TextBlock">TextBlock</a></td>
-                <td><p>Get the text block that owns this line</p>
+                <td><p>Gets the text block that owns this line.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextLine.TextHeight">TextHeight</a></td>
-                <td><p>The height of all text elements in this line</p>
+                <td><p>Gets the text height of this line.</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextLine.Width">Width</a></td>
-                <td><p>The width of the content on this line (excluding trailing whitespace)</p>
+                <td><p>The width of the content on this line, excluding trailing whitespace and overhang.</p>
 </td>
             </tr>
             <tr>
-                <td><a href="./../ref/Topten.RichTextKit.TextLine.YPosition">YPosition</a></td>
-                <td><p>Position of this line relative to the paragraph</p>
+                <td><a href="./../ref/Topten.RichTextKit.TextLine.YCoord">YCoord</a></td>
+                <td><p>Gets the y-coordinate of the top of this line, relative to the top of the text block.</p>
 </td>
             </tr>
     </table>

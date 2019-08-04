@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>The font run that displays this cluster</p>
+<p>The font run that contains the code point.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public FontRun FontRun;</code></pre>

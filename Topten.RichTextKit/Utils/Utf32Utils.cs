@@ -8,12 +8,12 @@ using Topten.RichTextKit.Utils;
 namespace Topten.RichTextKit.Utils
 {
     /// <summary>
-    /// Miscellaneous utility functions for working with UTF-32 data
+    /// Miscellaneous utility functions for working with UTF-32 data.
     /// </summary>
     public static class Utf32Utils
     {
         /// <summary>
-        /// Convert a slice of utf32 integer code points back to a string
+        /// Convert a slice of UTF-32 integer code points to a string
         /// </summary>
         /// <param name="buffer">The code points to convert</param>
         /// <returns>A string</returns>
@@ -30,7 +30,7 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Convert a string to an integer array of utf-32 code points
+        /// Converts a string to an integer array of UTF-32 code points
         /// </summary>
         /// <param name="str">The string to convert</param>
         /// <returns>The converted code points</returns>

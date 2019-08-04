@@ -48,7 +48,7 @@ namespace Topten.RichTextKit
         /// ellipsis (`...`) character.
         /// </summary>
         /// <remarks>
-        /// This property can be set to null, in which the vertical height of the text block
+        /// This property can be set to null, in which case the vertical height of the text block
         /// won't be capped.
         /// </remarks>
         public float? MaxHeight
@@ -73,7 +73,7 @@ namespace Topten.RichTextKit
         /// ellipsis (`...`) character.
         /// </summary>
         /// <remarks>
-        /// This property can be set to null, in which the vertical height of 
+        /// This property can be set to null, in which case the vertical height of 
         /// the text block won't be capped.
         /// </remarks>
         public int? MaxLines
@@ -519,7 +519,7 @@ namespace Topten.RichTextKit
             for (int i = 0; i < _lines.Count; i++)
             {
                 var l = _lines[i];
-                if (y >= l.YPosition && y < l.YPosition + l.Height)
+                if (y >= l.YCoord && y < l.YCoord + l.Height)
                 {
                     htr.OverLine = i;
                 }
@@ -731,7 +731,7 @@ namespace Topten.RichTextKit
         BidiData bidiData = new BidiData();
 
         /// <summary>
-        /// A list of styled runs, as supplied by user
+        /// A list of style runs, as supplied by user
         /// </summary>
         List<StyleRun> _styleRuns = new List<StyleRun>();
 
@@ -866,7 +866,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Adds a run of directional text
         /// </summary>
-        /// <param name="styleRun">The styled run the directional run was created from</param>
+        /// <param name="styleRun">The style run the directional run was created from</param>
         /// <param name="start">Index of the first code point _codePoints buffer</param>
         /// <param name="length">Number of code points in this run</param>
         /// <param name="direction">The direction of the text</param>
@@ -894,7 +894,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Adds a run of single font text
         /// </summary>
-        /// <param name="styleRun">The styled run the directional run was created from</param>
+        /// <param name="styleRun">The style run the directional run was created from</param>
         /// <param name="start">Index of the first code point _codePoints buffer</param>
         /// <param name="length">Number of code points in this run</param>
         /// <param name="direction">The direction of the text</param>
@@ -912,7 +912,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Helper to create a font run
         /// </summary>
-        /// <param name="styleRun">The user styled run owning this font run</param>
+        /// <param name="styleRun">The style run owning this font run</param>
         /// <param name="codePoints">The code points of the run</param>
         /// <param name="direction">The run direction</param>
         /// <param name="style">The user supplied style for this run</param>
@@ -1100,7 +1100,7 @@ namespace Topten.RichTextKit
             // Create the line
             var line = new TextLine();
             line.TextBlock = this;
-            line.YPosition = _measuredHeight;
+            line.YCoord = _measuredHeight;
 
             // Add runs
             for (int i = frIndexStartOfLine; i < frTrailingWhiteSpaceIndex; i++)
@@ -1390,7 +1390,7 @@ namespace Topten.RichTextKit
                     var fr = line.Runs[frIndex];
                     fr.Line = line;
                     fr.XCoord += xAdjust;
-                    fr.MoveGlyphs(fr.XCoord, line.YPosition + line.BaseLine);
+                    fr.MoveGlyphs(fr.XCoord, line.YCoord + line.BaseLine);
                 }
             }
         }

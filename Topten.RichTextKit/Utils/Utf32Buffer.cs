@@ -8,19 +8,19 @@ using Topten.RichTextKit.Utils;
 namespace Topten.RichTextKit.Utils
 {
     /// <summary>
-    /// A buffer of utf-32 character data
+    /// Represents a buffer of UTF-32 encoded code point data
     /// </summary>
     public class Utf32Buffer : Buffer<int>
     {
         /// <summary>
-        /// Constructor
+        /// Constructs a new Utf32Buffer
         /// </summary>
         public Utf32Buffer()
         {
         }
 
         /// <summary>
-        /// Constructs a UTF32 buffer with an initial string
+        /// Constructs a Utf32 buffer with an initial string
         /// </summary>
         /// <param name="str">The string to initialize with</param>
         public Utf32Buffer(string str)
@@ -29,7 +29,7 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Clear this text buffer
+        /// Clears this buffer.
         /// </summary>
         public new void Clear()
         {
@@ -38,10 +38,11 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Add text to this UTF-32 buffer
+        /// Adds text to this buffer, converting from UTF-16 to UTF-32 and normalizing
+        /// line endings to `\n`.
         /// </summary>
-        /// <param name="str">The text to add</param>
-        /// <returns>A slice representing the added UTF-32 data</returns>
+        /// <param name="str">The string of text to be added to the buffer</param>
+        /// <returns>A slice representing the added UTF-32 data.</returns>
         public Slice<int> Add(string str)
         {
             // Remember old length
@@ -105,14 +106,15 @@ namespace Topten.RichTextKit.Utils
 
 
         /// <summary>
-        /// Convers an offset into this utf32 buffer to a utf16 offset
+        /// Convers an offset into this buffer to a UTF-16 offset in the originally 
+        /// added string.
         /// </summary>
         /// <remarks>
-        /// This function assumes the was text added to the buffer as utf16
+        /// This function assumes the was text added to the buffer as UTF-16
         /// and hasn't been modified in any way since.
         /// </remarks>
-        /// <param name="utf32Offset">The utf32 offset to convert</param>
-        /// <returns>The utf16 character offset</returns>
+        /// <param name="utf32Offset">The UTF-3232 offset to convert</param>
+        /// <returns>The converted UTF-16 character offset</returns>
         public int Utf32OffsetToUtf16Offset(int utf32Offset)
         {
             // How many surrogate pairs were there before this utf32 offset?
@@ -126,7 +128,8 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Given a utf-16 index, convert it to a utf-32 index
+        /// Converts an offset in the original UTF-16 string, a code point index into 
+        /// this UTF-32 buffer.
         /// </summary>
         /// <param name="utf16Offset">The utf-16 character index</param>
         /// <returns>The utf-32 code point index</returns>
@@ -145,7 +148,7 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Get the enture buffer's content as a string
+        /// Gets the enture buffer's content as a string.
         /// </summary>
         /// <returns></returns>
         public string GetString()
@@ -154,11 +157,11 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Get a slide of the buffer as a string
+        /// Gets a part of the buffer as a string.
         /// </summary>
-        /// <param name="start">Start offset (in utf-32 coords)</param>
-        /// <param name="length">Length of the slice (in utf-32 coords)</param>
-        /// <returns></returns>
+        /// <param name="start">The UTF-32 code point index of the first character to retrieve</param>
+        /// <param name="length">The number of code points in the string to be retrieved</param>
+        /// <returns>A string equivalent to the specified code point range.</returns>
         public string GetString(int start, int length)
         {
             return Utf32Utils.FromUtf32(SubSlice(start, length));

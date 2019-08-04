@@ -7,22 +7,22 @@ using System.Threading.Tasks;
 namespace Topten.RichTextKit
 {
     /// <summary>
-    /// Underline styles
+    /// Describes the underline style for a run of text
     /// </summary>
     public enum UnderlineStyle
     {
         /// <summary>
-        /// No underline
+        /// No underline.
         /// </summary>
         None,
 
         /// <summary>
-        /// Underline with gaps over descenders
+        /// Underline with gaps over descenders.
         /// </summary>
         Gapped,
 
         /// <summary>
-        /// Underline with no gaps over descenders
+        /// Underline with no gaps over descenders.
         /// </summary>
         Solid,
     }

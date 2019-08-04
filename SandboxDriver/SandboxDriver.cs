@@ -45,15 +45,21 @@ namespace SandboxDriver
 
             //string typefaceName = "Times New Roman";
             string typefaceName = "Segoe UI";
+            //string typefaceName = "Segoe Script";
 
+            var styleSmall = new Style() { FontFamily = typefaceName, FontSize = 12 * Scale };
+            var styleScript = new Style() { FontFamily = "Segoe Script", FontSize = 18 * Scale };
+            var styleHeading = new Style() { FontFamily = typefaceName, FontSize = 24 * Scale, FontWeight = 700 };
             var styleNormal = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, LineHeight = 1.0f };
-            var styleUnderline = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, Underline = UnderlineStyle.Gapped, TextColor = new SKColor(0xFF0000FF) };
-            var styleStrike = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, StrikeThrough = StrikeThroughStyle.Solid, TextColor = new SKColor(0xFFFF0000) };
+            var styleBold = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, FontWeight = 700 };
+            var styleUnderline = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, Underline = UnderlineStyle.Gapped };
+            var styleStrike = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, StrikeThrough = StrikeThroughStyle.Solid };
             var styleSubScript = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, FontVariant = FontVariant.SubScript };
             var styleSuperScript = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, FontVariant = FontVariant.SuperScript };
             var styleItalic = new Style() { FontFamily = typefaceName, FontItalic = true, FontSize = 18 * Scale };
-            var styleBold = new Style() { FontFamily = typefaceName, FontSize = 28 * Scale, FontWeight = 700 };
+            var styleBoldLarge = new Style() { FontFamily = typefaceName, FontSize = 28 * Scale, FontWeight = 700 };
             var styleRed = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, TextColor = new SKColor(0xFFFF0000) };
+            var styleBlue = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, TextColor = new SKColor(0xFF0000FF) };
 
 
             var tle = new TextBlock();
@@ -68,11 +74,41 @@ namespace SandboxDriver
             switch (ContentMode)
             {
                 case 0:
+                    tle.AddText("Welcome to RichTextKit!\n", styleHeading);
+                    tle.AddText("\nRichTextKit is a rich text layout, rendering and measurement library for SkiaSharp.\n\nIt supports normal, ", styleNormal);
+                    tle.AddText("bold", styleBold);
+                    tle.AddText(", ", styleNormal);
+                    tle.AddText("italic", styleItalic);
+                    tle.AddText(", ", styleNormal);
+                    tle.AddText("underline", styleUnderline);
+                    tle.AddText(" (including ", styleNormal);
+                    tle.AddText("gaps over descenders", styleUnderline);
+                    tle.AddText("), ", styleNormal);
+                    tle.AddText("strikethrough", styleStrike);
+                    tle.AddText(", superscript (E=mc", styleNormal);
+                    tle.AddText("2", styleSuperScript);
+                    tle.AddText("), subscript (H", styleNormal);
+                    tle.AddText("2", styleSubScript);
+                    tle.AddText("O), ", styleNormal);
+                    tle.AddText("colored ", styleRed);
+                    tle.AddText("text", styleBlue);
+                    tle.AddText(" and ", styleNormal);
+                    tle.AddText("mixed ", styleNormal);
+                    tle.AddText("sizes", styleSmall);
+                    tle.AddText(" and ", styleNormal);
+                    tle.AddText("fonts", styleScript);
+                    tle.AddText(".\n\n", styleNormal);
+                    tle.AddText("Font fallback means emojis work: 🌐 🍪 🍕 🚀 and ", styleNormal);
+                    tle.AddText("text shaping and bi-directional text support means complex scripts and languages like Arabic: مرحبا بالعالم, Japanese: ハローワールド, Chinese: 世界您好 and Hindi: हैलो वर्ल्ड are rendered correctly!\n\n", styleNormal);
+                    tle.AddText("RichTextKit also supports left/center/right text alignment, word wrapping, truncation with ellipsis place-holder, text measurement, hit testing, painting a selection range, caret position & shape helpers.", styleNormal);
+                    break;
+
+                case 1:
                     tle.AddText("Hello Wor", styleNormal);
                     tle.AddText("ld", styleRed);
                     tle.AddText(". This is normal 18px. These are emojis: 🌐 🍪 🍕 🚀 ", styleNormal);
                     tle.AddText("This is ", styleNormal);
-                    tle.AddText("bold 28px", styleBold);
+                    tle.AddText("bold 28px", styleBoldLarge);
                     tle.AddText(". ", styleNormal);
                     tle.AddText("This is italic", styleItalic);
                     tle.AddText(". This is ", styleNormal);
@@ -86,12 +122,12 @@ namespace SandboxDriver
                     tle.AddText("緳 踥踕", styleNormal);
                     break;
 
-                case 1:
+                case 2:
                     tle.AddText("Hello Wor", styleNormal);
                     tle.AddText("ld", styleRed);
                     tle.AddText(".\nThis is normal 18px.\nThese are emojis: 🌐 🍪 🍕 🚀\n", styleNormal);
                     tle.AddText("This is ", styleNormal);
-                    tle.AddText("bold 28px", styleBold);
+                    tle.AddText("bold 28px", styleBoldLarge);
                     tle.AddText(".\n", styleNormal);
                     tle.AddText("This is italic", styleItalic);
                     tle.AddText(".\nThis is ", styleNormal);
@@ -108,19 +144,19 @@ namespace SandboxDriver
                     tle.AddText("緳 踥踕", styleNormal);
                     break;
 
-                case 2:
+                case 3:
                     tle.AddText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus semper, sapien vitae placerat sollicitudin, lorem diam aliquet quam, id finibus nisi quam eget lorem.\nDonec facilisis sem nec rhoncus elementum. Cras laoreet porttitor malesuada.\n\nVestibulum sed lacinia diam. Mauris a mollis enim. Cras in rhoncus mauris, at vulputate nisl. Sed nec lobortis dolor, hendrerit posuere quam. Vivamus malesuada sit amet nunc ac cursus. Praesent volutpat euismod efficitur. Nam eu ante.", styleNormal);
                     break;
 
-                case 3:
+                case 4:
                     tle.AddText("مرحبا بالعالم.  هذا هو اختبار التفاف \nالخط للتأكد من أنه يعمل للغات من اليمين إلى اليسار.", styleNormal);
                     break;
 
-                case 4:
+                case 5:
                     tle.AddText("مرحبا بالعالم.  هذا هو اختبار التفاف الخط للتأكد من \u2066ACME Inc.\u2069 أنه يعمل للغات من اليمين إلى اليسار.", styleNormal);
                     break;
 
-                case 5:
+                case 6:
                     tle.AddText("Subscript: H", styleNormal);
                     tle.AddText("2", styleSubScript);
                     tle.AddText("O  Superscript: E=mc", styleNormal);
@@ -131,19 +167,20 @@ namespace SandboxDriver
                     tle.AddText("♭", styleSubScript);
                     break;
 
-                case 6:
+                case 7:
                     tle.AddText("The quick brown fox jumps over the lazy dog.", styleUnderline);
                     tle.AddText(" ", styleNormal);
                     tle.AddText("Strike Through", styleStrike);
+                    tle.AddText(" something ends in wooooooooq", styleNormal);
                     break;
 
-                case 7:
+                case 8:
                     tle.AddText("Apples and Bananas\r\n", styleNormal);
                     tle.AddText("Pears\r\n", styleNormal);
                     tle.AddText("Bananas\r\n", styleNormal);
                     break;
 
-                case 8:
+                case 9:
                     tle.AddText("Hello World", styleNormal);
                     break;
 

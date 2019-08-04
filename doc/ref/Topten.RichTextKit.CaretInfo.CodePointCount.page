@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>The number of code points in this cluster</p>
+<p>The number of code points in this cluster.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public int CodePointCount { get; }</code></pre>

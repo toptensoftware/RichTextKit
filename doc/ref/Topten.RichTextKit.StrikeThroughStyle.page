@@ -15,7 +15,7 @@ import: "../.common.page"
 </p>
 
 
-<p>Enumeration of different strike-through styles</p>
+<p>Describes the strike-through style for a run of text</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public enum StrikeThroughStyle</code></pre>
@@ -31,13 +31,13 @@ import: "../.common.page"
             <tr>
                 <td>None</td>
                 <td>0</td>
-                <td><p>No strike through</p>
+                <td><p>No strike through.</p>
 </td>
             </tr>
             <tr>
                 <td>Solid</td>
                 <td>1</td>
-                <td><p>Standard strike through</p>
+                <td><p>Standard solid line strike through.</p>
 </td>
             </tr>
     </table>

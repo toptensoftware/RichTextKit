@@ -15,7 +15,8 @@ import: "../.common.page"
 </p>
 
 
-<p>Represents a single font run</p>
+<p>Represents a font run - a physical sequence of laid glyphs all with
+the same font and style attributes.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public class FontRun</code></pre>
@@ -83,7 +84,7 @@ import: "../.common.page"
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.FontRun.RunKind">RunKind</a></td>
-                <td><p>The kind of run</p>
+                <td><p>The kind of font run.</p>
 </td>
             </tr>
             <tr>
@@ -98,7 +99,7 @@ import: "../.common.page"
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.FontRun.StyleRun">StyleRun</a></td>
-                <td><p>The user run this typeface run was derived from</p>
+                <td><p>The style run this typeface run was derived from.</p>
 </td>
             </tr>
             <tr>

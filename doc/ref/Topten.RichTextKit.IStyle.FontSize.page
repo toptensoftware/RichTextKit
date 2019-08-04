@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>The font size</p>
+<p>The font size for text in this run.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public float FontSize { get; }</code></pre>

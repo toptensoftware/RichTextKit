@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>The index of the first code point after this run</p>
+<p>The index of the first code point after this run.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public int End { get; }</code></pre>

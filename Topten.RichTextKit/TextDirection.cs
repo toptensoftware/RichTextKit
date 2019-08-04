@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 namespace Topten.RichTextKit
 {
     /// <summary>
-    /// Text writing direction
+    /// Specifies the text writing direction for text.
     /// </summary>
     public enum TextDirection
     {
         /// <summary>
-        /// Left to right
+        /// Left to right.
         /// </summary>
         LTR,
 
         /// <summary>
-        /// Right to left
+        /// Right to left.
         /// </summary>
         RTL,
     }

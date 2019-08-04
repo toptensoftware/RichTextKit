@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>The user run this typeface run was derived from</p>
+<p>The style run this typeface run was derived from.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public StyleRun StyleRun;</code></pre>

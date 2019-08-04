@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>The strike through style of the text</p>
+<p>The strike through style for the text in this run</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public StrikeThroughStyle StrikeThrough { get; }</code></pre>

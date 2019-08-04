@@ -40,6 +40,7 @@ navTree:
               - text: FontRun|./ref/Topten.RichTextKit.CaretInfo.FontRun
               - text: NextCodePointIndex|./ref/Topten.RichTextKit.CaretInfo.NextCodePointIndex
               - text: PreviousCodePointIndex|./ref/Topten.RichTextKit.CaretInfo.PreviousCodePointIndex
+              - text: StyleRun|./ref/Topten.RichTextKit.CaretInfo.StyleRun
           - text: Properties
             subItems:
               - text: CaretRectangle|./ref/Topten.RichTextKit.CaretInfo.CaretRectangle
@@ -192,7 +193,7 @@ navTree:
               - text: TextBlock|./ref/Topten.RichTextKit.TextLine.TextBlock
               - text: TextHeight|./ref/Topten.RichTextKit.TextLine.TextHeight
               - text: Width|./ref/Topten.RichTextKit.TextLine.Width
-              - text: YPosition|./ref/Topten.RichTextKit.TextLine.YPosition
+              - text: YCoord|./ref/Topten.RichTextKit.TextLine.YCoord
       - text: TextPaintOptions
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.TextPaintOptions

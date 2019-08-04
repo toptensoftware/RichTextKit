@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 namespace Topten.RichTextKit
 {
     /// <summary>
-    /// Enumeration of different strike-through styles
+    /// Describes the strike-through style for a run of text
     /// </summary>
     public enum StrikeThroughStyle
     {
         /// <summary>
-        /// No strike through
+        /// No strike through.
         /// </summary>
         None,
 
         /// <summary>
-        /// Standard strike through
+        /// Standard solid line strike through.
         /// </summary>
         Solid,
     }

@@ -15,7 +15,8 @@ import: "../.common.page"
 </p>
 
 
-<p>Describes the results of hit testing a <a href="./../ref/Topten.RichTextKit.TextBlock">TextBlock</a></p>
+<p>Used to return hit test information from the
+<a href="./../ref/Topten.RichTextKit.TextBlock.HitTest">TextBlock.HitTest(float, float)</a> method.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public struct HitTestResult</code></pre>
@@ -42,7 +43,7 @@ point is closest to.</p>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.HitTestResult.ClosestLine">ClosestLine</a></td>
-                <td><p>The closest line to the passed y-coordinate.</p>
+                <td><p>The zero based index of the closest line to the passed y-coordinate.</p>
 </td>
             </tr>
             <tr>
@@ -54,7 +55,7 @@ point is actually over, or -1 if not over a cluster.</p>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.HitTestResult.OverLine">OverLine</a></td>
                 <td><p>The zero based index of the line number the y-coordinate is directly
-over, or -1 if the y-coordinate is above the first line, or below the
+over, or -1 if the y-coordinate is before the first line, or after the
 last line.</p>
 </td>
             </tr>

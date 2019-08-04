@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>The base line for text in this line (relative to YPosition)</p>
+<p>Gets the base line of this line (relative to <a href="./../ref/Topten.RichTextKit.TextLine.YCoord">YCoord</a>)</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public float BaseLine { get; }</code></pre>

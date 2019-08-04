@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>Get the next line in this text block</p>
+<p>Gets the next line in this text block, or null if this is the last line.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public TextLine NextLine { get; }</code></pre>
