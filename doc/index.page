@@ -33,7 +33,7 @@ Also, text layout in general and Unicode and international text specifically are
 complicated topics - almost certainly there are issues I'm unaware of and I'm 
 hoping the community can help improve this project over time...
 
-That said, RichTextKit certainly does a better job than Skia on it's own.
+That said, RichTextKit certainly does a better job than Skia on its own.
 
 ## Documentation
 

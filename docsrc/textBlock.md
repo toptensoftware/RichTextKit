@@ -74,9 +74,9 @@ you need it.
 ## Re-using TextBlocks
 
 Text blocks are designed to be re-used.  For example suppose you have a label control
-that uses a text Bbock to render it's content the recommended approach would be to:
+that uses a text block to render its content, the recommended approach would be:
 
-1. Create and initialize a `TextBlock` instance with the text to be displayed.
+1. Create and initialize a [T:Topten.RichTextKit.TextBlock] instance with the text to be displayed.
 
 2. Render that text block instance each time the control needs to be drawn.
 

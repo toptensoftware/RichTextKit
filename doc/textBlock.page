@@ -53,9 +53,9 @@ provides an easy way to plugin styling to a more comprehensive styling/DOM syste
 you need it.</p>
 <h2 id="re-using-textblocks">Re-using TextBlocks</h2>
 <p>Text blocks are designed to be re-used.  For example suppose you have a label control
-that uses a text Bbock to render it's content the recommended approach would be to:</p>
+that uses a text block to render its content, the recommended approach would be:</p>
 <ol>
-<li><p>Create and initialize a <code>TextBlock</code> instance with the text to be displayed.</p>
+<li><p>Create and initialize a <a href="./ref/Topten.RichTextKit.TextBlock">TextBlock</a> instance with the text to be displayed.</p>
 </li>
 <li><p>Render that text block instance each time the control needs to be drawn.</p>
 </li>
