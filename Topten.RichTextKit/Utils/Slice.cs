@@ -64,6 +64,15 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
+        /// Fill the slice with a specified value
+        /// </summary>
+        /// <param name="value"></param>
+        public void Fill(T value)
+        {
+            Array.Fill(_array, value, _start, _length);
+        }
+
+        /// <summary>
         /// Gets a reference to an element in the slice
         /// </summary>
         /// <param name="index">The element index</param>
