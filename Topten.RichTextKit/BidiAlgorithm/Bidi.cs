@@ -109,7 +109,7 @@ namespace Topten.RichTextKit
         //
 
         public Bidi(BidiData data) : 
-            this(data.Directionality, data.PairedBracketTypes, data.PairedBracketValues, data.ParagraphEmbeddingLevel)
+            this(data.Directionality, data.PairedBracketTypes, data.PairedBracketValues, (byte)data.ParagraphEmbeddingLevel)
         {
         }
 
@@ -181,6 +181,8 @@ namespace Topten.RichTextKit
 
         // Get the final computed directionality of each character
         public Directionality[] Result => _resultTypes;
+
+        public byte[] ResultLevels => _resultLevels;
 
         public struct Run
         {
@@ -873,7 +875,7 @@ namespace Topten.RichTextKit
                     {
                         // locate end of sequence
                         int runstart = i;
-                        int runlimit = findRunLimit(runstart, length, new Directionality[] { Directionality.ET });
+                        int runlimit = findRunLimit(runstart, length, _dirsetET);
 
                         // check values at ends of sequence
                         var t = runstart == 0 ? sos : types[runstart - 1];
@@ -927,6 +929,19 @@ namespace Topten.RichTextKit
                 }
             }
 
+            static HashSet<Directionality> _dirsetET = new HashSet<Directionality>(new Directionality[] { Directionality.ET });
+
+            static HashSet<Directionality> _dirsetNeutral = new HashSet<Directionality>(new Directionality[] {
+                Directionality.B,
+                Directionality.S,
+                Directionality.WS,
+                Directionality.ON,
+                Directionality.RLI,
+                Directionality.LRI,
+                Directionality.FSI,
+                Directionality.PDI
+            });
+
             /*
              * 6) resolving neutral types Rules N1-N2.
              */
@@ -957,16 +972,7 @@ namespace Topten.RichTextKit
                     {
                         // find bounds of run of neutrals
                         int runstart = i;
-                        int runlimit = findRunLimit(runstart, length, new Directionality[] {
-                        Directionality.B,
-                        Directionality.S,
-                        Directionality.WS,
-                        Directionality.ON,
-                        Directionality.RLI,
-                        Directionality.LRI,
-                        Directionality.FSI,
-                        Directionality.PDI
-                    });
+                        int runlimit = findRunLimit(runstart, length, _dirsetNeutral);
 
                         // determine effective types at ends of run
                         Directionality leadingType;
@@ -1096,23 +1102,28 @@ namespace Topten.RichTextKit
              * starting at index. This checks the value at index, and will return
              * index if that value is not in validSet.
              */
-            private int findRunLimit(int index, int limit, Directionality[] validSet)
+            private int findRunLimit(int index, int limit, HashSet<Directionality> validSet)
             {
+                while (index < limit && validSet.Contains(types[index]))
+                    index++;
+
+                return index;
+
+                /*
                 loop: while (index < limit)
                 {
                     var t = types[index];
-                    for (int i = 0; i < validSet.Length; ++i)
+                    if (validSet.Contains(t))
                     {
-                        if (t == validSet[i])
-                        {
-                            ++index;
-                            goto loop;
-                        }
+                        ++index;
+                        goto loop;
                     }
+
                     // didn't find a match in validSet
                     return index;
                 }
                 return limit;
+                */
             }
 
             /*

@@ -25,16 +25,16 @@ namespace Topten.RichTextKit
 
         List<int> _paragraphPositions = new List<int>();
 
-        byte _paragraphEmbeddingLevel;
+        int _paragraphEmbeddingLevel;
 
-        public byte ParagraphEmbeddingLevel => _paragraphEmbeddingLevel;
+        public int ParagraphEmbeddingLevel => _paragraphEmbeddingLevel;
 
         /// <summary>
         /// Initialize with an array of Unicode code points
         /// </summary>
         /// <param name="codePoints">The unicode code points to be processed</param>
         /// <param name="paragraphEmbeddingLevel">The paragraph embedding level</param>
-        public void Init(Slice<int> codePoints, byte paragraphEmbeddingLevel)
+        public void Init(Slice<int> codePoints, int paragraphEmbeddingLevel)
         {
             // Set working buffer sizes
             _directionality.Length = codePoints.Length;

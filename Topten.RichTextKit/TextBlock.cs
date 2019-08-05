@@ -160,6 +160,7 @@ namespace Topten.RichTextKit
             _styleRuns.Clear();
             _fontRuns.Clear();
             _lines.Clear();
+            _textShapingBuffers.Clear();
             InvalidateLayout();
         }
 
@@ -725,6 +726,12 @@ namespace Topten.RichTextKit
         /// </summary>
         Utf32Buffer _codePoints = new Utf32Buffer();
 
+
+        /// <summary>
+        /// Re-usable buffers for text shaping results
+        /// </summary>
+        TextShaper.ResultBufferSet _textShapingBuffers = new TextShaper.ResultBufferSet();
+
         /// <summary>
         /// Reusable buffer for bidi data
         /// </summary>
@@ -922,7 +929,7 @@ namespace Topten.RichTextKit
         {
             // Shape the text
             var shaper = TextShaper.ForTypeface(typeface);
-            var shaped = shaper.Shape(codePoints, style, direction, codePoints.Start);
+            var shaped = shaper.Shape(_textShapingBuffers, codePoints, style, direction, codePoints.Start);
 
             // Update minimum required left margin
             if (shaped.XMin < 0 && -shaped.XMin > _minLeftMargin)
@@ -940,10 +947,10 @@ namespace Topten.RichTextKit
                 Style = style,
                 Direction = direction,
                 Typeface = typeface,
-                Glyphs = new Slice<ushort>(shaped.GlyphIndicies),
-                GlyphPositions = new Slice<SKPoint>(shaped.Points),
-                RelativeCodePointXCoords = new Slice<float>(shaped.CodePointXCoords),
-                Clusters = new Slice<int>(shaped.Clusters),
+                Glyphs = shaped.GlyphIndicies,
+                GlyphPositions = shaped.GlyphPositions,
+                RelativeCodePointXCoords = shaped.CodePointXCoords,
+                Clusters = shaped.Clusters,
                 Ascent = shaped.Ascent,
                 Descent = shaped.Descent,
                 Width = shaped.EndXCoord.X,

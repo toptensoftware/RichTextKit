@@ -49,14 +49,56 @@ namespace Topten.RichTextKit.Utils
             get => _length;
             set
             {
-                if (value > _data.Length)
+                // Now grow buffer
+                if (!GrowBuffer(value))
                 {
-                    var newData = new T[value];
-                    Array.Copy(_data, 0, newData, 0, _data.Length);
-                    _data = newData;
+                    // If the length is increasing, but we didn't re-size the buffer
+                    // then we need to clear the new elements.
+                    if (value > _length)
+                    {
+                        Array.Clear(_data, _length, value - _length);
+                    }
                 }
+
+                // Store new length
                 _length = value;
             }
+        }
+
+        /// <summary>
+        /// Ensures the buffer has sufficient capacity
+        /// </summary>
+        /// <param name="requiredLength"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        bool GrowBuffer(int requiredLength)
+        {
+            if (requiredLength <= _data.Length)
+                return false;
+
+            // Work out new length
+            int newLength;
+            if (_data.Length < 1048576)
+            {
+                // Below 1MB, grow by doubling...
+                newLength = _data.Length * 2;
+            }
+            else
+            {
+                // otherwise grow by 1mb at a time...
+                newLength = _data.Length + 1048576;
+            }
+
+            // Make sure we're allocating enough
+            if (newLength < requiredLength)
+                newLength = requiredLength;
+
+            // Allocate new buffer, only copying _length, not Data.Length
+            var newData = new T[requiredLength];
+            Array.Copy(_data, 0, newData, 0, _length);
+            _data = newData;
+
+            return true;
         }
 
         /// <summary>
@@ -75,25 +117,18 @@ namespace Topten.RichTextKit.Utils
         /// <returns>A slice representing the allocated elements.</returns>
         public Slice<T> Add(int length, bool clear = true)
         {
+            // Save position
+            int pos = Length;
+
             // Grow internal buffer?
-            if (_length + length > _data.Length)
-            {
-                var newData = new T[_length + length + 1024];
-                Array.Copy(_data, 0, newData, 0, _length);
-                _data = newData;
-            }
+            GrowBuffer(_length + length);
+            _length += length;
 
             // Clear it?
             if (clear)
-                Array.Clear(_data, _length, length);
+                Array.Clear(_data, pos, length);
 
-            // Capture where it was placed
-            var pos = _length;
-
-            // Update length
-            _length += length;
-
-            // Return position
+            // Return subslice
             return SubSlice(pos, length);
         }
 
@@ -104,22 +139,14 @@ namespace Topten.RichTextKit.Utils
         /// <returns>A slice representing the added elements.</returns>
         public Slice<T> Add(Slice<T> slice)
         {
-            // Grow internal buffer?
-            if (_length + slice.Length > _data.Length)
-            {
-                var newData = new T[_length + slice.Length + 1024];
-                Array.Copy(_data, 0, newData, 0, _length);
-                _data = newData;
-            }
-
-            // Copy in the slice
-            Array.Copy(slice.Underlying, slice.Start, _data, _length, slice.Length);
-
-            // Capture where it was placed
             var pos = _length;
 
-            // Update length
+            // Grow internal buffer?
+            GrowBuffer(_length + slice.Length);
             _length += slice.Length;
+
+            // Copy in the slice
+            Array.Copy(slice.Underlying, slice.Start, _data, pos, slice.Length);
 
             // Return position
             return SubSlice(pos, slice.Length);

@@ -89,6 +89,25 @@ namespace Topten.RichTextKit
         SKFontMetrics _fontMetrics;
 
         /// <summary>
+        /// A set of re-usable result buffers to store the result of text shaping operation
+        /// </summary>
+        public class ResultBufferSet
+        {
+            public void Clear()
+            {
+                GlyphIndicies.Clear();
+                GlyphPositions.Clear();
+                Clusters.Clear();
+                CodePointXCoords.Clear();
+            }
+
+            public Buffer<ushort> GlyphIndicies = new Buffer<ushort>();
+            public Buffer<SKPoint> GlyphPositions = new Buffer<SKPoint>();
+            public Buffer<int> Clusters = new Buffer<int>();
+            public Buffer<float> CodePointXCoords = new Buffer<float>();
+        }
+
+        /// <summary>
         /// Returned as the result of a text shaping operation
         /// </summary>
         public struct Result
@@ -96,18 +115,18 @@ namespace Topten.RichTextKit
             /// <summary>
             /// The glyph indicies of all glyphs required to render the shaped text
             /// </summary>
-            public ushort[] GlyphIndicies;
+            public Slice<ushort> GlyphIndicies;
 
             /// <summary>
             /// The position of each glyph
             /// </summary>
-            public SKPoint[] Points;
+            public Slice<SKPoint> GlyphPositions;
 
             /// <summary>
             /// One entry for each glyph, showing the code point index
             /// of the characters it was derived from
             /// </summary>
-            public int[] Clusters;
+            public Slice<int> Clusters;
 
             /// <summary>
             /// The end position of the rendered text
@@ -117,7 +136,7 @@ namespace Topten.RichTextKit
             /// <summary>
             /// The X-Position of each passed code point
             /// </summary>
-            public float[] CodePointXCoords;
+            public Slice<float> CodePointXCoords;
 
             /// <summary>
             /// The ascent of the font
@@ -147,12 +166,13 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Shape an array of utf-32 code points
         /// </summary>
+        /// <param name="bufferSet">A re-usable text shaping buffer set that results will be allocated from</param>
         /// <param name="codePoints">The utf-32 code points to be shaped</param>
         /// <param name="style">The user style for the text</param>
         /// <param name="direction">LTR or RTL direction</param>
         /// <param name="clusterAdjustment">A value to add to all reported cluster numbers</param>
         /// <returns>A TextShaper.Result representing the shaped text</returns>
-        public Result Shape(Slice<int> codePoints, IStyle style, TextDirection direction, int clusterAdjustment = 0)
+        public Result Shape(ResultBufferSet bufferSet, Slice<int> codePoints, IStyle style, TextDirection direction, int clusterAdjustment = 0)
         {
             using (var buffer = new HarfBuzzSharp.Buffer())
             {
@@ -186,13 +206,6 @@ namespace Topten.RichTextKit
                 // Shape it
                 _font.Shape(buffer);
 
-                // Create results
-                var r = new Result();
-                r.GlyphIndicies = buffer.GlyphInfos.Select(x => (ushort)x.Codepoint).ToArray();
-                r.Clusters = buffer.GlyphInfos.Select(x => (int)x.Cluster + clusterAdjustment).ToArray();
-                r.CodePointXCoords = new float[codePoints.Length];
-                r.Points = new SKPoint[buffer.Length];
-
                 // RTL?
                 bool rtl = buffer.Direction == Direction.RightToLeft;
 
@@ -210,12 +223,23 @@ namespace Topten.RichTextKit
                     glyphVOffset += style.FontSize * 0.1f;
                 }
 
+                // Create results and get buffes
+                var r = new Result();
+                r.GlyphIndicies = bufferSet.GlyphIndicies.Add((int)buffer.Length, false);
+                r.GlyphPositions = bufferSet.GlyphPositions.Add((int)buffer.Length, false);
+                r.Clusters = bufferSet.Clusters.Add((int)buffer.Length, false);
+                r.CodePointXCoords = bufferSet.CodePointXCoords.Add(codePoints.Length, false);
+                
                 // Convert points
                 var gp = buffer.GlyphPositions;
+                var gi = buffer.GlyphInfos;
                 float cursorX = 0;
                 float cursorY = 0;
                 for (int i = 0; i < buffer.Length; i++)
                 {
+                    r.GlyphIndicies[i] = (ushort)gi[i].Codepoint;
+                    r.Clusters[i] = (int)gi[i].Cluster + clusterAdjustment;
+
                     // Update code point positions
                     if (!rtl)
                     {
@@ -232,7 +256,7 @@ namespace Topten.RichTextKit
                     var pos = gp[i];
 
                     // Update glyph position
-                    r.Points[i] = new SKPoint(
+                    r.GlyphPositions[i] = new SKPoint(
                         cursorX + pos.XOffset * glyphScale,
                         cursorY - pos.YOffset * glyphScale + glyphVOffset
                         );

@@ -7,7 +7,7 @@ namespace SandboxDriver
 {
     public class SandboxDriver
     {
-        public int ContentModeCount = 9;
+        public int ContentModeCount = 10;
         public int ContentMode = 0;
         public TextDirection BaseDirection = TextDirection.LTR;
         public TextAlignment TextAlignment = TextAlignment.Auto;
@@ -16,6 +16,8 @@ namespace SandboxDriver
         public bool UseMaxWidth = true;
         public bool UseMaxHeight = false;
         public bool ShowMeasuredSize = false;
+
+        TextBlock _textBlock = new TextBlock();
 
         public void Render(SKCanvas canvas, float canvasWidth, float canvasHeight)
         {
@@ -62,133 +64,132 @@ namespace SandboxDriver
             var styleBlue = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, TextColor = new SKColor(0xFF0000FF) };
 
 
-            var tle = new TextBlock();
-            tle.MaxWidth = width;
-            tle.MaxHeight = height;
-            tle.Clear();
+            _textBlock.Clear();
+            _textBlock.MaxWidth = width;
+            _textBlock.MaxHeight = height;
 
-            tle.BaseDirection = BaseDirection;
-            tle.Alignment = TextAlignment;
-            tle.UseMSWordStyleRTLLayout = UseMSWordStyleRTLLayout;
+            _textBlock.BaseDirection = BaseDirection;
+            _textBlock.Alignment = TextAlignment;
+            _textBlock.UseMSWordStyleRTLLayout = UseMSWordStyleRTLLayout;
 
             switch (ContentMode)
             {
                 case 0:
-                    tle.AddText("Welcome to RichTextKit!\n", styleHeading);
-                    tle.AddText("\nRichTextKit is a rich text layout, rendering and measurement library for SkiaSharp.\n\nIt supports normal, ", styleNormal);
-                    tle.AddText("bold", styleBold);
-                    tle.AddText(", ", styleNormal);
-                    tle.AddText("italic", styleItalic);
-                    tle.AddText(", ", styleNormal);
-                    tle.AddText("underline", styleUnderline);
-                    tle.AddText(" (including ", styleNormal);
-                    tle.AddText("gaps over descenders", styleUnderline);
-                    tle.AddText("), ", styleNormal);
-                    tle.AddText("strikethrough", styleStrike);
-                    tle.AddText(", superscript (E=mc", styleNormal);
-                    tle.AddText("2", styleSuperScript);
-                    tle.AddText("), subscript (H", styleNormal);
-                    tle.AddText("2", styleSubScript);
-                    tle.AddText("O), ", styleNormal);
-                    tle.AddText("colored ", styleRed);
-                    tle.AddText("text", styleBlue);
-                    tle.AddText(" and ", styleNormal);
-                    tle.AddText("mixed ", styleNormal);
-                    tle.AddText("sizes", styleSmall);
-                    tle.AddText(" and ", styleNormal);
-                    tle.AddText("fonts", styleScript);
-                    tle.AddText(".\n\n", styleNormal);
-                    tle.AddText("Font fallback means emojis work: 🌐 🍪 🍕 🚀 and ", styleNormal);
-                    tle.AddText("text shaping and bi-directional text support means complex scripts and languages like Arabic: مرحبا بالعالم, Japanese: ハローワールド, Chinese: 世界您好 and Hindi: हैलो वर्ल्ड are rendered correctly!\n\n", styleNormal);
-                    tle.AddText("RichTextKit also supports left/center/right text alignment, word wrapping, truncation with ellipsis place-holder, text measurement, hit testing, painting a selection range, caret position & shape helpers.", styleNormal);
+                    _textBlock.AddText("Welcome to RichTextKit!\n", styleHeading);
+                    _textBlock.AddText("\nRichTextKit is a rich text layout, rendering and measurement library for SkiaSharp.\n\nIt supports normal, ", styleNormal);
+                    _textBlock.AddText("bold", styleBold);
+                    _textBlock.AddText(", ", styleNormal);
+                    _textBlock.AddText("italic", styleItalic);
+                    _textBlock.AddText(", ", styleNormal);
+                    _textBlock.AddText("underline", styleUnderline);
+                    _textBlock.AddText(" (including ", styleNormal);
+                    _textBlock.AddText("gaps over descenders", styleUnderline);
+                    _textBlock.AddText("), ", styleNormal);
+                    _textBlock.AddText("strikethrough", styleStrike);
+                    _textBlock.AddText(", superscript (E=mc", styleNormal);
+                    _textBlock.AddText("2", styleSuperScript);
+                    _textBlock.AddText("), subscript (H", styleNormal);
+                    _textBlock.AddText("2", styleSubScript);
+                    _textBlock.AddText("O), ", styleNormal);
+                    _textBlock.AddText("colored ", styleRed);
+                    _textBlock.AddText("text", styleBlue);
+                    _textBlock.AddText(" and ", styleNormal);
+                    _textBlock.AddText("mixed ", styleNormal);
+                    _textBlock.AddText("sizes", styleSmall);
+                    _textBlock.AddText(" and ", styleNormal);
+                    _textBlock.AddText("fonts", styleScript);
+                    _textBlock.AddText(".\n\n", styleNormal);
+                    _textBlock.AddText("Font fallback means emojis work: 🌐 🍪 🍕 🚀 and ", styleNormal);
+                    _textBlock.AddText("text shaping and bi-directional text support means complex scripts and languages like Arabic: مرحبا بالعالم, Japanese: ハローワールド, Chinese: 世界您好 and Hindi: हैलो वर्ल्ड are rendered correctly!\n\n", styleNormal);
+                    _textBlock.AddText("RichTextKit also supports left/center/right text alignment, word wrapping, truncation with ellipsis place-holder, text measurement, hit testing, painting a selection range, caret position & shape helpers.", styleNormal);
                     break;
 
                 case 1:
-                    tle.AddText("Hello Wor", styleNormal);
-                    tle.AddText("ld", styleRed);
-                    tle.AddText(". This is normal 18px. These are emojis: 🌐 🍪 🍕 🚀 ", styleNormal);
-                    tle.AddText("This is ", styleNormal);
-                    tle.AddText("bold 28px", styleBoldLarge);
-                    tle.AddText(". ", styleNormal);
-                    tle.AddText("This is italic", styleItalic);
-                    tle.AddText(". This is ", styleNormal);
-                    tle.AddText("red", styleRed);
-                    tle.AddText(". This is Arabic: (", styleNormal);
-                    tle.AddText("تسجّل ", styleNormal);
-                    tle.AddText("يتكلّم", styleNormal);
-                    tle.AddText("), Hindi: ", styleNormal);
-                    tle.AddText("हालाँकि प्रचलित रूप पूज", styleNormal);
-                    tle.AddText(", Han: ", styleNormal);
-                    tle.AddText("緳 踥踕", styleNormal);
+                    _textBlock.AddText("Hello Wor", styleNormal);
+                    _textBlock.AddText("ld", styleRed);
+                    _textBlock.AddText(". This is normal 18px. These are emojis: 🌐 🍪 🍕 🚀 ", styleNormal);
+                    _textBlock.AddText("This is ", styleNormal);
+                    _textBlock.AddText("bold 28px", styleBoldLarge);
+                    _textBlock.AddText(". ", styleNormal);
+                    _textBlock.AddText("This is italic", styleItalic);
+                    _textBlock.AddText(". This is ", styleNormal);
+                    _textBlock.AddText("red", styleRed);
+                    _textBlock.AddText(". This is Arabic: (", styleNormal);
+                    _textBlock.AddText("تسجّل ", styleNormal);
+                    _textBlock.AddText("يتكلّم", styleNormal);
+                    _textBlock.AddText("), Hindi: ", styleNormal);
+                    _textBlock.AddText("हालाँकि प्रचलित रूप पूज", styleNormal);
+                    _textBlock.AddText(", Han: ", styleNormal);
+                    _textBlock.AddText("緳 踥踕", styleNormal);
                     break;
 
                 case 2:
-                    tle.AddText("Hello Wor", styleNormal);
-                    tle.AddText("ld", styleRed);
-                    tle.AddText(".\nThis is normal 18px.\nThese are emojis: 🌐 🍪 🍕 🚀\n", styleNormal);
-                    tle.AddText("This is ", styleNormal);
-                    tle.AddText("bold 28px", styleBoldLarge);
-                    tle.AddText(".\n", styleNormal);
-                    tle.AddText("This is italic", styleItalic);
-                    tle.AddText(".\nThis is ", styleNormal);
-                    tle.AddText("red", styleRed);
+                    _textBlock.AddText("Hello Wor", styleNormal);
+                    _textBlock.AddText("ld", styleRed);
+                    _textBlock.AddText(".\nThis is normal 18px.\nThese are emojis: 🌐 🍪 🍕 🚀\n", styleNormal);
+                    _textBlock.AddText("This is ", styleNormal);
+                    _textBlock.AddText("bold 28px", styleBoldLarge);
+                    _textBlock.AddText(".\n", styleNormal);
+                    _textBlock.AddText("This is italic", styleItalic);
+                    _textBlock.AddText(".\nThis is ", styleNormal);
+                    _textBlock.AddText("red", styleRed);
                     /*
                     tle.AddText(".\nThis is Arabic: (", styleNormal);
                     tle.AddText("تسجّل ", styleNormal);
                     tle.AddText("يتكلّم", styleNormal);
                     tle.AddText("), Hindi: ", styleNormal);
                     */
-                    tle.AddText(".\nThis is Arabic: (تسجّل يتكلّم), Hindi: ", styleNormal);
-                    tle.AddText("हालाँकि प्रचलित रूप पूज", styleNormal);
-                    tle.AddText(", Han: ", styleNormal);
-                    tle.AddText("緳 踥踕", styleNormal);
+                    _textBlock.AddText(".\nThis is Arabic: (تسجّل يتكلّم), Hindi: ", styleNormal);
+                    _textBlock.AddText("हालाँकि प्रचलित रूप पूज", styleNormal);
+                    _textBlock.AddText(", Han: ", styleNormal);
+                    _textBlock.AddText("緳 踥踕", styleNormal);
                     break;
 
                 case 3:
-                    tle.AddText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus semper, sapien vitae placerat sollicitudin, lorem diam aliquet quam, id finibus nisi quam eget lorem.\nDonec facilisis sem nec rhoncus elementum. Cras laoreet porttitor malesuada.\n\nVestibulum sed lacinia diam. Mauris a mollis enim. Cras in rhoncus mauris, at vulputate nisl. Sed nec lobortis dolor, hendrerit posuere quam. Vivamus malesuada sit amet nunc ac cursus. Praesent volutpat euismod efficitur. Nam eu ante.", styleNormal);
+                    _textBlock.AddText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus semper, sapien vitae placerat sollicitudin, lorem diam aliquet quam, id finibus nisi quam eget lorem.\nDonec facilisis sem nec rhoncus elementum. Cras laoreet porttitor malesuada.\n\nVestibulum sed lacinia diam. Mauris a mollis enim. Cras in rhoncus mauris, at vulputate nisl. Sed nec lobortis dolor, hendrerit posuere quam. Vivamus malesuada sit amet nunc ac cursus. Praesent volutpat euismod efficitur. Nam eu ante.", styleNormal);
                     break;
 
                 case 4:
-                    tle.AddText("مرحبا بالعالم.  هذا هو اختبار التفاف \nالخط للتأكد من أنه يعمل للغات من اليمين إلى اليسار.", styleNormal);
+                    _textBlock.AddText("مرحبا بالعالم.  هذا هو اختبار التفاف \nالخط للتأكد من أنه يعمل للغات من اليمين إلى اليسار.", styleNormal);
                     break;
 
                 case 5:
-                    tle.AddText("مرحبا بالعالم.  هذا هو اختبار التفاف الخط للتأكد من \u2066ACME Inc.\u2069 أنه يعمل للغات من اليمين إلى اليسار.", styleNormal);
+                    _textBlock.AddText("مرحبا بالعالم.  هذا هو اختبار التفاف الخط للتأكد من \u2066ACME Inc.\u2069 أنه يعمل للغات من اليمين إلى اليسار.", styleNormal);
                     break;
 
                 case 6:
-                    tle.AddText("Subscript: H", styleNormal);
-                    tle.AddText("2", styleSubScript);
-                    tle.AddText("O  Superscript: E=mc", styleNormal);
-                    tle.AddText("2", styleSuperScript);
-                    tle.AddText("  Key: C", styleNormal);
-                    tle.AddText("♯", styleSuperScript);
-                    tle.AddText(" B", styleNormal);
-                    tle.AddText("♭", styleSubScript);
+                    _textBlock.AddText("Subscript: H", styleNormal);
+                    _textBlock.AddText("2", styleSubScript);
+                    _textBlock.AddText("O  Superscript: E=mc", styleNormal);
+                    _textBlock.AddText("2", styleSuperScript);
+                    _textBlock.AddText("  Key: C", styleNormal);
+                    _textBlock.AddText("♯", styleSuperScript);
+                    _textBlock.AddText(" B", styleNormal);
+                    _textBlock.AddText("♭", styleSubScript);
                     break;
 
                 case 7:
-                    tle.AddText("The quick brown fox jumps over the lazy dog.", styleUnderline);
-                    tle.AddText(" ", styleNormal);
-                    tle.AddText("Strike Through", styleStrike);
-                    tle.AddText(" something ends in wooooooooq", styleNormal);
+                    _textBlock.AddText("The quick brown fox jumps over the lazy dog.", styleUnderline);
+                    _textBlock.AddText(" ", styleNormal);
+                    _textBlock.AddText("Strike Through", styleStrike);
+                    _textBlock.AddText(" something ends in wooooooooq", styleNormal);
                     break;
 
                 case 8:
-                    tle.AddText("Apples and Bananas\r\n", styleNormal);
-                    tle.AddText("Pears\r\n", styleNormal);
-                    tle.AddText("Bananas\r\n", styleNormal);
+                    _textBlock.AddText("Apples and Bananas\r\n", styleNormal);
+                    _textBlock.AddText("Pears\r\n", styleNormal);
+                    _textBlock.AddText("Bananas\r\n", styleNormal);
                     break;
 
                 case 9:
-                    tle.AddText("Hello World", styleNormal);
+                    _textBlock.AddText("Hello World", styleNormal);
                     break;
 
             }
 
             var sw = new Stopwatch();
             sw.Start();
-            tle.Layout();
+            _textBlock.Layout();
             var elapsed = sw.ElapsedMilliseconds;
 
             var options = new TextPaintOptions()
@@ -200,14 +201,14 @@ namespace SandboxDriver
             CaretInfo? ci = null;
             if (_showHitTest)
             {
-                htr = tle.HitTest(_hitTestX - margin, _hitTestY - margin);
+                htr = _textBlock.HitTest(_hitTestX - margin, _hitTestY - margin);
                 if (htr.Value.OverCodePointIndex >= 0)
                 {
                     options.SelectionStart = htr.Value.OverCodePointIndex;
-                    options.SelectionEnd = tle.CaretIndicies[tle.LookupCaretIndex(htr.Value.OverCodePointIndex) + 1];
+                    options.SelectionEnd = _textBlock.CaretIndicies[_textBlock.LookupCaretIndex(htr.Value.OverCodePointIndex) + 1];
                 }
 
-                ci = tle.GetCaretInfo(htr.Value.ClosestCodePointIndex);
+                ci = _textBlock.GetCaretInfo(htr.Value.ClosestCodePointIndex);
             }
 
             if (ShowMeasuredSize)
@@ -218,20 +219,20 @@ namespace SandboxDriver
                     IsStroke = false,
                 })
                 {
-                    var rect = new SKRect(margin + tle.MeasuredPadding.Left, margin, margin + tle.MeasuredWidth + tle.MeasuredPadding.Left, margin + tle.MeasuredHeight);
+                    var rect = new SKRect(margin + _textBlock.MeasuredPadding.Left, margin, margin + _textBlock.MeasuredWidth + _textBlock.MeasuredPadding.Left, margin + _textBlock.MeasuredHeight);
                     canvas.DrawRect(rect, paint);
                 }
             }
 
-            if (tle.MeasuredOverhang.Left > 0)
+            if (_textBlock.MeasuredOverhang.Left > 0)
             {
                 using (var paint = new SKPaint() { Color = new SKColor(0xFFf0f0f0), StrokeWidth = 1 })
                 {
-                    canvas.DrawLine(new SKPoint(margin - tle.MeasuredOverhang.Left, 0), new SKPoint(margin - tle.MeasuredOverhang.Left, (float)canvasHeight), paint);
+                    canvas.DrawLine(new SKPoint(margin - _textBlock.MeasuredOverhang.Left, 0), new SKPoint(margin - _textBlock.MeasuredOverhang.Left, (float)canvasHeight), paint);
                 }
             }
 
-            tle.Paint(canvas, new SKPoint(margin, margin), options);
+            _textBlock.Paint(canvas, new SKPoint(margin, margin), options);
 
             if (ci != null)
             {
