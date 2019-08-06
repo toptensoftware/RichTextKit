@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Topten.RichTextKit.Test
 {
-    public class BidiTest
+    public class Bidi2Test
     {
         [Fact]
         public void Test()
@@ -15,6 +15,8 @@ namespace Topten.RichTextKit.Test
             // Read the test file
             var location = System.IO.Path.GetDirectoryName(typeof(LineBreakTests).Assembly.Location);
             var lines = System.IO.File.ReadAllLines(System.IO.Path.Combine(location, "BidiTest.txt"));
+
+            var bidi = new Bidi2();
 
             // Process each line
             int testCount = 0;
@@ -82,9 +84,9 @@ namespace Topten.RichTextKit.Test
                     
 
                     // Run the algorithm...
-                    var bidi = new Bidi(new Slice<Directionality>(directions), new Slice<PairedBracketType>(pairTypes), new Slice<int>(pairValues), paragraphEmbeddingLevel);
+                    bidi.Process(new Slice<Directionality>(directions), new Slice<PairedBracketType>(pairTypes), new Slice<int>(pairValues), paragraphEmbeddingLevel);
 
-                    var resultLevels = bidi.getLevels(new int[] { directions.Length });
+                    var resultLevels = bidi.ResultLevels;
 
                     // Check the results match
                     bool pass = true;

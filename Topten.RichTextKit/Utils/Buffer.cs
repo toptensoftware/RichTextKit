@@ -28,7 +28,6 @@ namespace Topten.RichTextKit.Utils
         /// <summary>
         /// The data held by this buffer
         /// </summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         T[] _data;
 
         /// <summary>

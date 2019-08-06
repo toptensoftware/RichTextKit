@@ -69,7 +69,10 @@ namespace Topten.RichTextKit.Utils
         /// <param name="value"></param>
         public void Fill(T value)
         {
-            Array.Fill(_array, value, _start, _length);
+            for (int i = 0; i < _length; i++)
+            {
+                _array[i + _start] = value;
+            }
         }
 
         /// <summary>

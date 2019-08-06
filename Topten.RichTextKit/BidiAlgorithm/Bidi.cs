@@ -875,7 +875,7 @@ namespace Topten.RichTextKit
                     {
                         // locate end of sequence
                         int runstart = i;
-                        int runlimit = findRunLimit(runstart, length, _dirsetET);
+                        int runlimit = findRunLimit(runstart, length, new HashSet<Directionality>(new Directionality[] { Directionality.ET }));
 
                         // check values at ends of sequence
                         var t = runstart == 0 ? sos : types[runstart - 1];
@@ -929,19 +929,6 @@ namespace Topten.RichTextKit
                 }
             }
 
-            static HashSet<Directionality> _dirsetET = new HashSet<Directionality>(new Directionality[] { Directionality.ET });
-
-            static HashSet<Directionality> _dirsetNeutral = new HashSet<Directionality>(new Directionality[] {
-                Directionality.B,
-                Directionality.S,
-                Directionality.WS,
-                Directionality.ON,
-                Directionality.RLI,
-                Directionality.LRI,
-                Directionality.FSI,
-                Directionality.PDI
-            });
-
             /*
              * 6) resolving neutral types Rules N1-N2.
              */
@@ -972,7 +959,16 @@ namespace Topten.RichTextKit
                     {
                         // find bounds of run of neutrals
                         int runstart = i;
-                        int runlimit = findRunLimit(runstart, length, _dirsetNeutral);
+                        int runlimit = findRunLimit(runstart, length, new HashSet<Directionality>(new Directionality[] {
+                            Directionality.B,
+                            Directionality.S,
+                            Directionality.WS,
+                            Directionality.ON,
+                            Directionality.RLI,
+                            Directionality.LRI,
+                            Directionality.FSI,
+                            Directionality.PDI
+                        }));
 
                         // determine effective types at ends of run
                         Directionality leadingType;

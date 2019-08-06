@@ -37,12 +37,9 @@ namespace Topten.RichTextKit
         public bool MoveNext()
         {
             if (_current < _end)
-            {
                 _current++;
-                return true;
-            }
-            else
-                return false;
+
+            return _current < _end;
         }
 
         public void Reset()
