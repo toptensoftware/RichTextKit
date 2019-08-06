@@ -126,6 +126,8 @@ namespace Topten.RichTextKit
                                     overrideStatus = Directionality.ON,
                                     isolateStatus = false,
                                 });
+
+                                _levels[i] = newLevel;
                             }
                             else
                             {
@@ -147,6 +149,8 @@ namespace Topten.RichTextKit
                                     overrideStatus = Directionality.ON,
                                     isolateStatus = false,
                                 });
+
+                                _levels[i] = newLevel;
                             }
                             else
                             {
@@ -168,6 +172,8 @@ namespace Topten.RichTextKit
                                     overrideStatus = Directionality.R,
                                     isolateStatus = false,
                                 });
+
+                                _levels[i] = newLevel;
                             }
                             else
                             {
@@ -189,6 +195,8 @@ namespace Topten.RichTextKit
                                     overrideStatus = Directionality.L,
                                     isolateStatus = false,
                                 });
+
+                                _levels[i] = newLevel;
                             }
                             else
                             {
@@ -207,8 +215,12 @@ namespace Topten.RichTextKit
 
                             if (resolvedIsolate == Directionality.FSI)
                             {
+                                if (!_isolatePairs.TryGetValue(i, out var endOfIsolate))
+                                {
+                                    endOfIsolate = _originalTypes.Length;
+                                }
                                 // Rule X5c
-                                if (DetermineParagraphEmbeddingLevel(_originalTypes.SubSlice(i + 1)) == 1)
+                                if (DetermineParagraphEmbeddingLevel(_originalTypes.SubSlice(i + 1, endOfIsolate - (i + 1))) == 1)
                                     resolvedIsolate = Directionality.RLI;
                                 else
                                     resolvedIsolate = Directionality.LRI;
@@ -429,6 +441,7 @@ namespace Topten.RichTextKit
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         int mapX9(int index)
         {
+            //return index < _X9Map.Length ? _X9Map[index] : _originalTypes.Length;
             return _X9Map[index];
         }
 
@@ -458,15 +471,52 @@ namespace Topten.RichTextKit
 
         struct LevelRun
         {
-            public LevelRun(int start, int length, int level)
+            public LevelRun(int start, int length, int level, Directionality sos, Directionality eos)
             {
                 this.start = start;
                 this.length = length;
                 this.level = level;
+                this.sos = sos;
+                this.eos = eos;
             }
             public int start;
             public int length;
             public int level;
+            public Directionality sos;
+            public Directionality eos;
+        }
+
+        void AddLevelRun(int startIndex, int length, int level)
+        {
+            // Get original indicies to first and last character in this run
+            int firstCharIndex = mapX9(startIndex);
+            int lastCharIndex = mapX9(startIndex + length - 1);
+
+            // Work out sos
+            int i = firstCharIndex - 1;
+            while (i >= 0 && IsRemovedByX9(_originalTypes[i]))
+                i--;
+            var prevLevel = i < 0 ? _paragraphEmbeddingLevel : _levels[i];
+            var sos = DirectionFromLevel(Math.Max(prevLevel, level));
+
+            // Work out eos
+            var lastType = _resultTypes[lastCharIndex];
+            int nextLevel;
+            if (lastType == Directionality.LRI || lastType == Directionality.RLI || lastType == Directionality.FSI)
+            {
+                nextLevel = _paragraphEmbeddingLevel;
+            }
+            else
+            {
+                i = lastCharIndex + 1;
+                while (i < _originalTypes.Length && IsRemovedByX9(_originalTypes[i]))
+                    i++;
+                nextLevel = i >= _originalTypes.Length ? _paragraphEmbeddingLevel : _levels[i];
+            }
+            var eos = DirectionFromLevel(Math.Max(nextLevel, level));
+
+            // Add the run            
+            _levelRuns.Add(new LevelRun(startIndex, length, level, sos, eos));
         }
 
         void FindLevelRuns()
@@ -480,7 +530,7 @@ namespace Topten.RichTextKit
                 {
                     if (currentLevel != -1)
                     {
-                        _levelRuns.Add(new LevelRun(runStartIndex, i - runStartIndex, currentLevel));
+                        AddLevelRun(runStartIndex, i - runStartIndex, currentLevel);
                     }
                     currentLevel = level;
                     runStartIndex = i;
@@ -490,7 +540,7 @@ namespace Topten.RichTextKit
             // Don't forget the final level run
             if (currentLevel != -1)
             {
-                _levelRuns.Add(new LevelRun(runStartIndex, _X9Map.Length - runStartIndex, currentLevel));
+                AddLevelRun(runStartIndex, _X9Map.Length - runStartIndex, currentLevel);
             }
         }
 
@@ -527,10 +577,21 @@ namespace Topten.RichTextKit
 
                 // Process all runs that continue on from this run
                 var runIndex = 0;
+                Directionality eos = _levelRuns[0].eos;
+                Directionality sos = _levelRuns[0].sos;
+                int level = _levelRuns[0].level;
                 while (true)
                 {
                     // Get the run
                     var r = _levelRuns[runIndex];
+
+                    // Track the sos and eos for the run as a whole
+                    if (_isolatedRunBuffer.Length == 0)
+                    {
+                        sos = r.sos;
+                        level = r.level;
+                    }
+                    eos = r.eos;
 
                     // Remove this run as we've now processed it
                     _levelRuns.RemoveAt(runIndex);
@@ -555,7 +616,7 @@ namespace Topten.RichTextKit
                 }
 
                 // Process an isolated run comprising the character indices it _isolatedRunBuffer
-                ProcessIsolatedRunSequence();
+                ProcessIsolatedRunSequence(sos, eos, level);
             }
         }
 
@@ -577,7 +638,7 @@ namespace Topten.RichTextKit
         /// Process a single isolated run sequence, where the character sequence
         /// is currently held in _isolatedRunSequence.
         /// </summary>
-        void ProcessIsolatedRunSequence()
+        void ProcessIsolatedRunSequence(Directionality sos, Directionality eos, int runLevel)
         {
             // Create mappings on the underlying buffers
             _runResultTypes = new MappedSlice<Directionality>(_resultTypes, _isolatedRunBuffer.AsSlice());
@@ -585,40 +646,11 @@ namespace Topten.RichTextKit
             _runLevels = new MappedSlice<int>(_levels, _isolatedRunBuffer.AsSlice());
             _runPairedBracketTypes = new MappedSlice<PairedBracketType>(_pairedBracketTypes, _isolatedRunBuffer.AsSlice());
             _runPairedBracketValues = new MappedSlice<int>(_pairedBracketValues, _isolatedRunBuffer.AsSlice());
-
-            // Get original indicies to first and last character in this run
-            int firstCharIndex = _isolatedRunBuffer[0];
-            int lastCharIndex = _isolatedRunBuffer[_isolatedRunBuffer.Length - 1];
-
-            // Get the level (and direction) of the run
-            _runLevel = _levels[firstCharIndex];
-            _runDirection = DirectionFromLevel(_runLevel);
-
-            // Work out sos
-            int i = firstCharIndex;
-            while (i >= 0 && IsRemovedByX9(_originalTypes[i]))
-                i--;
-            var prevLevel = i < 0 ? _paragraphEmbeddingLevel : _levels[i];
-            var sos = DirectionFromLevel(Math.Max(prevLevel, _runLevel));
-
-            // Work out eos
-            var lastType = _runResultTypes[_runResultTypes.Length - 1];
-            int nextLevel;
-            if (lastType == Directionality.LRI || lastType == Directionality.RLI || lastType == Directionality.FSI)
-            {
-                nextLevel = _paragraphEmbeddingLevel;
-            }
-            else
-            {
-                i = lastCharIndex;
-                while (i < _originalTypes.Length && IsRemovedByX9(_originalTypes[i]))
-                    i++;
-                nextLevel = i >= _originalTypes.Length ? _paragraphEmbeddingLevel : _levels[i];
-            }
-            var eos = DirectionFromLevel(Math.Max(nextLevel, _runLevel));
-
+            _runLevel = runLevel;
+            _runDirection = DirectionFromLevel(runLevel);
 
             // Rule W1
+            int i;
             var prevType = sos;
             for (i = 0; i < _runResultTypes.Length; i++)
             {
@@ -693,7 +725,7 @@ namespace Topten.RichTextKit
                          (prevSepType == Directionality.EN && succSepType == Directionality.EN))
                     {
                         // CS between (AN and AN) or (EN and EN)
-                        rt = Directionality.AN;
+                        rt = prevSepType;
                     }
                 }
             }

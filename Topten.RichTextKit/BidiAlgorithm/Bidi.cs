@@ -1032,11 +1032,11 @@ namespace Topten.RichTextKit
 
                 // on entry, only these types can be in resultTypes
                 assertOnly(new Directionality[] {
-                Directionality.L,
-                Directionality.R,
-                Directionality.EN,
-                Directionality.AN
-            });
+                    Directionality.L,
+                    Directionality.R,
+                    Directionality.EN,
+                    Directionality.AN
+                });
 
                 resolvedLevels = new byte[length];
                 owner.setLevels(resolvedLevels, 0, length, level);

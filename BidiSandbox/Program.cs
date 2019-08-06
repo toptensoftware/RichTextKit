@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define USE_BIDI2
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -25,7 +27,9 @@ namespace BidiSandbox
             var location = System.IO.Path.GetDirectoryName(typeof(Program).Assembly.Location);
             var lines = System.IO.File.ReadAllLines(System.IO.Path.Combine(location, "BidiTest.txt"));
 
+#if USE_BIDI2
             var bidi2 = new Bidi2();
+#endif
 
             var sw = new Stopwatch();
 
@@ -129,20 +133,17 @@ namespace BidiSandbox
                 // Run the algorithm...
                 var memBefore = System.GC.GetTotalMemory(false);
                 Slice<int> resultLevels;
-                if (true)
-                {
+#if USE_BIDI2
                     sw.Start();
                     bidi2.Process(t.Types, t.PairedBracketTypes, t.PairedBracketValues, t.ParagraphEmbeddingLevel);
                     sw.Stop();
                     resultLevels = bidi2.ResultLevels;
-                }
-                else
-                {
+#else
                     sw.Start();
                     var bidi = new Bidi(t.Types, t.PairedBracketTypes, t.PairedBracketValues, (byte)t.ParagraphEmbeddingLevel);
                     sw.Stop();
                     resultLevels = new Slice<int>(bidi.getLevels(new int[] { t.Types.Length }).Select(x => (int)x).ToArray());
-                }
+#endif
 
                 var memAfter = System.GC.GetTotalMemory(false);
                 if (memAfter > memBefore)
@@ -170,13 +171,14 @@ namespace BidiSandbox
                 }
 
                 if (pass)
-                {
-                    //Console.WriteLine($"Passed line {lineNumber} (bit {bit})");
                     passCount++;
+
+                if (pass)
+                {
+//                    Console.WriteLine($"Passed line {t.LineNumber} {t.ParagraphEmbeddingLevel}");
                 }
                 else
                 {
-                    /*
                     Console.WriteLine($"Failed line {t.LineNumber}");
                     Console.WriteLine();
                     Console.WriteLine($"        Data: {string.Join(" ", t.Types)}");
@@ -185,7 +187,6 @@ namespace BidiSandbox
                     Console.WriteLine($"      Actual: {string.Join(" ", resultLevels)}");
                     Console.WriteLine();
                     return;
-                    */
                 }
 
                 testCount++;
@@ -196,6 +197,11 @@ namespace BidiSandbox
             }
 
             Console.WriteLine();
+#if USE_BIDI2
+            Console.WriteLine("Bidi Version 2");
+#else
+            Console.WriteLine("Bidi Version 1");
+#endif
             Console.WriteLine($"Passed {passCount} of {testCount} tests");
             Console.WriteLine($"Time in algorithm: {sw.Elapsed}");
             Console.WriteLine($"Memory in algorithm: {memUsed:n0}");
