@@ -7,7 +7,7 @@ namespace Topten.RichTextKit.Utils
     /// from the source array
     /// </summary>
     /// <typeparam name="T">The element type of the underlying array</typeparam>
-    public class MappedSlice<T>
+    public struct MappedSlice<T>
     {
         /// <summary>
         /// Constructs a new mapped array

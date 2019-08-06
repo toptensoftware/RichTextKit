@@ -14,17 +14,17 @@
     <Company>Topten Software</Company>
     <PackageLicenseUrl>https://www.toptensoftware.com/richtextkit</PackageLicenseUrl>
     <PackageIconUrl>https://www.toptensoftware.com/nuget_icon.png</PackageIconUrl>
+    <GenerateFullPaths>True</GenerateFullPaths>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
       <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="WordBoundaryAlgorithm\**" />
-    <EmbeddedResource Remove="WordBoundaryAlgorithm\**" />
-    <None Remove="WordBoundaryAlgorithm\**" />
-  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.1|AnyCPU'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Resources\BidiData.trie" />

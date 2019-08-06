@@ -344,26 +344,27 @@ namespace Topten.RichTextKit
             public bool isolateStatus;
         }
 
+        Stack<int> _pendingOpens = new Stack<int>();
+
         /// <summary>
         /// Build a list of matching isolates for a directionality slice 
         /// Implements BD9
         /// </summary>
         void FindIsolatePairs()
         {
-            var pendingOpens = new Stack<int>();
-
+            _pendingOpens.Clear();
             for (int i = 0; i < _originalTypes.Length; i++)
             {
                 var t = _originalTypes[i];
                 if (t == Directionality.LRI || t == Directionality.RLI || t == Directionality.FSI)
                 {
-                    pendingOpens.Push(i);
+                    _pendingOpens.Push(i);
                 }
                 else if (t == Directionality.PDI)
                 {
-                    if (pendingOpens.Count > 0)
+                    if (_pendingOpens.Count > 0)
                     {
-                        _isolatePairs.Add(pendingOpens.Pop(), i);
+                        _isolatePairs.Add(_pendingOpens.Pop(), i);
                     }
                 }
             }
@@ -649,10 +650,12 @@ namespace Topten.RichTextKit
             _runLevel = runLevel;
             _runDirection = DirectionFromLevel(runLevel);
 
+            int length = _runResultTypes.Length;
+
             // Rule W1
             int i;
             var prevType = sos;
-            for (i = 0; i < _runResultTypes.Length; i++)
+            for (i = 0; i < length; i++)
             {
                 var t = _runResultTypes[i];
                 if (t == Directionality.NSM)
@@ -673,7 +676,7 @@ namespace Topten.RichTextKit
             }
 
             // Rule W2
-            for (i = 0; i < _runResultTypes.Length; i++)
+            for (i = 0; i < length; i++)
             {
                 if (_runResultTypes[i] == Directionality.EN)
                 {
@@ -693,7 +696,7 @@ namespace Topten.RichTextKit
             }
 
             // Rule W3
-            for (i = 0; i < _runResultTypes.Length; i++)
+            for (i = 0; i < length; i++)
             {
                 if (_runResultTypes[i] == Directionality.AL)
                 {
@@ -702,7 +705,7 @@ namespace Topten.RichTextKit
             }
 
             // Rule W4
-            for (i = 1; i < _runResultTypes.Length - 1; ++i)
+            for (i = 1; i < length - 1; ++i)
             {
                 ref var rt = ref _runResultTypes[i];
                 if (rt == Directionality.ES)
@@ -731,19 +734,19 @@ namespace Topten.RichTextKit
             }
 
             // Rule W5
-            for (i = 0; i < _runResultTypes.Length; ++i)
+            for (i = 0; i < length; ++i)
             {
                 if (_runResultTypes[i] == Directionality.ET)
                 {
                     // locate end of sequence
                     int seqStart = i;
                     int seqEnd = i;
-                    while (seqEnd < _runResultTypes.Length && _runResultTypes[seqEnd] == Directionality.ET)
+                    while (seqEnd < length && _runResultTypes[seqEnd] == Directionality.ET)
                         seqEnd++;
 
                     // Preceeded by EN or followed by EN?
                     if ((seqStart == 0 ? sos : _runResultTypes[seqStart - 1]) == Directionality.EN
-                        || (seqEnd == _runResultTypes.Length ? eos : _runResultTypes[seqEnd]) == Directionality.EN)
+                        || (seqEnd == length ? eos : _runResultTypes[seqEnd]) == Directionality.EN)
                     {
                         // Change the entire range
                         for (int j = seqStart; i < seqEnd; ++i)
@@ -758,7 +761,7 @@ namespace Topten.RichTextKit
             }
 
             // Rule W6.
-            for (i = 0; i < _runResultTypes.Length; ++i)
+            for (i = 0; i < length; ++i)
             {
                 ref var t = ref _runResultTypes[i];
                 if (t == Directionality.ES || t == Directionality.ET || t == Directionality.CS)
@@ -769,7 +772,7 @@ namespace Topten.RichTextKit
 
             // Rule W7.
             var prevStrongType = sos;
-            for (i = 0; i < _runResultTypes.Length; ++i)
+            for (i = 0; i < length; ++i)
             {
                 ref var rt = ref _runResultTypes[i];
                 if (rt == Directionality.EN)
@@ -789,8 +792,12 @@ namespace Topten.RichTextKit
             }
 
             // Rule N0 - process bracket pairs
-            foreach (var pb in LocatePairedBrackets())
+            int count;
+            var pairedBrackets = LocatePairedBrackets();
+            pairedBrackets.Sort(_pairedBracketComparer);
+            for (i=0, count = pairedBrackets.Count; i< count; i++)
             {
+                var pb = pairedBrackets[i];
                 var dir = InspectPairedBracket(pb);
 
                 // Case "d" - no strong types in the brackets, ignore
@@ -817,7 +824,7 @@ namespace Topten.RichTextKit
 
 
             // Rules N1 and N2 - resolve neutral types
-            for (i = 0; i < _runResultTypes.Length; ++i)
+            for (i = 0; i < length; ++i)
             {
                 var t = _runResultTypes[i];
                 if (IsNeutralType(t))
@@ -825,7 +832,7 @@ namespace Topten.RichTextKit
                     // locate end of sequence
                     int seqStart = i;
                     int seqEnd = i;
-                    while (seqEnd < _runResultTypes.Length && IsNeutralType(_runResultTypes[seqEnd]))
+                    while (seqEnd < length && IsNeutralType(_runResultTypes[seqEnd]))
                         seqEnd++;
 
                     // Work out preceding type
@@ -845,7 +852,7 @@ namespace Topten.RichTextKit
 
                     // Work out the following type
                     Directionality typeAfter;
-                    if (seqEnd == _runResultTypes.Length)
+                    if (seqEnd == length)
                     {
                         typeAfter = eos;
                     }
@@ -885,7 +892,7 @@ namespace Topten.RichTextKit
             if ((_runLevel & 0x01) == 0)
             {
                 // Rule I1 - even
-                for (i = 0; i < _runResultTypes.Length; i++)
+                for (i = 0; i < length; i++)
                 {
                     var t = _runResultTypes[i];
                     ref var l = ref _runLevels[i];
@@ -898,7 +905,7 @@ namespace Topten.RichTextKit
             else
             {
                 // Rule I2 - odd
-                for (i = 0; i < _runResultTypes.Length; i++)
+                for (i = 0; i < length; i++)
                 {
                     var t = _runResultTypes[i];
                     ref var l = ref _runLevels[i];
@@ -908,6 +915,15 @@ namespace Topten.RichTextKit
             }
         }
 
+        class PairedBracketComparer : IComparer<BracketPair>
+        {
+            int IComparer<BracketPair>.Compare(BracketPair x, BracketPair y)
+            {
+                return x.Opener - y.Opener;
+            }
+        }
+
+        static PairedBracketComparer _pairedBracketComparer = new PairedBracketComparer();
 
         /// <summary>
         /// Check if a a directionality is neutral for rules N1 and N2
@@ -936,37 +952,40 @@ namespace Topten.RichTextKit
         const int MAX_PAIRING_DEPTH = 63;
 
 
+        List<int> _openers = new List<int>();
+        List<BracketPair> _pairPositions = new List<BracketPair>();
+
         /// <summary>
         /// Locate all pair brackets in the current isolating run
         /// </summary>
         /// <returns>A sorted list of BracketPairs</returns>
         List<BracketPair> LocatePairedBrackets()
         {
-            var openers = new List<int>();
-            var pairPositions = new SortedSet<BracketPair>();
+            _openers.Clear();
+            _pairPositions.Clear();
 
             for (int ich = 0; ich < _runResultTypes.Length; ich++)
             {
                 switch (_runPairedBracketTypes[ich])
                 {
                     case PairedBracketType.o:
-                        if (openers.Count == MAX_PAIRING_DEPTH)
-                            return pairPositions.ToList();
+                        if (_openers.Count == MAX_PAIRING_DEPTH)
+                            return _pairPositions;
 
-                        openers.Insert(0, ich);
+                        _openers.Insert(0, ich);
                         break;
 
                     case PairedBracketType.c:
                         // see if there is a match
-                        for (int i = 0; i < openers.Count - 1; i++)
+                        for (int i = 0; i < _openers.Count - 1; i++)
                         {
-                            if (_runPairedBracketValues[i] == _runPairedBracketValues[openers[i]])
+                            if (_runPairedBracketValues[i] == _runPairedBracketValues[_openers[i]])
                             {
                                 // Add this paired bracket set
-                                pairPositions.Add(new BracketPair(openers[i], ich));
+                                _pairPositions.Add(new BracketPair(_openers[i], ich));
 
                                 // remove up to and including matched opener
-                                openers.RemoveRange(0, i + 1);
+                                _openers.RemoveRange(0, i + 1);
                                 break;
                             }
                         }
@@ -974,7 +993,7 @@ namespace Topten.RichTextKit
                 }
             }
 
-            return pairPositions.ToList();
+            return _pairPositions;
         }
 
         Directionality InspectPairedBracket(BracketPair pb)
@@ -1063,49 +1082,21 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Hold the start and end index of a pair of brackets
         /// </summary>
-        struct BracketPair : IEquatable<BracketPair>, IComparable<BracketPair>
+        struct BracketPair
         {
-            private int ichOpener;
-            private int ichCloser;
+            public int Opener;
+            public int Closer;
 
             public BracketPair(int ichOpener, int ichCloser)
             {
-                this.ichOpener = ichOpener;
-                this.ichCloser = ichCloser;
+                this.Opener = ichOpener;
+                this.Closer = ichCloser;
             }
 
             public override string ToString()
             {
-                return "(" + ichOpener + ", " + ichCloser + ")";
+                return "(" + Opener + ", " + Closer + ")";
             }
-
-            public override int GetHashCode()
-            {
-                return ichOpener.GetHashCode() ^ ichCloser.GetHashCode();
-            }
-
-            public override bool Equals(object obj)
-            {
-                return obj is BracketPair && Equals((BracketPair)obj);
-            }
-
-            public bool Equals(BracketPair p)
-            {
-                return ichOpener == p.ichOpener && ichCloser == p.ichCloser;
-            }
-
-            public int CompareTo(BracketPair other)
-            {
-                if (this.ichOpener == other.ichOpener)
-                    return 0;
-                if (this.ichOpener < other.ichOpener)
-                    return -1;
-                else
-                    return 1;
-            }
-
-            public int Opener => ichOpener;
-            public int Closer => ichCloser;
         }
 
 

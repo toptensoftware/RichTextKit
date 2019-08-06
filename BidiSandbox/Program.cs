@@ -1,4 +1,5 @@
-﻿//#define USE_BIDI2
+﻿#define USE_BIDI2
+//#define FOR_PROFILING
 
 using System;
 using System.Collections.Generic;
@@ -44,7 +45,7 @@ namespace BidiSandbox
             for (int lineNumber = 1; lineNumber < lines.Length + 1; lineNumber++)
             {
                 // Get the line, remove comments
-                var line = lines[lineNumber - 1].Split("#")[0].Trim();
+                var line = lines[lineNumber - 1].Split('#')[0].Trim();
 
                 // Ignore blank/comment only lines
                 if (string.IsNullOrWhiteSpace(line))
@@ -67,7 +68,7 @@ namespace BidiSandbox
                 }
 
                 // Split data line
-                var parts = line.Split(";");
+                var parts = line.Split(';');
                 System.Diagnostics.Debug.Assert(parts.Length == 2);
 
                 // Get the directions
@@ -126,6 +127,9 @@ namespace BidiSandbox
                 preGCCounts.Add(System.GC.CollectionCount(i));
             }
 
+#if FOR_PROFILING
+            for (int repeat = 0; repeat < 50; repeat++)
+#endif
             for (int testNumber=0; testNumber<tests.Count; testNumber++)
             {
                 var t = tests[testNumber];
@@ -192,7 +196,9 @@ namespace BidiSandbox
                 testCount++;
                 if ((testCount % 10000) == 0)
                 {
-                    Console.WriteLine($"Progress: line {testCount} of {tests.Count}");
+#if !FOR_PROFILING
+                        Console.WriteLine($"Progress: line {testCount} of {tests.Count}");
+#endif
                 }
             }
 
