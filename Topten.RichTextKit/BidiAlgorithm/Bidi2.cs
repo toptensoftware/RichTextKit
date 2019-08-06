@@ -706,7 +706,7 @@ namespace Topten.RichTextKit
                     // locate end of sequence
                     int seqStart = i;
                     int seqEnd = i;
-                    while (seqEnd < _runResultTypes.Length && _runResultTypes[i] == Directionality.ET)
+                    while (seqEnd < _runResultTypes.Length && _runResultTypes[seqEnd] == Directionality.ET)
                         seqEnd++;
 
                     // Preceeded by EN or followed by EN?
@@ -793,7 +793,7 @@ namespace Topten.RichTextKit
                     // locate end of sequence
                     int seqStart = i;
                     int seqEnd = i;
-                    while (seqEnd < _runResultTypes.Length && IsNeutralType(_runResultTypes[i]))
+                    while (seqEnd < _runResultTypes.Length && IsNeutralType(_runResultTypes[seqEnd]))
                         seqEnd++;
 
                     // Work out preceding type

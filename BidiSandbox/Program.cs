@@ -176,6 +176,7 @@ namespace BidiSandbox
                 }
                 else
                 {
+                    /*
                     Console.WriteLine($"Failed line {t.LineNumber}");
                     Console.WriteLine();
                     Console.WriteLine($"        Data: {string.Join(" ", t.Types)}");
@@ -184,6 +185,7 @@ namespace BidiSandbox
                     Console.WriteLine($"      Actual: {string.Join(" ", resultLevels)}");
                     Console.WriteLine();
                     return;
+                    */
                 }
 
                 testCount++;
