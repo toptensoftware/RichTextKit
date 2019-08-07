@@ -818,7 +818,7 @@ namespace Topten.RichTextKit
 
             _bidi.Process(bidiData);
 
-            var bidiRuns = BidiRun.CoalescLevels(_bidi.ResultLevels).ToList();
+            var bidiRuns = BidiRun.CoalescLevels(_bidi.ResolvedLevels).ToList();
 
             // Split...
             var pos = 0;

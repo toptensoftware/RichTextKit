@@ -124,7 +124,7 @@ namespace TestBench
                 tr.EnterTest();
                 bidi.Process(t.Types, Slice<PairedBracketType>.Empty, Slice<int>.Empty, t.ParagraphEmbeddingLevel, false, null, null);
                 tr.LeaveTest();
-                resultLevels = bidi.ResultLevels;
+                resultLevels = bidi.ResolvedLevels;
 
 
                 // Check the results match

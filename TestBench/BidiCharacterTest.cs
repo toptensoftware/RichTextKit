@@ -86,7 +86,7 @@ namespace TestBench
                     bidi.Process(bidiData);
                 }
                 tr.LeaveTest();
-                var resultLevels = bidi.ResultLevels;
+                var resultLevels = bidi.ResolvedLevels;
                 int resultParagraphLevel = bidi.ResolvedParagraphEmbeddingLevel;
 
                 // Assert
