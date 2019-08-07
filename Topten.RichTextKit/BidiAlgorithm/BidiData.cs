@@ -18,26 +18,34 @@ namespace Topten.RichTextKit
         /// </summary>
         public BidiData()
         {
-            _directionality = new Buffer<Directionality>();
+            _types = new Buffer<Directionality>();
             _pairedBracketTypes= new Buffer<PairedBracketType>();
             _pairedBracketValues = new Buffer<int>();
         }
 
         List<int> _paragraphPositions = new List<int>();
 
-        int _paragraphEmbeddingLevel;
+        sbyte _paragraphEmbeddingLevel;
+        public sbyte ParagraphEmbeddingLevel => _paragraphEmbeddingLevel;
 
-        public int ParagraphEmbeddingLevel => _paragraphEmbeddingLevel;
+        bool _hasBrackets;
+        public bool HasBrackets => _hasBrackets;
+
+        bool _hasEmbeddings;
+        public bool HasEmbeddings => _hasEmbeddings;
+
+        bool _hasIsolates;
+        public bool HasIsolates => _hasIsolates;
 
         /// <summary>
         /// Initialize with an array of Unicode code points
         /// </summary>
         /// <param name="codePoints">The unicode code points to be processed</param>
         /// <param name="paragraphEmbeddingLevel">The paragraph embedding level</param>
-        public void Init(Slice<int> codePoints, int paragraphEmbeddingLevel)
+        public void Init(Slice<int> codePoints, sbyte paragraphEmbeddingLevel)
         {
             // Set working buffer sizes
-            _directionality.Length = codePoints.Length;
+            _types.Length = codePoints.Length;
             _pairedBracketTypes.Length = codePoints.Length;
             _pairedBracketValues.Length = codePoints.Length;
 
@@ -46,29 +54,60 @@ namespace Topten.RichTextKit
 
             // Resolve the directionality, paired bracket type and paired bracket values for
             // all code points
+            _hasBrackets = false;
+            _hasEmbeddings = false;
+            _hasIsolates = false;
             for (int i = 0; i < codePoints.Length; i++)
             {
                 var bidiData = UnicodeClasses.BidiData(codePoints[i]);
-                _directionality[i] = (Directionality)(bidiData >> 24);
-                _pairedBracketTypes[i] = (PairedBracketType)((bidiData >> 16) & 0xFF);
-                if (_pairedBracketTypes[i] == PairedBracketType.o)
+
+                // Look up directionality
+                var dir = (Directionality)(bidiData >> 24);
+                _types[i] = dir;
+
+                switch (dir)
                 {
-                    _pairedBracketValues[i] = MapCanon((int)(bidiData & 0xFFFF));
-                }
-                else
-                {
-                    _pairedBracketValues[i] = MapCanon(codePoints[i]);
+                    case Directionality.LRE:
+                    case Directionality.LRO:
+                    case Directionality.RLE:
+                    case Directionality.RLO:
+                    case Directionality.PDF:
+                        _hasEmbeddings = true;
+                        break;
+
+                    case Directionality.LRI:
+                    case Directionality.RLI:
+                    case Directionality.FSI:
+                    case Directionality.PDI:
+                        _hasIsolates = true;
+                        break;
                 }
 
-                if (_directionality[i] == RichTextKit.Directionality.B)
+                // Lookup paired bracket types
+                var pbt = (PairedBracketType)((bidiData >> 16) & 0xFF);
+                _pairedBracketTypes[i]  = pbt;
+                switch (pbt)
                 {
-                    _directionality[i] = (Directionality)_paragraphEmbeddingLevel;
+                    case PairedBracketType.o:
+                        _pairedBracketValues[i] = MapCanon((int)(bidiData & 0xFFFF));
+                        _hasBrackets = true;
+                        break;
+
+                    case PairedBracketType.c:
+                        _pairedBracketValues[i] = MapCanon(codePoints[i]);
+                        _hasBrackets = true;
+                        break;
+                }
+
+                if (_types[i] == RichTextKit.Directionality.B)
+                {
+                    _types[i] = (Directionality)_paragraphEmbeddingLevel;
                     _paragraphPositions.Add(i);
                 }
             }
 
             // Create slices on work buffers
-            Directionality = _directionality.AsSlice();
+            Types = _types.AsSlice();
             PairedBracketTypes = _pairedBracketTypes.AsSlice();
             PairedBracketValues = _pairedBracketValues.AsSlice();
         }
@@ -81,9 +120,9 @@ namespace Topten.RichTextKit
         static int MapCanon(int codePoint)
         {
             if (codePoint == 0x3008)
-                return 0x2379;
+                return 0x2329;
             if (codePoint == 0x3009)
-                return 0x237A;
+                return 0x232A;
             else
                 return codePoint;
         }
@@ -91,16 +130,16 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Get the length of the data held by the BidiData
         /// </summary>
-        public int Length => _directionality.Length;
+        public int Length => _types.Length;
 
-        Buffer<Directionality> _directionality;
+        Buffer<Directionality> _types;
         Buffer<PairedBracketType> _pairedBracketTypes;
         Buffer<int> _pairedBracketValues;
 
         /// <summary>
         /// The directionality of each code point
         /// </summary>
-        public Slice<Directionality> Directionality;
+        public Slice<Directionality> Types;
 
         /// <summary>
         /// The paired bracket type for each code point

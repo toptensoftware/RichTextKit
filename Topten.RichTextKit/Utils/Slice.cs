@@ -151,5 +151,10 @@ namespace Topten.RichTextKit.Utils
         {
             return new ArraySliceEnumerator<T>(_array, _start, _length);
         }
+
+        /// <summary>
+        /// A shared empty slice of type T
+        /// </summary>
+        public static Slice<T> Empty => new Slice<T>();
     }
 }

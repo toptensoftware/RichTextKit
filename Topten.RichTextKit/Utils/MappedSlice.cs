@@ -51,5 +51,19 @@ namespace Topten.RichTextKit.Utils
                 return ref _data[_mapping[index]];
             }
         }
+
+        /// <summary>
+        /// Get the content of this mapped slice as an array
+        /// </summary>
+        /// <returns>The content as an array</returns>
+        public T[] ToArray()
+        {
+            var arr = new T[Length];
+            for (int i = 0; i < Length; i++)
+            {
+                arr[i] = this[i];
+            }
+            return arr;
+        }
     }
 }

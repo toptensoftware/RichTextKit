@@ -35,12 +35,14 @@ namespace Topten.RichTextKit
         WS = 12,
         ON = 13,
 
-        // Explicit Formatting Types
+        // Explicit Formatting Types - Embed
         LRE = 14,
         LRO = 15,
         RLE = 16,
         RLO = 17,
         PDF = 18,
+
+        // Explicit Formatting Types - Isolate
         LRI = 19,
         RLI = 20,
         FSI = 21,

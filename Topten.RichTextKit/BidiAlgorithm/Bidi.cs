@@ -109,7 +109,7 @@ namespace Topten.RichTextKit
         //
 
         public Bidi(BidiData data) : 
-            this(data.Directionality, data.PairedBracketTypes, data.PairedBracketValues, (byte)data.ParagraphEmbeddingLevel)
+            this(data.Types, data.PairedBracketTypes, data.PairedBracketValues, (sbyte)data.ParagraphEmbeddingLevel)
         {
         }
 
@@ -156,7 +156,7 @@ namespace Topten.RichTextKit
          * @param paragraphEmbeddingLevel
          *            the externally supplied paragraph embedding level.
          */
-        public Bidi(Slice<Directionality> types, Slice<PairedBracketType> pairTypes, Slice<int> pairValues, byte paragraphEmbeddingLevel)
+        public Bidi(Slice<Directionality> types, Slice<PairedBracketType> pairTypes, Slice<int> pairValues, sbyte paragraphEmbeddingLevel)
         {
             validateTypes(types);
             validatePbTypes(pairTypes);
@@ -171,67 +171,20 @@ namespace Topten.RichTextKit
             runAlgorithm();
         }
 
+        public sbyte ResolvedParagraphEmbeddingLevel => _paragraphEmbeddingLevel;
 
-        private const byte implicitEmbeddingLevel = 2; // level will be determined implicitly
+
+        private const sbyte implicitEmbeddingLevel = 2; // level will be determined implicitly
         private Directionality[] _initialTypes;
-        private byte _paragraphEmbeddingLevel = implicitEmbeddingLevel;
+        private sbyte _paragraphEmbeddingLevel = implicitEmbeddingLevel;
         private int _textLength; // for convenience
         private Directionality[] _resultTypes; // for paragraph, not lines
-        private byte[] _resultLevels; // for paragraph, not lines
+        private sbyte[] _resultLevels; // for paragraph, not lines
 
         // Get the final computed directionality of each character
         public Directionality[] Result => _resultTypes;
 
-        public byte[] ResultLevels => _resultLevels;
-
-        public struct Run
-        {
-            public Directionality Direction;
-            public int Start;
-            public int Length;
-            public int End => Start + Length;
-
-            public override string ToString()
-            {
-                return $"{Start} - {End} - {Direction}";
-            }
-        }
-
-        public IEnumerable<Run> Runs
-        {
-            get
-            {
-                if (_resultTypes.Length == 0)
-                    yield break;
-
-                int startRun = 0;
-                Directionality runDir = _resultTypes[0];
-                for (int i = 1; i < _resultTypes.Length; i++)
-                {
-                    if (_resultTypes[i] == runDir)
-                        continue;
-
-                    // End of this run
-                    yield return new Run()
-                    {
-                        Direction = runDir,
-                        Start = startRun,
-                        Length = i - startRun,
-                    };
-
-                    // Move to next run
-                    startRun = i;
-                    runDir = _resultTypes[i];
-                }
-
-                yield return new Run()
-                {
-                    Direction = runDir,
-                    Start = startRun,
-                    Length = _resultTypes.Length - startRun,
-                };
-            }
-        }
+        public Slice<sbyte> ResultLevels => new Slice<sbyte>(_resultLevels);
 
         /*
          * Index of matching PDI for isolate initiator characters. For other
@@ -309,7 +262,7 @@ namespace Topten.RichTextKit
             }
 
             // Initialize result levels to paragraph embedding level.
-            _resultLevels = new byte[_textLength];
+            _resultLevels = new sbyte[_textLength];
             setLevels(_resultLevels, 0, _textLength, _paragraphEmbeddingLevel);
 
             // 2) Explicit levels and directions
@@ -331,7 +284,7 @@ namespace Topten.RichTextKit
                 IsolatingRunSequence sequence = sequences[i];
                 // 3) resolving weak types
                 // Rules W1-W7.
-                sequence.resolveWeakTypes();
+                sequence.resolveWeakTypes(); 
 
                 // 4a) resolving paired brackets
                 // Rule N0
@@ -428,7 +381,7 @@ namespace Topten.RichTextKit
          * @return the resolved paragraph direction of the substring limited by
          *         startIndex and endIndex
          */
-        private byte determineParagraphEmbeddingLevel(int startIndex, int endIndex)
+        private sbyte determineParagraphEmbeddingLevel(int startIndex, int endIndex)
         {
             var strongType = Directionality.Unknown; // unknown
 
@@ -471,7 +424,7 @@ namespace Topten.RichTextKit
         private class directionalStatusStack
         {
             private int stackCounter = 0;
-            private byte[] embeddingLevelStack = new byte[MAX_DEPTH + 1];
+            private sbyte[] embeddingLevelStack = new sbyte[MAX_DEPTH + 1];
             private Directionality[] overrideStatusStack = new Directionality[MAX_DEPTH + 1];
             private bool[] isolateStatusStack = new bool[MAX_DEPTH + 1];
 
@@ -480,7 +433,7 @@ namespace Topten.RichTextKit
                 stackCounter = 0;
             }
 
-            public void push(byte level, Directionality overrideStatus, bool isolateStatus)
+            public void push(sbyte level, Directionality overrideStatus, bool isolateStatus)
             {
                 embeddingLevelStack[stackCounter] = level;
                 overrideStatusStack[stackCounter] = overrideStatus;
@@ -498,7 +451,7 @@ namespace Topten.RichTextKit
                 return stackCounter;
             }
 
-            public byte lastEmbeddingLevel()
+            public sbyte lastEmbeddingLevel()
             {
                 return embeddingLevelStack[stackCounter - 1];
             }
@@ -559,16 +512,16 @@ namespace Topten.RichTextKit
                             }
                         }
 
-                        byte newLevel;
+                        sbyte newLevel;
                         if (isRTL)
                         {
                             // least greater odd
-                            newLevel = (byte)((stack.lastEmbeddingLevel() + 1) | 1);
+                            newLevel = (sbyte)((stack.lastEmbeddingLevel() + 1) | 1);
                         }
                         else
                         {
                             // least greater even
-                            newLevel = (byte)((stack.lastEmbeddingLevel() + 2) & ~1);
+                            newLevel = (sbyte)((stack.lastEmbeddingLevel() + 2) & ~1);
                         }
 
                         if (newLevel <= MAX_DEPTH && overflowIsolateCount == 0 && overflowEmbeddingCount == 0)
@@ -683,11 +636,11 @@ namespace Topten.RichTextKit
         {
             private int[] indexes; // indexes to the original string
             private Directionality[] types; // type of each character using the index
-            private byte[] resolvedLevels; // resolved levels after application of
+            private sbyte[] resolvedLevels; // resolved levels after application of
                                            // rules
             private int length; // length of isolating run sequence in
                                 // characters
-            private byte level;
+            private sbyte level;
             private Directionality sos, eos;
             private Bidi owner;
 
@@ -716,11 +669,11 @@ namespace Topten.RichTextKit
                 {
                     --prevChar;
                 }
-                byte prevLevel = prevChar >= 0 ? owner._resultLevels[prevChar] : owner._paragraphEmbeddingLevel;
+                sbyte prevLevel = prevChar >= 0 ? owner._resultLevels[prevChar] : owner._paragraphEmbeddingLevel;
                 sos = typeForLevel(Math.Max(prevLevel, level));
 
                 var lastType = types[length - 1];
-                byte succLevel;
+                sbyte succLevel;
                 if (lastType == Directionality.LRI || lastType == Directionality.RLI || lastType == Directionality.FSI)
                 {
                     succLevel = owner._paragraphEmbeddingLevel;
@@ -1038,7 +991,7 @@ namespace Topten.RichTextKit
                     Directionality.AN
                 });
 
-                resolvedLevels = new byte[length];
+                resolvedLevels = new sbyte[length];
                 owner.setLevels(resolvedLevels, 0, length, level);
 
                 if ((level & 1) == 0)
@@ -1171,7 +1124,7 @@ namespace Topten.RichTextKit
             int[][] allRuns = new int[_textLength][];
             int numRuns = 0;
 
-            byte currentLevel = (byte)0xFF;
+            sbyte currentLevel = -1;
             int runLength = 0;
             for (int i = 0; i < _textLength; ++i)
             {
@@ -1181,7 +1134,7 @@ namespace Topten.RichTextKit
                     { // we just encountered a
                       // new run
                       // Wrap up last run
-                        if (currentLevel != 0xFF)
+                        if (currentLevel != -1)
                         { // only wrap it up if there was a run
                             int[] run = copyArray(temporaryRun, runLength);
                             allRuns[numRuns] = run;
@@ -1282,7 +1235,7 @@ namespace Topten.RichTextKit
                         || t == Directionality.RLO || t == Directionality.PDF || t == Directionality.BN)
                 {
                     _resultTypes[i] = t;
-                    _resultLevels[i] = 0xFF;
+                    _resultLevels[i] = -1;
                 }
             }
 
@@ -1290,13 +1243,13 @@ namespace Topten.RichTextKit
             // propagated backward, the main thing is not to introduce a level
             // break where one doesn't already exist).
 
-            if (_resultLevels[0] == 0xFF)
+            if (_resultLevels[0] == -1)
             {
                 _resultLevels[0] = _paragraphEmbeddingLevel;
             }
             for (int i = 1; i < _initialTypes.Length; ++i)
             {
-                if (_resultLevels[i] == 0xFF)
+                if (_resultLevels[i] == -1)
                 {
                     _resultLevels[i] = _resultLevels[i - 1];
                 }
@@ -1327,7 +1280,7 @@ namespace Topten.RichTextKit
          *            the offsets at which to break the paragraph
          * @return the resolved levels of the text
          */
-        public byte[] getLevels(int[] linebreaks)
+        public sbyte[] getLevels(int[] linebreaks)
         {
 
             // Note that since the previous processing has removed all
@@ -1343,7 +1296,7 @@ namespace Topten.RichTextKit
 
             validateLineBreaks(linebreaks, _textLength);
 
-            byte[] result = _resultLevels.ToArray(); // will be returned to
+            sbyte[] result = _resultLevels.ToArray(); // will be returned to
                                                     // caller
 
             // don't worry about linebreaks since if there is a break within
@@ -1422,7 +1375,7 @@ namespace Topten.RichTextKit
         {
             validateLineBreaks(linebreaks, _textLength);
 
-            byte[] levels = getLevels(linebreaks);
+            sbyte[] levels = getLevels(linebreaks);
 
             return computeMultilineReordering(levels, linebreaks);
         }
@@ -1431,7 +1384,7 @@ namespace Topten.RichTextKit
          * Return multiline reordering array for a given level array. Reordering
          * does not occur across a line break.
          */
-        private static int[] computeMultilineReordering(byte[] levels, int[] linebreaks)
+        private static int[] computeMultilineReordering(sbyte[] levels, int[] linebreaks)
         {
             int[] result = new int[levels.Length];
 
@@ -1440,7 +1393,7 @@ namespace Topten.RichTextKit
             {
                 int limit = linebreaks[i];
 
-                byte[] templevels = new byte[limit - start];
+                sbyte[] templevels = new sbyte[limit - start];
                 Array.Copy(levels, start, templevels, 0, templevels.Length);
 
                 int[] temporder = computeReordering(templevels);
@@ -1460,7 +1413,7 @@ namespace Topten.RichTextKit
          * line. The reordering is a visual to logical map. For example, the
          * leftmost char is string.charAt(order[0]). Rule L2.
          */
-        private static int[] computeReordering(byte[] levels)
+        private static int[] computeReordering(sbyte[] levels)
         {
             int lineLength = levels.Length;
 
@@ -1475,11 +1428,11 @@ namespace Topten.RichTextKit
             // locate highest level found on line.
             // Note the rules say text, but no reordering across line bounds is
             // performed, so this is sufficient.
-            byte highestLevel = 0;
-            byte lowestOddLevel = MAX_DEPTH + 2;
+            sbyte highestLevel = 0;
+            sbyte lowestOddLevel = MAX_DEPTH + 2;
             for (int i = 0; i < lineLength; ++i)
             {
-                byte level = levels[i];
+                sbyte level = levels[i];
                 if (level > highestLevel)
                 {
                     highestLevel = level;
@@ -1524,7 +1477,7 @@ namespace Topten.RichTextKit
         /*
          * Return the base level of the paragraph.
          */
-        public byte getBaseLevel()
+        public sbyte getBaseLevel()
         {
             return _paragraphEmbeddingLevel;
         }
@@ -1587,7 +1540,7 @@ namespace Topten.RichTextKit
         /*
          * Set levels from start up to (but not including) limit to newLevel.
          */
-        private void setLevels(byte[] levels, int start, int limit, byte newLevel)
+        private void setLevels(sbyte[] levels, int start, int limit, sbyte newLevel)
         {
             for (int i = start; i < limit; ++i)
             {
@@ -1624,7 +1577,7 @@ namespace Topten.RichTextKit
          * paragraph embedding level as implicit can still be performed when
          * using this API.
          */
-        private static void validateParagraphEmbeddingLevel(byte paragraphEmbeddingLevel)
+        private static void validateParagraphEmbeddingLevel(sbyte paragraphEmbeddingLevel)
         {
             if (paragraphEmbeddingLevel != implicitEmbeddingLevel &&
                     paragraphEmbeddingLevel != 0 &&
@@ -1701,7 +1654,7 @@ namespace Topten.RichTextKit
             Slice<Directionality> types, 
             Slice<PairedBracketType> pairTypes, 
             Slice<int> pairValues, 
-            byte paragraphEmbeddingLevel
+            sbyte paragraphEmbeddingLevel
             )
         {
             Bidi bidi = new Bidi(types, pairTypes, pairValues, paragraphEmbeddingLevel);

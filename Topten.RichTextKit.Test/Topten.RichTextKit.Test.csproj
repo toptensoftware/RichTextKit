@@ -15,16 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TestBench\TestBench.csproj" />
     <ProjectReference Include="..\Topten.RichTextKit\Topten.RichTextKit.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="BidiCharacterTest.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="BidiTest.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="LineBreakTest.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

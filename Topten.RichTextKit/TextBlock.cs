@@ -798,13 +798,17 @@ namespace Topten.RichTextKit
             else
                 return _textAlignment;
         }
-        
+
+#if !USE_BIDI1
+        Bidi2 _bidi = new Bidi2();
+#endif
+
         /// <summary>
         /// Split into runs based on directionality and style switch points
         /// </summary>
         void BuildFontRuns()
         {
-            byte paragraphEmbeddingLevel = 0;
+            sbyte paragraphEmbeddingLevel = 0;
 
             if (BaseDirection == TextDirection.RTL && !_useMSWordStyleRtlLayout)
             {
@@ -813,7 +817,14 @@ namespace Topten.RichTextKit
 
             // Break supplied text into directionality runs
             bidiData.Init(_codePoints.AsSlice(), paragraphEmbeddingLevel);
-            var bidiRuns = new Bidi(bidiData).Runs.ToList();
+
+#if USE_BIDI1
+            var _bidi = new Bidi(bidiData);
+#else
+            _bidi.Process(bidiData);
+#endif
+
+            var bidiRuns = BidiRun.CoalescLevels(_bidi.ResultLevels).ToList();
 
             // Split...
             var pos = 0;

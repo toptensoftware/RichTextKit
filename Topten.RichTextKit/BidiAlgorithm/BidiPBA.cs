@@ -169,7 +169,7 @@ namespace Topten.RichTextKit
 
         Directionality _sos; // direction corresponding to start of sequence
         private Slice<Directionality> _initialCodes; // direction bidi codes initially assigned to the original string
-        public Directionality[] _codesIsolatedRun; // directional bidi codes for an isolated run
+        public Slice<Directionality> _codesIsolatedRun; // directional bidi codes for an isolated run
         private Slice<int> _indexes; // array of index values into the original string
 
         /**
@@ -246,7 +246,7 @@ namespace Topten.RichTextKit
                         if (_openers.Count == 0)
                             continue; // no opening bracket defined
 
-                        for (int i = 0; i < _openers.Count - 1; i++)
+                        for (int i = 0; i < _openers.Count; i++)
                         {
                             if (matchOpener(pairValues, _openers[i], ich))
                             {
@@ -507,13 +507,13 @@ namespace Topten.RichTextKit
                 Slice<PairedBracketType> pairTypes,
                 Slice<int> pairValues, 
                 Directionality sos, 
-                byte level)
+                sbyte level)
         {
             var dirEmbed = 1 == (level & 1) ? Directionality.R : Directionality.L;
 
             _sos = sos;
             _indexes = indexes;
-            _codesIsolatedRun = codes.ToArray();
+            _codesIsolatedRun = codes;
             _initialCodes = initialCodes;
 
             locateBrackets(pairTypes, pairValues);
@@ -541,7 +541,7 @@ namespace Topten.RichTextKit
                 Slice<PairedBracketType> pairTypes,
                 Slice<int> pairValues, 
                 Directionality sos, 
-                byte level
+                sbyte level
             )
         {
 

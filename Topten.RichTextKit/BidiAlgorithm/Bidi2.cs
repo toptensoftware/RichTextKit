@@ -23,9 +23,9 @@ namespace Topten.RichTextKit
         Slice<Directionality> _originalTypes;
         Slice<Directionality> _resultTypes;
         Buffer<Directionality> _resultTypesBuffer = new Buffer<Directionality>();
-        Slice<int> _levels;
-        Buffer<int> _levelsBuffer = new Buffer<int>();
-        int _paragraphEmbeddingLevel;
+        Slice<sbyte> _levels;
+        Buffer<sbyte> _levelsBuffer = new Buffer<sbyte>();
+        sbyte _paragraphEmbeddingLevel;
         Stack<Status> _statusStack = new Stack<Status>();
         Buffer<int> _X9Map = new Buffer<int>();
         List<LevelRun> _levelRuns = new List<LevelRun>();
@@ -33,12 +33,31 @@ namespace Topten.RichTextKit
         Slice<PairedBracketType> _pairedBracketTypes;
         Slice<int> _pairedBracketValues;
 
-        public Slice<int> ResultLevels => _levels;
+        bool _hasBrackets;
+        bool _hasEmbeddings;
+        bool _hasIsolates;
+
+        public Slice<sbyte> ResultLevels => _levels;
+
+        public int ResolvedParagraphEmbeddingLevel => _paragraphEmbeddingLevel;
+
+        public void Process(BidiData data)
+        {
+            Process(data.Types, data.PairedBracketTypes, data.PairedBracketValues, data.ParagraphEmbeddingLevel, data.HasBrackets, data.HasEmbeddings, data.HasIsolates);
+        }
 
         /// <summary>
         /// Processes Bidi Data
         /// </summary>
-        public void Process(Slice<Directionality> directionality, Slice<PairedBracketType> pairedBracketTypes, Slice<int> pairedBracketValues, int paragraphEmbeddingLevel)
+        public void Process(
+            Slice<Directionality> directionality, 
+            Slice<PairedBracketType> pairedBracketTypes, 
+            Slice<int> pairedBracketValues, 
+            sbyte paragraphEmbeddingLevel,
+            bool? hasBrackets,
+            bool? hasEmbeddings,
+            bool? hasIsolates
+            )
         {
             // Reset state
             _isolatePairs.Clear();
@@ -53,6 +72,11 @@ namespace Topten.RichTextKit
             // Capture paired bracket values and types
             _pairedBracketTypes = pairedBracketTypes;
             _pairedBracketValues = pairedBracketValues;
+
+            // Store things we know
+            _hasBrackets = hasBrackets ?? _pairedBracketTypes.Length == _originalTypes.Length;
+            _hasEmbeddings = hasEmbeddings ?? true;
+            _hasIsolates = hasIsolates ?? true;
 
             // Determine isolate pairs
             FindIsolatePairs();
@@ -82,6 +106,9 @@ namespace Topten.RichTextKit
 
             // Reset whitespace levels
             ResetWhitespaceLevels();
+
+            // Clean up
+            AssignLevelsToCodePointsRemovedByX9();
         }
 
 
@@ -90,6 +117,10 @@ namespace Topten.RichTextKit
         /// </summary>
         private void DetermineExplicitEmbeddingLevels()
         {
+            // Redundant?
+            if (!_hasIsolates && !_hasEmbeddings)
+                return;
+
             // Work variables
             _statusStack.Clear();
             int overflowIsolateCount = 0;
@@ -117,7 +148,7 @@ namespace Topten.RichTextKit
                     case Directionality.RLE:
                         {
                             // Rule X2
-                            var newLevel = (_statusStack.Peek().embeddingLevel + 1) | 1;
+                            var newLevel = (sbyte)((_statusStack.Peek().embeddingLevel + 1) | 1);
                             if (newLevel <= maxStackDepth && overflowIsolateCount == 0 && overflowEmbeddingCount == 0)
                             {
                                 _statusStack.Push(new Status()
@@ -140,7 +171,7 @@ namespace Topten.RichTextKit
                     case Directionality.LRE:
                         {
                             // Rule X3
-                            var newLevel = (_statusStack.Peek().embeddingLevel + 2) & ~1;
+                            var newLevel = (sbyte)((_statusStack.Peek().embeddingLevel + 2) & ~1);
                             if (newLevel < maxStackDepth && overflowIsolateCount == 0 && overflowEmbeddingCount == 0)
                             {
                                 _statusStack.Push(new Status()
@@ -163,7 +194,7 @@ namespace Topten.RichTextKit
                     case Directionality.RLO:
                         {
                             // Rule X4
-                            var newLevel = (_statusStack.Peek().embeddingLevel + 1) | 1;
+                            var newLevel = (sbyte)((_statusStack.Peek().embeddingLevel + 1) | 1);
                             if (newLevel <= maxStackDepth && overflowIsolateCount == 0 && overflowEmbeddingCount == 0)
                             {
                                 _statusStack.Push(new Status()
@@ -186,7 +217,7 @@ namespace Topten.RichTextKit
                     case Directionality.LRO:
                         {
                             // Rule X5
-                            var newLevel = (_statusStack.Peek().embeddingLevel + 2) & ~1;
+                            var newLevel = (sbyte)((_statusStack.Peek().embeddingLevel + 2) & ~1);
                             if (newLevel <= maxStackDepth && overflowIsolateCount == 0 && overflowEmbeddingCount == 0)
                             {
                                 _statusStack.Push(new Status()
@@ -237,11 +268,11 @@ namespace Topten.RichTextKit
                             }
 
                             // Work out new level
-                            int newLevel;
+                            sbyte newLevel;
                             if (resolvedIsolate == Directionality.RLI)
-                                newLevel = (tos.embeddingLevel + 1) | 1;
+                                newLevel = (sbyte)((tos.embeddingLevel + 1) | 1);
                             else
-                                newLevel = (tos.embeddingLevel + 2) & ~1;
+                                newLevel = (sbyte)((tos.embeddingLevel + 2) & ~1);
 
                             // Valid?
                             if (newLevel <= maxStackDepth && overflowIsolateCount == 0 && overflowEmbeddingCount == 0)
@@ -339,7 +370,7 @@ namespace Topten.RichTextKit
 
         struct Status
         {
-            public int embeddingLevel;
+            public sbyte embeddingLevel;
             public Directionality overrideStatus;
             public bool isolateStatus;
         }
@@ -352,6 +383,12 @@ namespace Topten.RichTextKit
         /// </summary>
         void FindIsolatePairs()
         {
+            // Redundant?
+            if (!_hasIsolates)
+                return;
+
+            _hasIsolates = false;
+
             _pendingOpens.Clear();
             for (int i = 0; i < _originalTypes.Length; i++)
             {
@@ -359,6 +396,7 @@ namespace Topten.RichTextKit
                 if (t == Directionality.LRI || t == Directionality.RLI || t == Directionality.FSI)
                 {
                     _pendingOpens.Push(i);
+                    _hasIsolates = true;
                 }
                 else if (t == Directionality.PDI)
                 {
@@ -366,13 +404,14 @@ namespace Topten.RichTextKit
                     {
                         _isolatePairs.Add(_pendingOpens.Pop(), i);
                     }
+                    _hasIsolates = true;
                 }
             }
         }
 
 
 
-        int DetermineParagraphEmbeddingLevel(Slice<Directionality> data)
+        sbyte DetermineParagraphEmbeddingLevel(Slice<Directionality> data)
         {
             // P2
             for (var i = 0; i < data.Length; ++i)
@@ -419,18 +458,29 @@ namespace Topten.RichTextKit
             // Reserve room for the x9 map
             _X9Map.Length = _originalTypes.Length;
 
-            // Build a map the removes all x9 characters
-            var j = 0;
-            for (int i = 0; i < _originalTypes.Length; i++)
+            if (_hasEmbeddings || _hasIsolates)
             {
-                if (!IsRemovedByX9(_originalTypes[i]))
+                // Build a map the removes all x9 characters
+                var j = 0;
+                for (int i = 0; i < _originalTypes.Length; i++)
                 {
-                    _X9Map[j++] = i;
+                    if (!IsRemovedByX9(_originalTypes[i]))
+                    {
+                        _X9Map[j++] = i;
+                    }
+                }
+
+                // Set the final length
+                _X9Map.Length = j;
+            }
+            else
+            {
+                for (int i = 0, count = _originalTypes.Length; i < count; i++)
+                {
+                    _X9Map[i] = i;
                 }
             }
 
-            // Set the final length
-            _X9Map.Length = j;
         }
 
 
@@ -621,6 +671,7 @@ namespace Topten.RichTextKit
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Directionality DirectionFromLevel(int level)
         {
             return ((level & 0x1) == 0) ? Directionality.L : Directionality.R;
@@ -631,7 +682,7 @@ namespace Topten.RichTextKit
         Directionality _runDirection;
         MappedSlice<Directionality> _runResultTypes;
         MappedSlice<Directionality> _runOriginalTypes;
-        MappedSlice<int> _runLevels;
+        MappedSlice<sbyte> _runLevels;
         MappedSlice<PairedBracketType> _runPairedBracketTypes;
         MappedSlice<int> _runPairedBracketValues;
 
@@ -644,182 +695,247 @@ namespace Topten.RichTextKit
             // Create mappings on the underlying buffers
             _runResultTypes = new MappedSlice<Directionality>(_resultTypes, _isolatedRunBuffer.AsSlice());
             _runOriginalTypes = new MappedSlice<Directionality>(_originalTypes, _isolatedRunBuffer.AsSlice());
-            _runLevels = new MappedSlice<int>(_levels, _isolatedRunBuffer.AsSlice());
-            _runPairedBracketTypes = new MappedSlice<PairedBracketType>(_pairedBracketTypes, _isolatedRunBuffer.AsSlice());
-            _runPairedBracketValues = new MappedSlice<int>(_pairedBracketValues, _isolatedRunBuffer.AsSlice());
+            _runLevels = new MappedSlice<sbyte>(_levels, _isolatedRunBuffer.AsSlice());
+            if (_hasBrackets)
+            {
+                _runPairedBracketTypes = new MappedSlice<PairedBracketType>(_pairedBracketTypes, _isolatedRunBuffer.AsSlice());
+                _runPairedBracketValues = new MappedSlice<int>(_pairedBracketValues, _isolatedRunBuffer.AsSlice());
+            }
             _runLevel = runLevel;
             _runDirection = DirectionFromLevel(runLevel);
 
             int length = _runResultTypes.Length;
 
-            // Rule W1
+            bool hasEN = false;
+            bool hasAL = false;
+            bool hasES = false;
+            bool hasCS = false;
+            bool hasAN = false;
+            bool hasET = false;
+
+            // Rule W1 + check for used types in the first run through...
             int i;
             var prevType = sos;
             for (i = 0; i < length; i++)
             {
                 var t = _runResultTypes[i];
-                if (t == Directionality.NSM)
+                switch (t)
                 {
-                    _runResultTypes[i] = prevType;
-                }
-                else
-                {
-                    if (t == Directionality.LRI || t == Directionality.RLI || t == Directionality.FSI || t == Directionality.PDI)
-                    {
+                    case Directionality.NSM:
+                        _runResultTypes[i] = prevType;
+                        break;
+
+                    case Directionality.LRI:
+                    case Directionality.RLI:
+                    case Directionality.FSI:
+                    case Directionality.PDI:
                         prevType = Directionality.ON;
-                    }
-                    else
-                    {
+                        break;
+
+                    case Directionality.EN:
+                        hasEN = true;
                         prevType = t;
-                    }
+                        break;
+
+                    case Directionality.AL:
+                        hasAL = true;
+                        prevType = t;
+                        break;
+
+                    case Directionality.ES:
+                        hasES = true;
+                        prevType = t;
+                        break;
+
+                    case Directionality.CS:
+                        hasCS = true;
+                        prevType = t;
+                        break;
+
+                    case Directionality.AN:
+                        hasAN = true;
+                        prevType = t;
+                        break;
+
+                    case Directionality.ET:
+                        hasET = true;
+                        prevType = t;
+                        break;
+
+                    default:
+                        prevType = t;
+                        break;
                 }
             }
 
             // Rule W2
-            for (i = 0; i < length; i++)
+            if (hasEN)
             {
-                if (_runResultTypes[i] == Directionality.EN)
+                for (i = 0; i < length; i++)
                 {
-                    for (int j = i - 1; j >= 0; j--)
+                    if (_runResultTypes[i] == Directionality.EN)
                     {
-                        var t = _runResultTypes[j];
-                        if (t == Directionality.L || t == Directionality.R || t == Directionality.AL)
+                        for (int j = i - 1; j >= 0; j--)
                         {
-                            if (t == Directionality.AL)
+                            var t = _runResultTypes[j];
+                            if (t == Directionality.L || t == Directionality.R || t == Directionality.AL)
                             {
-                                _runResultTypes[i] = Directionality.AN;
+                                if (t == Directionality.AL)
+                                {
+                                    _runResultTypes[i] = Directionality.AN;
+                                    hasAN = true;
+                                }
+                                break;
                             }
-                            break;
                         }
                     }
                 }
             }
 
             // Rule W3
-            for (i = 0; i < length; i++)
+            if (hasAL)
             {
-                if (_runResultTypes[i] == Directionality.AL)
+                for (i = 0; i < length; i++)
                 {
-                    _runResultTypes[i] = Directionality.R;
+                    if (_runResultTypes[i] == Directionality.AL)
+                    {
+                        _runResultTypes[i] = Directionality.R;
+                    }
                 }
             }
 
             // Rule W4
-            for (i = 1; i < length - 1; ++i)
+            if ((hasES || hasCS) && (hasEN || hasAN))
             {
-                ref var rt = ref _runResultTypes[i];
-                if (rt == Directionality.ES)
+                for (i = 1; i < length - 1; ++i)
                 {
-                    var prevSepType = _runResultTypes[i - 1];
-                    var succSepType = _runResultTypes[i + 1];
-
-                    if (prevSepType == Directionality.EN && succSepType == Directionality.EN)
+                    ref var rt = ref _runResultTypes[i];
+                    if (rt == Directionality.ES)
                     {
-                        // ES between EN and EN
-                        rt = Directionality.EN;
+                        var prevSepType = _runResultTypes[i - 1];
+                        var succSepType = _runResultTypes[i + 1];
+
+                        if (prevSepType == Directionality.EN && succSepType == Directionality.EN)
+                        {
+                            // ES between EN and EN
+                            rt = Directionality.EN;
+                        }
                     }
-                }
-                else if (rt == Directionality.CS)
-                {
-                    var prevSepType = _runResultTypes[i - 1];
-                    var succSepType = _runResultTypes[i + 1];
-
-                    if ((prevSepType == Directionality.AN && succSepType == Directionality.AN) ||
-                         (prevSepType == Directionality.EN && succSepType == Directionality.EN))
+                    else if (rt == Directionality.CS)
                     {
-                        // CS between (AN and AN) or (EN and EN)
-                        rt = prevSepType;
+                        var prevSepType = _runResultTypes[i - 1];
+                        var succSepType = _runResultTypes[i + 1];
+
+                        if ((prevSepType == Directionality.AN && succSepType == Directionality.AN) ||
+                             (prevSepType == Directionality.EN && succSepType == Directionality.EN))
+                        {
+                            // CS between (AN and AN) or (EN and EN)
+                            rt = prevSepType;
+                        }
                     }
                 }
             }
 
             // Rule W5
-            for (i = 0; i < length; ++i)
+            if (hasET)
             {
-                if (_runResultTypes[i] == Directionality.ET)
+                for (i = 0; i < length; ++i)
                 {
-                    // locate end of sequence
-                    int seqStart = i;
-                    int seqEnd = i;
-                    while (seqEnd < length && _runResultTypes[seqEnd] == Directionality.ET)
-                        seqEnd++;
-
-                    // Preceeded by EN or followed by EN?
-                    if ((seqStart == 0 ? sos : _runResultTypes[seqStart - 1]) == Directionality.EN
-                        || (seqEnd == length ? eos : _runResultTypes[seqEnd]) == Directionality.EN)
+                    if (_runResultTypes[i] == Directionality.ET)
                     {
-                        // Change the entire range
-                        for (int j = seqStart; i < seqEnd; ++i)
-                        {
-                            _runResultTypes[i] = Directionality.EN;
-                        }
-                    }
+                        // locate end of sequence
+                        int seqStart = i;
+                        int seqEnd = i;
+                        while (seqEnd < length && _runResultTypes[seqEnd] == Directionality.ET)
+                            seqEnd++;
 
-                    // continue at end of sequence
-                    i = seqEnd;
+                        // Preceeded by EN or followed by EN?
+                        if ((seqStart == 0 ? sos : _runResultTypes[seqStart - 1]) == Directionality.EN
+                            || (seqEnd == length ? eos : _runResultTypes[seqEnd]) == Directionality.EN)
+                        {
+                            // Change the entire range
+                            for (int j = seqStart; i < seqEnd; ++i)
+                            {
+                                _runResultTypes[i] = Directionality.EN;
+                                hasEN = true;
+                            }
+                        }
+
+                        // continue at end of sequence
+                        i = seqEnd;
+                    }
                 }
             }
 
             // Rule W6.
-            for (i = 0; i < length; ++i)
+            if (hasES || hasET || hasCS)
             {
-                ref var t = ref _runResultTypes[i];
-                if (t == Directionality.ES || t == Directionality.ET || t == Directionality.CS)
+                for (i = 0; i < length; ++i)
                 {
-                    t = Directionality.ON;
+                    ref var t = ref _runResultTypes[i];
+                    if (t == Directionality.ES || t == Directionality.ET || t == Directionality.CS)
+                    {
+                        t = Directionality.ON;
+                    }
                 }
             }
 
             // Rule W7.
-            var prevStrongType = sos;
-            for (i = 0; i < length; ++i)
+            if (hasEN)
             {
-                ref var rt = ref _runResultTypes[i];
-                if (rt == Directionality.EN)
+                var prevStrongType = sos;
+                for (i = 0; i < length; ++i)
                 {
-                    // If prev strong type was an L change this to L too
-                    if (prevStrongType == Directionality.L)
+                    ref var rt = ref _runResultTypes[i];
+                    if (rt == Directionality.EN)
                     {
-                        _runResultTypes[i] = Directionality.L;
+                        // If prev strong type was an L change this to L too
+                        if (prevStrongType == Directionality.L)
+                        {
+                            _runResultTypes[i] = Directionality.L;
+                        }
                     }
-                }
 
-                // Remember previous strong type (NB: AL should already be changed to R)
-                if (rt == Directionality.L || rt == Directionality.R)
-                {
-                    prevStrongType = rt;
+                    // Remember previous strong type (NB: AL should already be changed to R)
+                    if (rt == Directionality.L || rt == Directionality.R)
+                    {
+                        prevStrongType = rt;
+                    }
                 }
             }
 
             // Rule N0 - process bracket pairs
-            int count;
-            var pairedBrackets = LocatePairedBrackets();
-            pairedBrackets.Sort(_pairedBracketComparer);
-            for (i=0, count = pairedBrackets.Count; i< count; i++)
+            if (_hasBrackets)
             {
-                var pb = pairedBrackets[i];
-                var dir = InspectPairedBracket(pb);
-
-                // Case "d" - no strong types in the brackets, ignore
-                if (dir == Directionality.ON)
+                int count;
+                var pairedBrackets = LocatePairedBrackets();
+                //pairedBrackets.Sort(_pairedBracketComparer);
+                for (i = 0, count = pairedBrackets.Count; i < count; i++)
                 {
-                    continue;
-                }
+                    var pb = pairedBrackets[i];
+                    var dir = InspectPairedBracket(pb);
 
-                // Case "b" - strong type found that matches the embedding direction
-                if ((dir == Directionality.L || dir == Directionality.R) && dir == _runDirection)
-                {
+                    // Case "d" - no strong types in the brackets, ignore
+                    if (dir == Directionality.ON)
+                    {
+                        continue;
+                    }
+
+                    // Case "b" - strong type found that matches the embedding direction
+                    if ((dir == Directionality.L || dir == Directionality.R) && dir == _runDirection)
+                    {
+                        SetPairedBracketDirection(pb, dir);
+                        continue;
+                    }
+
+                    // Case "c" - found opposite strong type found, look before to establish context
+                    dir = InspectBeforePairedBracket(pb, sos);
+                    if (dir == _runDirection || dir == Directionality.ON)
+                    {
+                        dir = _runDirection;
+                    }
                     SetPairedBracketDirection(pb, dir);
-                    continue;
                 }
-
-                // Case "c" - found opposite strong type found, look before to establish context
-                dir = InspectBeforePairedBracket(pb, sos);
-                if (dir == _runDirection || dir == Directionality.ON)
-                {
-                    dir = _runDirection;
-                }
-                SetPairedBracketDirection(pb, dir);
             }
 
 
@@ -963,26 +1079,43 @@ namespace Topten.RichTextKit
         {
             _openers.Clear();
             _pairPositions.Clear();
+            const int sortLimit = 8;
 
-            for (int ich = 0; ich < _runResultTypes.Length; ich++)
+            for (int ich = 0, length = _runResultTypes.Length; ich < length; ich++)
             {
+                if (_runResultTypes[ich] != Directionality.ON)
+                    continue;
+
                 switch (_runPairedBracketTypes[ich])
                 {
                     case PairedBracketType.o:
                         if (_openers.Count == MAX_PAIRING_DEPTH)
-                            return _pairPositions;
+                            goto exit;
 
                         _openers.Insert(0, ich);
                         break;
 
                     case PairedBracketType.c:
                         // see if there is a match
-                        for (int i = 0; i < _openers.Count - 1; i++)
+                        for (int i = 0; i < _openers.Count; i++)
                         {
-                            if (_runPairedBracketValues[i] == _runPairedBracketValues[_openers[i]])
+                            if (_runPairedBracketValues[ich] == _runPairedBracketValues[_openers[i]])
                             {
                                 // Add this paired bracket set
-                                _pairPositions.Add(new BracketPair(_openers[i], ich));
+                                var opener = _openers[i];
+                                if (_pairPositions.Count < sortLimit)
+                                {
+                                    int ppi = 0;
+                                    while (ppi < _pairPositions.Count && _pairPositions[ppi].Opener < opener)
+                                    {
+                                        ppi++;
+                                    }
+                                    _pairPositions.Insert(ppi, new BracketPair(opener, ich));
+                                }
+                                else
+                                {
+                                    _pairPositions.Add(new BracketPair(opener, ich));
+                                }
 
                                 // remove up to and including matched opener
                                 _openers.RemoveRange(0, i + 1);
@@ -992,6 +1125,10 @@ namespace Topten.RichTextKit
                         break;
                 }
             }
+
+            exit:
+            if (_pairPositions.Count > sortLimit)
+                _pairPositions.Sort(_pairedBracketComparer);
 
             return _pairPositions;
         }
@@ -1061,6 +1198,7 @@ namespace Topten.RichTextKit
         /// </summary>
         /// <param name="dir">The direction to map</param>
         /// <returns>A strong direction - R, L or ON</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         Directionality GetStrongTypeN0(Directionality dir)
         {
             switch (dir)
@@ -1161,5 +1299,31 @@ namespace Topten.RichTextKit
             }
         }
 
+        void AssignLevelsToCodePointsRemovedByX9()
+        {
+            // Redundant?
+            if (!_hasIsolates && !_hasEmbeddings)
+                return;
+
+            // No-op?
+            if (_resultTypes.Length == 0)
+                return;
+
+            // Fix up first character
+            if (_levels[0] < 0)
+                _levels[0] = _paragraphEmbeddingLevel;
+            if (IsRemovedByX9(_originalTypes[0]))
+                _resultTypes[0] = _originalTypes[0];
+
+            for (int i = 1, length = _resultTypes.Length; i < length; i++)
+            {
+                var t = _originalTypes[i];
+                if (IsRemovedByX9(t))
+                {
+                    _resultTypes[i] = t;
+                    _levels[i] = _levels[i - 1];
+                }
+            }
+        }
     }
 }
