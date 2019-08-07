@@ -201,5 +201,25 @@ namespace Topten.RichTextKit.Utils
         {
             return new ArraySliceEnumerator<T>(_data, 0, _length);
         }
+
+        public T[] SetMapping(Slice<T> data, Slice<int> mapping)
+        {
+            Length = mapping.Length;
+            for (int i = 0; i < Length; i++)
+            {
+                _data[i] = data[mapping[i]];
+            }
+            return _data;
+        }
+
+        public T[] GetMapping(Slice<T> data, Slice<int> mapping)
+        {
+            int len = mapping.Length;
+            for (int i = 0; i < len; i++)
+            {
+                data[mapping[i]] = _data[i];
+            }
+            return _data;
+        }
     }
 }
