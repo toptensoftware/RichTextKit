@@ -13,6 +13,7 @@ namespace Topten.RichTextKit.Test
         public void Test()
         {
             Assert.True(TestBench.BidiTest.Run());
+            Assert.True(TestBench.BidiCharacterTest.Run());
         }
     }
 }
