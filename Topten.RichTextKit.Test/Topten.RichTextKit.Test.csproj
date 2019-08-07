@@ -19,10 +19,4 @@
     <ProjectReference Include="..\Topten.RichTextKit\Topten.RichTextKit.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="LineBreakTest.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

@@ -1,0 +1,70 @@
+
+0.2										sot	×	any
+0.3										any	÷	eot
+4.0										BK	÷	any
+5.01									CR	×	LF
+5.02									CR	÷	any
+5.03									LF	÷	any
+5.04									NL	÷	any
+6.0										any	×	( BK | CR | LF | NL )
+7.01									any	×	SP
+7.02									any	×	ZW
+8.0		==>							ZW SP*	÷	any
+8.1									ZWJ_O	×	any
+9.0					[^ SP BK CR LF NL ZW]	×	CM
+11.01									any	×	WJ
+11.02									WJ	×	any
+12.0									GL	×	any
+12.1						[^ SP BA HY CM]	×	GL
+12.2	==>				[^ BA HY CM] CM+	×	GL
+12.3	==>							^ CM+	×	GL
+13.01									any	×	EX
+13.02							[^ NU CM]	×	(CL | CP | IS | SY)
+13.03	==>					[^ NU CM] CM+	×	(CL | CP | IS | SY)
+13.04	==>							^ CM+	×	(CL | CP | IS | SY)
+14.0	==>							OP SP*	×	any
+15.0	==>							QU SP*	×	OP
+16.0	==>					(CL | CP) SP*	×	NS
+17.0	==>							B2 SP*	×	B2
+18.0									SP	÷	any
+19.01									any	×	QU
+19.02									QU	×	any
+20.01									any	÷	CB
+20.02									CB	÷	any
+21.01									any	×	BA
+21.02									any	×	HY
+21.03									any	×	NS
+21.04									BB	×	any
+21.1	==>					HL (HY | BA)	×	any
+21.2									SY	×	HL
+22.01							(AL | HL)	×	IN
+22.02									EX	×	IN
+22.03						(ID | EB | EM)	×	IN
+22.04									IN	×	IN
+22.05									NU	×	IN
+23.02							(AL | HL)	×	NU
+23.03									NU	×	(AL | HL)
+23.12									PR	×	(ID | EB | EM)
+23.13						(ID | EB | EM)	×	PO
+24.02							(PR | PO)	×	(AL | HL)
+24.03							(AL | HL)	×	(PR | PO)
+25.01							(PR | PO)	×	( OP | HY )? NU
+25.02							( OP | HY )	×	NU
+25.03									NU	×	(NU | SY | IS)
+25.04	==>				NU (NU | SY | IS)*	×	(NU | SY | IS | CL | CP)
+25.05	==>	NU (NU | SY | IS)* (CL | CP)?	×	(PO | PR)
+26.01									JL	×	JL | JV | H2 | H3
+26.02								JV | H2	×	JV | JT
+26.03								JT | H3	×	JT
+27.01				JL | JV | JT | H2 | H3	×	IN
+27.02				JL | JV | JT | H2 | H3	×	PO
+27.03									PR	×	JL | JV | JT | H2 | H3
+28.0							(AL | HL)	×	(AL | HL)
+29.0									IS	×	(AL | HL)
+30.01						(AL | HL | NU)	×	OP
+30.02									CP	×	(AL | HL | NU)
+30.11	==>					^ (RI RI)* RI	×	RI
+30.12	==>				[^RI] (RI RI)* RI	×	RI
+30.13									RI	÷	RI
+30.2									EB	×	EM
+999.0									any	÷	Any

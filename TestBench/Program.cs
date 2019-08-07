@@ -5,8 +5,9 @@
 
         static void Main(string[] args)
         {
-            BidiTest.Run();
-            BidiCharacterTest.Run();
+            //BidiTest.Run();
+            //BidiCharacterTest.Run();
+            LineBreakTest.Run();
         }
     }
 }
