@@ -1,5 +1,4 @@
-﻿#define USE_BIDI2
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,12 +21,8 @@ namespace TestBench
 
         public static bool Run()
         {
-#if USE_BIDI2
-            Console.WriteLine("Bidi Character Tests (Version 2)");
-#else
-            Console.WriteLine("Bidi Character Tests (Version 1)");
-#endif
-            Console.WriteLine("--------------------------------");
+            Console.WriteLine("Bidi Character Tests");
+            Console.WriteLine("--------------------");
             Console.WriteLine();
 
             // Read the test file
@@ -71,9 +66,7 @@ namespace TestBench
 
             Console.WriteLine($"Test data loaded: {tests.Count} test cases");
 
-#if USE_BIDI2
-            var bidi2 = new Bidi2();
-#endif
+            var bidi = new Bidi();
             var bidiData = new BidiData();
 
             // Run tests...
@@ -87,23 +80,14 @@ namespace TestBench
 
                 // Act
 
-#if USE_BIDI2
                 tr.EnterTest();
                 for (int i = 0; i < 10; i++)
                 {
-                    bidi2.Process(bidiData);
+                    bidi.Process(bidiData);
                 }
                 tr.LeaveTest();
-                var resultLevels = bidi2.ResultLevels;
-                int resultParagraphLevel = bidi2.ResolvedParagraphEmbeddingLevel;
-#else
-            tr.EnterTest();
-            var bidi1 = new Bidi(bidiData);
-            tr.LeaveTest();
-            var resultLevels = new Slice<int>(bidi1.getLevels(new int[] { bidiData.Length }).Select(x => (int)x).ToArray());
-            int resultParagraphLevel = bidi1.ResolvedParagraphEmbeddingLevel;
-#endif
-
+                var resultLevels = bidi.ResultLevels;
+                int resultParagraphLevel = bidi.ResolvedParagraphEmbeddingLevel;
 
                 // Assert
                 bool passed = true;

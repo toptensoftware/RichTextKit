@@ -1,7 +1,4 @@
-﻿#define USE_BIDI2
-//#define FOR_PROFILING
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -24,21 +21,15 @@ namespace TestBench
 
         public static bool Run()
         {
-#if USE_BIDI2
-            Console.WriteLine("Bidi Class Tests (Version 2)");
-#else
-            Console.WriteLine("Bidi Class Tests (Version 1)");
-#endif
-            Console.WriteLine("----------------------------");
+            Console.WriteLine("Bidi Class Tests");
+            Console.WriteLine("----------------");
             Console.WriteLine();
 
              // Read the test file
             var location = System.IO.Path.GetDirectoryName(typeof(Program).Assembly.Location);
             var lines = System.IO.File.ReadAllLines(System.IO.Path.Combine(location, "BidiTest.txt"));
 
-#if USE_BIDI2
-            var bidi2 = new Bidi2();
-#endif
+            var bidi = new Bidi();
 
             List<Test> tests = new List<Test>();
 
@@ -130,17 +121,10 @@ namespace TestBench
 
                 // Run the algorithm...
                 Slice<sbyte> resultLevels;
-#if USE_BIDI2
-                    tr.EnterTest();
-                    bidi2.Process(t.Types, Slice<PairedBracketType>.Empty, Slice<int>.Empty, t.ParagraphEmbeddingLevel, false, null, null);
-                    tr.LeaveTest();
-                    resultLevels = bidi2.ResultLevels;
-#else
-                    tr.EnterTest();
-                    var bidi = new Bidi(t.Types, t.PairedBracketTypes, t.PairedBracketValues, t.ParagraphEmbeddingLevel);
-                    tr.LeaveTest();
-                    resultLevels = new Slice<sbyte>(bidi.getLevels(new int[] { t.Types.Length }).ToArray());
-#endif
+                tr.EnterTest();
+                bidi.Process(t.Types, Slice<PairedBracketType>.Empty, Slice<int>.Empty, t.ParagraphEmbeddingLevel, false, null, null);
+                tr.LeaveTest();
+                resultLevels = bidi.ResultLevels;
 
 
                 // Check the results match

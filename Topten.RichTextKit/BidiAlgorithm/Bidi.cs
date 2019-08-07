@@ -1,1322 +1,1260 @@
-﻿/* 
- * Ported from https://www.unicode.org/Public/PROGRAMS/BidiReferenceJava/BidiReference.java
- * /
-
-/*
- * Last Revised: 2016-09-21
- *
- * Credits:
- * Originally written by Doug Felt
- * 
- * Updated for Unicode 6.3 by Roozbeh Pournader, with feedback by Aharon Lanin
- * 
- * Updated by Asmus Freytag to implement the Paired Bracket Algorithm (PBA)
- *
- * Updated for Unicode 8.0 by Deepak Jois, with feedback from Ken Whistler
- *
- * Disclaimer and legal rights:
- * (C) Copyright IBM Corp. 1999, All Rights Reserved
- * (C) Copyright Google Inc. 2013, All Rights Reserved
- * (C) Copyright ASMUS, Inc. 2013. All Rights Reserved
- * (C) Copyright Deepak Jois 2016, All Rights Reserved
- *
- * Distributed under the Terms of Use in http://www.unicode.org/copyright.html.
- */
-
-
-/*
- * Revision info (2016-09-21):
- * Changes to support updated rules X5a,X5b and X6a in Unicode 8.0
- *
- * Revision info (2013-09-16):
- * Changed MAX_DEPTH to 125
- * 
- * Revision info (2013-06-02):
- * <p>
- * The core part of the Unicode Paired Bracket Algorithm (PBA) 
- * is implemented in a new BidiPBAReference class.
- * <p>
- * Changed convention for default paragraph embedding level from -1 to 2.
- */
-
-
-/*
- * Reference implementation of the Unicode Bidirectional Algorithm (UAX #9).
- *
- * <p>
- * This implementation is not optimized for performance. It is intended as a
- * reference implementation that closely follows the specification of the
- * Bidirectional Algorithm in The Unicode Standard version 6.3.
- * <p>
- * <b>Input:</b><br>
- * There are two levels of input to the algorithm, since clients may prefer to
- * supply some information from out-of-band sources rather than relying on the
- * default behavior.
- * <ol>
- * <li>Bidi class array
- * <li>Bidi class array, with externally supplied base line direction
- * </ol>
- * <p>
- * <b>Output:</b><br>
- * Output is separated into several stages as well, to better enable clients to
- * evaluate various aspects of implementation conformance.
- * <ol>
- * <li>levels array over entire paragraph
- * <li>reordering array over entire paragraph
- * <li>levels array over line
- * <li>reordering array over line
- * </ol>
- * Note that for conformance to the Unicode Bidirectional Algorithm,
- * implementations are only required to generate correct reordering and
- * character directionality (odd or even levels) over a line. Generating
- * identical level arrays over a line is not required. Bidi explicit format
- * codes (LRE, RLE, LRO, RLO, PDF) and BN can be assigned arbitrary levels and
- * positions as long as the rest of the input is properly reordered.
- * <p>
- * As the algorithm is defined to operate on a single paragraph at a time, this
- * implementation is written to handle single paragraphs. Thus rule P1 is
- * presumed by this implementation-- the data provided to the implementation is
- * assumed to be a single paragraph, and either contains no 'B' codes, or a
- * single 'B' code at the end of the input. 'B' is allowed as input to
- * illustrate how the algorithm assigns it a level.
- * <p>
- * Also note that rules L3 and L4 depend on the rendering engine that uses the
- * result of the bidi algorithm. This implementation assumes that the rendering
- * engine expects combining marks in visual order (e.g. to the left of their
- * base character in RTL runs) and that it adjusts the glyphs used to render
- * mirrored characters that are in RTL runs so that they render appropriately.
- *
- * @author Doug Felt
- * @author Roozbeh Pournader
- * @author Asmus Freytag
- * @author Deepak Jois
- */
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 using Topten.RichTextKit.Utils;
 
 namespace Topten.RichTextKit
 {
+    /// <summary>
+    /// Implementation of Unicode Bidirection Algorithm (UAX #9)
+    /// https://unicode.org/reports/tr9/
+    /// </summary>
     class Bidi
     {
-        //
-        // Input
-        //
-
-        public Bidi(BidiData data) : 
-            this(data.Types, data.PairedBracketTypes, data.PairedBracketValues, (sbyte)data.ParagraphEmbeddingLevel)
+        /// <summary>
+        /// Constructs a new instance of Bidi algorithm processor
+        /// </summary>
+        public Bidi()
         {
         }
 
-        /*
-         * Initialize using several arrays, then run the algorithm
-         * @param types
-         *            Array of types ranging from TYPE_MIN to TYPE_MAX inclusive 
-         *            and representing the direction codes of the characters in the text.
-         * @param pairTypes
-         * 			  Array of paired bracket types ranging from 0 (none) to 2 (closing)
-         * 			  of the characters
-         * @param pairValues
-         * 			  Array identifying which set of matching bracket characters
-         * 			  as defined in BidiPBAReference (note, both opening and closing
-         * 			  bracket get the same value if they are part of the same canonical "set"
-         * 			  or pair)
-         */
-        public Bidi(Slice<Directionality> types, Slice<PairedBracketType> pairTypes, Slice<int> pairValues)
+        BiDictionary<int, int> _isolatePairs = new BiDictionary<int, int>();
+        Slice<Directionality> _originalTypes;
+        Slice<Directionality> _resultTypes;
+        Buffer<Directionality> _resultTypesBuffer = new Buffer<Directionality>();
+        Slice<sbyte> _levels;
+        Buffer<sbyte> _levelsBuffer = new Buffer<sbyte>();
+        sbyte _paragraphEmbeddingLevel;
+        Stack<Status> _statusStack = new Stack<Status>();
+        Buffer<int> _X9Map = new Buffer<int>();
+        List<LevelRun> _levelRuns = new List<LevelRun>();
+
+        Slice<PairedBracketType> _pairedBracketTypes;
+        Slice<int> _pairedBracketValues;
+
+        bool _hasBrackets;
+        bool _hasEmbeddings;
+        bool _hasIsolates;
+
+        public Slice<sbyte> ResultLevels => _levels;
+
+        public int ResolvedParagraphEmbeddingLevel => _paragraphEmbeddingLevel;
+
+        public void Process(BidiData data)
         {
-            validateTypes(types);
-            validatePbTypes(pairTypes);
-            validatePbValues(pairValues, pairTypes);
-
-            _initialTypes = types.ToArray(); // client type array remains unchanged
-            this._pairTypes = pairTypes;
-            this._pairValues = pairValues;
-
-            runAlgorithm();
+            Process(data.Types, data.PairedBracketTypes, data.PairedBracketValues, data.ParagraphEmbeddingLevel, data.HasBrackets, data.HasEmbeddings, data.HasIsolates);
         }
 
-        /*
-         * Initialize using several arrays of direction and other types and an externally supplied
-         * paragraph embedding level. The embedding level may be  0, 1 or 2.
-         * <p>
-         * 2 means to apply the default algorithm (rules P2 and P3), 0 is for LTR
-         * paragraphs, and 1 is for RTL paragraphs.
-         *
-         * @param types
-         *            the types array
-         * @param pairTypes
-         *           the paired bracket types array
-         * @param pairValues
-         * 			 the paired bracket values array
-         * @param paragraphEmbeddingLevel
-         *            the externally supplied paragraph embedding level.
-         */
-        public Bidi(Slice<Directionality> types, Slice<PairedBracketType> pairTypes, Slice<int> pairValues, sbyte paragraphEmbeddingLevel)
+        /// <summary>
+        /// Processes Bidi Data
+        /// </summary>
+        public void Process(
+            Slice<Directionality> directionality, 
+            Slice<PairedBracketType> pairedBracketTypes, 
+            Slice<int> pairedBracketValues, 
+            sbyte paragraphEmbeddingLevel,
+            bool? hasBrackets,
+            bool? hasEmbeddings,
+            bool? hasIsolates
+            )
         {
-            validateTypes(types);
-            validatePbTypes(pairTypes);
-            validatePbValues(pairValues, pairTypes);
-            validateParagraphEmbeddingLevel(paragraphEmbeddingLevel);
+            // Reset state
+            _isolatePairs.Clear();
+            _resultTypesBuffer.Clear();
+            _levelRuns.Clear();
+            _levelsBuffer.Clear();
 
-            _initialTypes = types.ToArray(); // client type array remains unchanged
-            this._paragraphEmbeddingLevel = paragraphEmbeddingLevel;
-            this._pairTypes = pairTypes;
-            this._pairValues = pairValues;
+            // Setup original types and result types
+            _originalTypes = directionality;
+            _resultTypes = _resultTypesBuffer.Add(directionality);
 
-            runAlgorithm();
+            // Capture paired bracket values and types
+            _pairedBracketTypes = pairedBracketTypes;
+            _pairedBracketValues = pairedBracketValues;
+
+            // Store things we know
+            _hasBrackets = hasBrackets ?? _pairedBracketTypes.Length == _originalTypes.Length;
+            _hasEmbeddings = hasEmbeddings ?? true;
+            _hasIsolates = hasIsolates ?? true;
+
+            // Determine isolate pairs
+            FindIsolatePairs();
+
+            // Determine the paragraph embedding level (if implicit)
+            _paragraphEmbeddingLevel = paragraphEmbeddingLevel;
+            if (_paragraphEmbeddingLevel == 2)
+            {
+                _paragraphEmbeddingLevel = DetermineParagraphEmbeddingLevel(_originalTypes);
+            }
+
+            // Create result levels
+            _levels = _levelsBuffer.Add(_originalTypes.Length);
+            _levels.Fill(_paragraphEmbeddingLevel);
+
+            // Determine explicit embedding levels (X1-X8)
+            DetermineExplicitEmbeddingLevels();
+
+            // Build the rule X9 map
+            BuildX9Map();
+
+            // Find the level runs
+            FindLevelRuns();
+
+            // Process the isolating run sequences
+            ProcessIsolatedRunSequences();
+
+            // Reset whitespace levels
+            ResetWhitespaceLevels();
+
+            // Clean up
+            AssignLevelsToCodePointsRemovedByX9();
         }
 
-        public sbyte ResolvedParagraphEmbeddingLevel => _paragraphEmbeddingLevel;
 
-
-        private const sbyte implicitEmbeddingLevel = 2; // level will be determined implicitly
-        private Directionality[] _initialTypes;
-        private sbyte _paragraphEmbeddingLevel = implicitEmbeddingLevel;
-        private int _textLength; // for convenience
-        private Directionality[] _resultTypes; // for paragraph, not lines
-        private sbyte[] _resultLevels; // for paragraph, not lines
-
-        // Get the final computed directionality of each character
-        public Directionality[] Result => _resultTypes;
-
-        public Slice<sbyte> ResultLevels => new Slice<sbyte>(_resultLevels);
-
-        /*
-         * Index of matching PDI for isolate initiator characters. For other
-         * characters, the value of matchingPDI will be set to -1. For isolate
-         * initiators with no matching PDI, matchingPDI will be set to the length of
-         * the input string.
-         */
-        private int[] _matchingPDI;
-
-        /*
-         * Index of matching isolate initiator for PDI characters. For other
-         * characters, and for PDIs with no matching isolate initiator, the value of
-         * matchingIsolateInitiator will be set to -1.
-         */
-        private int[] _matchingIsolateInitiator;
-
-        /*
-         * Arrays of properties needed for paired bracket evaluation in N0
-         */
-        private Slice<PairedBracketType> _pairTypes; // paired Bracket types for paragraph
-        private Slice<int> _pairValues; // paired Bracket values for paragraph
-
-        public BidiPBA _pba; // to allow access to internal pba state for diagnostics
-
-
-        /* Shorthand names of bidi type values, for error reporting. */
-        public static string[] typenames = {
-            "L",
-            "LRE",
-            "LRO",
-            "R",
-            "AL",
-            "RLE",
-            "RLO",
-            "PDF",
-            "EN",
-            "ES",
-            "ET",
-            "AN",
-            "CS",
-            "NSM",
-            "BN",
-            "B",
-            "S",
-            "WS",
-            "ON",
-            "LRI",
-            "RLI",
-            "FSI",
-            "PDI"
-        };
-
-        /*
-         * The algorithm. Does not include line-based processing (Rules L1, L2).
-         * These are applied later in the line-based phase of the algorithm.
-         */
-        private void runAlgorithm()
+        /// <summary>
+        /// Determine explicit result levels
+        /// </summary>
+        private void DetermineExplicitEmbeddingLevels()
         {
-            _textLength = _initialTypes.Length;
+            // Redundant?
+            if (!_hasIsolates && !_hasEmbeddings)
+                return;
 
-            // Initialize output types.
-            // Result types initialized to input types.
-            _resultTypes = _initialTypes.ToArray();
+            // Work variables
+            _statusStack.Clear();
+            int overflowIsolateCount = 0;
+            int overflowEmbeddingCount = 0;
+            int validIsolateCount = 0;
 
-            // Preprocessing to find the matching isolates
-            determineMatchingIsolates();
+            // Constants
+            const int maxStackDepth = 125;
 
-            // 1) determining the paragraph level
-            // Rule P1 is the requirement for entering this algorithm.
-            // Rules P2, P3.
-            // If no externally supplied paragraph embedding level, use default.
-            if (_paragraphEmbeddingLevel == implicitEmbeddingLevel)
+            // Rule X1 - setup initial state
+            _statusStack.Clear();
+            _statusStack.Push(new Status()
             {
-                _paragraphEmbeddingLevel = determineParagraphEmbeddingLevel(0, _textLength);
-            }
+                embeddingLevel = _paragraphEmbeddingLevel,
+                overrideStatus = Directionality.ON,         // Neutral
+                isolateStatus = false,
+            });
 
-            // Initialize result levels to paragraph embedding level.
-            _resultLevels = new sbyte[_textLength];
-            setLevels(_resultLevels, 0, _textLength, _paragraphEmbeddingLevel);
 
-            // 2) Explicit levels and directions
-            // Rules X1-X8.
-            determineExplicitEmbeddingLevels();
-
-            // Rule X9.
-            // We do not remove the embeddings, the overrides, the PDFs, and the BNs
-            // from the string explicitly. But they are not copied into isolating run
-            // sequences when they are created, so they are removed for all
-            // practical purposes.
-
-            // Rule X10.
-            // Run remainder of algorithm one isolating run sequence at a time
-            IsolatingRunSequence[] sequences = determineIsolatingRunSequences();
-
-            for (int i = 0; i < sequences.Length; ++i)
+            // Process all characters
+            for (int i = 0; i < _originalTypes.Length; i++)
             {
-                IsolatingRunSequence sequence = sequences[i];
-                // 3) resolving weak types
-                // Rules W1-W7.
-                sequence.resolveWeakTypes(); 
-
-                // 4a) resolving paired brackets
-                // Rule N0
-                sequence.resolvePairedBrackets();
-
-                // 4b) resolving neutral types
-                // Rules N1-N3.
-                sequence.resolveNeutralTypes();
-
-                // 5) resolving implicit embedding levels
-                // Rules I1, I2.
-                sequence.resolveImplicitLevels();
-
-                // Apply the computed levels and types
-                sequence.applyLevelsAndTypes();
-            }
-
-            // Assign appropriate levels to 'hide' LREs, RLEs, LROs, RLOs, PDFs, and
-            // BNs. This is for convenience, so the resulting level array will have
-            // a value for every character.
-            assignLevelsToCharactersRemovedByX9();
-        }
-
-        /*
-         * Determine the matching PDI for each isolate initiator and vice versa.
-         * <p>
-         * Definition BD9.
-         * <p>
-         * At the end of this function:
-         * <ul>
-         * <li>The member variable matchingPDI is set to point to the index of the
-         * matching PDI character for each isolate initiator character. If there is
-         * no matching PDI, it is set to the length of the input text. For other
-         * characters, it is set to -1.
-         * <li>The member variable matchingIsolateInitiator is set to point to the
-         * index of the matching isolate initiator character for each PDI character.
-         * If there is no matching isolate initiator, or the character is not a PDI,
-         * it is set to -1.
-         * </ul>
-         */
-        private void determineMatchingIsolates()
-        {
-            _matchingPDI = new int[_textLength];
-            _matchingIsolateInitiator = new int[_textLength];
-
-            for (int i = 0; i < _textLength; ++i)
-            {
-                _matchingIsolateInitiator[i] = -1;
-            }
-
-            for (int i = 0; i < _textLength; ++i)
-            {
-                _matchingPDI[i] = -1;
-
-                var t = _resultTypes[i];
-                if (t == Directionality.LRI || t == Directionality.RLI || t == Directionality.FSI)
-                {
-                    int depthCounter = 1;
-                    for (int j = i + 1; j < _textLength; ++j)
-                    {
-                        var u = _resultTypes[j];
-                        if (u == Directionality.LRI || u == Directionality.RLI || u == Directionality.FSI)
-                        {
-                            ++depthCounter;
-                        }
-                        else if (u == Directionality.PDI)
-                        {
-                            --depthCounter;
-                            if (depthCounter == 0)
-                            {
-                                _matchingPDI[i] = j;
-                                _matchingIsolateInitiator[j] = i;
-                                break;
-                            }
-                        }
-                    }
-                    if (_matchingPDI[i] == -1)
-                    {
-                        _matchingPDI[i] = _textLength;
-                    }
-                }
-            }
-        }
-
-        /*
-         * Determines the paragraph level based on rules P2, P3. This is also used
-         * in rule X5c to find if an FSI should resolve to LRI or RLI.
-         *
-         * @param startIndex
-         *            the index of the beginning of the substring
-         * @param endIndex
-         *            the index of the character after the end of the string
-         *
-         * @return the resolved paragraph direction of the substring limited by
-         *         startIndex and endIndex
-         */
-        private sbyte determineParagraphEmbeddingLevel(int startIndex, int endIndex)
-        {
-            var strongType = Directionality.Unknown; // unknown
-
-            // Rule P2.
-            for (int i = startIndex; i < endIndex; ++i)
-            {
-                var t = _resultTypes[i];
-                if (t == Directionality.L || t == Directionality.AL || t == Directionality.R)
-                {
-                    strongType = t;
-                    break;
-                }
-                else if (t == Directionality.FSI || t == Directionality.LRI || t == Directionality.RLI)
-                {
-                    i = _matchingPDI[i]; // skip over to the matching PDI
-                    System.Diagnostics.Debug.Assert(i <= endIndex);
-                }
-            }
-
-            // Rule P3.
-            if (strongType == Directionality.Unknown)
-            { // none found
-              // default embedding level when no strong types found is 0.
-                return 0;
-            }
-            else if (strongType == Directionality.L)
-            {
-                return 0;
-            }
-            else
-            { // AL, R
-                return 1;
-            }
-        }
-
-        public const int MAX_DEPTH = 125;
-
-        // This stack will store the embedding levels and override and isolated
-        // statuses
-        private class directionalStatusStack
-        {
-            private int stackCounter = 0;
-            private sbyte[] embeddingLevelStack = new sbyte[MAX_DEPTH + 1];
-            private Directionality[] overrideStatusStack = new Directionality[MAX_DEPTH + 1];
-            private bool[] isolateStatusStack = new bool[MAX_DEPTH + 1];
-
-            public void empty()
-            {
-                stackCounter = 0;
-            }
-
-            public void push(sbyte level, Directionality overrideStatus, bool isolateStatus)
-            {
-                embeddingLevelStack[stackCounter] = level;
-                overrideStatusStack[stackCounter] = overrideStatus;
-                isolateStatusStack[stackCounter] = isolateStatus;
-                ++stackCounter;
-            }
-
-            public void pop()
-            {
-                --stackCounter;
-            }
-
-            public int depth()
-            {
-                return stackCounter;
-            }
-
-            public sbyte lastEmbeddingLevel()
-            {
-                return embeddingLevelStack[stackCounter - 1];
-            }
-
-            public Directionality lastDirectionalOverrideStatus()
-            {
-                return overrideStatusStack[stackCounter - 1];
-            }
-
-            public bool lastDirectionalIsolateStatus()
-            {
-                return isolateStatusStack[stackCounter - 1];
-            }
-        }
-
-        /*
-         * Determine explicit levels using rules X1 - X8
-         */
-        private void determineExplicitEmbeddingLevels()
-        {
-            directionalStatusStack stack = new directionalStatusStack();
-            int overflowIsolateCount, overflowEmbeddingCount, validIsolateCount;
-
-            // Rule X1.
-            stack.empty();
-            stack.push(_paragraphEmbeddingLevel, Directionality.ON, false);
-            overflowIsolateCount = 0;
-            overflowEmbeddingCount = 0;
-            validIsolateCount = 0;
-            for (int i = 0; i < _textLength; ++i)
-            {
-                var t = _resultTypes[i];
-
-                // Rules X2, X3, X4, X5, X5a, X5b, X5c
-                switch (t)
+                switch (_originalTypes[i])
                 {
                     case Directionality.RLE:
+                        {
+                            // Rule X2
+                            var newLevel = (sbyte)((_statusStack.Peek().embeddingLevel + 1) | 1);
+                            if (newLevel <= maxStackDepth && overflowIsolateCount == 0 && overflowEmbeddingCount == 0)
+                            {
+                                _statusStack.Push(new Status()
+                                {
+                                    embeddingLevel = newLevel,
+                                    overrideStatus = Directionality.ON,
+                                    isolateStatus = false,
+                                });
+
+                                _levels[i] = newLevel;
+                            }
+                            else
+                            {
+                                if (overflowIsolateCount == 0)
+                                    overflowEmbeddingCount++;
+                            }
+                            break;
+                        }
+
                     case Directionality.LRE:
+                        {
+                            // Rule X3
+                            var newLevel = (sbyte)((_statusStack.Peek().embeddingLevel + 2) & ~1);
+                            if (newLevel < maxStackDepth && overflowIsolateCount == 0 && overflowEmbeddingCount == 0)
+                            {
+                                _statusStack.Push(new Status()
+                                {
+                                    embeddingLevel = newLevel,
+                                    overrideStatus = Directionality.ON,
+                                    isolateStatus = false,
+                                });
+
+                                _levels[i] = newLevel;
+                            }
+                            else
+                            {
+                                if (overflowIsolateCount == 0)
+                                    overflowEmbeddingCount++;
+                            }
+                            break;
+                        }
+
                     case Directionality.RLO:
+                        {
+                            // Rule X4
+                            var newLevel = (sbyte)((_statusStack.Peek().embeddingLevel + 1) | 1);
+                            if (newLevel <= maxStackDepth && overflowIsolateCount == 0 && overflowEmbeddingCount == 0)
+                            {
+                                _statusStack.Push(new Status()
+                                {
+                                    embeddingLevel = newLevel,
+                                    overrideStatus = Directionality.R,
+                                    isolateStatus = false,
+                                });
+
+                                _levels[i] = newLevel;
+                            }
+                            else
+                            {
+                                if (overflowIsolateCount == 0)
+                                    overflowEmbeddingCount++;
+                            }
+                            break;
+                        }
+
                     case Directionality.LRO:
+                        {
+                            // Rule X5
+                            var newLevel = (sbyte)((_statusStack.Peek().embeddingLevel + 2) & ~1);
+                            if (newLevel <= maxStackDepth && overflowIsolateCount == 0 && overflowEmbeddingCount == 0)
+                            {
+                                _statusStack.Push(new Status()
+                                {
+                                    embeddingLevel = newLevel,
+                                    overrideStatus = Directionality.L,
+                                    isolateStatus = false,
+                                });
+
+                                _levels[i] = newLevel;
+                            }
+                            else
+                            {
+                                if (overflowIsolateCount == 0)
+                                    overflowEmbeddingCount++;
+                            }
+                            break;
+                        }
+
                     case Directionality.RLI:
                     case Directionality.LRI:
                     case Directionality.FSI:
-                        bool isIsolate = (t == Directionality.RLI || t == Directionality.LRI || t == Directionality.FSI);
-                        bool isRTL = (t == Directionality.RLE || t == Directionality.RLO || t == Directionality.RLI);
-                        // override if this is an FSI that resolves to RLI
-                        if (t == Directionality.FSI)
                         {
-                            isRTL = (determineParagraphEmbeddingLevel(i + 1, _matchingPDI[i]) == 1);
-                        }
+                            // Rule X5a, X5b and X5c
+                            var resolvedIsolate = _originalTypes[i];
 
-                        if (isIsolate)
-                        {
-                            _resultLevels[i] = stack.lastEmbeddingLevel();
-                            if (stack.lastDirectionalOverrideStatus() != Directionality.ON)
+                            if (resolvedIsolate == Directionality.FSI)
                             {
-                                _resultTypes[i] = stack.lastDirectionalOverrideStatus();
+                                if (!_isolatePairs.TryGetValue(i, out var endOfIsolate))
+                                {
+                                    endOfIsolate = _originalTypes.Length;
+                                }
+                                // Rule X5c
+                                if (DetermineParagraphEmbeddingLevel(_originalTypes.SubSlice(i + 1, endOfIsolate - (i + 1))) == 1)
+                                    resolvedIsolate = Directionality.RLI;
+                                else
+                                    resolvedIsolate = Directionality.LRI;
                             }
-                        }
 
-                        sbyte newLevel;
-                        if (isRTL)
-                        {
-                            // least greater odd
-                            newLevel = (sbyte)((stack.lastEmbeddingLevel() + 1) | 1);
-                        }
-                        else
-                        {
-                            // least greater even
-                            newLevel = (sbyte)((stack.lastEmbeddingLevel() + 2) & ~1);
-                        }
+                            // Replace RLI's level with current embedding level
+                            var tos = _statusStack.Peek();
+                            _levels[i] = tos.embeddingLevel;
 
-                        if (newLevel <= MAX_DEPTH && overflowIsolateCount == 0 && overflowEmbeddingCount == 0)
-                        {
-                            if (isIsolate)
+                            // Apply override
+                            if (tos.overrideStatus != Directionality.ON)
                             {
-                                ++validIsolateCount;
+                                _resultTypes[i] = tos.overrideStatus;
                             }
-                            // Push new embedding level, override status, and isolated
-                            // status.
-                            // No check for valid stack counter, since the level check
-                            // suffices.
-                            stack.push(
-                                    newLevel,
-                                    t == Directionality.LRO ? Directionality.L : t == Directionality.RLO ? Directionality.R : Directionality.ON,
-                                    isIsolate);
 
-                            // Not really part of the spec
-                            if (!isIsolate)
+                            // Work out new level
+                            sbyte newLevel;
+                            if (resolvedIsolate == Directionality.RLI)
+                                newLevel = (sbyte)((tos.embeddingLevel + 1) | 1);
+                            else
+                                newLevel = (sbyte)((tos.embeddingLevel + 2) & ~1);
+
+                            // Valid?
+                            if (newLevel <= maxStackDepth && overflowIsolateCount == 0 && overflowEmbeddingCount == 0)
                             {
-                                _resultLevels[i] = newLevel;
-                            }
-                        }
-                        else
-                        {
-                            // This is an invalid explicit formatting character,
-                            // so apply the "Otherwise" part of rules X2-X5b.
-                            if (isIsolate)
-                            {
-                                ++overflowIsolateCount;
+                                validIsolateCount++;
+                                _statusStack.Push(new Status()
+                                {
+                                    embeddingLevel = newLevel,
+                                    overrideStatus = Directionality.ON,
+                                    isolateStatus = true,
+                                });
                             }
                             else
-                            { // !isIsolate
-                                if (overflowIsolateCount == 0)
-                                {
-                                    ++overflowEmbeddingCount;
-                                }
-                            }
-                        }
-                        break;
-
-                    // Rule X6a
-                    case Directionality.PDI:
-                        if (overflowIsolateCount > 0)
-                        {
-                            --overflowIsolateCount;
-                        }
-                        else if (validIsolateCount == 0)
-                        {
-                            // do nothing
-                        }
-                        else
-                        {
-                            overflowEmbeddingCount = 0;
-                            while (!stack.lastDirectionalIsolateStatus())
                             {
-                                stack.pop();
+                                overflowIsolateCount++;
                             }
-                            stack.pop();
-                            --validIsolateCount;
+                            break;
                         }
-                        _resultLevels[i] = stack.lastEmbeddingLevel();
-                        break;
 
-                    // Rule X7
-                    case Directionality.PDF:
-                        // Not really part of the spec
-                        _resultLevels[i] = stack.lastEmbeddingLevel();
-
-                        if (overflowIsolateCount > 0)
+                    case Directionality.BN:
                         {
-                            // do nothing
+                            // Mentioned in rule X6 - "for all types besides ..., BN, ..."
+                            // no-op
+                            break;
                         }
-                        else if (overflowEmbeddingCount > 0)
-                        {
-                            --overflowEmbeddingCount;
-                        }
-                        else if (!stack.lastDirectionalIsolateStatus() && stack.depth() >= 2)
-                        {
-                            stack.pop();
-                        }
-                        else
-                        {
-                            // do nothing
-                        }
-                        break;
-
-                    case Directionality.B:
-                        // Rule X8.
-
-                        // These values are reset for clarity, in this implementation B
-                        // can only occur as the last code in the array.
-                        stack.empty();
-                        overflowIsolateCount = 0;
-                        overflowEmbeddingCount = 0;
-                        validIsolateCount = 0;
-                        _resultLevels[i] = _paragraphEmbeddingLevel;
-                        break;
 
                     default:
-                        _resultLevels[i] = stack.lastEmbeddingLevel();
-                        if (stack.lastDirectionalOverrideStatus() != Directionality.ON)
                         {
-                            _resultTypes[i] = stack.lastDirectionalOverrideStatus();
+                            // Rule X6
+                            var tos = _statusStack.Peek();
+                            _levels[i] = tos.embeddingLevel;
+                            if (tos.overrideStatus != Directionality.ON)
+                            {
+                                _resultTypes[i] = tos.overrideStatus;
+                            }
+                            break;
                         }
-                        break;
+
+                    case Directionality.PDI:
+                        {
+                            // Rule X6a
+                            if (overflowIsolateCount > 0)
+                            {
+                                overflowIsolateCount--;
+                            }
+                            else if (validIsolateCount != 0)
+                            {
+                                overflowEmbeddingCount = 0;
+                                while (!_statusStack.Peek().isolateStatus)
+                                    _statusStack.Pop();
+                                _statusStack.Pop();
+                                validIsolateCount--;
+                            }
+
+                            var tos = _statusStack.Peek();
+                            _levels[i] = tos.embeddingLevel;
+                            if (tos.overrideStatus != Directionality.ON)
+                            {
+                                _resultTypes[i] = tos.overrideStatus;
+                            }
+                            break;
+                        }
+
+                    case Directionality.PDF:
+                        {
+                            // Rule X7
+                            if (overflowIsolateCount == 0)
+                            {
+                                if (overflowEmbeddingCount > 0)
+                                {
+                                    overflowEmbeddingCount--;
+                                }
+                                else
+                                {
+                                    if (!_statusStack.Peek().isolateStatus && _statusStack.Count >= 2)
+                                    {
+                                        _statusStack.Pop();
+                                    }
+                                }
+                            }
+                            break;
+                        }
+
+                    case Directionality.B:
+                        {
+                            // Rule X8
+                            _levels[i] = _paragraphEmbeddingLevel;
+                            break;
+                        }
+
+
                 }
             }
         }
 
-        private class IsolatingRunSequence
+        struct Status
         {
-            private int[] indexes; // indexes to the original string
-            private Directionality[] types; // type of each character using the index
-            private sbyte[] resolvedLevels; // resolved levels after application of
-                                           // rules
-            private int length; // length of isolating run sequence in
-                                // characters
-            private sbyte level;
-            private Directionality sos, eos;
-            private Bidi owner;
+            public sbyte embeddingLevel;
+            public Directionality overrideStatus;
+            public bool isolateStatus;
+        }
 
-            /*
-             * Rule X10, second bullet: Determine the start-of-sequence (sos) and end-of-sequence (eos) types,
-             * 			 either L or R, for each isolating run sequence.
-             * @param inputIndexes
-             */
-            public IsolatingRunSequence(Bidi owner, int[] inputIndexes)
+        Stack<int> _pendingOpens = new Stack<int>();
+
+        /// <summary>
+        /// Build a list of matching isolates for a directionality slice 
+        /// Implements BD9
+        /// </summary>
+        void FindIsolatePairs()
+        {
+            // Redundant?
+            if (!_hasIsolates)
+                return;
+
+            _hasIsolates = false;
+
+            _pendingOpens.Clear();
+            for (int i = 0; i < _originalTypes.Length; i++)
             {
-                this.owner = owner;
-                indexes = inputIndexes;
-                length = indexes.Length;
-
-                types = new Directionality[length];
-                for (int i = 0; i < length; ++i)
+                var t = _originalTypes[i];
+                if (t == Directionality.LRI || t == Directionality.RLI || t == Directionality.FSI)
                 {
-                    types[i] = owner._resultTypes[indexes[i]];
+                    _pendingOpens.Push(i);
+                    _hasIsolates = true;
                 }
-
-                // assign level, sos and eos
-                level = owner._resultLevels[indexes[0]];
-
-                int prevChar = indexes[0] - 1;
-                while (prevChar >= 0 && isRemovedByX9(owner._initialTypes[prevChar]))
+                else if (t == Directionality.PDI)
                 {
-                    --prevChar;
-                }
-                sbyte prevLevel = prevChar >= 0 ? owner._resultLevels[prevChar] : owner._paragraphEmbeddingLevel;
-                sos = typeForLevel(Math.Max(prevLevel, level));
-
-                var lastType = types[length - 1];
-                sbyte succLevel;
-                if (lastType == Directionality.LRI || lastType == Directionality.RLI || lastType == Directionality.FSI)
-                {
-                    succLevel = owner._paragraphEmbeddingLevel;
-                }
-                else
-                {
-                    int limit = indexes[length - 1] + 1; // the first character
-                                                         // after the end of
-                                                         // run sequence
-                    while (limit < owner._textLength && isRemovedByX9(owner._initialTypes[limit]))
+                    if (_pendingOpens.Count > 0)
                     {
-                        ++limit;
+                        _isolatePairs.Add(_pendingOpens.Pop(), i);
                     }
-                    succLevel = limit < owner._textLength ? owner._resultLevels[limit] : owner._paragraphEmbeddingLevel;
+                    _hasIsolates = true;
                 }
-                eos = typeForLevel(Math.Max(succLevel, level));
             }
+        }
 
-            /*
-             * Resolving bidi paired brackets  Rule N0
-             */
 
-            public void resolvePairedBrackets()
+
+        sbyte DetermineParagraphEmbeddingLevel(Slice<Directionality> data)
+        {
+            // P2
+            for (var i = 0; i < data.Length; ++i)
             {
-                owner._pba = new BidiPBA();
-                owner._pba.resolvePairedBrackets(
-                    new Slice<int>(indexes), 
-                    new Slice<Directionality>(owner._initialTypes), 
-                    new Slice<Directionality>(types), 
-                    owner._pairTypes,
-                    owner._pairValues,
-                    sos, 
-                    level
-                    );
-            }
-
-
-            /*
-             * Resolving weak types Rules W1-W7.
-             *
-             * Note that some weak types (EN, AN) remain after this processing is
-             * complete.
-             */
-            public void resolveWeakTypes()
-            {
-
-                // on entry, only these types remain
-                assertOnly(new Directionality[] {
-                Directionality.L,
-                Directionality.R,
-                Directionality.AL,
-                Directionality.EN,
-                Directionality.ES,
-                Directionality.ET,
-                Directionality.AN,
-                Directionality.CS,
-                Directionality.B,
-                Directionality.S,
-                Directionality.WS,
-                Directionality.ON,
-                Directionality.NSM,
-                Directionality.LRI,
-                Directionality.RLI,
-                Directionality.FSI,
-                Directionality.PDI
-            });
-
-                // Rule W1.
-                // Changes all NSMs.
-                var preceedingCharacterType = sos;
-                for (int i = 0; i < length; ++i)
+                switch (data[i])
                 {
-                    var t = types[i];
-                    if (t == Directionality.NSM)
+                    case Directionality.L:
+                        // P3
+                        return 0;
+
+                    case Directionality.AL:
+                    case Directionality.R:
+                        // P3
+                        return 1;
+
+                    case Directionality.FSI:
+                    case Directionality.LRI:
+                    case Directionality.RLI:
+                        // Skip isolate pairs
+                        // (Because we're working with a slice, we need to adjust the indicies
+                        //  we're using for the isolatePairs map)
+                        if (_isolatePairs.TryGetValue(data.Start + i, out i))
+                        {
+                            i -= data.Start;
+                        }
+                        else
+                        {
+                            i = data.Length;
+                        }
+                        break;
+                }
+            }
+
+            // P3
+            return 0;
+        }
+
+        /// <summary>
+        /// Build a map to the original data positions that excludes all
+        /// the types defined by rule X9
+        /// </summary>
+        void BuildX9Map()
+        {
+            // Reserve room for the x9 map
+            _X9Map.Length = _originalTypes.Length;
+
+            if (_hasEmbeddings || _hasIsolates)
+            {
+                // Build a map the removes all x9 characters
+                var j = 0;
+                for (int i = 0; i < _originalTypes.Length; i++)
+                {
+                    if (!IsRemovedByX9(_originalTypes[i]))
                     {
-                        types[i] = preceedingCharacterType;
+                        _X9Map[j++] = i;
+                    }
+                }
+
+                // Set the final length
+                _X9Map.Length = j;
+            }
+            else
+            {
+                for (int i = 0, count = _originalTypes.Length; i < count; i++)
+                {
+                    _X9Map[i] = i;
+                }
+            }
+
+        }
+
+
+        /// <summary>
+        /// Find the original character index for an entry in the X9 map
+        /// </summary>
+        /// <param name="index">Index in the x9 map</param>
+        /// <returns>Index to the original data</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        int mapX9(int index)
+        {
+            //return index < _X9Map.Length ? _X9Map[index] : _originalTypes.Length;
+            return _X9Map[index];
+        }
+
+        /// <summary>
+        /// Helper to check if a directionality is removed by rule X9
+        /// </summary>
+        /// <param name="biditype">The bidi type to check</param>
+        /// <returns>True if rule X9 would remove this character; otherwise false</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsRemovedByX9(Directionality biditype)
+        {
+            switch (biditype)
+            {
+                case Directionality.LRE:
+                case Directionality.RLE:
+                case Directionality.LRO:
+                case Directionality.RLO:
+                case Directionality.PDF:
+                case Directionality.BN:
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+
+        struct LevelRun
+        {
+            public LevelRun(int start, int length, int level, Directionality sos, Directionality eos)
+            {
+                this.start = start;
+                this.length = length;
+                this.level = level;
+                this.sos = sos;
+                this.eos = eos;
+            }
+            public int start;
+            public int length;
+            public int level;
+            public Directionality sos;
+            public Directionality eos;
+        }
+
+        void AddLevelRun(int startIndex, int length, int level)
+        {
+            // Get original indicies to first and last character in this run
+            int firstCharIndex = mapX9(startIndex);
+            int lastCharIndex = mapX9(startIndex + length - 1);
+
+            // Work out sos
+            int i = firstCharIndex - 1;
+            while (i >= 0 && IsRemovedByX9(_originalTypes[i]))
+                i--;
+            var prevLevel = i < 0 ? _paragraphEmbeddingLevel : _levels[i];
+            var sos = DirectionFromLevel(Math.Max(prevLevel, level));
+
+            // Work out eos
+            var lastType = _resultTypes[lastCharIndex];
+            int nextLevel;
+            if (lastType == Directionality.LRI || lastType == Directionality.RLI || lastType == Directionality.FSI)
+            {
+                nextLevel = _paragraphEmbeddingLevel;
+            }
+            else
+            {
+                i = lastCharIndex + 1;
+                while (i < _originalTypes.Length && IsRemovedByX9(_originalTypes[i]))
+                    i++;
+                nextLevel = i >= _originalTypes.Length ? _paragraphEmbeddingLevel : _levels[i];
+            }
+            var eos = DirectionFromLevel(Math.Max(nextLevel, level));
+
+            // Add the run            
+            _levelRuns.Add(new LevelRun(startIndex, length, level, sos, eos));
+        }
+
+        void FindLevelRuns()
+        {
+            int currentLevel = -1;
+            int runStartIndex = 0;
+            for (int i = 0; i < _X9Map.Length; ++i)
+            {
+                int level = _levels[mapX9(i)];
+                if (level != currentLevel)
+                {
+                    if (currentLevel != -1)
+                    {
+                        AddLevelRun(runStartIndex, i - runStartIndex, currentLevel);
+                    }
+                    currentLevel = level;
+                    runStartIndex = i;
+                }
+            }
+
+            // Don't forget the final level run
+            if (currentLevel != -1)
+            {
+                AddLevelRun(runStartIndex, _X9Map.Length - runStartIndex, currentLevel);
+            }
+        }
+
+        Buffer<int> _isolatedRunBuffer = new Buffer<int>();
+
+        /// <summary>
+        /// Given a x9 map character index, find the level run that starts at that position
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        int FindRunForIndex(int index)
+        {
+            for (int i = 0; i < _levelRuns.Count; i++)
+            {
+                if (mapX9(_levelRuns[i].start) == index)
+                    return i;
+            }
+            throw new InvalidOperationException("Internal error");
+        }
+
+        /// <summary>
+        /// Process all isolated run sequence
+        /// </summary>
+        void ProcessIsolatedRunSequences()
+        {
+            // Process all runs
+            while (_levelRuns.Count > 0)
+            {
+                // Get the index of the first character in this run
+                var firstCharacterIndex = mapX9(_levelRuns[0].start);
+
+                // Clear the buffer
+                _isolatedRunBuffer.Clear();
+
+                // Process all runs that continue on from this run
+                var runIndex = 0;
+                Directionality eos = _levelRuns[0].eos;
+                Directionality sos = _levelRuns[0].sos;
+                int level = _levelRuns[0].level;
+                while (true)
+                {
+                    // Get the run
+                    var r = _levelRuns[runIndex];
+
+                    // Track the sos and eos for the run as a whole
+                    if (_isolatedRunBuffer.Length == 0)
+                    {
+                        sos = r.sos;
+                        level = r.level;
+                    }
+                    eos = r.eos;
+
+                    // Remove this run as we've now processed it
+                    _levelRuns.RemoveAt(runIndex);
+
+                    // Add the x9 map indicies for the run range
+                    _isolatedRunBuffer.Add(_X9Map.SubSlice(r.start, r.length));
+
+                    // Get the last character and see if it's an isolating run with a matching
+                    // PDI and move to that run
+                    int lastCharacterIndex = _isolatedRunBuffer[_isolatedRunBuffer.Length - 1];
+                    var lastType = _originalTypes[lastCharacterIndex];
+                    if ((lastType == Directionality.LRI || lastType == Directionality.RLI || lastType == Directionality.FSI) &&
+                            _isolatePairs.TryGetValue(lastCharacterIndex, out var nextRunIndex))
+                    {
+                        // Find the continuing run index
+                        runIndex = FindRunForIndex(nextRunIndex);
                     }
                     else
                     {
-                        if (t == Directionality.LRI || t == Directionality.RLI || t == Directionality.FSI || t == Directionality.PDI)
-                        {
-                            preceedingCharacterType = Directionality.ON;
-                        }
-                        preceedingCharacterType = t;
+                        break;
                     }
                 }
 
-                // Rule W2.
-                // EN does not change at the start of the run, because sos != AL.
-                for (int i = 0; i < length; ++i)
+                // Process an isolated run comprising the character indices it _isolatedRunBuffer
+                ProcessIsolatedRunSequence(sos, eos, level);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static Directionality DirectionFromLevel(int level)
+        {
+            return ((level & 0x1) == 0) ? Directionality.L : Directionality.R;
+        }
+
+
+        int _runLevel;
+        Directionality _runDirection;
+        MappedSlice<Directionality> _runResultTypes;
+        MappedSlice<Directionality> _runOriginalTypes;
+        MappedSlice<sbyte> _runLevels;
+        MappedSlice<PairedBracketType> _runPairedBracketTypes;
+        MappedSlice<int> _runPairedBracketValues;
+
+        /// <summary>
+        /// Process a single isolated run sequence, where the character sequence
+        /// is currently held in _isolatedRunSequence.
+        /// </summary>
+        void ProcessIsolatedRunSequence(Directionality sos, Directionality eos, int runLevel)
+        {
+            // Create mappings on the underlying buffers
+            _runResultTypes = new MappedSlice<Directionality>(_resultTypes, _isolatedRunBuffer.AsSlice());
+            _runOriginalTypes = new MappedSlice<Directionality>(_originalTypes, _isolatedRunBuffer.AsSlice());
+            _runLevels = new MappedSlice<sbyte>(_levels, _isolatedRunBuffer.AsSlice());
+            if (_hasBrackets)
+            {
+                _runPairedBracketTypes = new MappedSlice<PairedBracketType>(_pairedBracketTypes, _isolatedRunBuffer.AsSlice());
+                _runPairedBracketValues = new MappedSlice<int>(_pairedBracketValues, _isolatedRunBuffer.AsSlice());
+            }
+            _runLevel = runLevel;
+            _runDirection = DirectionFromLevel(runLevel);
+
+            int length = _runResultTypes.Length;
+
+            bool hasEN = false;
+            bool hasAL = false;
+            bool hasES = false;
+            bool hasCS = false;
+            bool hasAN = false;
+            bool hasET = false;
+
+            // Rule W1 + check for used types in the first run through...
+            int i;
+            var prevType = sos;
+            for (i = 0; i < length; i++)
+            {
+                var t = _runResultTypes[i];
+                switch (t)
                 {
-                    if (types[i] == Directionality.EN)
+                    case Directionality.NSM:
+                        _runResultTypes[i] = prevType;
+                        break;
+
+                    case Directionality.LRI:
+                    case Directionality.RLI:
+                    case Directionality.FSI:
+                    case Directionality.PDI:
+                        prevType = Directionality.ON;
+                        break;
+
+                    case Directionality.EN:
+                        hasEN = true;
+                        prevType = t;
+                        break;
+
+                    case Directionality.AL:
+                        hasAL = true;
+                        prevType = t;
+                        break;
+
+                    case Directionality.ES:
+                        hasES = true;
+                        prevType = t;
+                        break;
+
+                    case Directionality.CS:
+                        hasCS = true;
+                        prevType = t;
+                        break;
+
+                    case Directionality.AN:
+                        hasAN = true;
+                        prevType = t;
+                        break;
+
+                    case Directionality.ET:
+                        hasET = true;
+                        prevType = t;
+                        break;
+
+                    default:
+                        prevType = t;
+                        break;
+                }
+            }
+
+            // Rule W2
+            if (hasEN)
+            {
+                for (i = 0; i < length; i++)
+                {
+                    if (_runResultTypes[i] == Directionality.EN)
                     {
-                        for (int j = i - 1; j >= 0; --j)
+                        for (int j = i - 1; j >= 0; j--)
                         {
-                            var t = types[j];
+                            var t = _runResultTypes[j];
                             if (t == Directionality.L || t == Directionality.R || t == Directionality.AL)
                             {
                                 if (t == Directionality.AL)
                                 {
-                                    types[i] = Directionality.AN;
+                                    _runResultTypes[i] = Directionality.AN;
+                                    hasAN = true;
                                 }
                                 break;
                             }
                         }
                     }
                 }
+            }
 
-                // Rule W3.
-                for (int i = 0; i < length; ++i)
+            // Rule W3
+            if (hasAL)
+            {
+                for (i = 0; i < length; i++)
                 {
-                    if (types[i] == Directionality.AL)
+                    if (_runResultTypes[i] == Directionality.AL)
                     {
-                        types[i] = Directionality.R;
+                        _runResultTypes[i] = Directionality.R;
                     }
                 }
+            }
 
-                // Rule W4.
-                // Since there must be values on both sides for this rule to have an
-                // effect, the scan skips the first and last value.
-                //
-                // Although the scan proceeds left to right, and changes the type
-                // values in a way that would appear to affect the computations
-                // later in the scan, there is actually no problem. A change in the
-                // current value can only affect the value to its immediate right,
-                // and only affect it if it is ES or CS. But the current value can
-                // only change if the value to its right is not ES or CS. Thus
-                // either the current value will not change, or its change will have
-                // no effect on the remainder of the analysis.
-
-                for (int i = 1; i < length - 1; ++i)
+            // Rule W4
+            if ((hasES || hasCS) && (hasEN || hasAN))
+            {
+                for (i = 1; i < length - 1; ++i)
                 {
-                    if (types[i] == Directionality.ES || types[i] == Directionality.CS)
+                    ref var rt = ref _runResultTypes[i];
+                    if (rt == Directionality.ES)
                     {
-                        var prevSepType = types[i - 1];
-                        var succSepType = types[i + 1];
+                        var prevSepType = _runResultTypes[i - 1];
+                        var succSepType = _runResultTypes[i + 1];
+
                         if (prevSepType == Directionality.EN && succSepType == Directionality.EN)
                         {
-                            types[i] = Directionality.EN;
+                            // ES between EN and EN
+                            rt = Directionality.EN;
                         }
-                        else if (types[i] == Directionality.CS && prevSepType == Directionality.AN && succSepType == Directionality.AN)
+                    }
+                    else if (rt == Directionality.CS)
+                    {
+                        var prevSepType = _runResultTypes[i - 1];
+                        var succSepType = _runResultTypes[i + 1];
+
+                        if ((prevSepType == Directionality.AN && succSepType == Directionality.AN) ||
+                             (prevSepType == Directionality.EN && succSepType == Directionality.EN))
                         {
-                            types[i] = Directionality.AN;
+                            // CS between (AN and AN) or (EN and EN)
+                            rt = prevSepType;
                         }
                     }
                 }
+            }
 
-                // Rule W5.
-                for (int i = 0; i < length; ++i)
+            // Rule W5
+            if (hasET)
+            {
+                for (i = 0; i < length; ++i)
                 {
-                    if (types[i] == Directionality.ET)
+                    if (_runResultTypes[i] == Directionality.ET)
                     {
                         // locate end of sequence
-                        int runstart = i;
-                        int runlimit = findRunLimit(runstart, length, new HashSet<Directionality>(new Directionality[] { Directionality.ET }));
+                        int seqStart = i;
+                        int seqEnd = i;
+                        while (seqEnd < length && _runResultTypes[seqEnd] == Directionality.ET)
+                            seqEnd++;
 
-                        // check values at ends of sequence
-                        var t = runstart == 0 ? sos : types[runstart - 1];
-
-                        if (t != Directionality.EN)
+                        // Preceeded by EN or followed by EN?
+                        if ((seqStart == 0 ? sos : _runResultTypes[seqStart - 1]) == Directionality.EN
+                            || (seqEnd == length ? eos : _runResultTypes[seqEnd]) == Directionality.EN)
                         {
-                            t = runlimit == length ? eos : types[runlimit];
-                        }
-
-                        if (t == Directionality.EN)
-                        {
-                            setTypes(runstart, runlimit, Directionality.EN);
+                            // Change the entire range
+                            for (int j = seqStart; i < seqEnd; ++i)
+                            {
+                                _runResultTypes[i] = Directionality.EN;
+                                hasEN = true;
+                            }
                         }
 
                         // continue at end of sequence
-                        i = runlimit;
+                        i = seqEnd;
                     }
                 }
+            }
 
-                // Rule W6.
-                for (int i = 0; i < length; ++i)
+            // Rule W6.
+            if (hasES || hasET || hasCS)
+            {
+                for (i = 0; i < length; ++i)
                 {
-                    var t = types[i];
+                    ref var t = ref _runResultTypes[i];
                     if (t == Directionality.ES || t == Directionality.ET || t == Directionality.CS)
                     {
-                        types[i] = Directionality.ON;
+                        t = Directionality.ON;
                     }
                 }
+            }
 
-                // Rule W7.
-                for (int i = 0; i < length; ++i)
+            // Rule W7.
+            if (hasEN)
+            {
+                var prevStrongType = sos;
+                for (i = 0; i < length; ++i)
                 {
-                    if (types[i] == Directionality.EN)
+                    ref var rt = ref _runResultTypes[i];
+                    if (rt == Directionality.EN)
                     {
-                        // set default if we reach start of run
-                        var prevStrongType = sos;
-                        for (int j = i - 1; j >= 0; --j)
+                        // If prev strong type was an L change this to L too
+                        if (prevStrongType == Directionality.L)
                         {
-                            var t = types[j];
-                            if (t == Directionality.L || t == Directionality.R)
-                            { // AL's have been changed to R
-                                prevStrongType = t;
+                            _runResultTypes[i] = Directionality.L;
+                        }
+                    }
+
+                    // Remember previous strong type (NB: AL should already be changed to R)
+                    if (rt == Directionality.L || rt == Directionality.R)
+                    {
+                        prevStrongType = rt;
+                    }
+                }
+            }
+
+            // Rule N0 - process bracket pairs
+            if (_hasBrackets)
+            {
+                int count;
+                var pairedBrackets = LocatePairedBrackets();
+                //pairedBrackets.Sort(_pairedBracketComparer);
+                for (i = 0, count = pairedBrackets.Count; i < count; i++)
+                {
+                    var pb = pairedBrackets[i];
+                    var dir = InspectPairedBracket(pb);
+
+                    // Case "d" - no strong types in the brackets, ignore
+                    if (dir == Directionality.ON)
+                    {
+                        continue;
+                    }
+
+                    // Case "b" - strong type found that matches the embedding direction
+                    if ((dir == Directionality.L || dir == Directionality.R) && dir == _runDirection)
+                    {
+                        SetPairedBracketDirection(pb, dir);
+                        continue;
+                    }
+
+                    // Case "c" - found opposite strong type found, look before to establish context
+                    dir = InspectBeforePairedBracket(pb, sos);
+                    if (dir == _runDirection || dir == Directionality.ON)
+                    {
+                        dir = _runDirection;
+                    }
+                    SetPairedBracketDirection(pb, dir);
+                }
+            }
+
+
+            // Rules N1 and N2 - resolve neutral types
+            for (i = 0; i < length; ++i)
+            {
+                var t = _runResultTypes[i];
+                if (IsNeutralType(t))
+                {
+                    // locate end of sequence
+                    int seqStart = i;
+                    int seqEnd = i;
+                    while (seqEnd < length && IsNeutralType(_runResultTypes[seqEnd]))
+                        seqEnd++;
+
+                    // Work out preceding type
+                    Directionality typeBefore;
+                    if (seqStart == 0)
+                    {
+                        typeBefore = sos;
+                    }
+                    else
+                    {
+                        typeBefore = _runResultTypes[seqStart - 1];
+                        if (typeBefore == Directionality.AN || typeBefore == Directionality.EN)
+                        {
+                            typeBefore = Directionality.R;
+                        }
+                    }
+
+                    // Work out the following type
+                    Directionality typeAfter;
+                    if (seqEnd == length)
+                    {
+                        typeAfter = eos;
+                    }
+                    else
+                    {
+                        typeAfter = _runResultTypes[seqEnd];
+                        if (typeAfter == Directionality.AN || typeAfter == Directionality.EN)
+                        {
+                            typeAfter = Directionality.R;
+                        }
+                    }
+
+                    // Work out the final resolved type
+                    Directionality resolvedType;
+                    if (typeBefore == typeAfter)
+                    {
+                        // Rule N1.
+                        resolvedType = typeBefore;
+                    }
+                    else
+                    {
+                        // Rule N2.
+                        resolvedType = _runDirection;
+                    }
+
+                    for (int j = seqStart; j < seqEnd; j++)
+                    {
+                        _runResultTypes[j] = resolvedType;
+                    }
+
+                    // continue after this run
+                    i = seqEnd;
+                }
+            }
+
+            // Resolve implicit types
+            if ((_runLevel & 0x01) == 0)
+            {
+                // Rule I1 - even
+                for (i = 0; i < length; i++)
+                {
+                    var t = _runResultTypes[i];
+                    ref var l = ref _runLevels[i];
+                    if (t == Directionality.R)
+                        l++;
+                    else if (t == Directionality.AN || t == Directionality.EN)
+                        l += 2;
+                }
+            }
+            else
+            {
+                // Rule I2 - odd
+                for (i = 0; i < length; i++)
+                {
+                    var t = _runResultTypes[i];
+                    ref var l = ref _runLevels[i];
+                    if (t != Directionality.R)
+                        l++;
+                }
+            }
+        }
+
+        class PairedBracketComparer : IComparer<BracketPair>
+        {
+            int IComparer<BracketPair>.Compare(BracketPair x, BracketPair y)
+            {
+                return x.Opener - y.Opener;
+            }
+        }
+
+        static PairedBracketComparer _pairedBracketComparer = new PairedBracketComparer();
+
+        /// <summary>
+        /// Check if a a directionality is neutral for rules N1 and N2
+        /// </summary>
+        /// <param name="dir"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        bool IsNeutralType(Directionality dir)
+        {
+            switch (dir)
+            {
+                case Directionality.B:
+                case Directionality.S:
+                case Directionality.WS:
+                case Directionality.ON:
+                case Directionality.RLI:
+                case Directionality.LRI:
+                case Directionality.FSI:
+                case Directionality.PDI:
+                    return true;
+            }
+
+            return false;
+        }
+
+        const int MAX_PAIRING_DEPTH = 63;
+
+
+        List<int> _openers = new List<int>();
+        List<BracketPair> _pairPositions = new List<BracketPair>();
+
+        /// <summary>
+        /// Locate all pair brackets in the current isolating run
+        /// </summary>
+        /// <returns>A sorted list of BracketPairs</returns>
+        List<BracketPair> LocatePairedBrackets()
+        {
+            _openers.Clear();
+            _pairPositions.Clear();
+            const int sortLimit = 8;
+
+            for (int ich = 0, length = _runResultTypes.Length; ich < length; ich++)
+            {
+                if (_runResultTypes[ich] != Directionality.ON)
+                    continue;
+
+                switch (_runPairedBracketTypes[ich])
+                {
+                    case PairedBracketType.o:
+                        if (_openers.Count == MAX_PAIRING_DEPTH)
+                            goto exit;
+
+                        _openers.Insert(0, ich);
+                        break;
+
+                    case PairedBracketType.c:
+                        // see if there is a match
+                        for (int i = 0; i < _openers.Count; i++)
+                        {
+                            if (_runPairedBracketValues[ich] == _runPairedBracketValues[_openers[i]])
+                            {
+                                // Add this paired bracket set
+                                var opener = _openers[i];
+                                if (_pairPositions.Count < sortLimit)
+                                {
+                                    int ppi = 0;
+                                    while (ppi < _pairPositions.Count && _pairPositions[ppi].Opener < opener)
+                                    {
+                                        ppi++;
+                                    }
+                                    _pairPositions.Insert(ppi, new BracketPair(opener, ich));
+                                }
+                                else
+                                {
+                                    _pairPositions.Add(new BracketPair(opener, ich));
+                                }
+
+                                // remove up to and including matched opener
+                                _openers.RemoveRange(0, i + 1);
                                 break;
                             }
                         }
-                        if (prevStrongType == Directionality.L)
-                        {
-                            types[i] = Directionality.L;
-                        }
-                    }
+                        break;
                 }
             }
 
-            /*
-             * 6) resolving neutral types Rules N1-N2.
-             */
-            public void resolveNeutralTypes()
+            exit:
+            if (_pairPositions.Count > sortLimit)
+                _pairPositions.Sort(_pairedBracketComparer);
+
+            return _pairPositions;
+        }
+
+        Directionality InspectPairedBracket(BracketPair pb)
+        {
+            var dirEmbed = DirectionFromLevel(_runLevel);
+            var dirOpposite = Directionality.ON;
+            for (int ich = pb.Opener + 1; ich < pb.Closer; ich++)
             {
-
-                // on entry, only these types can be in resultTypes
-                assertOnly(new Directionality[] {
-                Directionality.L,
-                Directionality.R,
-                Directionality.EN,
-                Directionality.AN,
-                Directionality.B,
-                Directionality.S,
-                Directionality.WS,
-                Directionality.ON,
-                Directionality.RLI,
-                Directionality.LRI,
-                Directionality.FSI,
-                Directionality.PDI });
-
-                for (int i = 0; i < length; ++i)
-                {
-                    var t = types[i];
-                    if (t == Directionality.WS || t == Directionality.ON || t == Directionality.B
-                            || t == Directionality.S || t == Directionality.RLI || t == Directionality.LRI
-                            || t == Directionality.FSI || t == Directionality.PDI)
-                    {
-                        // find bounds of run of neutrals
-                        int runstart = i;
-                        int runlimit = findRunLimit(runstart, length, new HashSet<Directionality>(new Directionality[] {
-                            Directionality.B,
-                            Directionality.S,
-                            Directionality.WS,
-                            Directionality.ON,
-                            Directionality.RLI,
-                            Directionality.LRI,
-                            Directionality.FSI,
-                            Directionality.PDI
-                        }));
-
-                        // determine effective types at ends of run
-                        Directionality leadingType;
-                        Directionality trailingType;
-
-                        // Note that the character found can only be L, R, AN, or
-                        // EN.
-                        if (runstart == 0)
-                        {
-                            leadingType = sos;
-                        }
-                        else
-                        {
-                            leadingType = types[runstart - 1];
-                            if (leadingType == Directionality.AN || leadingType == Directionality.EN)
-                            {
-                                leadingType = Directionality.R;
-                            }
-                        }
-
-                        if (runlimit == length)
-                        {
-                            trailingType = eos;
-                        }
-                        else
-                        {
-                            trailingType = types[runlimit];
-                            if (trailingType == Directionality.AN || trailingType == Directionality.EN)
-                            {
-                                trailingType = Directionality.R;
-                            }
-                        }
-
-                        Directionality resolvedType;
-                        if (leadingType == trailingType)
-                        {
-                            // Rule N1.
-                            resolvedType = leadingType;
-                        }
-                        else
-                        {
-                            // Rule N2.
-                            // Notice the embedding level of the run is used, not
-                            // the paragraph embedding level.
-                            resolvedType = typeForLevel(level);
-                        }
-
-                        setTypes(runstart, runlimit, resolvedType);
-
-                        // skip over run of (former) neutrals
-                        i = runlimit;
-                    }
-                }
+                var dir = GetStrongTypeN0(_runResultTypes[ich]);
+                if (dir == Directionality.ON)
+                    continue;
+                if (dir == dirEmbed)
+                    return dir;
+                dirOpposite = dir;
             }
+            return dirOpposite;
+        }
 
-            /*
-             * 7) resolving implicit embedding levels Rules I1, I2.
-             */
-            public void resolveImplicitLevels()
+        // Look for a strong type before a paired bracket
+        Directionality InspectBeforePairedBracket(BracketPair pb, Directionality sos)
+        {
+            for (int ich = pb.Opener - 1; ich >= 0; --ich)
             {
+                var dir = GetStrongTypeN0(_runResultTypes[ich]);
+                if (dir != Directionality.ON)
+                    return dir;
+            }
+            return sos;
+        }
 
-                // on entry, only these types can be in resultTypes
-                assertOnly(new Directionality[] {
-                    Directionality.L,
-                    Directionality.R,
-                    Directionality.EN,
-                    Directionality.AN
-                });
 
-                resolvedLevels = new sbyte[length];
-                owner.setLevels(resolvedLevels, 0, length, level);
+        /// <summary>
+        /// Sets the direction of a bracket pair, including setting the direction of NSM's inside
+        /// the brackets and following
+        /// </summary>
+        /// <param name="pb">The paired brackets</param>
+        /// <param name="dir">The resolved direction for the bracket pair</param>
+        void SetPairedBracketDirection(BracketPair pb, Directionality dir)
+        {
+            // Set the direction of the brackets
+            _runResultTypes[pb.Opener] = dir;
+            _runResultTypes[pb.Closer] = dir;
 
-                if ((level & 1) == 0)
-                { // even level
-                    for (int i = 0; i < length; ++i)
-                    {
-                        var t = types[i];
-                        // Rule I1.
-                        if (t == Directionality.L)
-                        {
-                            // no change
-                        }
-                        else if (t == Directionality.R)
-                        {
-                            resolvedLevels[i] += 1;
-                        }
-                        else
-                        { // t == AN || t == EN
-                            resolvedLevels[i] += 2;
-                        }
-                    }
-                }
+            // Set the directionality of NSM's inside the brackets
+            for (int i = pb.Opener + 1; i < pb.Closer; i++)
+            {
+                if (_runOriginalTypes[i] == Directionality.NSM)
+                    _runOriginalTypes[i] = dir;
                 else
-                { // odd level
-                    for (int i = 0; i < length; ++i)
-                    {
-                        var t = types[i];
-                        // Rule I2.
-                        if (t == Directionality.R)
-                        {
-                            // no change
-                        }
-                        else
-                        { // t == L || t == AN || t == EN
-                            resolvedLevels[i] += 1;
-                        }
-                    }
-                }
+                    break;
             }
 
-            /*
-             * Applies the levels and types resolved in rules W1-I2 to the
-             * resultLevels array.
-             */
-            public void applyLevelsAndTypes()
+            // Set the directionality of NSM's following the brackets
+            for (int i = pb.Closer + 1; i < _runResultTypes.Length; i++)
             {
-                for (int i = 0; i < length; ++i)
-                {
-                    int originalIndex = indexes[i];
-                    owner._resultTypes[originalIndex] = types[i];
-                    owner._resultLevels[originalIndex] = resolvedLevels[i];
-                }
-            }
-
-            /*
-             * Return the limit of the run consisting only of the types in validSet
-             * starting at index. This checks the value at index, and will return
-             * index if that value is not in validSet.
-             */
-            private int findRunLimit(int index, int limit, HashSet<Directionality> validSet)
-            {
-                while (index < limit && validSet.Contains(types[index]))
-                    index++;
-
-                return index;
-
-                /*
-                loop: while (index < limit)
-                {
-                    var t = types[index];
-                    if (validSet.Contains(t))
-                    {
-                        ++index;
-                        goto loop;
-                    }
-
-                    // didn't find a match in validSet
-                    return index;
-                }
-                return limit;
-                */
-            }
-
-            /*
-             * Set types from start up to (but not including) limit to newType.
-             */
-            private void setTypes(int start, int limit, Directionality newType)
-            {
-                for (int i = start; i < limit; ++i)
-                {
-                    types[i] = newType;
-                }
-            }
-
-            /*
-             * Algorithm validation. Assert that all values in types are in the
-             * provided set.
-             */
-            private void assertOnly(Directionality[] codes)
-            {
-                for (int i = 0; i < length; ++i)
-                {
-                    var t = types[i];
-                    if (!codes.Contains(t))
-                        throw new InvalidOperationException("invalid bidi code " + typenames[(int)t] + " present in assertOnly at position " + indexes[i]);
-                }
+                if (_runOriginalTypes[i] == Directionality.NSM)
+                    _runResultTypes[i] = dir;
+                else
+                    break;
             }
         }
 
-        static T[] copyArray<T>(T[] original, int length)
+        /// <summary>
+        /// Maps a direction to a strong type for rule N0
+        /// </summary>
+        /// <param name="dir">The direction to map</param>
+        /// <returns>A strong direction - R, L or ON</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        Directionality GetStrongTypeN0(Directionality dir)
         {
-            var newArray = new T[length];
-            Array.Copy(original, newArray, Math.Min(length, original.Length));
-            return newArray;
+            switch (dir)
+            {
+                case Directionality.EN:
+                case Directionality.AN:
+                case Directionality.AL:
+                case Directionality.R:
+                    return Directionality.R;
+                case Directionality.L:
+                    return Directionality.L;
+                default:
+                    return Directionality.ON;
+            }
         }
 
-        /*
-         * Determines the level runs. Rule X9 will be applied in determining the
-         * runs, in the way that makes sure the characters that are supposed to be
-         * removed are not included in the runs.
-         *
-         * @return an array of level runs. Each level run is described as an array
-         *         of indexes into the input string.
-         */
-        private int[][] determineLevelRuns()
+
+
+        /// <summary>
+        /// Hold the start and end index of a pair of brackets
+        /// </summary>
+        struct BracketPair
         {
-            // temporary array to hold the run
-            int[] temporaryRun = new int[_textLength];
-            // temporary array to hold the list of runs
-            int[][] allRuns = new int[_textLength][];
-            int numRuns = 0;
+            public int Opener;
+            public int Closer;
 
-            sbyte currentLevel = -1;
-            int runLength = 0;
-            for (int i = 0; i < _textLength; ++i)
+            public BracketPair(int ichOpener, int ichCloser)
             {
-                if (!isRemovedByX9(_initialTypes[i]))
-                {
-                    if (_resultLevels[i] != currentLevel)
-                    { // we just encountered a
-                      // new run
-                      // Wrap up last run
-                        if (currentLevel != -1)
-                        { // only wrap it up if there was a run
-                            int[] run = copyArray(temporaryRun, runLength);
-                            allRuns[numRuns] = run;
-                            ++numRuns;
-                        }
-                        // Start new run
-                        currentLevel = _resultLevels[i];
-                        runLength = 0;
-                    }
-                    temporaryRun[runLength] = i;
-                    ++runLength;
-                }
-            }
-            // Wrap up the final run, if any
-            if (runLength != 0)
-            {
-                int[] run = copyArray(temporaryRun, runLength);
-                allRuns[numRuns] = run;
-                ++numRuns;
+                this.Opener = ichOpener;
+                this.Closer = ichCloser;
             }
 
-            return copyArray(allRuns, numRuns);
+            public override string ToString()
+            {
+                return "(" + Opener + ", " + Closer + ")";
+            }
         }
 
-        /*
-         * Definition BD13. Determine isolating run sequences.
-         *
-         * @return an array of isolating run sequences.
-         */
-        private IsolatingRunSequence[] determineIsolatingRunSequences()
+
+        void ResetWhitespaceLevels()
         {
-            int[][] levelRuns = determineLevelRuns();
-            int numRuns = levelRuns.Length;
-
-            // Compute the run that each character belongs to
-            int[] runForCharacter = new int[_textLength];
-            for (int runNumber = 0; runNumber < numRuns; ++runNumber)
+            for (int i = 0; i < _levels.Length; i++)
             {
-                for (int i = 0; i < levelRuns[runNumber].Length; ++i)
-                {
-                    int characterIndex = levelRuns[runNumber][i];
-                    runForCharacter[characterIndex] = runNumber;
-                }
-            }
-
-            IsolatingRunSequence[] sequences = new IsolatingRunSequence[numRuns];
-            int numSequences = 0;
-            int[] currentRunSequence = new int[_textLength];
-            for (int i = 0; i < levelRuns.Length; ++i)
-            {
-                int firstCharacter = levelRuns[i][0];
-                if (_initialTypes[firstCharacter] != Directionality.PDI || _matchingIsolateInitiator[firstCharacter] == -1)
-                {
-                    int currentRunSequenceLength = 0;
-                    int run = i;
-                    do
-                    {
-                        // Copy this level run into currentRunSequence
-                        Array.Copy(levelRuns[run], 0, currentRunSequence, currentRunSequenceLength, levelRuns[run].Length);
-                        currentRunSequenceLength += levelRuns[run].Length;
-
-                        int lastCharacter = currentRunSequence[currentRunSequenceLength - 1];
-                        var lastType = _initialTypes[lastCharacter];
-                        if ((lastType == Directionality.LRI || lastType == Directionality.RLI || lastType == Directionality.FSI) &&
-                                _matchingPDI[lastCharacter] != _textLength)
-                        {
-                            run = runForCharacter[_matchingPDI[lastCharacter]];
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    } while (true);
-
-                    sequences[numSequences] = new IsolatingRunSequence(this,
-                            copyArray(currentRunSequence, currentRunSequenceLength));
-                    ++numSequences;
-                }
-            }
-            return copyArray(sequences, numSequences);
-        }
-
-        /*
-         * Assign level information to characters removed by rule X9. This is for
-         * ease of relating the level information to the original input data. Note
-         * that the levels assigned to these codes are arbitrary, they're chosen so
-         * as to avoid breaking level runs.
-         *
-         * @return the length of the data (original length of types array supplied
-         *         to constructor)
-         */
-        private int assignLevelsToCharactersRemovedByX9()
-        {
-            for (int i = 0; i < _initialTypes.Length; ++i)
-            {
-                var t = _initialTypes[i];
-                if (t == Directionality.LRE || t == Directionality.RLE || t == Directionality.LRO
-                        || t == Directionality.RLO || t == Directionality.PDF || t == Directionality.BN)
-                {
-                    _resultTypes[i] = t;
-                    _resultLevels[i] = -1;
-                }
-            }
-
-            // now propagate forward the levels information (could have
-            // propagated backward, the main thing is not to introduce a level
-            // break where one doesn't already exist).
-
-            if (_resultLevels[0] == -1)
-            {
-                _resultLevels[0] = _paragraphEmbeddingLevel;
-            }
-            for (int i = 1; i < _initialTypes.Length; ++i)
-            {
-                if (_resultLevels[i] == -1)
-                {
-                    _resultLevels[i] = _resultLevels[i - 1];
-                }
-            }
-
-            // Embedding information is for informational purposes only
-            // so need not be adjusted.
-
-            return _initialTypes.Length;
-        }
-
-        //
-        // Output
-        //
-
-        /*
-         * Return levels array breaking lines at offsets in linebreaks. <br>
-         * Rule L1.
-         * <p>
-         * The returned levels array contains the resolved level for each bidi code
-         * passed to the constructor.
-         * <p>
-         * The linebreaks array must include at least one value. The values must be
-         * in strictly increasing order (no duplicates) between 1 and the length of
-         * the text, inclusive. The last value must be the length of the text.
-         *
-         * @param linebreaks
-         *            the offsets at which to break the paragraph
-         * @return the resolved levels of the text
-         */
-        public sbyte[] getLevels(int[] linebreaks)
-        {
-
-            // Note that since the previous processing has removed all
-            // P, S, and WS values from resultTypes, the values referred to
-            // in these rules are the initial types, before any processing
-            // has been applied (including processing of overrides).
-            //
-            // This example implementation has reinserted explicit format codes
-            // and BN, in order that the levels array correspond to the
-            // initial text. Their final placement is not normative.
-            // These codes are treated like WS in this implementation,
-            // so they don't interrupt sequences of WS.
-
-            validateLineBreaks(linebreaks, _textLength);
-
-            sbyte[] result = _resultLevels.ToArray(); // will be returned to
-                                                    // caller
-
-            // don't worry about linebreaks since if there is a break within
-            // a series of WS values preceding S, the linebreak itself
-            // causes the reset.
-            for (int i = 0; i < result.Length; ++i)
-            {
-                var t = _initialTypes[i];
+                var t = _originalTypes[i];
                 if (t == Directionality.B || t == Directionality.S)
                 {
                     // Rule L1, clauses one and two.
-                    result[i] = _paragraphEmbeddingLevel;
+                    _levels[i] = _paragraphEmbeddingLevel;
 
                     // Rule L1, clause three.
                     for (int j = i - 1; j >= 0; --j)
                     {
-                        if (isWhitespace(_initialTypes[j]))
+                        if (IsWhitespace(_originalTypes[j]))
                         { // including format
                           // codes
-                            result[j] = _paragraphEmbeddingLevel;
+                            _levels[j] = _paragraphEmbeddingLevel;
                         }
                         else
                         {
@@ -1327,168 +1265,20 @@ namespace Topten.RichTextKit
             }
 
             // Rule L1, clause four.
-            int start = 0;
-            for (int i = 0; i < linebreaks.Length; ++i)
+            for (int j = _levels.Length - 1; j >= 0; j--)
             {
-                int limit = linebreaks[i];
-                for (int j = limit - 1; j >= start; --j)
-                {
-                    if (isWhitespace(_initialTypes[j]))
-                    { // including format codes
-                        result[j] = _paragraphEmbeddingLevel;
-                    }
-                    else
-                    {
-                        break;
-                    }
+                if (IsWhitespace(_originalTypes[j]))
+                { // including format codes
+                    _levels[j] = _paragraphEmbeddingLevel;
                 }
-
-                start = limit;
-            }
-
-            return result;
-        }
-
-        /*
-         * Return reordering array breaking lines at offsets in linebreaks.
-         * <p>
-         * The reordering array maps from a visual index to a logical index. Lines
-         * are concatenated from left to right. So for example, the fifth character
-         * from the left on the third line is
-         *
-         * <pre>
-         * getReordering(linebreaks)[linebreaks[1] + 4]
-         * </pre>
-         *
-         * (linebreaks[1] is the position after the last character of the second
-         * line, which is also the index of the first character on the third line,
-         * and adding four gets the fifth character from the left).
-         * <p>
-         * The linebreaks array must include at least one value. The values must be
-         * in strictly increasing order (no duplicates) between 1 and the length of
-         * the text, inclusive. The last value must be the length of the text.
-         *
-         * @param linebreaks
-         *            the offsets at which to break the paragraph.
-         */
-        public int[] getReordering(int[] linebreaks)
-        {
-            validateLineBreaks(linebreaks, _textLength);
-
-            sbyte[] levels = getLevels(linebreaks);
-
-            return computeMultilineReordering(levels, linebreaks);
-        }
-
-        /*
-         * Return multiline reordering array for a given level array. Reordering
-         * does not occur across a line break.
-         */
-        private static int[] computeMultilineReordering(sbyte[] levels, int[] linebreaks)
-        {
-            int[] result = new int[levels.Length];
-
-            int start = 0;
-            for (int i = 0; i < linebreaks.Length; ++i)
-            {
-                int limit = linebreaks[i];
-
-                sbyte[] templevels = new sbyte[limit - start];
-                Array.Copy(levels, start, templevels, 0, templevels.Length);
-
-                int[] temporder = computeReordering(templevels);
-                for (int j = 0; j < temporder.Length; ++j)
+                else
                 {
-                    result[start + j] = temporder[j] + start;
-                }
-
-                start = limit;
-            }
-
-            return result;
-        }
-
-        /*
-         * Return reordering array for a given level array. This reorders a single
-         * line. The reordering is a visual to logical map. For example, the
-         * leftmost char is string.charAt(order[0]). Rule L2.
-         */
-        private static int[] computeReordering(sbyte[] levels)
-        {
-            int lineLength = levels.Length;
-
-            int[] result = new int[lineLength];
-
-            // initialize order
-            for (int i = 0; i < lineLength; ++i)
-            {
-                result[i] = i;
-            }
-
-            // locate highest level found on line.
-            // Note the rules say text, but no reordering across line bounds is
-            // performed, so this is sufficient.
-            sbyte highestLevel = 0;
-            sbyte lowestOddLevel = MAX_DEPTH + 2;
-            for (int i = 0; i < lineLength; ++i)
-            {
-                sbyte level = levels[i];
-                if (level > highestLevel)
-                {
-                    highestLevel = level;
-                }
-                if (((level & 1) != 0) && level < lowestOddLevel)
-                {
-                    lowestOddLevel = level;
+                    break;
                 }
             }
-
-            for (int level = highestLevel; level >= lowestOddLevel; --level)
-            {
-                for (int i = 0; i < lineLength; ++i)
-                {
-                    if (levels[i] >= level)
-                    {
-                        // find range of text at or above this level
-                        int start = i;
-                        int limit = i + 1;
-                        while (limit < lineLength && levels[limit] >= level)
-                        {
-                            ++limit;
-                        }
-
-                        // reverse run
-                        for (int j = start, k = limit - 1; j < k; ++j, --k)
-                        {
-                            int temp = result[j];
-                            result[j] = result[k];
-                            result[k] = temp;
-                        }
-
-                        // skip to end of level run
-                        i = limit;
-                    }
-                }
-            }
-
-            return result;
         }
 
-        /*
-         * Return the base level of the paragraph.
-         */
-        public sbyte getBaseLevel()
-        {
-            return _paragraphEmbeddingLevel;
-        }
-
-        // --- internal utilities -------------------------------------------------
-
-        /*
-         * Return true if the type is considered a whitespace type for the line
-         * break rules.
-         */
-        private static bool isWhitespace(Directionality biditype)
+        static bool IsWhitespace(Directionality biditype)
         {
             switch (biditype)
             {
@@ -1509,157 +1299,31 @@ namespace Topten.RichTextKit
             }
         }
 
-        /*
-         * Return true if the type is one of the types removed in X9.
-         * Made public so callers can duplicate the effect.
-         */
-        public static bool isRemovedByX9(Directionality biditype)
+        void AssignLevelsToCodePointsRemovedByX9()
         {
-            switch (biditype)
+            // Redundant?
+            if (!_hasIsolates && !_hasEmbeddings)
+                return;
+
+            // No-op?
+            if (_resultTypes.Length == 0)
+                return;
+
+            // Fix up first character
+            if (_levels[0] < 0)
+                _levels[0] = _paragraphEmbeddingLevel;
+            if (IsRemovedByX9(_originalTypes[0]))
+                _resultTypes[0] = _originalTypes[0];
+
+            for (int i = 1, length = _resultTypes.Length; i < length; i++)
             {
-                case Directionality.LRE:
-                case Directionality.RLE:
-                case Directionality.LRO:
-                case Directionality.RLO:
-                case Directionality.PDF:
-                case Directionality.BN:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        /*
-         * Return the strong type (L or R) corresponding to the level.
-         */
-        private static Directionality typeForLevel(int level)
-        {
-            return ((level & 0x1) == 0) ? Directionality.L : Directionality.R;
-        }
-
-        /*
-         * Set levels from start up to (but not including) limit to newLevel.
-         */
-        private void setLevels(sbyte[] levels, int start, int limit, sbyte newLevel)
-        {
-            for (int i = start; i < limit; ++i)
-            {
-                levels[i] = newLevel;
-            }
-        }
-
-        // --- input validation ---------------------------------------------------
-
-        /*
-         * Throw exception if type array is invalid.
-         */
-        private static void validateTypes(Slice<Directionality> types)
-        {
-            for (int i = 0; i < types.Length; ++i)
-            {
-                if (types[i] < Directionality.TYPE_MIN || types[i] > Directionality.TYPE_MAX)
+                var t = _originalTypes[i];
+                if (IsRemovedByX9(t))
                 {
-                    throw new ArgumentException("illegal type value at " + i + ": " + types[i]);
-                }
-            }
-            for (int i = 0; i < types.Length - 1; ++i)
-            {
-                if (types[i] == Directionality.B)
-                {
-                    throw new ArgumentException("B type before end of paragraph at index: " + i);
+                    _resultTypes[i] = t;
+                    _levels[i] = _levels[i - 1];
                 }
             }
         }
-
-        /*
-         * Throw exception if paragraph embedding level is invalid. Special
-         * allowance for implicitEmbeddinglevel so that default processing of the
-         * paragraph embedding level as implicit can still be performed when
-         * using this API.
-         */
-        private static void validateParagraphEmbeddingLevel(sbyte paragraphEmbeddingLevel)
-        {
-            if (paragraphEmbeddingLevel != implicitEmbeddingLevel &&
-                    paragraphEmbeddingLevel != 0 &&
-                    paragraphEmbeddingLevel != 1)
-            {
-                throw new ArgumentException("illegal paragraph embedding level: " + paragraphEmbeddingLevel);
-            }
-        }
-
-        /*
-         * Throw exception if line breaks array is invalid.
-         */
-        private static void validateLineBreaks(int[] linebreaks, int textLength)
-        {
-            int prev = 0;
-            for (int i = 0; i < linebreaks.Length; ++i)
-            {
-                int next = linebreaks[i];
-                if (next <= prev)
-                {
-                    throw new ArgumentException("bad linebreak: " + next + " at index: " + i);
-                }
-                prev = next;
-            }
-            if (prev != textLength)
-            {
-                throw new ArgumentException("last linebreak must be at " + textLength);
-            }
-        }
-
-        /*
-         * Throw exception if pairTypes array is invalid
-         */
-        private static void validatePbTypes(Slice<PairedBracketType> pairTypes)
-        {
-            for (int i = 0; i < pairTypes.Length; ++i)
-            {
-                if (pairTypes[i] < PairedBracketType.n || pairTypes[i] > PairedBracketType.c)
-                {
-                    throw new ArgumentException("illegal pairType value at " + i + ": " + pairTypes[i]);
-                }
-            }
-        }
-
-        /*
-         * Throw exception if pairValues array is invalid or doesn't match pairTypes in length
-         * Unfortunately there's little we can do in terms of validating the values themselves
-         */
-        private static void validatePbValues(Slice<int> pairValues, Slice<PairedBracketType> pairTypes)
-        {
-            if (pairTypes.Length != pairValues.Length)
-            {
-                throw new ArgumentException("pairTypes is different length from pairValues");
-            }
-        }
-
-        /*
-         * static entry point for testing using several arrays of direction and other types and an externally supplied
-         * paragraph embedding level. The embedding level may be 0, 1 or 2.
-         * <p>
-         * 2 means to apply the default algorithm (rules P2 and P3), 0 is for LTR
-         * paragraphs, and 1 is for RTL paragraphs.
-         *
-         * @param types
-         *            the directional types array
-         * @param pairTypes
-         *           the paired bracket types array
-         * @param pairValues
-         * 			 the paired bracket values array
-         * @param paragraphEmbeddingLevel
-         *            the externally supplied paragraph embedding level.
-         */
-        public static Bidi analyzeInput(
-            Slice<Directionality> types, 
-            Slice<PairedBracketType> pairTypes, 
-            Slice<int> pairValues, 
-            sbyte paragraphEmbeddingLevel
-            )
-        {
-            Bidi bidi = new Bidi(types, pairTypes, pairValues, paragraphEmbeddingLevel);
-            return bidi;
-        }
-
     }
 }

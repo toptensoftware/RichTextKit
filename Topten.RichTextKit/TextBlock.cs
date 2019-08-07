@@ -799,9 +799,7 @@ namespace Topten.RichTextKit
                 return _textAlignment;
         }
 
-#if !USE_BIDI1
-        Bidi2 _bidi = new Bidi2();
-#endif
+        Bidi _bidi = new Bidi();
 
         /// <summary>
         /// Split into runs based on directionality and style switch points
@@ -818,11 +816,7 @@ namespace Topten.RichTextKit
             // Break supplied text into directionality runs
             bidiData.Init(_codePoints.AsSlice(), paragraphEmbeddingLevel);
 
-#if USE_BIDI1
-            var _bidi = new Bidi(bidiData);
-#else
             _bidi.Process(bidiData);
-#endif
 
             var bidiRuns = BidiRun.CoalescLevels(_bidi.ResultLevels).ToList();
 
