@@ -157,9 +157,9 @@ namespace Topten.RichTextKit
         {
             // Reset everything
             _codePoints.Clear();
-            _styleRuns.Clear();
-            _fontRuns.Clear();
-            _lines.Clear();
+            StyleRun.Pool.ReturnAndClear(_styleRuns);
+            FontRun.Pool.ReturnAndClear(_fontRuns);
+            TextLine.Pool.ReturnAndClear(_lines);
             _textShapingBuffers.Clear();
             InvalidateLayout();
         }
@@ -179,20 +179,20 @@ namespace Topten.RichTextKit
             var utf32 = _codePoints.Add(text);
 
             // Create a run
-            var run = new StyleRun()
-            {
-                TextBlock = this,
-                CodePointBuffer = _codePoints,
-                Start = utf32.Start,
-                Length = utf32.Length,
-                Style = style,
-            };
+            var run = StyleRun.Pool.Get();
+            run.TextBlock = this;
+            run.CodePointBuffer = _codePoints;
+            run.Start = utf32.Start;
+            run.Length = utf32.Length;
+            run.Style = style;
 
             // Add run
             _styleRuns.Add(run);
 
             return run;
         }
+
+        List<StyleRun> _styledRunPool = new List<StyleRun>();
 
         /// <summary>
         /// Add text to this paragraph
@@ -799,7 +799,8 @@ namespace Topten.RichTextKit
                 return _textAlignment;
         }
 
-        Bidi _bidi = new Bidi();
+        // Use the shared Bidi algo instance
+        Bidi _bidi = Bidi.Instance;
 
         /// <summary>
         /// Split into runs based on directionality and style switch points
@@ -943,23 +944,22 @@ namespace Topten.RichTextKit
             }
 
             // Create the run
-            return new FontRun()
-            {
-                StyleRun = styleRun,
-                CodePointBuffer = _codePoints,
-                Start = codePoints.Start,
-                Length = codePoints.Length,
-                Style = style,
-                Direction = direction,
-                Typeface = typeface,
-                Glyphs = shaped.GlyphIndicies,
-                GlyphPositions = shaped.GlyphPositions,
-                RelativeCodePointXCoords = shaped.CodePointXCoords,
-                Clusters = shaped.Clusters,
-                Ascent = shaped.Ascent,
-                Descent = shaped.Descent,
-                Width = shaped.EndXCoord.X,
-            };        
+            var fontRun = FontRun.Pool.Get();
+            fontRun.StyleRun = styleRun;
+            fontRun.CodePointBuffer = _codePoints;
+            fontRun.Start = codePoints.Start;
+            fontRun.Length = codePoints.Length;
+            fontRun.Style = style;
+            fontRun.Direction = direction;
+            fontRun.Typeface = typeface;
+            fontRun.Glyphs = shaped.GlyphIndicies;
+            fontRun.GlyphPositions = shaped.GlyphPositions;
+            fontRun.RelativeCodePointXCoords = shaped.CodePointXCoords;
+            fontRun.Clusters = shaped.Clusters;
+            fontRun.Ascent = shaped.Ascent;
+            fontRun.Descent = shaped.Descent;
+            fontRun.Width = shaped.EndXCoord.X;
+            return fontRun;
         }
 
         /// <summary>
@@ -1110,7 +1110,7 @@ namespace Topten.RichTextKit
         void BuildLine(int frIndexStartOfLine, int frSplitIndex, int frTrailingWhiteSpaceIndex)
         {
             // Create the line
-            var line = new TextLine();
+            var line = TextLine.Pool.Get();
             line.TextBlock = this;
             line.YCoord = _measuredHeight;
 

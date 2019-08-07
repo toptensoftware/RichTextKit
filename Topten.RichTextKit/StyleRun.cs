@@ -64,5 +64,16 @@ namespace Topten.RichTextKit
         /// The global list of code points
         /// </summary>
         internal Buffer<int> CodePointBuffer;
+
+        [ThreadStatic]
+        internal static ObjectPool<StyleRun> Pool = new ObjectPool<StyleRun>()
+        {
+            Cleaner = (r) =>
+            {
+                r.CodePointBuffer = null;
+                r.Style = null;
+                r.TextBlock = null;
+            }
+        };
     }
 }

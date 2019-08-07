@@ -202,6 +202,7 @@ namespace Topten.RichTextKit.Utils
             return new ArraySliceEnumerator<T>(_data, 0, _length);
         }
 
+        /*
         public T[] SetMapping(Slice<T> data, Slice<int> mapping)
         {
             Length = mapping.Length;
@@ -221,5 +222,6 @@ namespace Topten.RichTextKit.Utils
             }
             return _data;
         }
+        */
     }
 }

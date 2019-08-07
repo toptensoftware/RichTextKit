@@ -304,23 +304,21 @@ namespace Topten.RichTextKit
             }
 
             // Create the other run
-            var newRun = new FontRun()
-            {
-                StyleRun = this.StyleRun,
-                CodePointBuffer = this.CodePointBuffer,
-                Direction = this.Direction,
-                Ascent = this.Ascent,
-                Descent = this.Descent,
-                Style = this.Style,
-                Typeface = this.Typeface,
-                Start = splitAtCodePoint,
-                Length = this.End - splitAtCodePoint,
-                Width = sliceRightWidth,
-                RelativeCodePointXCoords = this.RelativeCodePointXCoords.SubSlice(codePointSplitPos),
-                GlyphPositions = this.GlyphPositions.SubSlice(glyphSplitPos),
-                Glyphs = this.Glyphs.SubSlice(glyphSplitPos),
-                Clusters = this.Clusters.SubSlice(glyphSplitPos),
-            };
+            var newRun = FontRun.Pool.Get();
+            newRun.StyleRun = this.StyleRun;
+            newRun.CodePointBuffer = this.CodePointBuffer;
+            newRun.Direction = this.Direction;
+            newRun.Ascent = this.Ascent;
+            newRun.Descent = this.Descent;
+            newRun.Style = this.Style;
+            newRun.Typeface = this.Typeface;
+            newRun.Start = splitAtCodePoint;
+            newRun.Length = this.End - splitAtCodePoint;
+            newRun.Width = sliceRightWidth;
+            newRun.RelativeCodePointXCoords = this.RelativeCodePointXCoords.SubSlice(codePointSplitPos);
+            newRun.GlyphPositions = this.GlyphPositions.SubSlice(glyphSplitPos);
+            newRun.Glyphs = this.Glyphs.SubSlice(glyphSplitPos);
+            newRun.Clusters = this.Clusters.SubSlice(glyphSplitPos);
 
             // Adjust code point positions
             for (int i = 0; i < newRun.RelativeCodePointXCoords.Length; i++)
@@ -375,23 +373,21 @@ namespace Topten.RichTextKit
             }
 
             // Create the other run
-            var newRun = new FontRun()
-            {
-                StyleRun = this.StyleRun,
-                CodePointBuffer = this.CodePointBuffer,
-                Direction = this.Direction,
-                Ascent = this.Ascent,
-                Descent = this.Descent,
-                Style = this.Style,
-                Typeface = this.Typeface,
-                Start = splitAtCodePoint,
-                Length = this.End - splitAtCodePoint,
-                Width = sliceLeftWidth,
-                RelativeCodePointXCoords = this.RelativeCodePointXCoords.SubSlice(codePointSplitPos),
-                GlyphPositions = this.GlyphPositions.SubSlice(0, glyphSplitPos),
-                Glyphs = this.Glyphs.SubSlice(0, glyphSplitPos),
-                Clusters = this.Clusters.SubSlice(0, glyphSplitPos),
-            };
+            var newRun = FontRun.Pool.Get();
+            newRun.StyleRun = this.StyleRun;
+            newRun.CodePointBuffer = this.CodePointBuffer;
+            newRun.Direction = this.Direction;
+            newRun.Ascent = this.Ascent;
+            newRun.Descent = this.Descent;
+            newRun.Style = this.Style;
+            newRun.Typeface = this.Typeface;
+            newRun.Start = splitAtCodePoint;
+            newRun.Length = this.End - splitAtCodePoint;
+            newRun.Width = sliceLeftWidth;
+            newRun.RelativeCodePointXCoords = this.RelativeCodePointXCoords.SubSlice(codePointSplitPos);
+            newRun.GlyphPositions = this.GlyphPositions.SubSlice(0, glyphSplitPos);
+            newRun.Glyphs = this.Glyphs.SubSlice(0, glyphSplitPos);
+            newRun.Clusters = this.Clusters.SubSlice(0, glyphSplitPos);
 
             // Update this run
             this.RelativeCodePointXCoords = this.RelativeCodePointXCoords.SubSlice(0, codePointSplitPos);
@@ -592,5 +588,18 @@ namespace Topten.RichTextKit
                 }
             }
         }
+
+        [ThreadStatic]
+        internal static ObjectPool<FontRun> Pool = new ObjectPool<FontRun>()
+        {
+            Cleaner = (r) =>
+            {
+                r.RunKind = FontRunKind.Normal;
+                r.CodePointBuffer = null;
+                r.Style = null;
+                r.Typeface = null;
+                r.Line = null;
+            }
+        };
     }
 }

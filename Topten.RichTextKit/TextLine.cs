@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Topten.RichTextKit.Utils;
 
 namespace Topten.RichTextKit
 {
@@ -296,5 +297,15 @@ namespace Topten.RichTextKit
         /// Internal List of runs
         /// </summary>
         internal List<FontRun> RunsInternal = new List<FontRun>();
+
+        [ThreadStatic]
+        internal static ObjectPool<TextLine> Pool = new ObjectPool<TextLine>()
+        {
+            Cleaner = (r) =>
+            {
+                r.TextBlock = null;
+                r.RunsInternal.Clear();
+            }
+        };
     }
 }

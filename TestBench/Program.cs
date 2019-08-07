@@ -7,7 +7,8 @@
         {
             //BidiTest.Run();
             //BidiCharacterTest.Run();
-            LineBreakTest.Run();
+            //LineBreakTest.Run();
+            TextBlockLoadTest.Run();
         }
     }
 }
