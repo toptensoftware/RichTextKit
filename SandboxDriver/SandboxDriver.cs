@@ -230,9 +230,27 @@ namespace SandboxDriver
 
             if (_textBlock.MeasuredOverhang.Left > 0)
             {
-                using (var paint = new SKPaint() { Color = new SKColor(0xFFf0f0f0), StrokeWidth = 1 })
+                using (var paint = new SKPaint() { Color = new SKColor(0xFF00fff0), StrokeWidth = 1 })
                 {
                     canvas.DrawLine(new SKPoint(margin - _textBlock.MeasuredOverhang.Left, 0), new SKPoint(margin - _textBlock.MeasuredOverhang.Left, (float)canvasHeight), paint);
+                }
+            }
+
+            if (_textBlock.MeasuredOverhang.Right > 0)
+            {
+                using (var paint = new SKPaint() { Color = new SKColor(0xFF00ff00), StrokeWidth = 1 })
+                {
+                    float x;
+                    if (_textBlock.MaxWidth.HasValue)
+                    {
+                        x = margin + _textBlock.MaxWidth.Value;
+                    }
+                    else
+                    {
+                        x = margin + _textBlock.MeasuredWidth;
+                    }
+                    x += _textBlock.MeasuredOverhang.Right;
+                    canvas.DrawLine(new SKPoint(x, 0), new SKPoint(x, (float)canvasHeight), paint);
                 }
             }
 

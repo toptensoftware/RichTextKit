@@ -419,13 +419,18 @@ namespace Topten.RichTextKit
         internal Buffer<int> CodePointBuffer;
 
         /// <summary>
-        /// Calculate how by how much text at the left margin overhangs the margin
+        /// Calculate any overhang for this text line
         /// </summary>
-        /// <returns>The amount of overhang</returns>
-        internal float CalculateRequiredLeftMargin()
+        /// <param name="right"></param>
+        /// <param name="leftOverhang"></param>
+        /// <param name="rightOverhang"></param>
+        internal void UpdateOverhang(float right, ref float leftOverhang, ref float rightOverhang)
         {
+            if (RunKind == FontRunKind.TrailingWhitespace)
+                return;
+
             if (Glyphs.Length == 0)
-                return 0;
+                return;
 
             using (var paint = new SKPaint())
             {
@@ -450,18 +455,25 @@ namespace Topten.RichTextKit
                 {
                     fixed (ushort* pGlyphs = Glyphs.Underlying)
                     {
-                        paint.GetGlyphWidths((IntPtr)(pGlyphs + Start), sizeof(ushort), out var bounds);
-                        if (bounds != null && bounds.Length >= 1)
+                        paint.GetGlyphWidths((IntPtr)(pGlyphs + Start), sizeof(ushort) * Glyphs.Length, out var bounds);
+                        if (bounds != null)
                         {
-                            var lhs = XCoord + bounds[0].Left;
-                            if (lhs < 0)
-                                return -lhs;
+                            for (int i = 0; i < bounds.Length; i++)
+                            {
+                                float gx = GlyphPositions[i].X;
+
+                                var loh = -(gx + bounds[i].Left);
+                                if (loh > leftOverhang)
+                                    leftOverhang = loh;
+
+                                var roh = (gx + bounds[i].Right + 1) - right;
+                                if (roh > rightOverhang) 
+                                    rightOverhang = roh;
+                            }
                         }
                     }
                 }
             }
-
-            return 0;
         }
 
         /// <summary>

@@ -245,8 +245,8 @@ namespace Topten.RichTextKit
             _caretIndicies.Clear();
             _measuredHeight = 0;
             _measuredWidth = 0;
-            _minLeftMargin = 0;
-            _requiredLeftMargin = null;
+            _leftOverhang = null;
+            _rightOverhang = null;
 
             // Only layout if actually have some text
             if (_codePoints.Length != 0)
@@ -446,38 +446,10 @@ namespace Topten.RichTextKit
 
 
         /// <summary>
-        /// Returns the maximum possible overhang based on the fonts used in this text block
-        /// </summary>
-        /// <remarks>
-        /// Some font's can overhang the left and right margins.  eg: a lowercase 'j' at 
-        /// the start of a line will often overhang to the left of the left margin.
-        /// 
-        /// This property returns the maximum overhang in each direction based on the fonts 
-        /// used, but not the actual text or final layout.  This can be useful to get a 
-        /// consistent maximum possible overhang, although the returned value is often 
-        /// excessive (depending on the font).
-        /// 
-        /// Currently only the left overhang is calculated.
-        /// 
-        /// The return rectangle describes overhang amounts for each edge - not rectangle 
-        /// co-ordinates.
-        /// </remarks>
-        public SKRect MaxOverhang
-        {
-            get
-            {
-                Layout();
-                return new SKRect(_minLeftMargin, 0, 0, 0);
-            }
-        }
-
-        /// <summary>
         /// Gets the actual measured overhang in each direction based on the 
         /// fonts used, and the supplied text.
         /// </summary>
         /// <remarks>
-        /// Currently only the left overhang is calculated.
-        /// 
         /// The return rectangle describes overhang amounts for each edge - not 
         /// rectangle co-ordinates.
         /// </remarks>
@@ -486,23 +458,19 @@ namespace Topten.RichTextKit
             get
             {
                 Layout();
-                if (!_requiredLeftMargin.HasValue)
+                if (!_leftOverhang.HasValue)
                 {
-                    float required = 0;
+                    var right = _maxWidth ?? MeasuredWidth;
+                    float leftOverhang = 0;
+                    float rightOverhang = 0;
                     foreach (var l in _lines)
                     {
-                        if (l.Runs.Count == 0)
-                            continue;
-                        var r = l.Runs[0];
-                        if (r.RunKind == FontRunKind.TrailingWhitespace)
-                            continue;
-                        var m = r.CalculateRequiredLeftMargin();
-                        if (m > required)
-                            required = m;
+                        l.UpdateOverhang(right, ref leftOverhang, ref rightOverhang);
                     }
-                    _requiredLeftMargin = required;
+                    _leftOverhang = leftOverhang;
+                    _rightOverhang = rightOverhang;
                 }
-                return new SKRect(_requiredLeftMargin.Value, 0, 0, 0);
+                return new SKRect(_leftOverhang.Value, 0, _rightOverhang.Value, 0);
             }
         }
 
@@ -779,14 +747,14 @@ namespace Topten.RichTextKit
         float _measuredWidth;
 
         /// <summary>
-        /// The minimum left margin
+        /// The required left overhang
         /// </summary>
-        float _minLeftMargin;
+        float? _leftOverhang = null;
 
         /// <summary>
-        /// The required left margin
+        /// The required left overhang
         /// </summary>
-        float? _requiredLeftMargin = null;
+        float? _rightOverhang = null;
 
         /// <summary>
         /// The final laid out set of lines
@@ -953,11 +921,6 @@ namespace Topten.RichTextKit
             var shaper = TextShaper.ForTypeface(typeface);
             var shaped = shaper.Shape(_textShapingBuffers, codePoints, style, direction, codePoints.Start);
 
-            // Update minimum required left margin
-            if (shaped.XMin < 0 && -shaped.XMin > _minLeftMargin)
-            {
-                _minLeftMargin = -shaped.XMin;
-            }
 
             // Create the run
             var fontRun = FontRun.Pool.Get();

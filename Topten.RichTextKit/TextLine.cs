@@ -293,6 +293,14 @@ namespace Topten.RichTextKit
             }
         }
 
+        internal void UpdateOverhang(float right, ref float leftOverhang, ref float rightOverhang)
+        {
+            foreach (var r in Runs)
+            {
+                r.UpdateOverhang(right, ref leftOverhang, ref rightOverhang);
+            }
+        }
+
         /// <summary>
         /// Internal List of runs
         /// </summary>
