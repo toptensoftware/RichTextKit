@@ -9,7 +9,6 @@ The `TextBlock` class provides various measurements of its contained text.
 * [P:Topten.RichTextKit.TextBlock.MeasuredWidth]
 * [P:Topten.RichTextKit.TextBlock.MeasuredHeight]
 * [P:Topten.RichTextKit.TextBlock.MeasuredPadding]
-* [P:Topten.RichTextKit.TextBlock.MaxOverhang]
 * [P:Topten.RichTextKit.TextBlock.MeasuredOverhang]
 
 ## Going Deeper
