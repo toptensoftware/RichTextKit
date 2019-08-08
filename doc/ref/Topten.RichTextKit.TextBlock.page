@@ -115,11 +115,6 @@ fonts used, and the supplied text.</p>
                 <td><p>Get the text runs as added by AddText</p>
 </td>
             </tr>
-            <tr>
-                <td><a href="./../ref/Topten.RichTextKit.TextBlock.UseMSWordStyleRTLLayout">UseMSWordStyleRTLLayout</a></td>
-                <td><p>Use MS Word style RTL layout</p>
-</td>
-            </tr>
     </table>
 
     <h2 id="methods">Methods</h2>

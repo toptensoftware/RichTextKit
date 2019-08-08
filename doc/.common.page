@@ -109,6 +109,7 @@ navTree:
               - text: LineHeight|./ref/Topten.RichTextKit.IStyle.LineHeight
               - text: StrikeThrough|./ref/Topten.RichTextKit.IStyle.StrikeThrough
               - text: TextColor|./ref/Topten.RichTextKit.IStyle.TextColor
+              - text: TextDirection|./ref/Topten.RichTextKit.IStyle.TextDirection
               - text: Underline|./ref/Topten.RichTextKit.IStyle.Underline
       - text: StrikeThroughStyle
         subItems:
@@ -127,6 +128,7 @@ navTree:
               - text: LineHeight|./ref/Topten.RichTextKit.Style.LineHeight
               - text: StrikeThrough|./ref/Topten.RichTextKit.Style.StrikeThrough
               - text: TextColor|./ref/Topten.RichTextKit.Style.TextColor
+              - text: TextDirection|./ref/Topten.RichTextKit.Style.TextDirection
               - text: Underline|./ref/Topten.RichTextKit.Style.Underline
       - text: StyleRun
         subItems:
@@ -162,7 +164,6 @@ navTree:
               - text: MeasuredPadding|./ref/Topten.RichTextKit.TextBlock.MeasuredPadding
               - text: MeasuredWidth|./ref/Topten.RichTextKit.TextBlock.MeasuredWidth
               - text: StyleRuns|./ref/Topten.RichTextKit.TextBlock.StyleRuns
-              - text: UseMSWordStyleRTLLayout|./ref/Topten.RichTextKit.TextBlock.UseMSWordStyleRTLLayout
           - text: Methods
             subItems:
               - text: AddText|./ref/Topten.RichTextKit.TextBlock.AddText
@@ -261,6 +262,7 @@ navTree:
             subItems:
               - text: Clear|./ref/Topten.RichTextKit.Utils.Slice[T].Clear
               - text: Fill|./ref/Topten.RichTextKit.Utils.Slice[T].Fill
+              - text: Set|./ref/Topten.RichTextKit.Utils.Slice[T].Set
               - text: SubSlice|./ref/Topten.RichTextKit.Utils.Slice[T].SubSlice
               - text: ToArray|./ref/Topten.RichTextKit.Utils.Slice[T].ToArray
       - text: Utf32Buffer

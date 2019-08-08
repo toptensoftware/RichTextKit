@@ -76,6 +76,11 @@ font; otherwise False.</p>
 </td>
             </tr>
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.IStyle.TextDirection">TextDirection</a></td>
+                <td><p>Text direction override for this span</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.IStyle.Underline">Underline</a></td>
                 <td><p>The underline style for text in this run.</p>
 </td>

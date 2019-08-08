@@ -1,0 +1,46 @@
+---
+title: "Slice&lt;T&gt;.Set"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">Slice&lt;T&gt;.Set Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+
+
+<pre class="language-csharp"><code class="language-csharp">public void Set(Slice&lt;T&gt; Source);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;T&gt;</a> Source
+                </td>
+                <td></td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

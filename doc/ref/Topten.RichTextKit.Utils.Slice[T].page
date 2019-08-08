@@ -99,6 +99,10 @@ import: "../.common.page"
 </td>
             </tr>
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T].Set">Set(Slice&lt;T&gt;)</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T].SubSlice#Topten.RichTextKit.Utils-Slice-T.SubSlice-System-Int32">SubSlice(int)</a></td>
                 <td><p>Creates a subslice of an array slice, from a specified position to the end</p>
 </td>

@@ -29,6 +29,12 @@ import: "../.common.page"
     <h2 id="members">Members</h2>
     <table class="name-value-description">
             <tr>
+                <td>Auto</td>
+                <td>2</td>
+                <td><p>Automatic</p>
+</td>
+            </tr>
+            <tr>
                 <td>LTR</td>
                 <td>0</td>
                 <td><p>Left to right.</p>
