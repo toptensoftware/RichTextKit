@@ -139,7 +139,17 @@ namespace Topten.RichTextKit
         Buffer<int> _pairedBracketValues;
         Buffer<Directionality> _savedTypes;
         Buffer<PairedBracketType> _savedPairedBracketTypes;
-
+        
+        /// <summary>
+        /// Save the Types and PairedBracketTypes of this bididata 
+        /// </summary>
+        /// <remarks>
+        /// This is used when processing embedded style runs with 
+        /// directionality overrides.  TextBlock saves the data,
+        /// overrides the style runs to neutral, processes the bidi
+        /// data for the entire paragraph and then restores this data
+        /// before processing the embedded runs.
+        /// </remarks>
         public void SaveTypes()
         {
             // Make sure we have a buffer
@@ -156,6 +166,9 @@ namespace Topten.RichTextKit
             _savedPairedBracketTypes.Add(_pairedBracketTypes.AsSlice());
         }
 
+        /// <summary>
+        /// Restore the data saved by SaveTypes
+        /// </summary>
         public void RestoreTypes()
         {
             _types.Clear();
@@ -188,6 +201,12 @@ namespace Topten.RichTextKit
 
         public Buffer<sbyte> _tempLevelBuffer;
 
+        /// <summary>
+        /// Gets a temporary level buffer.  Used by TextBlock when
+        /// resolving style runs with different directionality.
+        /// </summary>
+        /// <param name="length">Length of the required buffer</param>
+        /// <returns>An uninitialized level buffer</returns>
         public Slice<sbyte> GetTempLevelBuffer(int length)
         {
             if (_tempLevelBuffer == null)
