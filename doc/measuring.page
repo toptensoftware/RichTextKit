@@ -8,7 +8,7 @@ isMarkdown: false
 <li><a href="./ref/Topten.RichTextKit.TextBlock.MeasuredWidth">Topten.RichTextKit.TextBlock.MeasuredWidth</a></li>
 <li><a href="./ref/Topten.RichTextKit.TextBlock.MeasuredHeight">Topten.RichTextKit.TextBlock.MeasuredHeight</a></li>
 <li><a href="./ref/Topten.RichTextKit.TextBlock.MeasuredPadding">Topten.RichTextKit.TextBlock.MeasuredPadding</a></li>
-<li><a href="./ref/Topten.RichTextKit.TextBlock.MaxOverhang">Topten.RichTextKit.TextBlock.MaxOverhang</a></li>
+<li>[P:Topten.RichTextKit.TextBlock.MaxOverhang]</li>
 <li><a href="./ref/Topten.RichTextKit.TextBlock.MeasuredOverhang">Topten.RichTextKit.TextBlock.MeasuredOverhang</a></li>
 </ul>
 <h2 id="going-deeper">Going Deeper</h2>

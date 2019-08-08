@@ -34,6 +34,12 @@ import: "../.common.page"
     <h2 id="structs">Structs</h2>
     <table class="name-description">
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.MappedSlice[T]"> MappedSlice&lt;T&gt;</a></td>
+                <td><p>Provides a mapped view of an underlying slice array, selecting arbitrary indicies
+from the source array</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T]"> Slice&lt;T&gt;</a></td>
                 <td><p>Represents a slice of an array</p>
 </td>

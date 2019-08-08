@@ -25,8 +25,7 @@ fonts used, and the supplied text.</p>
 
 <pre class="language-csharp"><code class="language-csharp">public SkiaSharp.SKRect MeasuredOverhang { get; }</code></pre>
 
-<h2 id="remarks">Remarks</h2><p>Currently only the left overhang is calculated.</p>
-<p>The return rectangle describes overhang amounts for each edge - not
+<h2 id="remarks">Remarks</h2><p>The return rectangle describes overhang amounts for each edge - not
 rectangle co-ordinates.</p>
 
 <h2 id="property-type">Property Type</h2>    <table class="name-description">

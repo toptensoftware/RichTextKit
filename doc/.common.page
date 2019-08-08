@@ -156,7 +156,6 @@ navTree:
               - text: Lines|./ref/Topten.RichTextKit.TextBlock.Lines
               - text: MaxHeight|./ref/Topten.RichTextKit.TextBlock.MaxHeight
               - text: MaxLines|./ref/Topten.RichTextKit.TextBlock.MaxLines
-              - text: MaxOverhang|./ref/Topten.RichTextKit.TextBlock.MaxOverhang
               - text: MaxWidth|./ref/Topten.RichTextKit.TextBlock.MaxWidth
               - text: MeasuredHeight|./ref/Topten.RichTextKit.TextBlock.MeasuredHeight
               - text: MeasuredOverhang|./ref/Topten.RichTextKit.TextBlock.MeasuredOverhang
@@ -234,12 +233,26 @@ navTree:
               - text: AsSlice|./ref/Topten.RichTextKit.Utils.Buffer[T].AsSlice
               - text: Clear|./ref/Topten.RichTextKit.Utils.Buffer[T].Clear
               - text: SubSlice|./ref/Topten.RichTextKit.Utils.Buffer[T].SubSlice
+      - text: MappedSlice<T>
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.Utils.MappedSlice[T]
+          - text: Constructors|./ref/Topten.RichTextKit.Utils.MappedSlice[T]..ctor
+          - text: Properties
+            subItems:
+              - text: Item|./ref/Topten.RichTextKit.Utils.MappedSlice[T].Item
+              - text: Length|./ref/Topten.RichTextKit.Utils.MappedSlice[T].Length
+              - text: Mapping|./ref/Topten.RichTextKit.Utils.MappedSlice[T].Mapping
+              - text: Underlying|./ref/Topten.RichTextKit.Utils.MappedSlice[T].Underlying
+          - text: Methods
+            subItems:
+              - text: ToArray|./ref/Topten.RichTextKit.Utils.MappedSlice[T].ToArray
       - text: Slice<T>
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.Utils.Slice[T]
           - text: Constructors|./ref/Topten.RichTextKit.Utils.Slice[T]..ctor
           - text: Properties
             subItems:
+              - text: Empty|./ref/Topten.RichTextKit.Utils.Slice[T].Empty
               - text: Item|./ref/Topten.RichTextKit.Utils.Slice[T].Item
               - text: Length|./ref/Topten.RichTextKit.Utils.Slice[T].Length
               - text: Start|./ref/Topten.RichTextKit.Utils.Slice[T].Start
@@ -247,6 +260,7 @@ navTree:
           - text: Methods
             subItems:
               - text: Clear|./ref/Topten.RichTextKit.Utils.Slice[T].Clear
+              - text: Fill|./ref/Topten.RichTextKit.Utils.Slice[T].Fill
               - text: SubSlice|./ref/Topten.RichTextKit.Utils.Slice[T].SubSlice
               - text: ToArray|./ref/Topten.RichTextKit.Utils.Slice[T].ToArray
       - text: Utf32Buffer

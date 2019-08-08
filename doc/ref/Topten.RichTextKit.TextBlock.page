@@ -84,11 +84,6 @@ ellipsis (<code>...</code>) character.</p>
 </td>
             </tr>
             <tr>
-                <td><a href="./../ref/Topten.RichTextKit.TextBlock.MaxOverhang">MaxOverhang</a></td>
-                <td><p>Returns the maximum possible overhang based on the fonts used in this text block</p>
-</td>
-            </tr>
-            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextBlock.MaxWidth">MaxWidth</a></td>
                 <td><p>The max width property sets the maximum width of a line, after which
 the line will be wrapped onto the next line.</p>

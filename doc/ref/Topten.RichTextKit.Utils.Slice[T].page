@@ -60,6 +60,11 @@ import: "../.common.page"
     <h2 id="properties">Properties</h2>
     <table class="name-description">
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T].Empty">Empty</a></td>
+                <td><p>A shared empty slice of type T</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T].Item">Item[int]</a></td>
                 <td><p>Gets a reference to an element in the slice</p>
 </td>
@@ -86,6 +91,11 @@ import: "../.common.page"
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T].Clear">Clear()</a></td>
                 <td><p>Clears the entire slice content</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T].Fill">Fill(T)</a></td>
+                <td><p>Fill the slice with a specified value</p>
 </td>
             </tr>
             <tr>

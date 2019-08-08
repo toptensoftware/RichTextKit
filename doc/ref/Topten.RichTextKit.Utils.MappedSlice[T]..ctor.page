@@ -1,0 +1,56 @@
+---
+title: "MappedSlice&lt;T&gt;..ctor"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">MappedSlice&lt;T&gt; Constructor</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.MappedSlice[T]">MappedSlice&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Constructs a new mapped array</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public MappedSlice(Slice&lt;T&gt; data, Slice&lt;int&gt; mapping);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;T&gt;</a> data
+                </td>
+                <td><p>The data to be mapped</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;int&gt;</a> mapping
+                </td>
+                <td><p>The index map</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
