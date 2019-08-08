@@ -76,6 +76,17 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
+        /// Copy data from another slice into this one
+        /// </summary>
+        /// <param name="Source">The source data</param>
+        public void Set(Slice<T> Source)
+        {
+            if (Source.Length != this.Length)
+                throw new ArgumentException("Slices must have the same length");
+            Array.Copy(Source.Underlying, Source.Start, Underlying, Start, Source.Length);
+        }
+
+        /// <summary>
         /// Gets a reference to an element in the slice
         /// </summary>
         /// <param name="index">The element index</param>

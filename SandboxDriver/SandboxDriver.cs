@@ -52,6 +52,7 @@ namespace SandboxDriver
             var styleScript = new Style() { FontFamily = "Segoe Script", FontSize = 18 * Scale };
             var styleHeading = new Style() { FontFamily = typefaceName, FontSize = 24 * Scale, FontWeight = 700 };
             var styleNormal = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, LineHeight = 1.0f };
+            var styleLTR = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, TextDirection = TextDirection.LTR };
             var styleBold = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, FontWeight = 700 };
             var styleUnderline = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, Underline = UnderlineStyle.Gapped };
             var styleStrike = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, StrikeThrough = StrikeThroughStyle.Solid };
@@ -152,7 +153,10 @@ namespace SandboxDriver
                     break;
 
                 case 5:
-                    _textBlock.AddText("مرحبا بالعالم.  هذا هو اختبار التفاف الخط للتأكد من \u2066ACME Inc.\u2069 أنه يعمل للغات من اليمين إلى اليسار.", styleNormal);
+                    //_textBlock.AddText("مرحبا بالعالم.  هذا هو اختبار التفاف الخط للتأكد من \u2066ACME Inc.\u2069 أنه يعمل للغات من اليمين إلى اليسار.", styleNormal);
+                    _textBlock.AddText("مرحبا بالعالم.  هذا هو اختبار التفاف الخط للتأكد من ", styleNormal);
+                    _textBlock.AddText("ACME Inc.", styleLTR);
+                    _textBlock.AddText(" أنه يعمل للغات من اليمين إلى اليسار.", styleNormal);
                     break;
 
                 case 6:

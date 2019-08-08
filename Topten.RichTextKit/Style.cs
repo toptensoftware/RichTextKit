@@ -100,6 +100,6 @@ namespace Topten.RichTextKit
         {
             get;
             set;
-        }
+        } = TextDirection.Auto;
     }
 }

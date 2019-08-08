@@ -137,6 +137,32 @@ namespace Topten.RichTextKit
         Buffer<Directionality> _types;
         Buffer<PairedBracketType> _pairedBracketTypes;
         Buffer<int> _pairedBracketValues;
+        Buffer<Directionality> _savedTypes;
+        Buffer<PairedBracketType> _savedPairedBracketTypes;
+
+        public void SaveTypes()
+        {
+            // Make sure we have a buffer
+            if (_savedTypes == null)
+            {
+                _savedTypes = new Buffer<Directionality>();
+                _savedPairedBracketTypes = new Buffer<PairedBracketType>();
+            }
+
+            // Capture the types data
+            _savedTypes.Clear();
+            _savedTypes.Add(_types.AsSlice());
+            _savedPairedBracketTypes.Clear();
+            _savedPairedBracketTypes.Add(_pairedBracketTypes.AsSlice());
+        }
+
+        public void RestoreTypes()
+        {
+            _types.Clear();
+            _types.Add(_savedTypes.AsSlice());
+            _pairedBracketTypes.Clear();
+            _pairedBracketTypes.Add(_savedPairedBracketTypes.AsSlice());
+        }
 
         /// <summary>
         /// The directionality of each code point
@@ -159,5 +185,16 @@ namespace Topten.RichTextKit
         /// to their canonical equivalents
         /// </remarks>
         public Slice<int> PairedBracketValues;
+
+        public Buffer<sbyte> _tempLevelBuffer;
+
+        public Slice<sbyte> GetTempLevelBuffer(int length)
+        {
+            if (_tempLevelBuffer == null)
+                _tempLevelBuffer = new Buffer<sbyte>();
+
+            _tempLevelBuffer.Clear();
+            return _tempLevelBuffer.Add(length, false);
+        }
     }
 }

@@ -711,7 +711,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Reusable buffer for bidi data
         /// </summary>
-        BidiData bidiData = new BidiData();
+        BidiData _bidiData = new BidiData();
 
         /// <summary>
         /// A list of style runs, as supplied by user
@@ -778,24 +778,74 @@ namespace Topten.RichTextKit
         /// </summary>
         void BuildFontRuns()
         {
-            /*
-            sbyte paragraphEmbeddingLevel = 0;
-            if (BaseDirection == TextDirection.RTL && !_useMSWordStyleRtlLayout)
-            {
-                paragraphEmbeddingLevel = 1;
-            }
-            */
-
             // Break supplied text into directionality runs
-            bidiData.Init(_codePoints.AsSlice(), (sbyte)_baseDirection);
+            _bidiData.Init(_codePoints.AsSlice(), (sbyte)_baseDirection);
+        
+            // If we have embedded directional overrides then change those
+            // ranges to neutral
+            if (_hasTextDirectionOverrides)
+            {
+                // Save types
+                _bidiData.SaveTypes();
+
+                for (int i = 0; i < _styleRuns.Count; i++)
+                {
+                    // Get the run
+                    var sr = _styleRuns[i];
+                    
+                    // Does it have a direction override?
+                    if (sr.Style.TextDirection == TextDirection.Auto)
+                        continue;
+
+                    // Change the range to neutral with no brackets
+                    _bidiData.Types.SubSlice(sr.Start, sr.Length).Fill(Directionality.ON);
+                    _bidiData.PairedBracketTypes.SubSlice(sr.Start, sr.Length).Fill(PairedBracketType.n);
+                }
+            }
 
             // Process bidi
-            _bidi.Process(bidiData);
+            _bidi.Process(_bidiData);
+
+            var resolvedLevels = _bidi.ResolvedLevels;
 
             // Get resolved direction
             _resolvedBaseDirection = (TextDirection)_bidi.ResolvedParagraphEmbeddingLevel;
 
-            var bidiRuns = BidiRun.CoalescLevels(_bidi.ResolvedLevels).ToList();
+            // Now process the embedded runs
+            if (_hasTextDirectionOverrides)
+            {
+                // Restore types
+                _bidiData.RestoreTypes();
+
+                // Process each run individually
+                for (int i = 0; i < _styleRuns.Count; i++)
+                {
+                    // Get the run
+                    var sr = _styleRuns[i];
+
+                    // Does it have a direction override?
+                    if (sr.Style.TextDirection == TextDirection.Auto)
+                        continue;
+                    
+                    // Get the style run bidi data
+                    var types = _bidiData.Types.SubSlice(sr.Start, sr.Length);
+                    var pbts = _bidiData.PairedBracketTypes.SubSlice(sr.Start, sr.Length);
+                    var pbvs = _bidiData.PairedBracketValues.SubSlice(sr.Start, sr.Length);
+
+                    // Get a temp buffer to store the results
+                    // (We can't use the Bidi's built in buffer because we're about to patch it)
+                    var levels = _bidiData.GetTempLevelBuffer(sr.Length);
+
+                    // Process this style run
+                    _bidi.Process(types, pbts, pbvs, (sbyte)sr.Style.TextDirection, _bidiData.HasBrackets, _bidiData.HasEmbeddings, _bidiData.HasIsolates, levels);
+
+                    // Copy result levels back to the full level set
+                    resolvedLevels.SubSlice(sr.Start, sr.Length).Set(levels);
+                }
+            }
+
+            // Get the list of directional runs
+            var bidiRuns = BidiRun.CoalescLevels(resolvedLevels).ToList();
 
             // Split...
             var pos = 0;
