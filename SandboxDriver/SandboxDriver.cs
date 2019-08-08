@@ -7,7 +7,7 @@ namespace SandboxDriver
 {
     public class SandboxDriver
     {
-        public int ContentModeCount = 10;
+        public int ContentModeCount = 11;
         public int ContentMode = 0;
         public TextDirection BaseDirection = TextDirection.LTR;
         public TextAlignment TextAlignment = TextAlignment.Auto;
@@ -183,6 +183,10 @@ namespace SandboxDriver
 
                 case 9:
                     _textBlock.AddText("Hello World", styleNormal);
+                    break;
+
+                case 10:
+                    _textBlock.AddText("", styleNormal);
                     break;
 
             }

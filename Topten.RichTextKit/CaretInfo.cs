@@ -52,7 +52,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// The X-coordinate where the caret should be displayed for this code point.
         /// </summary>
-        public float CaretXCoord => FontRun.GetXCoordOfCodePointIndex(CodePointIndex);
+        public float CaretXCoord => CodePointIndex < 0 ? 0 : FontRun.GetXCoordOfCodePointIndex(CodePointIndex);
 
         /// <summary>
         /// A rectangle describing where the caret should be drawn, relative to the top-left
@@ -79,6 +79,9 @@ namespace Topten.RichTextKit
         {
             get
             {
+                if (CodePointIndex < 0)
+                    return SKRect.Empty;
+
                 // Get the font run to be used for caret metrics
                 var fr = GetFontRunForCaretMetrics();
 

@@ -248,14 +248,18 @@ namespace Topten.RichTextKit
             _minLeftMargin = 0;
             _requiredLeftMargin = null;
 
-            // Build font runs
-            BuildFontRuns();
+            // Only layout if actually have some text
+            if (_codePoints.Length != 0)
+            {
+                // Build font runs
+                BuildFontRuns();
 
-            // Break font runs into lines
-            BreakLines();
+                // Break font runs into lines
+                BreakLines();
 
-            // Finalize lines
-            FinalizeLines();
+                // Finalize lines
+                FinalizeLines();
+            }
         }
 
         /// <summary>
@@ -609,6 +613,18 @@ namespace Topten.RichTextKit
         /// <returns>A CaretInfo struct</returns>
         public CaretInfo GetCaretInfo(int codePointIndex)
         {
+            if (_codePoints.Length == 0 || codePointIndex < 0)
+            {
+                return new CaretInfo()
+                {
+                    CodePointIndex = -1,
+                    NextCodePointIndex = -1,
+                    PreviousCodePointIndex = -1,
+                    FontRun = null,
+                    StyleRun = null,
+                };
+            }
+
             // Look up the caret index
             int cpii = LookupCaretIndex(codePointIndex);
 
@@ -1475,6 +1491,11 @@ namespace Topten.RichTextKit
         void AdornLineWithEllipsis(TextLine line)
         {
             var lastRun = line.Runs[line.Runs.Count - 1];
+
+            // Don't add ellipsis if the last run actually
+            // has all the text...
+            if (lastRun.End == _codePoints.Length)
+                return;
 
             // Remove all trailing whitespace from the line
             for (int i = line.Runs.Count - 1; i >= 0; i--)
