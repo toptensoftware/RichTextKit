@@ -11,7 +11,6 @@ namespace SandboxDriver
         public int ContentMode = 0;
         public TextDirection BaseDirection = TextDirection.LTR;
         public TextAlignment TextAlignment = TextAlignment.Auto;
-        public bool UseMSWordStyleRTLLayout = false;
         public float Scale = 1.0f;
         public bool UseMaxWidth = true;
         public bool UseMaxHeight = false;
@@ -70,7 +69,6 @@ namespace SandboxDriver
 
             _textBlock.BaseDirection = BaseDirection;
             _textBlock.Alignment = TextAlignment;
-            _textBlock.UseMSWordStyleRTLLayout = UseMSWordStyleRTLLayout;
 
             switch (ContentMode)
             {
@@ -272,7 +270,7 @@ namespace SandboxDriver
                 }
             }
 
-            var state = $"Size: {width} x {height} Base Direction: {BaseDirection} Alignment: {TextAlignment} Content: {ContentMode} scale: {Scale} time: {elapsed} msword: {UseMSWordStyleRTLLayout}";
+            var state = $"Size: {width} x {height} Base Direction: {BaseDirection} Alignment: {TextAlignment} Content: {ContentMode} scale: {Scale} time: {elapsed}";
             canvas.DrawText(state, margin, 20, new SKPaint()
             {
                 Typeface = SKTypeface.FromFamilyName("Arial"),

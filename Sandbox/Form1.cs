@@ -64,7 +64,10 @@ namespace Sandbox
                 case Keys.Left:
                     if (e.Modifiers.HasFlag(Keys.Control))
                     {
-                        _driver.BaseDirection = TextDirection.LTR;
+                        if (_driver.BaseDirection == TextDirection.RTL)
+                            _driver.BaseDirection = TextDirection.LTR;
+                        else if (_driver.BaseDirection == TextDirection.LTR)
+                            _driver.BaseDirection = TextDirection.Auto;
                     }
                     else
                     {
@@ -78,7 +81,10 @@ namespace Sandbox
                 case Keys.Right:
                     if (e.Modifiers.HasFlag(Keys.Control))
                     {
-                        _driver.BaseDirection = TextDirection.RTL;
+                        if (_driver.BaseDirection == TextDirection.Auto)
+                            _driver.BaseDirection = TextDirection.LTR;
+                        else if (_driver.BaseDirection == TextDirection.LTR)
+                            _driver.BaseDirection = TextDirection.RTL;
                     }
                     else
                     {
@@ -98,11 +104,6 @@ namespace Sandbox
                     _driver.Scale -= 0.1f;
                     if (_driver.Scale < 0.5f)
                         _driver.Scale = 0.5f;
-                    Invalidate();
-                    break;
-
-                case Keys.Z:
-                    _driver.UseMSWordStyleRTLLayout = !_driver.UseMSWordStyleRTLLayout;
                     Invalidate();
                     break;
 

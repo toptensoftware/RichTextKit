@@ -135,22 +135,6 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// Use MS Word style RTL layout
-        /// </summary>
-        public bool UseMSWordStyleRTLLayout
-        {
-            get => _useMSWordStyleRtlLayout;
-            set
-            {
-                if (_useMSWordStyleRtlLayout != value)
-                {
-                    _useMSWordStyleRtlLayout = value;
-                    InvalidateLayout();
-                }
-            }
-        }
-
-        /// <summary>
         /// Clear the content of this text block
         /// </summary>
         public void Clear()
@@ -162,6 +146,7 @@ namespace Topten.RichTextKit
             TextLine.Pool.ReturnAndClear(_lines);
             _textShapingBuffers.Clear();
             InvalidateLayout();
+            _hasTextDirectionOverrides = false;
         }
 
         /// <summary>
@@ -185,14 +170,13 @@ namespace Topten.RichTextKit
             run.Start = utf32.Start;
             run.Length = utf32.Length;
             run.Style = style;
+            _hasTextDirectionOverrides |= style.TextDirection != TextDirection.Auto;
 
             // Add run
             _styleRuns.Add(run);
 
             return run;
         }
-
-        List<StyleRun> _styledRunPool = new List<StyleRun>();
 
         /// <summary>
         /// Add text to this paragraph
@@ -208,14 +192,13 @@ namespace Topten.RichTextKit
             var utf32 = _codePoints.Add(text);
 
             // Create a run
-            var run = new StyleRun()
-            {
-                TextBlock = this,
-                CodePointBuffer = _codePoints,
-                Start = utf32.Start,
-                Length = utf32.Length,
-                Style = style,
-            };
+            var run = StyleRun.Pool.Get();
+            run.TextBlock = this;
+            run.CodePointBuffer = _codePoints;
+            run.Start = utf32.Start;
+            run.Length = utf32.Length;
+            run.Style = style;
+            _hasTextDirectionOverrides |= style.TextDirection != TextDirection.Auto;
 
             // Add run
             _styleRuns.Add(run);
@@ -698,18 +681,27 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Text alignment
         /// </summary>
-        TextAlignment _textAlignment = TextAlignment.Left;
+        TextAlignment _textAlignment = TextAlignment.Auto;
 
         /// <summary>
-        /// Base direction
+        /// Base direction as set by user
         /// </summary>
-        TextDirection _baseDirection = TextDirection.LTR;
+        TextDirection _baseDirection = TextDirection.Auto;
+
+        /// <summary>
+        /// Base direction as resolved if auto
+        /// </summary>
+        TextDirection _resolvedBaseDirection;
 
         /// <summary>
         /// All code points as supplied by user, accumulated into a single buffer
         /// </summary>
         Utf32Buffer _codePoints = new Utf32Buffer();
 
+        /// <summary>
+        /// Set to true if any style runs have a directionality override.
+        /// </summary>
+        bool _hasTextDirectionOverrides = false;
 
         /// <summary>
         /// Re-usable buffers for text shaping results
@@ -762,11 +754,6 @@ namespace Topten.RichTextKit
         List<TextLine> _lines = new List<TextLine>();
 
         /// <summary>
-        /// True to use MS Word style RTL layout
-        /// </summary>
-        bool _useMSWordStyleRtlLayout = false;
-
-        /// <summary>
         /// Calculated valid caret indicies
         /// </summary>
         List<int> _caretIndicies = new List<int>();
@@ -778,7 +765,7 @@ namespace Topten.RichTextKit
         TextAlignment ResolveTextAlignment()
         {
             if (_textAlignment == TextAlignment.Auto)
-                return BaseDirection == TextDirection.LTR ? TextAlignment.Left : TextAlignment.Right;
+                return _resolvedBaseDirection == TextDirection.LTR ? TextAlignment.Left : TextAlignment.Right;
             else
                 return _textAlignment;
         }
@@ -791,17 +778,22 @@ namespace Topten.RichTextKit
         /// </summary>
         void BuildFontRuns()
         {
+            /*
             sbyte paragraphEmbeddingLevel = 0;
-
             if (BaseDirection == TextDirection.RTL && !_useMSWordStyleRtlLayout)
             {
                 paragraphEmbeddingLevel = 1;
             }
+            */
 
             // Break supplied text into directionality runs
-            bidiData.Init(_codePoints.AsSlice(), paragraphEmbeddingLevel);
+            bidiData.Init(_codePoints.AsSlice(), (sbyte)_baseDirection);
 
+            // Process bidi
             _bidi.Process(bidiData);
+
+            // Get resolved direction
+            _resolvedBaseDirection = (TextDirection)_bidi.ResolvedParagraphEmbeddingLevel;
 
             var bidiRuns = BidiRun.CoalescLevels(_bidi.ResolvedLevels).ToList();
 
@@ -1101,10 +1093,10 @@ namespace Topten.RichTextKit
                 {
                     var fr = _fontRuns[i];
                     fr.RunKind = FontRunKind.TrailingWhitespace;
-                    if (fr.Direction != BaseDirection)
+                    if (fr.Direction != _resolvedBaseDirection)
                     {
                         // Create a new font run over the same text span but using the base direction
-                        _fontRuns[i] = CreateFontRun(fr.StyleRun, fr.CodePoints, BaseDirection, fr.Style, fr.Typeface);
+                        _fontRuns[i] = CreateFontRun(fr.StyleRun, fr.CodePoints, _resolvedBaseDirection, fr.Style, fr.Typeface);
                     }
                 }
 
@@ -1131,17 +1123,19 @@ namespace Topten.RichTextKit
             float xAdjust;
 
             // Which direction?
-            if (BaseDirection == TextDirection.LTR)
+            if (_resolvedBaseDirection == TextDirection.LTR)
             {
                 xAdjust = LayoutLineLTR(line);
             }
             else
             {
+                /*
                 if (_useMSWordStyleRtlLayout)
                 {
                     xAdjust = LayoutLineRTLWordStyle(line);
                 }
                 else
+                */
                 {
                     xAdjust = LayoutLineRTL(line);
                 }
@@ -1440,7 +1434,7 @@ namespace Topten.RichTextKit
             var fontRun = FontFallback.GetFontRuns(ellipsis.AsSlice(), typeface).Single();
 
             // Create the new run and mark is as a special run type for ellipsis
-            var fr = CreateFontRun(basedOn.StyleRun, ellipsis.SubSlice(fontRun.Start, fontRun.Length), BaseDirection, basedOn.Style, fontRun.Typeface);
+            var fr = CreateFontRun(basedOn.StyleRun, ellipsis.SubSlice(fontRun.Start, fontRun.Length), _resolvedBaseDirection, basedOn.Style, fontRun.Typeface);
             fr.RunKind = FontRunKind.Ellipsis;
 
             // Done

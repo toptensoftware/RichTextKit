@@ -99,11 +99,13 @@ namespace Topten.RichTextKit
                         break;
                 }
 
+                /*
                 if (_types[i] == RichTextKit.Directionality.B)
                 {
-                    _types[i] = (Directionality)_paragraphEmbeddingLevel;
+                    _types[i] = (Directionality)Directionality.WS;
                     _paragraphPositions.Add(i);
                 }
+                */
             }
 
             // Create slices on work buffers

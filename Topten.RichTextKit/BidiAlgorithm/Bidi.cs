@@ -52,7 +52,7 @@ namespace Topten.RichTextKit
         /// <param name="data"></param>
         public void Process(BidiData data)
         {
-            Process(data.Types, data.PairedBracketTypes, data.PairedBracketValues, data.ParagraphEmbeddingLevel, data.HasBrackets, data.HasEmbeddings, data.HasIsolates);
+            Process(data.Types, data.PairedBracketTypes, data.PairedBracketValues, data.ParagraphEmbeddingLevel, data.HasBrackets, data.HasEmbeddings, data.HasIsolates, null);
         }
 
         /// <summary>
@@ -65,7 +65,8 @@ namespace Topten.RichTextKit
             sbyte paragraphEmbeddingLevel,
             bool? hasBrackets,
             bool? hasEmbeddings,
-            bool? hasIsolates
+            bool? hasIsolates,
+            Slice<sbyte>? outLevels
             )
         {
             // Reset state
@@ -97,8 +98,17 @@ namespace Topten.RichTextKit
                 _paragraphEmbeddingLevel = paragraphEmbeddingLevel;
 
             // Create resolved levels buffer
-            _resolvedLevels = _resolvedLevelsBuffer.Add(_originalTypes.Length);
-            _resolvedLevels.Fill(_paragraphEmbeddingLevel);
+            if (outLevels.HasValue)
+            {
+                if (outLevels.Value.Length != _originalTypes.Length)
+                    throw new ArgumentException("Out levels must be the same length as the input data");
+                _resolvedLevels = outLevels.Value;
+            }
+            else
+            {
+                _resolvedLevels = _resolvedLevelsBuffer.Add(_originalTypes.Length);
+                _resolvedLevels.Fill(_paragraphEmbeddingLevel);
+            }
 
             // Resolve explicit embedding levels (Rules X1-X8)
             ResolveExplicitEmbeddingLevels();
@@ -520,7 +530,7 @@ namespace Topten.RichTextKit
         /// </summary>
         /// <param name="data">The data to be evaluated</param>
         /// <returns>The resolved embedding level</returns>
-        sbyte ResolveEmbeddingLevel(Slice<Directionality> data)
+        public sbyte ResolveEmbeddingLevel(Slice<Directionality> data)
         {
             // P2
             for (var i = 0; i < data.Length; ++i)

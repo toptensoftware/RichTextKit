@@ -57,5 +57,10 @@ namespace Topten.RichTextKit
         /// The font variant (ie: super/sub-script) for text in this run.
         /// </summary>
         FontVariant FontVariant { get; }
+
+        /// <summary>
+        /// Text direction override for this span
+        /// </summary>
+        TextDirection TextDirection { get; }
     }
 }

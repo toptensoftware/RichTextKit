@@ -20,5 +20,10 @@ namespace Topten.RichTextKit
         /// Right to left.
         /// </summary>
         RTL,
+
+        /// <summary>
+        /// Automatic
+        /// </summary>
+        Auto,
     }
 }

@@ -92,5 +92,14 @@ namespace Topten.RichTextKit
             get;
             set;
         }
+
+        /// <summary>
+        /// Text direction override for this span
+        /// </summary>
+        public TextDirection TextDirection
+        {
+            get;
+            set;
+        }
     }
 }

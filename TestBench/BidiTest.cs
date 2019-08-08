@@ -122,7 +122,7 @@ namespace TestBench
                 // Run the algorithm...
                 Slice<sbyte> resultLevels;
                 tr.EnterTest();
-                bidi.Process(t.Types, Slice<PairedBracketType>.Empty, Slice<int>.Empty, t.ParagraphEmbeddingLevel, false, null, null);
+                bidi.Process(t.Types, Slice<PairedBracketType>.Empty, Slice<int>.Empty, t.ParagraphEmbeddingLevel, false, null, null, null);
                 tr.LeaveTest();
                 resultLevels = bidi.ResolvedLevels;
 
