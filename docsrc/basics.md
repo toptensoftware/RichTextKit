@@ -98,11 +98,14 @@ Algorithm ([UAX #9](http://www.unicode.org/reports/tr9/)) and each text block
 has a "base direction" that controls the default layout order of text in that 
 paragraph.
 
-Embedded control characters (as specifed by UAX #9) can be used to control 
-bi-directional text formatting. Specifying the text direction of a text run 
-through styles is currently not supported and embedded control characters 
-must be used.
+The text direction of spans within the text block can be controlled using
+either:
 
+* Embedded control characters (as specifed by UAX #9)
+* By setting the text direction of style runs (See the [T:Topten.RichTextKit.IStyle])
+
+When setting text direction property on style runs, the text is processed
+in the same manner as an "isolating sequence" as described in UAX #9.
 
 ## UTF-16, UTF-32, Code Points and Clusters
 

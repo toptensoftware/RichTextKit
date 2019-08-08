@@ -63,10 +63,14 @@ left-to-right and right-to-left based languages.</p>
 Algorithm (<a href="http://www.unicode.org/reports/tr9/">UAX #9</a>) and each text block
 has a &quot;base direction&quot; that controls the default layout order of text in that
 paragraph.</p>
-<p>Embedded control characters (as specifed by UAX #9) can be used to control
-bi-directional text formatting. Specifying the text direction of a text run
-through styles is currently not supported and embedded control characters
-must be used.</p>
+<p>The text direction of spans within the text block can be controlled using
+either:</p>
+<ul>
+<li>Embedded control characters (as specifed by UAX #9)</li>
+<li>By setting the text direction of style runs (See the <a href="./ref/Topten.RichTextKit.IStyle">IStyle</a>)</li>
+</ul>
+<p>When setting text direction property on style runs, the text is processed
+in the same manner as an &quot;isolating sequence&quot; as described in UAX #9.</p>
 <h2 id="utf-16-utf-32-code-points-and-clusters">UTF-16, UTF-32, Code Points and Clusters</h2>
 <p>Internally, RichTextKit works with UTF-32 encoded text.  Specifically it uses the
 <code>int</code> type to represent a character rather than the <code>char</code> type.</p>
