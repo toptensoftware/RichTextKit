@@ -1,0 +1,63 @@
+---
+title: "FontMapper.TypefaceFromStyle"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">FontMapper.TypefaceFromStyle Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.FontMapper">FontMapper</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Maps a given style to a specific typeface</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public virtual SkiaSharp.SKTypeface TypefaceFromStyle(IStyle style, bool ignoreFontVariants);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.IStyle">IStyle</a> style
+                </td>
+                <td><p>The style to be mapped</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Boolean">bool</a> ignoreFontVariants
+                </td>
+                <td><p>Indicates the mapping should ignore font variants (use to get font for ellipsis)</p>
+</td>
+            </tr>
+    </table>
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td>SkiaSharp.SKTypeface</td>
+            <td><p>A mapped typeface</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

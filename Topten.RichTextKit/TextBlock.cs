@@ -886,7 +886,20 @@ namespace Topten.RichTextKit
         /// <returns>The Skia typeface</returns>
         SKTypeface TypefaceFromStyle(IStyle style, bool ignoreFontVariants = false)
         {
-            return FontMapper.Default.TypefaceFromStyle(style, ignoreFontVariants);
+            return (FontMapper ?? FontMapper.Default).TypefaceFromStyle(style, ignoreFontVariants);
+        }
+
+
+        /// <summary>
+        /// Gets or sets the font mapper to be used by this TextBlock instance
+        /// </summary>
+        /// <remarks>
+        /// When null, the default font mapper (FontMapper.Default) is used.
+        /// </remarks>
+        public FontMapper FontMapper
+        {
+            get;
+            set;
         }
 
         /// <summary>

@@ -60,6 +60,11 @@ left to right, or right to left)</p>
 </td>
             </tr>
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.FontMapper">FontMapper</a></td>
+                <td><p>Gets or sets the font mapper to be used by this TextBlock instance</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextBlock.FontRuns">FontRuns</a></td>
                 <td><p>Get all font runs for this text block</p>
 </td>

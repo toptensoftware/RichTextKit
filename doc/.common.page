@@ -46,6 +46,16 @@ navTree:
               - text: CaretRectangle|./ref/Topten.RichTextKit.CaretInfo.CaretRectangle
               - text: CaretXCoord|./ref/Topten.RichTextKit.CaretInfo.CaretXCoord
               - text: CodePointCount|./ref/Topten.RichTextKit.CaretInfo.CodePointCount
+      - text: FontMapper
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.FontMapper
+          - text: Constructors|./ref/Topten.RichTextKit.FontMapper..ctor
+          - text: Fields
+            subItems:
+              - text: Default|./ref/Topten.RichTextKit.FontMapper.Default
+          - text: Methods
+            subItems:
+              - text: TypefaceFromStyle|./ref/Topten.RichTextKit.FontMapper.TypefaceFromStyle
       - text: FontRun
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.FontRun
@@ -154,6 +164,7 @@ navTree:
               - text: Alignment|./ref/Topten.RichTextKit.TextBlock.Alignment
               - text: BaseDirection|./ref/Topten.RichTextKit.TextBlock.BaseDirection
               - text: CaretIndicies|./ref/Topten.RichTextKit.TextBlock.CaretIndicies
+              - text: FontMapper|./ref/Topten.RichTextKit.TextBlock.FontMapper
               - text: FontRuns|./ref/Topten.RichTextKit.TextBlock.FontRuns
               - text: Lines|./ref/Topten.RichTextKit.TextBlock.Lines
               - text: MaxHeight|./ref/Topten.RichTextKit.TextBlock.MaxHeight

@@ -1,0 +1,39 @@
+---
+title: "TextBlock.FontMapper"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 data-nav-secondary-text="Definition" id="definition">TextBlock.FontMapper Property</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.TextBlock">TextBlock</a><br />
+                        </small>
+</p>
+
+
+
+
+<p>Gets or sets the font mapper to be used by this TextBlock instance</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public FontMapper FontMapper { get; set; }</code></pre>
+
+<h2 id="remarks">Remarks</h2><p>When null, the default font mapper (FontMapper.Default) is used.</p>
+
+<h2 id="property-type">Property Type</h2>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.FontMapper">FontMapper</a></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+

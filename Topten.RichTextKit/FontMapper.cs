@@ -43,8 +43,15 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// The default font mapper instance.  Can be replaced to change the default font mapping algorithm
+        /// The default font mapper instance.  
         /// </summary>
+        /// <remarks>
+        /// The default font mapper is used by any TextBlocks that don't 
+        /// have an explicit font mapper set (see the <see cref="TextBlock.FontMapper"/> property).
+        /// 
+        /// Replacing the default font mapper allows changing the font mapping
+        /// for all text blocks that don't have an explicit mapper assigned.
+        /// </remarks>
         public static FontMapper Default = new FontMapper();
     }
 }
