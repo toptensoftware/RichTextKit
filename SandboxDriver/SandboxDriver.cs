@@ -7,8 +7,15 @@ namespace SandboxDriver
 {
     public class SandboxDriver
     {
-        public int ContentModeCount = 11;
-        public int ContentMode = 0;
+        public SandboxDriver()
+        {
+            FontMapper.Default = new SandboxFontMapper();
+        }
+
+        SKTypeface _fontAwesome;
+
+        public int ContentModeCount = 12;
+        public int ContentMode = 11;
         public TextDirection BaseDirection = TextDirection.LTR;
         public TextAlignment TextAlignment = TextAlignment.Auto;
         public float Scale = 1.0f;
@@ -62,6 +69,7 @@ namespace SandboxDriver
             var styleBoldLarge = new Style() { FontFamily = typefaceName, FontSize = 28 * Scale, FontWeight = 700 };
             var styleRed = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, TextColor = new SKColor(0xFFFF0000) };
             var styleBlue = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, TextColor = new SKColor(0xFF0000FF) };
+            var styleFontAwesome = new Style() { FontFamily = "FontAwesome", FontSize = 24 };
 
 
             _textBlock.Clear();
@@ -191,6 +199,10 @@ namespace SandboxDriver
                     _textBlock.AddText("", styleNormal);
                     break;
 
+                case 11:
+                    _textBlock.AddText("\uF06B", styleFontAwesome);
+                    break;
+
             }
 
             var sw = new Stopwatch();
@@ -279,6 +291,7 @@ namespace SandboxDriver
             {
                 Typeface = SKTypeface.FromFamilyName("Arial"),
                 TextSize = 12,
+                IsAntialias = true,
             });
 
             state = $"Selection: {options.SelectionStart}-{options.SelectionEnd} Closest: {(htr.HasValue ? htr.Value.ClosestCodePointIndex.ToString() : "-")}";
@@ -286,6 +299,7 @@ namespace SandboxDriver
             {
                 Typeface = SKTypeface.FromFamilyName("Arial"),
                 TextSize = 12,
+                IsAntialias = true,
             });
         }
 
