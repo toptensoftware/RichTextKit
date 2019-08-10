@@ -886,21 +886,13 @@ namespace Topten.RichTextKit
         /// <returns>The Skia typeface</returns>
         SKTypeface TypefaceFromStyle(IStyle style, bool ignoreFontVariants = false)
         {
-            // Extra weight for superscript/subscript
-            int extraWeight = 0;
-            if (!ignoreFontVariants && (style.FontVariant == FontVariant.SuperScript || style.FontVariant == FontVariant.SubScript))
-            {
-                extraWeight += 100;
-            }
-
-            // Get the typeface
-            return SKTypeface.FromFamilyName(
-                style.FontFamily, 
-                (SKFontStyleWeight)(style.FontWeight + extraWeight), 
-                0, 
-                style.FontItalic ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright
-                );
+            return FontMapper.TypefaceFromStyle(style, ignoreFontVariants);
         }
+
+        /// <summary>
+        /// A font mapper instance responsible for mapping typeface names to typeface instances
+        /// </summary>
+        public FontMapper FontMapper = FontMapper.Default;
 
         /// <summary>
         /// Adds a run of directional text
