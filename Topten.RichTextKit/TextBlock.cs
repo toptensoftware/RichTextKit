@@ -1623,5 +1623,32 @@ namespace Topten.RichTextKit
             return true;
         }
 
+        /// <summary>
+        /// Resets and internal object and memory pools.
+        /// </summary>
+        /// <remarks>
+        /// For performance reasons and to reduce pressure on the 
+        /// garbage collector, RichTextKit maintains several internal
+        /// per-thread memory and object pools.
+        /// 
+        /// If you create a very large text block, these pools will be 
+        /// enlarged to cope with content of larger text blocks.
+        /// 
+        /// This method can be used to reset those pools to reclaim the 
+        /// extra memory they consumed.
+        /// 
+        /// In general you can ignore this method, unless you know you're
+        /// working with very large text blocks (which you shouldn't be
+        /// anyway, since a text block is only supposed to be a single
+        /// paragraph).
+        /// /// </remarks>
+        public static void ResetPooledMemory()
+        {
+            TextLine.Pool = new ObjectPool<TextLine>();
+            FontRun.Pool = new ObjectPool<FontRun>();
+            StyleRun.Pool = new ObjectPool<StyleRun>();
+            Bidi.Instance = new Bidi();
+        }
+
     }
 }
