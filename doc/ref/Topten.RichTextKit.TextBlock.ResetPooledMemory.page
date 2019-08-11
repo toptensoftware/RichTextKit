@@ -1,0 +1,50 @@
+---
+title: "TextBlock.ResetPooledMemory"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">TextBlock.ResetPooledMemory Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.TextBlock">TextBlock</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Resets and internal object and memory pools.</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public static void ResetPooledMemory();</code></pre>
+
+<h2 id="remarks">Remarks</h2><p>For performance reasons and to reduce pressure on the
+garbage collector, RichTextKit maintains several internal
+per-thread memory and object pools.</p>
+<p>If you create a very large text block, these pools will be
+enlarged to cope with content of larger text blocks.</p>
+<p>This method can be used to reset those pools to reclaim the
+extra memory they consumed.</p>
+<p>In general you can ignore this method, unless you know you're
+working with very large text blocks (which you shouldn't be
+anyway, since a text block is only supposed to be a single
+paragraph).
+///</p>
+
+
+
+
+
+
+
+

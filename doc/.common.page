@@ -185,6 +185,7 @@ navTree:
               - text: Layout|./ref/Topten.RichTextKit.TextBlock.Layout
               - text: LookupCaretIndex|./ref/Topten.RichTextKit.TextBlock.LookupCaretIndex
               - text: Paint|./ref/Topten.RichTextKit.TextBlock.Paint
+              - text: ResetPooledMemory|./ref/Topten.RichTextKit.TextBlock.ResetPooledMemory
       - text: TextDirection
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.TextDirection
