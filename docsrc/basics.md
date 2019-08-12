@@ -50,14 +50,14 @@ RichTextKit uses SkiaSharp's `MatchCharacter` function to resolve the typeface t
 use for font fallback.
 
 
-## Font Shaping
+## Text Shaping
 
 For most Latin based languages, rendering text is simply a matter of placing one glyph 
 after another in a left-to-right manner.  Other languages however require a more 
 complicated process that often involves drawing multiple glyphs for a single character.
-This process is called "font shaping".
+This process is called "text shaping".
 
-By default Skia (and therefore ShiaSharp) doesn't do font shaping and often displays 
+By default Skia (and therefore ShiaSharp) doesn't do text shaping and often displays 
 text incorrectly.  RichTextKit uses [HarfBuzz](https://www.freedesktop.org/wiki/Software/HarfBuzz/) 
 for text shaping.
 

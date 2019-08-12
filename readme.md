@@ -8,7 +8,7 @@ RichTextKit is a rich-text layout, measurement and rendering library for SkiaSha
 
 * Rich text layout
 * Supports most common font styles (bold, italic, underline, super/sub-script etc...)
-* Font shaping using HarfBuzzSharp
+* Text shaping using HarfBuzzSharp
 * Font fallback for emoji and int'l character sets
 * Bi-directional and LTR/RTL Text Support (UAX #9)
 * Unicode word-break algorithm (UAX #14)

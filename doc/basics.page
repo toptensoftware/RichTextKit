@@ -32,12 +32,12 @@ font doesn't contain the required glyphs.</p>
 include emoji glyphs), for most complex scripts (eg: Arabic) and Asian scripts.</p>
 <p>RichTextKit uses SkiaSharp's <code>MatchCharacter</code> function to resolve the typeface to
 use for font fallback.</p>
-<h2 id="font-shaping">Font Shaping</h2>
+<h2 id="text-shaping">Text Shaping</h2>
 <p>For most Latin based languages, rendering text is simply a matter of placing one glyph
 after another in a left-to-right manner.  Other languages however require a more
 complicated process that often involves drawing multiple glyphs for a single character.
-This process is called &quot;font shaping&quot;.</p>
-<p>By default Skia (and therefore ShiaSharp) doesn't do font shaping and often displays
+This process is called &quot;text shaping&quot;.</p>
+<p>By default Skia (and therefore ShiaSharp) doesn't do text shaping and often displays
 text incorrectly.  RichTextKit uses <a href="https://www.freedesktop.org/wiki/Software/HarfBuzz/">HarfBuzz</a>
 for text shaping.</p>
 <h2 id="font-runs">Font Runs</h2>
