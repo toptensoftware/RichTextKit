@@ -1125,11 +1125,6 @@ namespace Topten.RichTextKit
                 // Build the final line
                 BuildLine(frIndexStartOfLine, frSplitIndex, frTrailingWhiteSpaceIndex);
 
-                if (_lines.Count == 317)
-                {
-                    int x = 3;
-                }
-
                 // Reset for the next line
                 frSplitIndex = -1;
                 frIndex = frTrailingWhiteSpaceIndex;
@@ -1157,10 +1152,6 @@ namespace Topten.RichTextKit
         /// <param name="frTrailingWhiteSpaceIndex"></param>
         void BuildLine(int frIndexStartOfLine, int frSplitIndex, int frTrailingWhiteSpaceIndex)
         {
-            if (frTrailingWhiteSpaceIndex == frIndexStartOfLine)
-            {
-                int x = 3;
-            }
             // Create the line
             var line = TextLine.Pool.Get();
             line.TextBlock = this;
