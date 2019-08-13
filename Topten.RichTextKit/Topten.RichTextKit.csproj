@@ -7,13 +7,12 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
     <Authors>Topten Software</Authors>
-    <PackageLicenseUrl>https://www.toptensoftware.com/nuget_icon.png</PackageLicenseUrl>
+    <PackageLicenseUrl>https://www.toptensoftware.com/richtextkey/license</PackageLicenseUrl>
     <PackageProjectUrl>https://www.toptensoftware.com/richtextkit</PackageProjectUrl>
+    <PackageIconUrl>https://www.toptensoftware.com/nuget_icon.png</PackageIconUrl>
     <PackageTags>rich text, rich, text, Skia, SkiaSharp, Font</PackageTags>
     <Description>Easy to use rich text rendering for SkiaSharp, including font-fallback, bi-directional text support and more...</Description>
     <Company>Topten Software</Company>
-    <PackageLicenseUrl>https://www.toptensoftware.com/richtextkit</PackageLicenseUrl>
-    <PackageIconUrl>https://www.toptensoftware.com/nuget_icon.png</PackageIconUrl>
     <GenerateFullPaths>True</GenerateFullPaths>
   </PropertyGroup>
 
