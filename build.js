@@ -31,7 +31,7 @@ if (bt.options.official)
     bt.git_tag();
 
     // Push nuget package
-    bt.nupush(`./build/Release/Topten.RichTextKit/*.${bt.options.version.build}.nupkg`);
+    bt.nupush(`./build/Release/Topten.RichTextKit/*.${bt.options.version.build}.nupkg`, `https://api.nuget.org/v3/index.json`);
 }
 
 
