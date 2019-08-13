@@ -8,7 +8,7 @@
     <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
     <Authors>Topten Software</Authors>
     <PackageLicenseUrl>https://www.toptensoftware.com/richtextkey/license</PackageLicenseUrl>
-    <PackageProjectUrl>https://www.toptensoftware.com/richtextkit</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/toptensoftware/richtextkit</PackageProjectUrl>
     <PackageIconUrl>https://www.toptensoftware.com/nuget_icon.png</PackageIconUrl>
     <PackageTags>rich text, rich, text, Skia, SkiaSharp, Font</PackageTags>
     <Description>Easy to use rich text rendering for SkiaSharp, including font-fallback, bi-directional text support and more...</Description>
