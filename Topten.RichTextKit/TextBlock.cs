@@ -1023,6 +1023,8 @@ namespace Topten.RichTextKit
                 fr.XCoord = consumedWidth;
                 consumedWidth += fr.Width;
 
+                float totalWidthToThisBreakPoint = 0;
+
                 // Skip line breaks
                 bool breakLine = false;
                 while (lbrIndex < lineBreakPositions.Count)
@@ -1038,7 +1040,7 @@ namespace Topten.RichTextKit
                         break;
 
                     // Do we need to break
-                    var totalWidthToThisBreakPoint = fr.XCoord + fr.LeadingWidth(lbr.PositionMeasure);
+                    totalWidthToThisBreakPoint = fr.XCoord + fr.LeadingWidth(lbr.PositionMeasure);
                     if (totalWidthToThisBreakPoint > _maxWidthResolved)
                     {
                         breakLine = true;
@@ -1047,9 +1049,14 @@ namespace Topten.RichTextKit
 
                     // It fits, remember that
                     lbrIndex++;
-                    frSplitIndex = frIndex;
-                    codePointIndexSplit = lbr.PositionMeasure;
-                    codePointIndexWrap = lbr.PositionWrap;
+
+                    // Only mark that we have something that fits if we actually know something has (or will be) been consumed
+                    if (totalWidthToThisBreakPoint > 0 || lbr.PositionWrap > lbr.PositionMeasure)
+                    {
+                        frSplitIndex = frIndex;
+                        codePointIndexSplit = lbr.PositionMeasure;
+                        codePointIndexWrap = lbr.PositionWrap;
+                    }
 
                     if (lbr.Required)
                     {
@@ -1118,6 +1125,11 @@ namespace Topten.RichTextKit
                 // Build the final line
                 BuildLine(frIndexStartOfLine, frSplitIndex, frTrailingWhiteSpaceIndex);
 
+                if (_lines.Count == 317)
+                {
+                    int x = 3;
+                }
+
                 // Reset for the next line
                 frSplitIndex = -1;
                 frIndex = frTrailingWhiteSpaceIndex;
@@ -1145,6 +1157,10 @@ namespace Topten.RichTextKit
         /// <param name="frTrailingWhiteSpaceIndex"></param>
         void BuildLine(int frIndexStartOfLine, int frSplitIndex, int frTrailingWhiteSpaceIndex)
         {
+            if (frTrailingWhiteSpaceIndex == frIndexStartOfLine)
+            {
+                int x = 3;
+            }
             // Create the line
             var line = TextLine.Pool.Get();
             line.TextBlock = this;
