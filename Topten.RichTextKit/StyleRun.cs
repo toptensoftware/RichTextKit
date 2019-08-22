@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Topten.RichTextKit.Utils;
 
@@ -80,8 +81,7 @@ namespace Topten.RichTextKit
         /// </summary>
         internal Buffer<int> CodePointBuffer;
 
-        [ThreadStatic]
-        internal static ObjectPool<StyleRun> Pool = new ObjectPool<StyleRun>()
+        internal static ThreadLocal<ObjectPool<StyleRun>> Pool = new ThreadLocal<ObjectPool<StyleRun>>(() => new ObjectPool<StyleRun>()
         {
             Cleaner = (r) =>
             {
@@ -89,6 +89,6 @@ namespace Topten.RichTextKit
                 r.Style = null;
                 r.TextBlock = null;
             }
-        };
+        });
     }
 }

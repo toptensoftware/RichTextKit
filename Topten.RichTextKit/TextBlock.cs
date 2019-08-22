@@ -156,9 +156,9 @@ namespace Topten.RichTextKit
         {
             // Reset everything
             _codePoints.Clear();
-            StyleRun.Pool.ReturnAndClear(_styleRuns);
-            FontRun.Pool.ReturnAndClear(_fontRuns);
-            TextLine.Pool.ReturnAndClear(_lines);
+            StyleRun.Pool.Value.ReturnAndClear(_styleRuns);
+            FontRun.Pool.Value.ReturnAndClear(_fontRuns);
+            TextLine.Pool.Value.ReturnAndClear(_lines);
             _textShapingBuffers.Clear();
             InvalidateLayout();
             _hasTextDirectionOverrides = false;
@@ -179,7 +179,7 @@ namespace Topten.RichTextKit
             var utf32 = _codePoints.Add(text);
 
             // Create a run
-            var run = StyleRun.Pool.Get();
+            var run = StyleRun.Pool.Value.Get();
             run.TextBlock = this;
             run.CodePointBuffer = _codePoints;
             run.Start = utf32.Start;
@@ -207,7 +207,7 @@ namespace Topten.RichTextKit
             var utf32 = _codePoints.Add(text);
 
             // Create a run
-            var run = StyleRun.Pool.Get();
+            var run = StyleRun.Pool.Value.Get();
             run.TextBlock = this;
             run.CodePointBuffer = _codePoints;
             run.Start = utf32.Start;
@@ -786,7 +786,7 @@ namespace Topten.RichTextKit
         }
 
         // Use the shared Bidi algo instance
-        Bidi _bidi = Bidi.Instance;
+        Bidi _bidi = Bidi.Instance.Value;
 
         /// <summary>
         /// Split into runs based on directionality and style switch points
@@ -980,7 +980,7 @@ namespace Topten.RichTextKit
 
 
             // Create the run
-            var fontRun = FontRun.Pool.Get();
+            var fontRun = FontRun.Pool.Value.Get();
             fontRun.StyleRun = styleRun;
             fontRun.CodePointBuffer = _codePoints;
             fontRun.Start = codePoints.Start;
@@ -1153,7 +1153,7 @@ namespace Topten.RichTextKit
         void BuildLine(int frIndexStartOfLine, int frSplitIndex, int frTrailingWhiteSpaceIndex)
         {
             // Create the line
-            var line = TextLine.Pool.Get();
+            var line = TextLine.Pool.Value.Get();
             line.TextBlock = this;
             line.YCoord = _measuredHeight;
 
@@ -1651,10 +1651,10 @@ namespace Topten.RichTextKit
         /// /// </remarks>
         public static void ResetPooledMemory()
         {
-            TextLine.Pool = new ObjectPool<TextLine>();
-            FontRun.Pool = new ObjectPool<FontRun>();
-            StyleRun.Pool = new ObjectPool<StyleRun>();
-            Bidi.Instance = new Bidi();
+            TextLine.Pool.Value = new ObjectPool<TextLine>();
+            FontRun.Pool.Value = new ObjectPool<FontRun>();
+            StyleRun.Pool.Value = new ObjectPool<StyleRun>();
+            Bidi.Instance.Value = new Bidi();
         }
 
     }

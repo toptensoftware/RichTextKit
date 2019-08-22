@@ -16,6 +16,7 @@
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Topten.RichTextKit.Utils;
 
 namespace Topten.RichTextKit
@@ -319,7 +320,7 @@ namespace Topten.RichTextKit
             }
 
             // Create the other run
-            var newRun = FontRun.Pool.Get();
+            var newRun = FontRun.Pool.Value.Get();
             newRun.StyleRun = this.StyleRun;
             newRun.CodePointBuffer = this.CodePointBuffer;
             newRun.Direction = this.Direction;
@@ -388,7 +389,7 @@ namespace Topten.RichTextKit
             }
 
             // Create the other run
-            var newRun = FontRun.Pool.Get();
+            var newRun = FontRun.Pool.Value.Get();
             newRun.StyleRun = this.StyleRun;
             newRun.CodePointBuffer = this.CodePointBuffer;
             newRun.Direction = this.Direction;
@@ -616,8 +617,7 @@ namespace Topten.RichTextKit
             }
         }
 
-        [ThreadStatic]
-        internal static ObjectPool<FontRun> Pool = new ObjectPool<FontRun>()
+        internal static ThreadLocal<ObjectPool<FontRun>> Pool = new ThreadLocal<ObjectPool<FontRun>>(() => new ObjectPool<FontRun>()
         {
             Cleaner = (r) =>
             {
@@ -627,6 +627,6 @@ namespace Topten.RichTextKit
                 r.Typeface = null;
                 r.Line = null;
             }
-        };
+        });
     }
 }

@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using Topten.RichTextKit.Utils;
 
 namespace Topten.RichTextKit
@@ -41,8 +42,7 @@ namespace Topten.RichTextKit
         /// A per-thread instance that can be re-used as often
         /// as necessary.
         /// </summary>
-        [ThreadStatic]
-        public static Bidi Instance = new Bidi();
+        internal static ThreadLocal<Bidi> Instance = new ThreadLocal<Bidi>(() => new Bidi());
 
         /// <summary>
         /// Constructs a new instance of Bidi algorithm processor
