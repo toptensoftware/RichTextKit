@@ -156,9 +156,9 @@ namespace Topten.RichTextKit
         {
             // Reset everything
             _codePoints.Clear();
-            StyleRun.Pool.ReturnAndClear(_styleRuns);
-            FontRun.Pool.ReturnAndClear(_fontRuns);
-            TextLine.Pool.ReturnAndClear(_lines);
+            StyleRun.Pool.Value.ReturnAndClear(_styleRuns);
+            FontRun.Pool.Value.ReturnAndClear(_fontRuns);
+            TextLine.Pool.Value.ReturnAndClear(_lines);
             _textShapingBuffers.Clear();
             InvalidateLayout();
             _hasTextDirectionOverrides = false;
@@ -179,7 +179,7 @@ namespace Topten.RichTextKit
             var utf32 = _codePoints.Add(text);
 
             // Create a run
-            var run = StyleRun.Pool.Get();
+            var run = StyleRun.Pool.Value.Get();
             run.TextBlock = this;
             run.CodePointBuffer = _codePoints;
             run.Start = utf32.Start;
@@ -207,7 +207,7 @@ namespace Topten.RichTextKit
             var utf32 = _codePoints.Add(text);
 
             // Create a run
-            var run = StyleRun.Pool.Get();
+            var run = StyleRun.Pool.Value.Get();
             run.TextBlock = this;
             run.CodePointBuffer = _codePoints;
             run.Start = utf32.Start;
@@ -786,7 +786,7 @@ namespace Topten.RichTextKit
         }
 
         // Use the shared Bidi algo instance
-        Bidi _bidi = Bidi.Instance;
+        Bidi _bidi = Bidi.Instance.Value;
 
         /// <summary>
         /// Split into runs based on directionality and style switch points
@@ -981,7 +981,7 @@ namespace Topten.RichTextKit
 
 
             // Create the run
-            var fontRun = FontRun.Pool.Get();
+            var fontRun = FontRun.Pool.Value.Get();
             fontRun.StyleRun = styleRun;
             fontRun.CodePointBuffer = _codePoints;
             fontRun.Start = codePoints.Start;
@@ -1024,6 +1024,8 @@ namespace Topten.RichTextKit
                 fr.XCoord = consumedWidth;
                 consumedWidth += fr.Width;
 
+                float totalWidthToThisBreakPoint = 0;
+
                 // Skip line breaks
                 bool breakLine = false;
                 while (lbrIndex < lineBreakPositions.Count)
@@ -1039,7 +1041,7 @@ namespace Topten.RichTextKit
                         break;
 
                     // Do we need to break
-                    var totalWidthToThisBreakPoint = fr.XCoord + fr.LeadingWidth(lbr.PositionMeasure);
+                    totalWidthToThisBreakPoint = fr.XCoord + fr.LeadingWidth(lbr.PositionMeasure);
                     if (totalWidthToThisBreakPoint > _maxWidthResolved)
                     {
                         breakLine = true;
@@ -1048,9 +1050,14 @@ namespace Topten.RichTextKit
 
                     // It fits, remember that
                     lbrIndex++;
-                    frSplitIndex = frIndex;
-                    codePointIndexSplit = lbr.PositionMeasure;
-                    codePointIndexWrap = lbr.PositionWrap;
+
+                    // Only mark that we have something that fits if we actually know something has (or will be) been consumed
+                    if (totalWidthToThisBreakPoint > 0 || lbr.PositionWrap > lbr.PositionMeasure)
+                    {
+                        frSplitIndex = frIndex;
+                        codePointIndexSplit = lbr.PositionMeasure;
+                        codePointIndexWrap = lbr.PositionWrap;
+                    }
 
                     if (lbr.Required)
                     {
@@ -1147,7 +1154,7 @@ namespace Topten.RichTextKit
         void BuildLine(int frIndexStartOfLine, int frSplitIndex, int frTrailingWhiteSpaceIndex)
         {
             // Create the line
-            var line = TextLine.Pool.Get();
+            var line = TextLine.Pool.Value.Get();
             line.TextBlock = this;
             line.YCoord = _measuredHeight;
 
@@ -1648,10 +1655,10 @@ namespace Topten.RichTextKit
         /// /// </remarks>
         public static void ResetPooledMemory()
         {
-            TextLine.Pool = new ObjectPool<TextLine>();
-            FontRun.Pool = new ObjectPool<FontRun>();
-            StyleRun.Pool = new ObjectPool<StyleRun>();
-            Bidi.Instance = new Bidi();
+            TextLine.Pool.Value = new ObjectPool<TextLine>();
+            FontRun.Pool.Value = new ObjectPool<FontRun>();
+            StyleRun.Pool.Value = new ObjectPool<StyleRun>();
+            Bidi.Instance.Value = new Bidi();
         }
 
     }

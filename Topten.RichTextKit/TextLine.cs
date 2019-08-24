@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Topten.RichTextKit.Utils;
 
@@ -321,14 +322,13 @@ namespace Topten.RichTextKit
         /// </summary>
         internal List<FontRun> RunsInternal = new List<FontRun>();
 
-        [ThreadStatic]
-        internal static ObjectPool<TextLine> Pool = new ObjectPool<TextLine>()
+        internal static ThreadLocal<ObjectPool<TextLine>> Pool = new ThreadLocal<ObjectPool<TextLine>>(() => new ObjectPool<TextLine>()
         {
             Cleaner = (r) =>
             {
                 r.TextBlock = null;
                 r.RunsInternal.Clear();
             }
-        };
+        });
     }
 }
