@@ -941,7 +941,7 @@ namespace Topten.RichTextKit
             foreach (var fontRun in FontFallback.GetFontRuns(codePointsSlice, typeface))
             {
                 // Add this run
-                AddFontRun(styleRun, start + fontRun.Start, fontRun.Length, direction, style, fontRun.Typeface);
+                AddFontRun(styleRun, start + fontRun.Start, fontRun.Length, direction, style, fontRun.Typeface, typeface);
             }
         }
 
@@ -954,13 +954,13 @@ namespace Topten.RichTextKit
         /// <param name="direction">The direction of the text</param>
         /// <param name="style">The user supplied style for this run</param>
         /// <param name="typeface">The typeface of the run</param>
-        void AddFontRun(StyleRun styleRun, int start, int length, TextDirection direction, IStyle style, SKTypeface typeface)
+        void AddFontRun(StyleRun styleRun, int start, int length, TextDirection direction, IStyle style, SKTypeface typeface, SKTypeface asFallbackFor)
         {
             // Get code points slice
             var codePoints = _codePoints.SubSlice(start, length);
 
             // Add the font face run
-            _fontRuns.Add(CreateFontRun(styleRun, codePoints, direction, style, typeface));
+            _fontRuns.Add(CreateFontRun(styleRun, codePoints, direction, style, typeface, asFallbackFor));
         }
 
         /// <summary>
@@ -971,12 +971,13 @@ namespace Topten.RichTextKit
         /// <param name="direction">The run direction</param>
         /// <param name="style">The user supplied style for this run</param>
         /// <param name="typeface">The typeface of the run</param>
+        /// <param name="asFallbackFor">The original typeface this is a fallback for</param>
         /// <returns>A FontRun</returns>
-        FontRun CreateFontRun(StyleRun styleRun, Slice<int> codePoints, TextDirection direction, IStyle style, SKTypeface typeface)
+        FontRun CreateFontRun(StyleRun styleRun, Slice<int> codePoints, TextDirection direction, IStyle style, SKTypeface typeface, SKTypeface asFallbackFor)
         {
             // Shape the text
             var shaper = TextShaper.ForTypeface(typeface);
-            var shaped = shaper.Shape(_textShapingBuffers, codePoints, style, direction, codePoints.Start);
+            var shaped = shaper.Shape(_textShapingBuffers, codePoints, style, direction, codePoints.Start, asFallbackFor);
 
 
             // Create the run
@@ -1160,8 +1161,11 @@ namespace Topten.RichTextKit
                     fr.RunKind = FontRunKind.TrailingWhitespace;
                     if (fr.Direction != _resolvedBaseDirection)
                     {
+                        // What is this a fallback for?
+                        var asFallbackFor = TypefaceFromStyle(fr.Style, false);
+
                         // Create a new font run over the same text span but using the base direction
-                        _fontRuns[i] = CreateFontRun(fr.StyleRun, fr.CodePoints, _resolvedBaseDirection, fr.Style, fr.Typeface);
+                        _fontRuns[i] = CreateFontRun(fr.StyleRun, fr.CodePoints, _resolvedBaseDirection, fr.Style, fr.Typeface, asFallbackFor);
                     }
                 }
 
@@ -1499,7 +1503,7 @@ namespace Topten.RichTextKit
             var fontRun = FontFallback.GetFontRuns(ellipsis.AsSlice(), typeface).Single();
 
             // Create the new run and mark is as a special run type for ellipsis
-            var fr = CreateFontRun(basedOn.StyleRun, ellipsis.SubSlice(fontRun.Start, fontRun.Length), _resolvedBaseDirection, basedOn.Style, fontRun.Typeface);
+            var fr = CreateFontRun(basedOn.StyleRun, ellipsis.SubSlice(fontRun.Start, fontRun.Length), _resolvedBaseDirection, basedOn.Style, fontRun.Typeface, typeface);
             fr.RunKind = FontRunKind.Ellipsis;
 
             // Done

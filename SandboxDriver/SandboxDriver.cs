@@ -14,8 +14,8 @@ namespace SandboxDriver
 
         SKTypeface _fontAwesome;
 
-        public int ContentModeCount = 12;
-        public int ContentMode = 11;
+        public int ContentModeCount = 13;
+        public int ContentMode = 12;
         public TextDirection BaseDirection = TextDirection.LTR;
         public TextAlignment TextAlignment = TextAlignment.Auto;
         public float Scale = 1.0f;
@@ -59,6 +59,7 @@ namespace SandboxDriver
             var styleScript = new Style() { FontFamily = "Segoe Script", FontSize = 18 * Scale };
             var styleHeading = new Style() { FontFamily = typefaceName, FontSize = 24 * Scale, FontWeight = 700 };
             var styleNormal = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, LineHeight = 1.0f };
+            var styleFixedPitch = new Style() { FontFamily = "Courier New", FontSize = 18 * Scale, LineHeight = 1.0f };
             var styleLTR = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, TextDirection = TextDirection.LTR };
             var styleBold = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, FontWeight = 700 };
             var styleUnderline = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, Underline = UnderlineStyle.Gapped };
@@ -203,6 +204,18 @@ namespace SandboxDriver
                     _textBlock.AddText("\uF06B", styleFontAwesome);
                     break;
 
+                case 12:
+                    _textBlock.AddText(".|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|\n", styleFixedPitch);
+                    _textBlock.AddText("♩♩♩♩♩♩♩♩♩♩♩\n", styleFixedPitch);
+                    _textBlock.AddText("\n", styleFixedPitch);
+                    _textBlock.AddText("   ♩__♩__♩.       ♩.     ♩.       x4\n", styleFixedPitch);
+                    _textBlock.AddText("   ♩__♩__♩.       ♩.     ♩.       x4\n", styleFixedPitch);
+                    _textBlock.AddText("   ♩   ♩   ♩.       ♩ ♪   ♩ ♪     x4\n", styleFixedPitch);
+                    _textBlock.AddText("   ♩   ♩   ♩   ♪   ♩ ♪   ♩ ♪      x8\n", styleFixedPitch);
+                    _textBlock.AddText("\n", styleFixedPitch);
+                    _textBlock.AddText("   🌐 🍪 🍕 🚀 xxx\n", styleFixedPitch);
+                    _textBlock.AddText("   🌐🍪🍕🚀    xxx\n", styleFixedPitch);
+                    break;
             }
 
             var sw = new Stopwatch();
@@ -316,3 +329,6 @@ namespace SandboxDriver
 
     }   
 }
+
+
+

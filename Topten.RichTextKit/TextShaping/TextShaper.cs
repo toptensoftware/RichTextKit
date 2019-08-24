@@ -60,6 +60,9 @@ namespace Topten.RichTextKit
         /// <param name="typeface">The typeface of this shaper</param>
         private TextShaper(SKTypeface typeface)
         {
+            // Store typeface
+            _typeface = typeface;
+
             // Load the typeface stream to a HarfBuzz font
             int index;
             using (var blob = typeface.OpenStream(out index).ToHarfBuzzBlob())
@@ -78,6 +81,16 @@ namespace Topten.RichTextKit
                 paint.Typeface = typeface;
                 paint.TextSize = overScale;
                 _fontMetrics = paint.FontMetrics;
+
+                // This is a temporary hack until SkiaSharp exposes
+                // a way to check if a font is fixed pitch.  For now
+                // we just measure and `i` and a `w` and see if they're
+                // the same width.
+                float[] widths = paint.GetGlyphWidths("iw", out var rects);
+                _isFixedPitch = widths != null && widths.Length > 1 && widths[0] == widths[1];
+                if (_isFixedPitch)
+                    _fixedCharacterWidth = widths[0];
+
             }
         }
 
@@ -99,9 +112,24 @@ namespace Topten.RichTextKit
         HarfBuzzSharp.Font _font;
 
         /// <summary>
+        /// The typeface for this shaper
+        /// </summary>
+        SKTypeface _typeface;
+
+        /// <summary>
         /// Font metrics for the font
         /// </summary>
         SKFontMetrics _fontMetrics;
+
+        /// <summary>
+        /// True if this font face is fixed pitch
+        /// </summary>
+        bool _isFixedPitch;
+
+        /// <summary>
+        /// Fixed pitch character width
+        /// </summary>
+        float _fixedCharacterWidth;
 
         /// <summary>
         /// A set of re-usable result buffers to store the result of text shaping operation
@@ -186,9 +214,22 @@ namespace Topten.RichTextKit
         /// <param name="style">The user style for the text</param>
         /// <param name="direction">LTR or RTL direction</param>
         /// <param name="clusterAdjustment">A value to add to all reported cluster numbers</param>
+        /// <param name="asFallbackFor">The type face this font is a fallback for</param>
         /// <returns>A TextShaper.Result representing the shaped text</returns>
-        public Result Shape(ResultBufferSet bufferSet, Slice<int> codePoints, IStyle style, TextDirection direction, int clusterAdjustment = 0)
+        public Result Shape(ResultBufferSet bufferSet, Slice<int> codePoints, IStyle style, TextDirection direction, int clusterAdjustment, SKTypeface asFallbackFor)
         {
+            // Work out if we need to force this to a fixed pitch and if
+            // so the unscale character width we need to use
+            float forceFixedPitchWidth = 0;
+            if (asFallbackFor != _typeface && asFallbackFor != null)
+            {
+                var originalTypefaceShaper = ForTypeface(asFallbackFor);
+                if (originalTypefaceShaper._isFixedPitch)
+                {
+                    forceFixedPitchWidth = originalTypefaceShaper._fixedCharacterWidth;
+                }
+            }
+
             using (var buffer = new HarfBuzzSharp.Buffer())
             {
                 // Setup buffer
@@ -250,6 +291,7 @@ namespace Topten.RichTextKit
                 var gi = buffer.GlyphInfos;
                 float cursorX = 0;
                 float cursorY = 0;
+                float cursorXCluster = 0;
                 for (int i = 0; i < buffer.Length; i++)
                 {
                     r.GlyphIndicies[i] = (ushort)gi[i].Codepoint;
@@ -279,6 +321,36 @@ namespace Topten.RichTextKit
                     // Update cursor position
                     cursorX += pos.XAdvance * glyphScale;
                     cursorY += pos.YAdvance * glyphScale;
+
+                    // Are we falling back for a fixed pitch font and is the next character a 
+                    // new cluster?  If so advance by the width of the original font, not this
+                    // fallback font
+                    if (forceFixedPitchWidth != 0)
+                    {
+                        // New cluster?
+                        if (i + 1 >= buffer.Length || gi[i].Cluster != gi[i + 1].Cluster)
+                        {
+                            // Work out fixed pitch position of next cluster
+                            cursorXCluster += forceFixedPitchWidth * glyphScale;
+                            if (cursorXCluster > cursorX)
+                            {
+                                // Nudge characters to center them in the fixed pitch width
+                                if (i == 0 || gi[i - 1].Cluster != gi[i].Cluster)
+                                {
+                                    r.GlyphPositions[i].X += (cursorXCluster - cursorX)/ 2;
+                                }
+
+                                // Use fixed width character position
+                                cursorX = cursorXCluster;
+                            }
+                            else
+                            {
+                                // Character is wider (probably an emoji) so we 
+                                // allow it to exceed the fixed pitch character width
+                                cursorXCluster = cursorX;
+                            }
+                        }
+                    }
 
                     // Store RTL cursor position
                     if (rtl)
