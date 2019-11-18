@@ -1,0 +1,10 @@
+trigger:
+- master
+
+pool:
+  name: Hosted Windows 2019 with VS2019
+
+steps:
+- checkout: self
+  submodules: true
+- pwsh: node build.js
