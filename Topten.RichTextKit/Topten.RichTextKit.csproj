@@ -3,7 +3,7 @@
   <Import Project="../common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netcoreapp2.0;net45</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
     <Authors>Topten Software</Authors>
@@ -37,7 +37,7 @@
 
   <ItemGroup>
     <PackageReference Include="SkiaSharp" Version="1.68.0" />
-    <PackageReference Include="SkiaSharp.HarfBuzz" Version="1.68.0" />
+    <PackageReference Include="HarfBuzzSharp" Version="2.6.1-rc.172" />
   </ItemGroup>
 
 </Project>

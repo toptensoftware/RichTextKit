@@ -15,7 +15,6 @@
 
 using HarfBuzzSharp;
 using SkiaSharp;
-using SkiaSharp.HarfBuzz;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,10 +64,10 @@ namespace Topten.RichTextKit
 
             // Load the typeface stream to a HarfBuzz font
             int index;
-            using (var blob = typeface.OpenStream(out index).ToHarfBuzzBlob())
+            using (var blob = GetHarfBuzzBlob(typeface.OpenStream(out index)))
             using (var face = new Face(blob, (uint)index))
             {
-                face.UnitsPerEm = (uint)typeface.UnitsPerEm;
+                face.UnitsPerEm = typeface.UnitsPerEm;
 
                 _font = new HarfBuzzSharp.Font(face);
                 _font.SetScale(overScale, overScale);
@@ -202,10 +201,6 @@ namespace Topten.RichTextKit
         /// </summary>
         const int overScale = 512;
 
-        // Temporary hack until newer HarfBuzzSharp is released with support for AddUtf32
-        [DllImport("libHarfBuzzSharp", CallingConvention = CallingConvention.Cdecl)]
-		private extern static void hb_buffer_add_utf32 (IntPtr buffer, IntPtr text, int text_length, int item_offset, int item_length);
-
         /// <summary>
         /// Shape an array of utf-32 code points
         /// </summary>
@@ -233,13 +228,7 @@ namespace Topten.RichTextKit
             using (var buffer = new HarfBuzzSharp.Buffer())
             {
                 // Setup buffer
-                unsafe
-                {
-                    fixed (int* pCodePoints = codePoints.Underlying)
-                    {
-                        hb_buffer_add_utf32(buffer.Handle, (IntPtr)(pCodePoints + codePoints.Start), codePoints.Length, 0, -1);
-                    }
-                }
+                buffer.AddUtf32(new ReadOnlySpan<int>(codePoints.Underlying, codePoints.Start, codePoints.Length), 0, -1);
 
                 // Setup directionality (if supplied)
                 switch (direction)
@@ -396,6 +385,35 @@ namespace Topten.RichTextKit
                 // Done
                 return r;
             }
+        }
+
+        private static Blob GetHarfBuzzBlob(SKStreamAsset asset)
+        {
+            if (asset == null)
+                throw new ArgumentNullException(nameof(asset));
+
+            Blob blob;
+
+            var size = asset.Length;
+            var memoryBase = asset.GetMemoryBase();
+            if (memoryBase != IntPtr.Zero)
+            {
+                // the underlying stream is really a mamory block
+                // so save on copying and just use that directly
+                blob = new Blob(memoryBase, size, MemoryMode.ReadOnly, () => asset.Dispose());
+            }
+            else
+            {
+                // this could be a forward-only stream, so we must copy
+                var ptr = Marshal.AllocCoTaskMem(size);
+                asset.Read(ptr, size);
+                blob = new Blob(ptr, size, MemoryMode.ReadOnly, () => Marshal.FreeCoTaskMem(ptr));
+            }
+
+            // make immutable for performance?
+            blob.MakeImmutable();
+
+            return blob;
         }
     }
 }
