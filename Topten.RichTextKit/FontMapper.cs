@@ -54,7 +54,7 @@ namespace Topten.RichTextKit
                 (SKFontStyleWeight)(style.FontWeight + extraWeight), 
                 0, 
                 style.FontItalic ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright
-                );
+                ) ?? SKTypeface.CreateDefault();
         }
 
         /// <summary>
