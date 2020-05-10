@@ -48,7 +48,7 @@ namespace Topten.RichTextKit
             set
             {
                 if (value.HasValue && value.Value < 0)
-                        value = 0;
+                    value = 0;
                 if (_maxWidth != value)
                 {
                     _maxWidth = value;
@@ -362,7 +362,7 @@ namespace Topten.RichTextKit
             // Restore and done!
             canvas.Restore();
         }
-    
+
         /// <summary>
         /// The total height of all lines.
         /// </summary>
@@ -597,7 +597,7 @@ namespace Topten.RichTextKit
             // Create caret info
             var ci = new CaretInfo();
             ci.CodePointIndex = _caretIndicies[cpii];
-            ci.NextCodePointIndex = cpii + 1 < _caretIndicies.Count ? _caretIndicies[cpii+1] : ci.CodePointIndex;
+            ci.NextCodePointIndex = cpii + 1 < _caretIndicies.Count ? _caretIndicies[cpii + 1] : ci.CodePointIndex;
             ci.PreviousCodePointIndex = cpii > 0 ? _caretIndicies[cpii - 1] : 0;
 
             var frIndex = FindFontRunForCodePointIndex(codePointIndex);
@@ -793,9 +793,12 @@ namespace Topten.RichTextKit
         /// </summary>
         void BuildFontRuns()
         {
+            // Clearn unshaped run buffer
+            _unshapedRuns.Clear();
+
             // Break supplied text into directionality runs
             _bidiData.Init(_codePoints.AsSlice(), (sbyte)_baseDirection);
-        
+
             // If we have embedded directional overrides then change those
             // ranges to neutral
             if (_hasTextDirectionOverrides)
@@ -807,7 +810,7 @@ namespace Topten.RichTextKit
                 {
                     // Get the run
                     var sr = _styleRuns[i];
-                    
+
                     // Does it have a direction override?
                     if (sr.Style.TextDirection == TextDirection.Auto)
                         continue;
@@ -841,7 +844,7 @@ namespace Topten.RichTextKit
                     // Does it have a direction override?
                     if (sr.Style.TextDirection == TextDirection.Auto)
                         continue;
-                    
+
                     // Get the style run bidi data
                     var types = _bidiData.Types.SubSlice(sr.Start, sr.Length);
                     var pbts = _bidiData.PairedBracketTypes.SubSlice(sr.Start, sr.Length);
@@ -890,7 +893,10 @@ namespace Topten.RichTextKit
 
             // Add the final run
             var dir2 = bidiRuns[bidiRun].Direction == Directionality.L ? TextDirection.LTR : TextDirection.RTL;
-            AddDirectionalRun(_styleRuns[_styleRuns.Count-1], pos, _codePoints.Length - pos, dir2, _styleRuns[styleRun].Style);
+            AddDirectionalRun(_styleRuns[_styleRuns.Count - 1], pos, _codePoints.Length - pos, dir2, _styleRuns[styleRun].Style);
+
+            // Flush runs
+            FlushUnshapedRuns();
         }
 
         /// <summary>
@@ -954,14 +960,95 @@ namespace Topten.RichTextKit
         /// <param name="direction">The direction of the text</param>
         /// <param name="style">The user supplied style for this run</param>
         /// <param name="typeface">The typeface of the run</param>
+        /// <param name="asFallbackFor">The typeface this is a fallback for</param>
         void AddFontRun(StyleRun styleRun, int start, int length, TextDirection direction, IStyle style, SKTypeface typeface, SKTypeface asFallbackFor)
         {
-            // Get code points slice
-            var codePoints = _codePoints.SubSlice(start, length);
+            // Coalesc added font runs such that those with the exact same font, direction etc... are
+            // all shaped together such that kerning is correct for the entire run - regardless of
+            // non-typographic style changes (eg: underline, color etc...).
+            var usr = new UnshapedRun()
+            {
+                styleRun = styleRun,
+                start = start,
+                length = length,
+                direction = direction,
+                style = style,
+                typeface = typeface,
+                asFallbackFor = asFallbackFor,
+            };
 
-            // Add the font face run
-            _fontRuns.Add(CreateFontRun(styleRun, codePoints, direction, style, typeface, asFallbackFor));
+            // If this run can't be shaped with the previous one then flush those accumlated so far
+            if (_unshapedRuns.Count > 0 && !_unshapedRuns[_unshapedRuns.Count - 1].CanShapeWith(usr))
+            {
+                FlushUnshapedRuns();
+            }
+
+            // Store it for now, actually shape it once we determine the next run is really
+            // a different font
+            _unshapedRuns.Add(usr);
         }
+
+        void FlushUnshapedRuns() 
+        {
+            // Quit if nothing to do?
+            if (_unshapedRuns.Count == 0)
+                return;
+
+            if (_unshapedRuns.Count == 1)
+            {
+                // If there's only one accumulated shape run then we can shape and add it directly
+                var usr = _unshapedRuns[0];
+                _fontRuns.Add(CreateFontRun(usr.styleRun, _codePoints.SubSlice(usr.start, usr.length), usr.direction, usr.style, usr.typeface, usr.asFallbackFor));
+            }
+            else 
+            {
+                // There are multiple styled runs, but they're all using the exact same type face
+                // so shape them all together to maintain correct kerning, but then break them
+                // apart so they're rendered separately with correct style for each piece.
+                var first = _unshapedRuns[0];
+                var last = _unshapedRuns[_unshapedRuns.Count - 1];
+                var spanningRun = CreateFontRun(first.styleRun, _codePoints.SubSlice(first.start, last.start + last.length - first.start), first.direction, first.style, first.typeface, first.asFallbackFor);
+
+                for (int i = 1; i < _unshapedRuns.Count; i++)
+                {
+                    var newRun = spanningRun.Split(_unshapedRuns[i].start);
+
+                    spanningRun.StyleRun = _unshapedRuns[i - 1].styleRun;
+                    spanningRun.Style = _unshapedRuns[i - 1].style;
+
+                    _fontRuns.Add(spanningRun);
+                    spanningRun = newRun;
+                }
+                spanningRun.StyleRun = _unshapedRuns[_unshapedRuns.Count-1].styleRun;
+                spanningRun.Style = _unshapedRuns[_unshapedRuns.Count-1].style;
+                _fontRuns.Add(spanningRun);
+            }
+
+            _unshapedRuns.Clear();
+        }
+
+        List<UnshapedRun> _unshapedRuns = new List<UnshapedRun>();
+
+        class UnshapedRun
+        {
+            public StyleRun styleRun;
+            public int start;
+            public int length;
+            public TextDirection direction;
+            public IStyle style;
+            public SKTypeface typeface;
+            public SKTypeface asFallbackFor;
+
+            // Check if this unshaped run can be shaped with the next one
+            public bool CanShapeWith(UnshapedRun next)
+            {
+                return typeface == next.typeface &&
+                        asFallbackFor == next.asFallbackFor &&
+                        direction == next.direction &&
+                        start + length == next.start;
+            }
+        }
+
 
         /// <summary>
         /// Helper to create a font run
@@ -978,7 +1065,6 @@ namespace Topten.RichTextKit
             // Shape the text
             var shaper = TextShaper.ForTypeface(typeface);
             var shaped = shaper.Shape(_textShapingBuffers, codePoints, style, direction, codePoints.Start, asFallbackFor);
-
 
             // Create the run
             var fontRun = FontRun.Pool.Value.Get();
@@ -1154,6 +1240,7 @@ namespace Topten.RichTextKit
         void BuildLine(int frIndexStartOfLine, int frSplitIndex, int frTrailingWhiteSpaceIndex)
         {
             // Create the line
+
             var line = TextLine.Pool.Value.Get();
             line.TextBlock = this;
             line.YCoord = _measuredHeight;
