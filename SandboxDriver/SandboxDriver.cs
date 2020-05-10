@@ -1,15 +1,4 @@
 ﻿using SkiaSharp;
-
-/* Unmerged change from project 'SandboxDriver (net45)'
-Before:
-using Topten.RichTextKit;
-using SkiaSharp;
-using System.Diagnostics;
-After:
-using System;
-using System.Diagnostics;
-using Topten.Diagnostics;
-*/
 using System.Diagnostics;
 using Topten.RichTextKit;
 
