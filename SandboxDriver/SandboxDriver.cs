@@ -1,7 +1,17 @@
-﻿using System;
+﻿using SkiaSharp;
+
+/* Unmerged change from project 'SandboxDriver (net45)'
+Before:
 using Topten.RichTextKit;
 using SkiaSharp;
 using System.Diagnostics;
+After:
+using System;
+using System.Diagnostics;
+using Topten.Diagnostics;
+*/
+using System.Diagnostics;
+using Topten.RichTextKit;
 
 namespace SandboxDriver
 {
@@ -15,7 +25,7 @@ namespace SandboxDriver
         SKTypeface _fontAwesome;
 
         public int ContentModeCount = 13;
-        public int ContentMode = 12;
+        public int ContentMode = 0;
         public TextDirection BaseDirection = TextDirection.LTR;
         public TextAlignment TextAlignment = TextAlignment.Auto;
         public float Scale = 1.0f;
@@ -62,7 +72,7 @@ namespace SandboxDriver
             var styleFixedPitch = new Style() { FontFamily = "Courier New", FontSize = 18 * Scale, LineHeight = 1.0f };
             var styleLTR = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, TextDirection = TextDirection.LTR };
             var styleBold = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, FontWeight = 700 };
-            var styleUnderline = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, Underline = UnderlineStyle.Gapped };
+            var styleUnderline = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, Underline = UnderlineStyle.Gapped, TextColor = new SKColor(0xFFFF0000) };
             var styleStrike = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, StrikeThrough = StrikeThroughStyle.Solid };
             var styleSubScript = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, FontVariant = FontVariant.SubScript };
             var styleSuperScript = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, FontVariant = FontVariant.SuperScript };
@@ -115,7 +125,7 @@ namespace SandboxDriver
                 case 1:
                     _textBlock.AddText("Hello Wor", styleNormal);
                     _textBlock.AddText("ld", styleRed);
-                    _textBlock.AddText(". This is normal 18px. These are emojis: 🌐 🍪 🍕 🚀 ", styleNormal);
+                    _textBlock.AddText(". This is normal 18px. These are emojis: 🌐 🍪 🍕 🚀 🏴‍☠️", styleNormal);
                     _textBlock.AddText("This is ", styleNormal);
                     _textBlock.AddText("bold 28px", styleBoldLarge);
                     _textBlock.AddText(". ", styleNormal);
@@ -158,7 +168,10 @@ namespace SandboxDriver
                     break;
 
                 case 4:
-                    _textBlock.AddText("مرحبا بالعالم.  هذا هو اختبار التفاف \nالخط للتأكد من أنه يعمل للغات من اليمين إلى اليسار.", styleNormal);
+                    //_textBlock.AddText("مرحبا بالعالم.  هذا هو اختبار التفاف \nالخط للتأكد من أنه يعمل للغات من اليمين إلى اليسار.\n", styleNormal);
+                    _textBlock.AddText("مرحبا بالعالم.  هذا هو اختبار التفاف \n", styleNormal);
+                    _textBlock.AddText("مرحبا بالعالم.  هذا هو اختبار الت", styleNormal);
+                    _textBlock.AddText("فاف \n", styleUnderline);
                     break;
 
                 case 5:
@@ -193,7 +206,9 @@ namespace SandboxDriver
                     break;
 
                 case 9:
-                    _textBlock.AddText("Hello World", styleNormal);
+                    _textBlock.AddText("Toggle Theme\r\n", styleNormal);
+                    _textBlock.AddText("T", styleUnderline);
+                    _textBlock.AddText("oggle Theme\r\n", styleNormal);
                     break;
 
                 case 10:
@@ -213,8 +228,10 @@ namespace SandboxDriver
                     _textBlock.AddText("   ♩   ♩   ♩.       ♩ ♪   ♩ ♪     x4\n", styleFixedPitch);
                     _textBlock.AddText("   ♩   ♩   ♩   ♪   ♩ ♪   ♩ ♪      x8\n", styleFixedPitch);
                     _textBlock.AddText("\n", styleFixedPitch);
-                    _textBlock.AddText("   🌐 🍪 🍕 🚀 xxx\n", styleFixedPitch);
-                    _textBlock.AddText("   🌐🍪🍕🚀    xxx\n", styleFixedPitch);
+                    _textBlock.AddText("   🌐 🍪 🍕 🚀 🏴‍☠️ xxx\n", styleFixedPitch);
+                    _textBlock.AddText("   🌐 🍪 🍕 🚀    xxx\n", styleFixedPitch);
+                    _textBlock.AddText("   🌐🍪🍕🚀       xxx\n", styleFixedPitch);
+
                     break;
             }
 
@@ -327,7 +344,7 @@ namespace SandboxDriver
             _showHitTest = true;
         }
 
-    }   
+    }
 }
 
 

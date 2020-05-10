@@ -48,11 +48,23 @@ namespace Topten.RichTextKit
         public void Reset(Slice<int> codePoints)
         {
             _codePoints = codePoints;
+            _first = true;
             _pos = 0;
             _lastPos = 0;
-            _curClass = null;
-            _nextClass = null;
+            _LB8a = false;
+            _LB21a = false;
+            _LB30a = 0;
         }
+
+        Slice<int> _codePoints;
+        bool _first = true;
+        int _pos;
+        int _lastPos;
+        LineBreakClass _curClass;
+        LineBreakClass _nextClass;
+        bool _LB8a = false;
+        bool _LB21a = false;
+        int _LB30a = 0;
 
         /// <summary>
         /// Enumerate all line breaks (optionally in reverse order)
@@ -66,120 +78,196 @@ namespace Topten.RichTextKit
             return list;
         }
 
-        /// <summary>
-        /// Get the next line break info
-        /// </summary>
-        /// <param name="lineBreak">A LineBreak structure returned by this method</param>
-        /// <returns>True if there was another line break</returns>
+        LineBreakClass mapClass(LineBreakClass c)
+        {
+            switch (c)
+            {
+                case LineBreakClass.AI:
+                    return LineBreakClass.AL;
+
+                case LineBreakClass.SA:
+                case LineBreakClass.SG:
+                case LineBreakClass.XX:
+                    return LineBreakClass.AL;
+
+                case LineBreakClass.CJ:
+                    return LineBreakClass.NS;
+
+                default:
+                    return c;
+            }
+        }
+
+        LineBreakClass mapFirst(LineBreakClass c)
+        {
+            switch (c)
+            {
+                case LineBreakClass.LF:
+                case LineBreakClass.NL:
+                    return LineBreakClass.BK;
+
+                case LineBreakClass.SP:
+                    return LineBreakClass.WJ;
+
+                default:
+                    return c;
+            }
+        }
+
+        // Get the next character class
+        LineBreakClass nextCharClass()
+        {
+            return mapClass(UnicodeClasses.LineBreakClass(_codePoints[_pos++]));
+        }
+
+        bool? getSimpleBreak()
+        {
+            // handle classes not handled by the pair table
+            switch (_nextClass)
+            {
+                case LineBreakClass.SP:
+                    return false;
+
+                case LineBreakClass.BK:
+                case LineBreakClass.LF:
+                case LineBreakClass.NL:
+                    _curClass = LineBreakClass.BK;
+                    return false;
+
+                case LineBreakClass.CR:
+                    _curClass = LineBreakClass.CR;
+                    return false;
+            }
+
+            return null;
+        }
+
+        bool getPairTableBreak(LineBreakClass lastClass)
+        {
+            // if not handled already, use the pair table
+            bool shouldBreak = false;
+            switch (LineBreakPairTable.table[(int)_curClass][(int)_nextClass])
+            {
+                case LineBreakPairTable.DI_BRK: // Direct break
+                    shouldBreak = true;
+                    break;
+
+                case LineBreakPairTable.IN_BRK: // possible indirect break
+                    shouldBreak = lastClass == LineBreakClass.SP;
+                    break;
+
+                case LineBreakPairTable.CI_BRK:
+                    shouldBreak = lastClass == LineBreakClass.SP;
+                    if (!shouldBreak)
+                    {
+                        shouldBreak = false;
+                        return shouldBreak;
+                    }
+                    break;
+
+                case LineBreakPairTable.CP_BRK: // prohibited for combining marks
+                    if (lastClass != LineBreakClass.SP)
+                    {
+                        return shouldBreak;
+                    }
+                    break;
+
+                case LineBreakPairTable.PR_BRK:
+                    break;
+            }
+
+            if (_LB8a)
+            {
+                shouldBreak = false;
+            }
+
+            // Rule LB21a
+            if (_LB21a && (_curClass == LineBreakClass.HY || _curClass == LineBreakClass.BA))
+            {
+                shouldBreak = false;
+                _LB21a = false;
+            }
+            else
+            {
+                _LB21a = (_curClass == LineBreakClass.HL);
+            }
+
+            // Rule LB30a
+            if (_curClass == LineBreakClass.RI)
+            {
+                _LB30a++;
+                if (_LB30a == 2 && (_nextClass == LineBreakClass.RI))
+                {
+                    shouldBreak = true;
+                    _LB30a = 0;
+                }
+            }
+            else
+            {
+                _LB30a = 0;
+            }
+
+            _curClass = _nextClass;
+
+            return shouldBreak;
+        }
+
+
         public bool NextBreak(out LineBreak lineBreak)
         {
             // get the first char if we're at the beginning of the string
-            if (!_curClass.HasValue)
+            if (_first)
             {
-                if (this.peekCharClass() == LineBreakClass.SP)
-                    this._curClass = LineBreakClass.WJ;
-                else                
-                    this._curClass = mapFirst(this.readCharClass());
+                _first = false;
+                var firstClass = nextCharClass();
+                _curClass = mapFirst(firstClass);
+                _nextClass = firstClass;
+                _LB8a = (firstClass == LineBreakClass.ZWJ);
+                _LB30a = 0;
             }
 
             while (_pos < _codePoints.Length)
             {
                 _lastPos = _pos;
                 var lastClass = _nextClass;
-                _nextClass = this.readCharClass();
+                _nextClass = nextCharClass();
 
                 // explicit newline
-                if (_curClass.HasValue && ((_curClass == LineBreakClass.BK) || ((_curClass == LineBreakClass.CR) && (this._nextClass != LineBreakClass.LF))))
+                if ((_curClass == LineBreakClass.BK) || ((_curClass == LineBreakClass.CR) && (_nextClass != LineBreakClass.LF)))
                 {
-                    _curClass = mapFirst(mapClass(_nextClass.Value));
+                    _curClass = mapFirst(mapClass(_nextClass));
                     lineBreak = new LineBreak(findPriorNonWhitespace(_lastPos), _lastPos, true);
                     return true;
                 }
 
-                // handle classes not handled by the pair table
-                LineBreakClass? cur = null;
-                switch (_nextClass.Value)
+                bool? shouldBreak = getSimpleBreak();
+
+                if (!shouldBreak.HasValue)
                 {
-                    case LineBreakClass.SP:
-                        cur = _curClass;
-                        break;
-
-                    case LineBreakClass.BK:
-                    case LineBreakClass.LF:
-                    case LineBreakClass.NL:
-                        cur = LineBreakClass.BK;
-                        break;
-
-                    case LineBreakClass.CR:
-                        cur = LineBreakClass.CR;
-                        break;
-
-                    case LineBreakClass.CB:
-                        cur = LineBreakClass.BA;
-                        break;
+                    shouldBreak = getPairTableBreak(lastClass);
                 }
 
-                if (cur != null)
+                // Rule LB8a
+                _LB8a = (_nextClass == LineBreakClass.ZWJ);
+
+                if (shouldBreak.Value)
                 {
-                    _curClass = cur;
-                    if (_nextClass.HasValue && _nextClass.Value == LineBreakClass.CB)
-                    {
-                        lineBreak = new LineBreak(findPriorNonWhitespace(_lastPos), _lastPos);
-                        return true;
-                    }
-                    continue;
-                }
-
-                // if not handled already, use the pair table
-                var shouldBreak = false;
-                switch (LineBreakPairTable.table[(int)this._curClass.Value][(int)this._nextClass.Value])
-                {
-                    case LineBreakPairTable.DI_BRK: // Direct break
-                        shouldBreak = true;
-                        break;
-
-                    case LineBreakPairTable.IN_BRK: // possible indirect break
-                        shouldBreak = lastClass.HasValue && lastClass.Value == LineBreakClass.SP;
-                        break;
-
-                    case LineBreakPairTable.CI_BRK:
-                        shouldBreak = lastClass.HasValue && lastClass.Value == LineBreakClass.SP;
-                        if (!shouldBreak)
-                        {
-                            continue;
-                        }
-                        break;
-
-                    case LineBreakPairTable.CP_BRK: // prohibited for combining marks
-                        if (!lastClass.HasValue || lastClass.Value != LineBreakClass.SP)
-                        {
-                            continue;
-                        }
-                        break;
-                }
-
-                _curClass = _nextClass;
-                if (shouldBreak)
-                {
-                    lineBreak = new LineBreak(findPriorNonWhitespace(_lastPos), _lastPos);
+                    lineBreak = new LineBreak(findPriorNonWhitespace(_lastPos), _lastPos, false);
                     return true;
                 }
             }
 
-            if (_pos >= _codePoints.Length)
+            if (_lastPos < _codePoints.Length)
             {
-                if (_lastPos < _codePoints.Length)
-                {
-                    _lastPos = _codePoints.Length;
-                    var cls = UnicodeClasses.LineBreakClass(_codePoints[_codePoints.Length - 1]);
-                    bool required = cls == LineBreakClass.BK || cls == LineBreakClass.LF || cls == LineBreakClass.CR;
-                    lineBreak = new LineBreak(findPriorNonWhitespace(_codePoints.Length), _codePoints.Length, required);
-                    return true;
-                }
+                _lastPos = _codePoints.Length;
+                lineBreak = new LineBreak(findPriorNonWhitespace(_codePoints.Length), _lastPos, false);
+                return true;
             }
-
-            lineBreak = new LineBreak(0, 0, false);
-            return false;
+            else
+            {
+                lineBreak = new LineBreak(0, 0, false);
+                return false;
+            }
         }
 
         int findPriorNonWhitespace(int from)
@@ -200,73 +288,5 @@ namespace Topten.RichTextKit
             }
             return from;
         }
-
-        int findNextNonWhitespace(int from)
-        {
-            while (from < _codePoints.Length && UnicodeClasses.LineBreakClass(_codePoints[from]) == LineBreakClass.SP)
-                from++;
-            return from;
-        }
-
-        // State
-        Slice<int> _codePoints;
-        int _pos;
-        int _lastPos;
-        LineBreakClass? _curClass;
-        LineBreakClass? _nextClass;
-
-        // Get the next character class
-        LineBreakClass readCharClass()
-        {
-            return mapClass(UnicodeClasses.LineBreakClass(_codePoints[_pos++]));
-        }
-
-        LineBreakClass peekCharClass()
-        {
-            return mapClass(UnicodeClasses.LineBreakClass(_codePoints[_pos]));
-        }
-
-
-
-        static LineBreakClass mapClass(LineBreakClass c)
-        {
-            switch (c)
-            {
-                case LineBreakClass.AI:
-                    return LineBreakClass.AL;
-
-                case LineBreakClass.SA:
-                case LineBreakClass.SG:
-                case LineBreakClass.XX:
-                    return LineBreakClass.AL;
-
-                case LineBreakClass.CJ:
-                    return LineBreakClass.NS;
-
-                default:
-                    return c;
-            }
-        }
-
-        static LineBreakClass mapFirst(LineBreakClass c)
-        {
-            switch (c)
-            {
-                case LineBreakClass.LF:
-                case LineBreakClass.NL:
-                    return LineBreakClass.BK;
-
-                case LineBreakClass.CB:
-                    return LineBreakClass.BA;
-
-                case LineBreakClass.SP:
-                    return LineBreakClass.WJ;
-
-                default:
-                    return c;
-            }
-        }
-
-
     }
 }

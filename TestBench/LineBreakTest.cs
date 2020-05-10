@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Topten.RichTextKit;
 using Topten.RichTextKit.Utils;
 
@@ -31,7 +30,7 @@ namespace TestBench
             for (int lineNumber = 1; lineNumber < lines.Length + 1; lineNumber++)
             {
                 // Ignore deliberately skipped test?
-                if (_skipLines.Contains(lineNumber-1))
+                if (_skipLines.Contains(lineNumber - 1))
                     continue;
 
                 // Get the line, remove comments
@@ -130,7 +129,7 @@ namespace TestBench
                     Console.WriteLine($"    Code Points: {string.Join(" ", t.CodePoints)}");
                     Console.WriteLine($"Expected Breaks: {string.Join(" ", t.BreakPoints)}");
                     Console.WriteLine($"  Actual Breaks: {string.Join(" ", foundBreaks)}");
-                    Console.WriteLine($"     Char Props: {string.Join(" ", t.CodePoints.Select(x=>UnicodeClasses.LineBreakClass(x)))}");
+                    Console.WriteLine($"     Char Props: {string.Join(" ", t.CodePoints.Select(x => UnicodeClasses.LineBreakClass(x)))}");
                     Console.WriteLine();
                     return false;
                 }

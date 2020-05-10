@@ -1,7 +1,7 @@
 ﻿// RichTextKit
 // Copyright © 2019 Topten Software. All Rights Reserved.
 // 
-// Licensed under the Apache License, Version 2.0 (the "License"); you may 
+// Licensed under the Apache License, Version 2.0 (the "License"), you may 
 // not use this product except in compliance with the License. You may obtain 
 // a copy of the License at
 // 
@@ -54,18 +54,21 @@ namespace Topten.RichTextKit
         JV = 26,  // Hangul V Jamo
         JT = 27,  // Hangul T Jamo
         RI = 28,  // Regional Indicator
+        EB = 29,  // Emoji Base
+        EM = 30,  // Emoji Modifier
+        ZWJ = 31, // Zero Width Joiner
+        CB = 32,  // Contingent break
 
         // The following break classes are not handled by the pair table
-        AI = 29,  // Ambiguous (Alphabetic or Ideograph)
-        BK = 30,  // Break (mandatory)
-        CB = 31,  // Contingent break
-        CJ = 32,  // Conditional Japanese Starter
-        CR = 33,  // Carriage return
-        LF = 34,  // Line feed
-        NL = 35,  // Next line
-        SA = 36,  // South-East Asian
-        SG = 37,  // Surrogates
-        SP = 38,  // Space
-        XX = 39,  // Unknown
+        AI = 33,  // Ambiguous (Alphabetic or Ideograph)
+        BK = 34,  // Break (mandatory)
+        CJ = 35,  // Conditional Japanese Starter
+        CR = 36,  // Carriage return
+        LF = 37,  // Line feed
+        NL = 38,  // Next line
+        SA = 39,  // South-East Asian
+        SG = 40,  // Surrogates
+        SP = 41,  // Space
+        XX = 42,  // Unknown
     }
 }
