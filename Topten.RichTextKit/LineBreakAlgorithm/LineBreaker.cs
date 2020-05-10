@@ -260,7 +260,8 @@ namespace Topten.RichTextKit
             if (_lastPos < _codePoints.Length)
             {
                 _lastPos = _codePoints.Length;
-                lineBreak = new LineBreak(findPriorNonWhitespace(_codePoints.Length), _lastPos, false);
+                var required = (_curClass == LineBreakClass.BK) || ((_curClass == LineBreakClass.CR) && (_nextClass != LineBreakClass.LF));
+                lineBreak = new LineBreak(findPriorNonWhitespace(_codePoints.Length), _lastPos, required);
                 return true;
             }
             else
