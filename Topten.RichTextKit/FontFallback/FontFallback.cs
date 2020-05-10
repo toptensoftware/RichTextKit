@@ -71,13 +71,27 @@ namespace Topten.RichTextKit
                         {
                             // Find fallback font
                             RunFace = fontManager.MatchCharacter(typeface.FamilyName, typeface.FontWeight, typeface.FontWidth, typeface.FontSlant, null, pch[pos]);
-
-                            // If couldn't use the specified font
+                            count = 1;
                             if (RunFace == null)
+                            {
                                 RunFace = typeface;
+                                count = 1;
+                            }
+                            else
+                            {
+                                // Consume as many as possible
+                                count = RunFace.GetGlyphs((IntPtr)(pch + pos), length - pos, SKEncoding.Utf32, out var glyphs);
 
-                            // Consume as many characters as possible using the requested type face
-                            count = 1;// RunFace.GetGlyphs((IntPtr)(pch + pos), length - pos, SKEncoding.Utf32, out var glyphs);
+                                // But don't take control characters or spaces...
+                                for (int i = 1; i < count; i++)
+                                {
+                                    if (pch[pos] <= 32)
+                                    {
+                                        count = i;
+                                        break;
+                                    }
+                                }
+                            }
                         }
 
                         // Do we need to start a new Run?
