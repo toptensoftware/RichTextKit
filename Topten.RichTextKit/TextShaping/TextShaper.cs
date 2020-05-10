@@ -274,6 +274,7 @@ namespace Topten.RichTextKit
                 r.GlyphPositions = bufferSet.GlyphPositions.Add((int)buffer.Length, false);
                 r.Clusters = bufferSet.Clusters.Add((int)buffer.Length, false);
                 r.CodePointXCoords = bufferSet.CodePointXCoords.Add(codePoints.Length, false);
+                r.CodePointXCoords.Fill(0);
                 
                 // Convert points
                 var gp = buffer.GlyphPositions;
