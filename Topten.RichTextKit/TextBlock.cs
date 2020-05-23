@@ -93,11 +93,11 @@ namespace Topten.RichTextKit
         /// </remarks>
         public int? MaxLines
         {
-            get => _maxLinesResolved;
+            get => _maxLines;
             set
             {
-                if (value.HasValue && value.Value < 1)
-                    value = 1;
+                if (value.HasValue && value.Value < 0)
+                    value = 0;
 
                 if (value != _maxLines)
                 {
@@ -222,6 +222,86 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
+        /// Appends an ellipsis to this text block
+        /// </summary>
+        /// <remarks>
+        /// This method checks if the text block has already been truncated and if
+        /// not appends an ellipsis without changing the measured vertical layout of the
+        /// text block.  The ellipsis only remains in effect until the block's layout
+        /// is recalculated.
+        /// 
+        /// The text block must have at least one line.  If the block contains no text,
+        /// then use AddText("\n", style) to create a single line with an attached style
+        /// but no text.
+        /// 
+        /// The intended purpose of this is to included an ellipsis on this text block
+        /// when a following text block doesn't fit.
+        /// </remarks>
+        public void AddEllipsis()
+        {
+            // Make sure laid out
+            Layout();
+
+            // Already truncated?
+            if (_truncated)
+                return;
+
+            if (_lines.Count == 0)
+                throw new InvalidOperationException("Ellipsis can't be appended to a text block with no lines");
+
+            // Append the ellipsis
+            var line = _lines[_lines.Count - 1];
+
+            // Because adorning the line with ellipsis resets the XCoord of each font run
+            // to be left aligned, we need to move the glyphs to be left aligned too
+            for (int frIndex = 0; frIndex < line.Runs.Count; frIndex++)
+            {
+                var fr = line.Runs[frIndex];
+                fr.MoveGlyphs(-fr.XCoord, 0);
+            }
+
+            // Append the ellipsis to the line and relayout theline
+            AdornLineWithEllipsis(line, true);
+
+            // Work out the new x-alignment
+            var ta = ResolveTextAlignment();
+            float xAdjust = 0;
+            switch (ta)
+            {
+                case TextAlignment.Right:
+                    xAdjust = (_maxWidth ?? _measuredWidth) - line.Width;
+                    break;
+
+                case TextAlignment.Center:
+                    xAdjust = ((_maxWidth ?? _measuredWidth) - line.Width) / 2;
+                    break;
+            }
+
+            // Adjust the measured width if the adorned line is the widest line
+            if (line.Width > _measuredWidth)
+                _measuredWidth = line.Width;
+
+            // Reposition each run to the correct location
+            for (int frIndex = 0; frIndex < line.Runs.Count; frIndex++)
+            {
+                var fr = line.Runs[frIndex];
+                fr.Line = line;
+                fr.XCoord += xAdjust;
+                if (fr.RunKind == FontRunKind.Ellipsis)
+                {
+                    // The ellipsis has it's xcoord setup, but it's glyphs have never
+                    // been positioned so need to handle this a little differently
+                    fr.MoveGlyphs(fr.XCoord, line.YCoord + line.BaseLine);
+                }
+                else
+                {
+                    // Move the glyphs back to corectly aligned position
+                    fr.MoveGlyphs(fr.XCoord, 0);
+                }
+            }
+        }
+
+        /// <summary>
         /// Lays out the provided text and returns paragraph
         /// </summary>
         /// <returns>A paragraph that can be drawn</returns>
@@ -245,6 +325,7 @@ namespace Topten.RichTextKit
             _measuredWidth = 0;
             _leftOverhang = null;
             _rightOverhang = null;
+            _truncated = false;
 
             // Only layout if actually have some text
             if (_codePoints.Length != 0)
@@ -260,10 +341,10 @@ namespace Topten.RichTextKit
             }
         }
 
-        /// <summary>
-        /// Get the text runs as added by AddText
-        /// </summary>
-        public IReadOnlyList<StyleRun> StyleRuns
+/// <summary>
+/// Get the text runs as added by AddText
+/// </summary>
+public IReadOnlyList<StyleRun> StyleRuns
         {
             get
             {
@@ -375,6 +456,19 @@ namespace Topten.RichTextKit
             }
         }
 
+
+        /// <summary>
+        /// The number of lines in the text
+        /// </summary>
+        public int LineCount
+        {
+            get
+            {
+                Layout();
+                return _lines.Count;
+            }
+        }
+
         /// <summary>
         /// The width of the widest line of text.
         /// </summary>
@@ -389,6 +483,20 @@ namespace Topten.RichTextKit
                 return _measuredWidth;
             }
         }
+
+        /// <summary>
+        /// Indicates if the text was truncated due to max height or max lines
+        /// constraints
+        /// </summary>
+        public bool Truncated
+        {
+            get
+            {
+                Layout();
+                return _truncated;
+            }
+        }
+
 
         /// <summary>
         /// Gets the size of any unused space around the text.
@@ -522,7 +630,13 @@ namespace Topten.RichTextKit
             if (htr.OverLine < 0)
                 htr.OverCodePointIndex = -1;
 
-            System.Diagnostics.Debug.Assert(htr.ClosestCodePointIndex >= 0);
+            if (htr.ClosestCodePointIndex < 0)
+            {
+                if (htr.ClosestLine == _lines.Count - 1 && _lines.Count > 0)
+                    htr.ClosestCodePointIndex = _lines[_lines.Count - 1].End - 1;
+                else
+                    htr.ClosestCodePointIndex = 0;
+            }
 
             return htr;
         }
@@ -541,10 +655,21 @@ namespace Topten.RichTextKit
                         _caretIndicies.Add(r.Clusters[i]);
                     }
                 }
-                _caretIndicies.Add(_codePoints.Length);
+                _caretIndicies.Add(EndIndex);
                 _caretIndicies = _caretIndicies.OrderBy(x => x).Distinct().ToList();
             }
         }
+
+        int EndIndex
+        {
+            get
+            {
+                if (_lines.Count == 0)
+                    return 0;
+                return _lines[_lines.Count - 1].End;
+            }
+        }
+
 
         /// <summary>
         /// Retrieves a list of all valid caret positions
@@ -579,7 +704,7 @@ namespace Topten.RichTextKit
         /// <returns>A CaretInfo struct</returns>
         public CaretInfo GetCaretInfo(int codePointIndex)
         {
-            if (_codePoints.Length == 0 || codePointIndex < 0)
+            if (_codePoints.Length == 0 || codePointIndex < 0 || _lines.Count == 0)
             {
                 return new CaretInfo()
                 {
@@ -632,7 +757,7 @@ namespace Topten.RichTextKit
         public int FindFontRunForCodePointIndex(int codePointIndex)
         {
             // Past end of text?
-            if (codePointIndex >= _codePoints.Length)
+            if (codePointIndex >= EndIndex)
                 return -1;
 
             // Look up font run
@@ -764,6 +889,11 @@ namespace Topten.RichTextKit
         float? _rightOverhang = null;
 
         /// <summary>
+        /// Indicates if the text was truncated by max height/max lines limitations
+        /// </summary>
+        bool _truncated;
+
+        /// <summary>
         /// The final laid out set of lines
         /// </summary>
         List<TextLine> _lines = new List<TextLine>();
@@ -777,7 +907,7 @@ namespace Topten.RichTextKit
         /// Resolve the text alignment when set to Auto
         /// </summary>
         /// <returns>Resolved text alignment (left, right or center)</returns>
-        TextAlignment ResolveTextAlignment()
+        internal TextAlignment ResolveTextAlignment()
         {
             if (_textAlignment == TextAlignment.Auto)
                 return _resolvedBaseDirection == TextDirection.LTR ? TextAlignment.Left : TextAlignment.Right;
@@ -1102,6 +1232,9 @@ namespace Topten.RichTextKit
             int codePointIndexSplit = -1;   // Code point index of the last fitting break point measure position
             int codePointIndexWrap = -1;    // Code point index of the last fitting breaj point wrap position
 
+            if (!CheckHeightConstraints())
+                return;
+
             while (frIndex < _fontRuns.Count)
             {
                 // Get the font run, update it's position
@@ -1211,6 +1344,15 @@ namespace Topten.RichTextKit
 
                 // Build the final line
                 BuildLine(frIndexStartOfLine, frSplitIndex, frTrailingWhiteSpaceIndex);
+
+                // Special case for the first line not fitting
+                if (_lines.Count == 1 && _measuredHeight > _maxHeightResolved)
+                {
+                    _truncated = true;
+                    _measuredWidth = 0;
+                    _lines.RemoveAt(0);
+                    return;
+                }
 
                 // Reset for the next line
                 frSplitIndex = -1;
@@ -1515,7 +1657,6 @@ namespace Topten.RichTextKit
                     _measuredWidth = l.Width;
             }
 
-            // Finalize lines
             var ta = ResolveTextAlignment();
             foreach (var line in _lines)
             {
@@ -1540,6 +1681,13 @@ namespace Topten.RichTextKit
                     fr.XCoord += xAdjust;
                     fr.MoveGlyphs(fr.XCoord, line.YCoord + line.BaseLine);
                 }
+            }
+
+            // Remove the font runs that weren't assigned to a line because the text
+            // was truncated
+            while (_fontRuns.Count > 0 && _fontRuns[_fontRuns.Count-1].Line == null)
+            {
+                _fontRuns.RemoveAt(_fontRuns.Count - 1);
             }
         }
 
@@ -1608,13 +1756,14 @@ namespace Topten.RichTextKit
         /// Update the current line with a new font run containing the trailing ellipsis
         /// </summary>
         /// <param name="line">The line to be updated</param>
-        void AdornLineWithEllipsis(TextLine line)
+        /// <param name="postLayout">True if the ellipsis is being added post layout via a user call to AddEllipsis()</param>
+        void AdornLineWithEllipsis(TextLine line, bool postLayout = false)
         {
             var lastRun = line.Runs[line.Runs.Count - 1];
 
             // Don't add ellipsis if the last run actually
             // has all the text...
-            if (lastRun.End == _codePoints.Length)
+            if (!postLayout && lastRun.End == _codePoints.Length)
                 return;
 
             // Remove all trailing whitespace from the line
@@ -1638,8 +1787,13 @@ namespace Topten.RichTextKit
             // Create a new run for the ellipsis
             var ellipsisRun = CreateEllipsisRun(lastRun);
 
-            // Is there enough room in the line
-            var removeWidth = totalWidth + ellipsisRun.Width - _maxWidthResolved;
+            // Work out how much room we've got.  If this is user request
+            // to append the ellipsis and MaxWidth isn't set then make sure
+            // we don't change our previously measured width be using that
+            // previous measurement as the limit
+            var maxWidth = _maxWidthResolved;
+
+            var removeWidth = totalWidth + ellipsisRun.Width - maxWidth;
             if (removeWidth > 0)
             {
                 for (int i = line.Runs.Count-1; i>=0; i--)
@@ -1669,7 +1823,8 @@ namespace Topten.RichTextKit
 
                         // Keep the remaining part in case we need it later (not sure why,
                         // but seems wise).
-                        _fontRuns.Insert(_fontRuns.IndexOf(fr) + 1, remaining);
+                        if (!postLayout)
+                            _fontRuns.Insert(_fontRuns.IndexOf(fr) + 1, remaining);
                     }
 
                     break;
@@ -1679,15 +1834,23 @@ namespace Topten.RichTextKit
             // Add it to the line
             line.RunsInternal.Add(ellipsisRun);
 
-            // Remember old line height
-            var oldHeight = line.Height;
-            _measuredHeight -= line.Height;
+            if (postLayout)
+            {
+                // No layout adjustmenst if this is post layout change
+                LayoutLine(line);
+            }
+            else
+            {
+                // Remember old line height
+                var oldHeight = line.Height;
+                _measuredHeight -= line.Height;
 
-            // Layout the line again
-            LayoutLine(line);
+                // Layout the line again
+                LayoutLine(line);
 
-            // Adjust height just in case it changed
-            _measuredHeight += line.Height;
+                // Adjust height just in case it changed
+                _measuredHeight += line.Height;
+            }
         }
 
         /// <summary>
@@ -1699,7 +1862,7 @@ namespace Topten.RichTextKit
         bool CheckHeightConstraints()
         {
             // Have we exceeded the height limit
-            if (_measuredHeight > _maxHeightResolved)
+            if (_measuredHeight > _maxHeightResolved || _maxHeightResolved <= 0)
             {
                 // Remove the last line (unless it's the only line)
                 if (_lines.Count > 1)
@@ -1707,14 +1870,22 @@ namespace Topten.RichTextKit
                     _measuredHeight -= _lines[_lines.Count - 1].Height;
                     _lines.RemoveAt(_lines.Count - 1);
                 }
-                AdornLineWithEllipsis(_lines[_lines.Count-1]);
+                if (_lines.Count > 0)
+                {
+                    AdornLineWithEllipsis(_lines[_lines.Count - 1]);
+                }
+                _truncated = true;
                 return false;
             }
 
             // Have we hit the line count limit?
             if (_lines.Count >= _maxLinesResolved)
             {
-                AdornLineWithEllipsis(_lines[_lines.Count-1]);
+                if (_lines.Count > 0)
+                {
+                    AdornLineWithEllipsis(_lines[_lines.Count - 1]);
+                }
+                _truncated = true;
                 return false;
             }
 
