@@ -116,5 +116,54 @@ namespace Topten.RichTextKit
             get;
             set;
         } = TextDirection.Auto;
+
+
+        /// <summary>
+        /// Modifies this style with one or more attribute changes and returns a new style
+        /// </summary>
+        /// <remarks>
+        /// Note this method always creates a new style instance.To avoid creating excessive 
+        /// style instances, consider using the StyleManager which caches instances of styles 
+        /// with the same attributes
+        /// </remarks>
+        /// <param name="fontFamily">The new font family</param>
+        /// <param name="fontSize">The new font size</param>
+        /// <param name="fontWeight">The new font weight</param>
+        /// <param name="fontItalic">The new font italic</param>
+        /// <param name="underline">The new underline style</param>
+        /// <param name="strikeThrough">The new strike-through style</param>
+        /// <param name="lineHeight">The new line height</param>
+        /// <param name="textColor">The new text color</param>
+        /// <param name="fontVariant">The new font variant</param>
+        /// <param name="textDirection">The new text direction</param>
+        /// <returns>A new style with the passed attributes changed</returns>
+        public Style Modify(
+               string fontFamily = null,
+               float? fontSize = null,
+               int? fontWeight = null,
+               bool? fontItalic = null,
+               UnderlineStyle? underline = null,
+               StrikeThroughStyle? strikeThrough = null,
+               float? lineHeight = null,
+               SKColor? textColor = null,
+               FontVariant? fontVariant = null,
+               TextDirection? textDirection = null
+            )
+        {
+            // Resolve new style against current style
+            return new Style()
+            {
+                FontFamily = fontFamily ?? this.FontFamily,
+                FontSize = fontSize ?? this.FontSize,
+                FontWeight = fontWeight ?? this.FontWeight,
+                FontItalic = fontItalic ?? this.FontItalic,
+                Underline = underline ?? this.Underline,
+                StrikeThrough = strikeThrough ?? this.StrikeThrough,
+                LineHeight = lineHeight ?? this.LineHeight,
+                TextColor = textColor ?? this.TextColor,
+                FontVariant = fontVariant ?? this.FontVariant,
+                TextDirection = textDirection ?? this.TextDirection,
+            };
+        }
     }
 }
