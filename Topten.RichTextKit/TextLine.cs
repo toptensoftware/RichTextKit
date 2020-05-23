@@ -169,6 +169,39 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
+        /// Code point index of start of this line
+        /// </summary>
+        public int Start
+        {
+            get
+            {
+                var pl = PreviousLine;
+                return PreviousLine == null ? 0 : PreviousLine.End;
+            }
+        }
+
+        /// <summary>
+        /// The length of this line in codepoints
+        /// </summary>
+        public int Length => End - Start;
+
+        /// <summary>
+        /// The code point index of the first character after this line
+        /// </summary>
+        public int End
+        {
+            get
+            {
+                // Get the last run that's not an ellipsis
+                var lastRun = this.Runs.LastOrDefault(x => x.RunKind != FontRunKind.Ellipsis);
+
+                // If last run found, then it's the end of the run, other wise it's the start index
+                return lastRun == null ? Start : lastRun.End;
+            }
+        }
+
+
+        /// <summary>
         /// Hit test this line, working out the cluster the x position is over
         /// and closest to.
         /// </summary>
@@ -186,7 +219,7 @@ namespace Topten.RichTextKit
             if (Runs.Count > 0)
             {
                 var lastRun = Runs[Runs.Count - 1];
-                if (lastRun.RunKind == FontRunKind.TrailingWhitespace)
+                if (lastRun.RunKind == FontRunKind.TrailingWhitespace || lastRun.RunKind == FontRunKind.Ellipsis)
                 {
                     if ((lastRun.Direction == TextDirection.LTR && x >= lastRun.XCoord + lastRun.Width) ||
                         (lastRun.Direction == TextDirection.RTL && x < lastRun.XCoord))
@@ -203,6 +236,10 @@ namespace Topten.RichTextKit
             // Check all runs
             foreach (var r in Runs)
             {
+                // Ignore ellipsis runs
+                if (r.RunKind == FontRunKind.Ellipsis)
+                    continue;
+
                 if (x < r.XCoord)
                 {
                     // Before the run...
