@@ -43,12 +43,12 @@ namespace Topten.RichTextKit
         public Slice<int> CodePoints => CodePointBuffer.SubSlice(Start, Length);
 
         /// <summary>
-        /// Index into _codePoints buffer of the start of this run
+        /// Code point index of the start of this run
         /// </summary>
         public int Start;
 
         /// <summary>
-        /// The length of this run (in codepoints)
+        /// The length of this run in codepoints
         /// </summary>
         public int Length;
 
@@ -499,7 +499,7 @@ namespace Topten.RichTextKit
         internal void Paint(PaintTextContext ctx)
         {
             // Paint selection?
-            if (ctx.PaintSelectionBackground != null)
+            if (ctx.PaintSelectionBackground != null && RunKind != FontRunKind.Ellipsis)
             {
                 float selStartXCoord;
                 if (ctx.SelectionStart < Start)
