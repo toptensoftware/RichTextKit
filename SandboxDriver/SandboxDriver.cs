@@ -54,22 +54,22 @@ namespace SandboxDriver
             string typefaceName = "Segoe UI";
             //string typefaceName = "Segoe Script";
 
-            var styleSmall = new Style() { FontFamily = typefaceName, FontSize = 12 * Scale };
-            var styleScript = new Style() { FontFamily = "Segoe Script", FontSize = 18 * Scale };
-            var styleHeading = new Style() { FontFamily = typefaceName, FontSize = 24 * Scale, FontWeight = 700 };
-            var styleNormal = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, LineHeight = 1.0f };
-            var styleFixedPitch = new Style() { FontFamily = "Courier New", FontSize = 18 * Scale, LineHeight = 1.0f };
-            var styleLTR = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, TextDirection = TextDirection.LTR };
-            var styleBold = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, FontWeight = 700 };
-            var styleUnderline = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, Underline = UnderlineStyle.Gapped, TextColor = new SKColor(0xFFFF0000) };
-            var styleStrike = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, StrikeThrough = StrikeThroughStyle.Solid };
-            var styleSubScript = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, FontVariant = FontVariant.SubScript };
-            var styleSuperScript = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, FontVariant = FontVariant.SuperScript };
-            var styleItalic = new Style() { FontFamily = typefaceName, FontItalic = true, FontSize = 18 * Scale };
-            var styleBoldLarge = new Style() { FontFamily = typefaceName, FontSize = 28 * Scale, FontWeight = 700 };
-            var styleRed = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, TextColor = new SKColor(0xFFFF0000) };
-            var styleBlue = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale, TextColor = new SKColor(0xFF0000FF) };
-            var styleFontAwesome = new Style() { FontFamily = "FontAwesome", FontSize = 24 };
+            var styleNormal = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale };
+            var styleSmall = styleNormal.Modify(fontSize: 12 * Scale);
+            var styleScript = styleNormal.Modify(fontFamily: "Segoe Script");
+            var styleHeading = styleNormal.Modify(fontSize: 24 * Scale, fontWeight: 700);
+            var styleFixedPitch = styleNormal.Modify(fontFamily: "Courier New");
+            var styleLTR = styleNormal.Modify(textDirection: TextDirection.LTR);
+            var styleBold = styleNormal.Modify(fontWeight: 700);
+            var styleUnderline = styleNormal.Modify(underline: UnderlineStyle.Gapped, textColor: new SKColor(0xFFFF0000));
+            var styleStrike = styleNormal.Modify(strikeThrough: StrikeThroughStyle.Solid);
+            var styleSubScript = styleNormal.Modify(fontVariant: FontVariant.SubScript);
+            var styleSuperScript = styleNormal.Modify(fontVariant: FontVariant.SuperScript);
+            var styleItalic = styleNormal.Modify(fontItalic: true);
+            var styleBoldLarge = styleNormal.Modify(fontSize: 28 * Scale, fontWeight: 700);
+            var styleRed = styleNormal.Modify(textColor: new SKColor(0xFFFF0000));
+            var styleBlue = styleNormal.Modify(textColor: new SKColor(0xFF0000FF));
+            var styleFontAwesome = new Style() { FontFamily = "FontAwesome", FontSize = 24 * Scale};
 
 
             _textBlock.Clear();
@@ -112,6 +112,9 @@ namespace SandboxDriver
                     break;
 
                 case 1:
+                    _textBlock.AddText("\n\n", styleNormal);
+                    //_textBlock.AddEllipsis();
+                    /*
                     _textBlock.AddText("Hello Wor", styleNormal);
                     _textBlock.AddText("ld", styleRed);
                     _textBlock.AddText(". This is normal 18px. These are emojis: 🌐 🍪 🍕 🚀 🏴‍☠️", styleNormal);
@@ -128,6 +131,7 @@ namespace SandboxDriver
                     _textBlock.AddText("हालाँकि प्रचलित रूप पूज", styleNormal);
                     _textBlock.AddText(", Han: ", styleNormal);
                     _textBlock.AddText("緳 踥踕", styleNormal);
+                    */
                     break;
 
                 case 2:
@@ -246,6 +250,10 @@ namespace SandboxDriver
                 }
 
                 ci = _textBlock.GetCaretInfo(htr.Value.ClosestCodePointIndex);
+                if (ci.Value.NextCodePointIndex > 700)
+                {
+                    int x = 3;
+                }
             }
 
             if (ShowMeasuredSize)
@@ -315,6 +323,14 @@ namespace SandboxDriver
 
             state = $"Selection: {options.SelectionStart}-{options.SelectionEnd} Closest: {(htr.HasValue ? htr.Value.ClosestCodePointIndex.ToString() : "-")}";
             canvas.DrawText(state, margin, 40, new SKPaint()
+            {
+                Typeface = SKTypeface.FromFamilyName("Arial"),
+                TextSize = 12,
+                IsAntialias = true,
+            });
+
+            state = $"Measured: {_textBlock.MeasuredWidth} x {_textBlock.MeasuredHeight} Lines: {_textBlock.Lines.Count} Truncated: {_textBlock.Truncated}";
+            canvas.DrawText(state, margin, 60, new SKPaint()
             {
                 Typeface = SKTypeface.FromFamilyName("Arial"),
                 TextSize = 12,
