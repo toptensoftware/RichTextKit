@@ -187,7 +187,14 @@ namespace Topten.RichTextKit
         /// <returns>Debug string</returns>
         public override string ToString()
         {
-            return $"{Start} - {End} @ {XCoord} - {XCoord + Width} = '{Utf32Utils.FromUtf32(CodePoints)}'";
+            switch (RunKind)
+            {
+                case FontRunKind.Normal:
+                    return $"{Start} - {End} @ {XCoord} - {XCoord + Width} = '{Utf32Utils.FromUtf32(CodePoints)}'";
+
+                default:
+                    return $"{Start} - {End} @ {XCoord} - {XCoord + Width} {RunKind}'";
+            }
         }
 
         /// <summary>
