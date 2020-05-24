@@ -26,32 +26,46 @@ namespace Topten.RichTextKit
     /// </summary>
     public class Style : IStyle
     {
+        void CheckNotSealed()
+        {
+            if (_sealed)
+                throw new InvalidOperationException("Style has been sealed and can't be modified");
+        }
+
+        /// <summary>
+        /// Seals the style to prevent it from further modification
+        /// </summary>
+        public void Seal()
+        {
+            _sealed = true;
+        }
+
         /// <summary>
         /// The font family for text this text run (defaults to "Arial").
         /// </summary>
         public string FontFamily
         {
-            get;
-            set;
-        } = "Arial";
+            get => _fontFamily;
+            set { CheckNotSealed(); _fontFamily = value; }
+        }
 
         /// <summary>
         /// The font size for text in this run (defaults to 16).
         /// </summary>
         public float FontSize
         {
-            get;
-            set;
-        } = 16;
+            get => _fontSize;
+            set { CheckNotSealed(); _fontSize = value; }
+        }
 
         /// <summary>
         /// The font weight for text in this run (defaults to 400).
         /// </summary>
         public int FontWeight
         {
-            get;
-            set;
-        } = 400;
+            get => _fontWeight;
+            set { CheckNotSealed(); _fontWeight = value; }
+        }
 
         /// <summary>
         /// True if the text in this run should be displayed in an italic
@@ -59,8 +73,8 @@ namespace Topten.RichTextKit
         /// </summary>
         public bool FontItalic
         {
-            get;
-            set;
+            get => _fontItalic;
+            set { CheckNotSealed(); _fontItalic = value; }
         }
 
         /// <summary>
@@ -68,8 +82,8 @@ namespace Topten.RichTextKit
         /// </summary>
         public UnderlineStyle Underline
         {
-            get;
-            set;
+            get => _underlineStyle;
+            set { CheckNotSealed(); _underlineStyle = value; }
         }
 
         /// <summary>
@@ -77,8 +91,8 @@ namespace Topten.RichTextKit
         /// </summary>
         public StrikeThroughStyle StrikeThrough
         {
-            get;
-            set;
+            get => _strikeThrough;
+            set { CheckNotSealed(); _strikeThrough = value; }
         }
 
         /// <summary>
@@ -86,26 +100,26 @@ namespace Topten.RichTextKit
         /// </summary>
         public float LineHeight
         {
-            get;
-            set;
-        } = 1.0f;
+            get => _lineHeight;
+            set { CheckNotSealed(); _lineHeight = value; }
+        }
 
         /// <summary>
         /// The text color for text in this run (defaults to black).
         /// </summary>
         public SKColor TextColor
         {
-            get;
-            set;
-        } = new SKColor(0xFF000000);
+            get => _textColor;
+            set { CheckNotSealed(); _textColor = value; }
+        }
 
         /// <summary>
         /// The character spacing for text in this run (defaults to 0).
         /// </summary>
         public float LetterSpacing
         {
-            get;
-            set;
+            get => _letterSpacing;
+            set { CheckNotSealed(); _letterSpacing = value; }
         }
 
         /// <summary>
@@ -113,8 +127,8 @@ namespace Topten.RichTextKit
         /// </summary>
         public FontVariant FontVariant
         {
-            get;
-            set;
+            get => _fontVariant;
+            set { CheckNotSealed(); _fontVariant = value; }
         }
 
         /// <summary>
@@ -122,10 +136,23 @@ namespace Topten.RichTextKit
         /// </summary>
         public TextDirection TextDirection
         {
-            get;
-            set;
-        } = TextDirection.Auto;
+            get => _textDirection;
+            set { CheckNotSealed(); _textDirection = value; }
+        }
 
+
+        bool _sealed;
+        string _fontFamily = "Arial";
+        float _fontSize = 16;
+        int _fontWeight = 400;
+        bool _fontItalic;
+        UnderlineStyle _underlineStyle;
+        StrikeThroughStyle _strikeThrough;
+        float _lineHeight = 1.0f;
+        SKColor _textColor = new SKColor(0xFF000000);
+        float _letterSpacing;
+        FontVariant _fontVariant;
+        TextDirection _textDirection = TextDirection.Auto;
 
         /// <summary>
         /// Modifies this style with one or more attribute changes and returns a new style
