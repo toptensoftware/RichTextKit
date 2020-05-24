@@ -7,9 +7,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
     <Authors>Topten Software</Authors>
-    <PackageLicenseUrl>https://www.toptensoftware.com/richtextkey/license</PackageLicenseUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/toptensoftware/richtextkit</PackageProjectUrl>
-    <PackageIconUrl>https://www.toptensoftware.com/nuget_icon.png</PackageIconUrl>
+    <PackageIcon>nuget-icon.png</PackageIcon>
     <PackageTags>rich text, rich, text, Skia, SkiaSharp, Font</PackageTags>
     <Description>Easy to use rich text rendering for SkiaSharp, including font-fallback, bi-directional text support and more...</Description>
     <Company>Topten Software</Company>
@@ -38,6 +38,10 @@
   <ItemGroup>
     <PackageReference Include="SkiaSharp" Version="1.68.0" />
     <PackageReference Include="HarfBuzzSharp" Version="2.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+      <None Include="../Artwork/nuget-icon.png" Pack="true" PackagePath=""/>
   </ItemGroup>
 
 </Project>
