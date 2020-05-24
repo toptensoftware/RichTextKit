@@ -101,7 +101,7 @@ namespace RichStringSandbox
             _richString.MaxWidth = width;
             _richString.MaxHeight = height;
 
-            var state = $"Measured: {_richString.MeasuredWidth} x {_richString.MeasuredHeight} Lines: {_richString.LineCount} Truncated: {_richString.Truncated} Length: {_richString.MeasuredLength}";
+            var state = $"Measured: {_richString.MeasuredWidth} x {_richString.MeasuredHeight} Lines: {_richString.LineCount} Truncated: {_richString.Truncated} Length: {_richString.MeasuredLength} Revision: {_richString.Revision}";
             canvas.DrawText(state, margin, 20, new SKPaint()
             {
                 Typeface = SKTypeface.FromFamilyName("Arial"),

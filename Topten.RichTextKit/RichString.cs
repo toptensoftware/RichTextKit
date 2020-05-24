@@ -16,6 +16,7 @@
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Topten.RichTextKit
@@ -209,6 +210,7 @@ namespace Topten.RichTextKit
 
             // Start new paragraph
             _paragraphs.Add(new ParagraphInfo(_paragraphs[_paragraphs.Count - 1]));
+            Invalidate();
             return this;
         }
 
@@ -220,6 +222,7 @@ namespace Topten.RichTextKit
         public RichString MarginLeft(float value)
         {
             _paragraphs[_paragraphs.Count - 1].MarginLeft = value;
+            Invalidate();
             return this;
         }
 
@@ -231,6 +234,7 @@ namespace Topten.RichTextKit
         public RichString MarginRight(float value)
         {
             _paragraphs[_paragraphs.Count - 1].MarginRight = value;
+            Invalidate();
             return this;
         }
 
@@ -242,6 +246,7 @@ namespace Topten.RichTextKit
         public RichString MarginTop(float value)
         {
             _paragraphs[_paragraphs.Count - 1].MarginTop = value;
+            Invalidate();
             return this;
         }
 
@@ -254,6 +259,7 @@ namespace Topten.RichTextKit
         public RichString MarginBottom(float value)
         {
             _paragraphs[_paragraphs.Count - 1].MarginBottom = value;
+            Invalidate();
             return this;
         }
 
@@ -266,6 +272,7 @@ namespace Topten.RichTextKit
         public RichString Alignment(TextAlignment value)
         {
             _paragraphs[_paragraphs.Count - 1].TextAlignment = value;
+            Invalidate();
             return this;
         }
 
@@ -277,6 +284,7 @@ namespace Topten.RichTextKit
         public RichString BaseDirection(TextDirection value)
         {
             _paragraphs[_paragraphs.Count - 1].BaseDirection = value;
+            Invalidate();
             return this;
         }
 
@@ -297,7 +305,7 @@ namespace Topten.RichTextKit
                 if (_maxWidth != value)
                 {
                     _maxWidth = value;
-                    InvalidateLayout();
+                    Invalidate();
                 }
             }
         }
@@ -322,7 +330,7 @@ namespace Topten.RichTextKit
                 if (value != _maxHeight)
                 {
                     _maxHeight = value;
-                    InvalidateLayout();
+                    Invalidate();
                 }
             }
         }
@@ -347,7 +355,7 @@ namespace Topten.RichTextKit
                 if (value != _maxLines)
                 {
                     _maxLines = value;
-                    InvalidateLayout();
+                    Invalidate();
                 }
             }
         }
@@ -364,7 +372,7 @@ namespace Topten.RichTextKit
                 if (_textAlignment != value)
                 {
                     _textAlignment = value;
-                    InvalidateLayout();
+                    Invalidate();
                 }
             }
         }
@@ -381,7 +389,7 @@ namespace Topten.RichTextKit
                 if (_baseDirection != value)
                 {
                     _baseDirection = value;
-                    InvalidateLayout();
+                    Invalidate();
                 }
             }
         }
@@ -395,8 +403,12 @@ namespace Topten.RichTextKit
             get => _baseStyle;
             set
             {
+                if (!_baseStyle.IsSame(value))
+                {
+                    _needsFullLayout = true;
+                    Invalidate();
+                }
                 _baseStyle = value;
-                _needsFullLayout = true;
             }
         }
 
@@ -531,6 +543,27 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
+        /// Returns the revision number of the content of this rich text string
+        /// </summary>
+        /// <remarks>
+        /// If the revision number of a text string has not changed then painting it 
+        /// again will result in the exact same representation as the previous time.
+        /// </remarks>
+        public uint Revision
+        {
+            get
+            {
+                if (!_revisionValid)
+                {
+                    _revision++;
+                    _revisionValid = true;
+                }
+                return _revision;
+            }
+        }
+
+
+        /// <summary>
         /// Hit test this string
         /// </summary>
         /// <param name="x">The x-coordinate relative to top left of the string</param>
@@ -606,18 +639,27 @@ namespace Topten.RichTextKit
         /// Calculates useful information for displaying a caret
         /// </summary>
         /// <param name="codePointIndex">The code point index of the caret</param>
-        /// <returns>A CaretInfo struct</returns>
+        /// <returns>A CaretInfo struct, or CaretInfo.None</returns>
         public CaretInfo GetCaretInfo(int codePointIndex)
         {
             Layout();
 
-            if (codePointIndex < 0)
-                codePointIndex = 0;
-            if (codePointIndex > MeasuredLength)
-                codePointIndex = MeasuredLength;
+            // Is it outside the displayed range?
+            if (codePointIndex < 0 || codePointIndex > MeasuredLength)
+                return CaretInfo.None;
 
             // Find the paragraph containing that code point
-            var p = ParagraphForCodePointIndex(codePointIndex);
+            ParagraphInfo p;
+            if (codePointIndex == MeasuredLength)
+            {
+                // Special case for after the last displayed paragraph
+                p = _paragraphs.LastOrDefault(x => !x.Truncated);
+            }
+            else
+            {
+                p = ParagraphForCodePointIndex(codePointIndex);
+            }
+
 
             // Get the caret info
             var ci = p.TextBlock.GetCaretInfo(codePointIndex - p.CodePointOffset);
@@ -645,9 +687,10 @@ namespace Topten.RichTextKit
 
 
 
-        void InvalidateLayout()
+        void Invalidate()
         {
             _needsLayout = true;
+            _revisionValid = false;
         }
 
         void Layout()
@@ -741,9 +784,12 @@ namespace Topten.RichTextKit
         {
             _paragraphs[_paragraphs.Count - 1]._items.Add(item);
             _needsFullLayout = true;
+            Invalidate();
             return this;
         }
 
+        bool _revisionValid = false;
+        uint _revision = 0;
         bool _needsLayout = true;
         bool _needsFullLayout = true;
         float? _maxWidth;
