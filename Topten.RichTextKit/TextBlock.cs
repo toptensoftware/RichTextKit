@@ -164,9 +164,46 @@ namespace Topten.RichTextKit
             _hasTextDirectionOverrides = false;
         }
 
+
+        /// <summary>
+        /// Converts a code point index to a character index
+        /// </summary>
+        /// <remarks>
+        /// This method only works when the text buffer was built using the 
+        /// AddText(string) method
+        /// </remarks>
+        /// <param name="codePointIndex">The code point index to convert</param>
+        /// <returns>The converted index</returns>
+        public int CodePointToCharacterIndex(int codePointIndex)
+        {
+            return _codePoints.Utf32OffsetToUtf16Offset(codePointIndex);
+        }
+
+        /// <summary>
+        /// Converts a character index to a code point index
+        /// </summary>
+        /// <remarks>
+        /// This method only works when the text buffer was built using the 
+        /// AddText(string) method
+        /// </remarks>
+        /// <param name="characterIndex">The character index to convert</param>
+        /// <returns>The converted index</returns>
+        public int CharacterToCodePointIndex(int characterIndex)
+        {
+            return _codePoints.Utf16OffsetToUtf32Offset(characterIndex);
+        }
+
         /// <summary>
         /// Add text to this paragraph
         /// </summary>
+        /// <remarks>
+        /// The added text will be internally coverted to UTF32.  
+        /// 
+        /// Note that all text indicies returned by and accepted by this object will 
+        /// be UTF32 "code point indicies".  To convert between UTF16 character indicies 
+        /// and UTF32 code point indicies use the <see cref="CodePointToCharacterIndex(int)"/> 
+        /// and <see cref="CharacterToCodePointIndex(int)"/> methods
+        /// </remarks>
         /// <param name="text">The text to add</param>
         /// <param name="style">The style of the text</param>
         public StyleRun AddText(string text, IStyle style)
@@ -456,6 +493,30 @@ public IReadOnlyList<StyleRun> StyleRuns
             }
         }
 
+        /// <summary>
+        /// The length of the added text in code points
+        /// </summary>
+        public int Length => _codePoints.Length;
+
+        /// <summary>
+        /// The length of the displayed text (in code points)
+        /// </summary>
+        /// <remarks>
+        /// If the text is truncated, this is the index of the point
+        /// at which the ellipsis was inserted.  If the text it not
+        /// truncated, is the length of all added text.
+        /// </remarks>
+        public int MeasuredLength
+        {
+            get
+            {
+                Layout();
+                if (_lines.Count == 0)
+                    return 0;
+                return _lines[_lines.Count - 1].End;
+            }
+        }
+
 
         /// <summary>
         /// The number of lines in the text
@@ -655,21 +716,10 @@ public IReadOnlyList<StyleRun> StyleRuns
                         _caretIndicies.Add(r.Clusters[i]);
                     }
                 }
-                _caretIndicies.Add(EndIndex);
+                _caretIndicies.Add(MeasuredLength);
                 _caretIndicies = _caretIndicies.OrderBy(x => x).Distinct().ToList();
             }
         }
-
-        int EndIndex
-        {
-            get
-            {
-                if (_lines.Count == 0)
-                    return 0;
-                return _lines[_lines.Count - 1].End;
-            }
-        }
-
 
         /// <summary>
         /// Retrieves a list of all valid caret positions
@@ -704,16 +754,16 @@ public IReadOnlyList<StyleRun> StyleRuns
         /// <returns>A CaretInfo struct</returns>
         public CaretInfo GetCaretInfo(int codePointIndex)
         {
+            // Empty text block?
             if (_codePoints.Length == 0 || codePointIndex < 0 || _lines.Count == 0)
             {
-                return new CaretInfo()
-                {
-                    CodePointIndex = -1,
-                    NextCodePointIndex = -1,
-                    PreviousCodePointIndex = -1,
-                    FontRun = null,
-                    StyleRun = null,
-                };
+                return CaretInfo.None;
+            }
+
+            // Past the measured length?
+            if (codePointIndex > MeasuredLength)
+            {
+                return CaretInfo.None;
             }
 
             // Look up the caret index
@@ -722,32 +772,91 @@ public IReadOnlyList<StyleRun> StyleRuns
             // Create caret info
             var ci = new CaretInfo();
             ci.CodePointIndex = _caretIndicies[cpii];
-            ci.NextCodePointIndex = cpii + 1 < _caretIndicies.Count ? _caretIndicies[cpii + 1] : ci.CodePointIndex;
-            ci.PreviousCodePointIndex = cpii > 0 ? _caretIndicies[cpii - 1] : 0;
 
             var frIndex = FindFontRunForCodePointIndex(codePointIndex);
-
+            FontRun fr = null;
             if (frIndex >= 0)
-                ci.FontRun = _fontRuns[frIndex];
-
-            if (frIndex > 0)
             {
-                if (ci.FontRun.Start == codePointIndex && frIndex > 0)
+                fr = _fontRuns[frIndex];
+
+                if (fr.Start == codePointIndex && frIndex > 0)
                 {
                     var frPrior = _fontRuns[frIndex - 1];
                     if (frPrior.Direction == TextDirection.RTL && frPrior.End == codePointIndex)
                     {
                         if (frPrior.RunKind != FontRunKind.TrailingWhitespace)
-                            ci.FontRun = frPrior;
+                            fr = frPrior;
                     }
                 }
             }
+            else
+            {
+                var lastLine = _lines[_lines.Count - 1];
+                if (lastLine.RunsInternal.Count > 0)
+                    fr = lastLine.RunsInternal[lastLine.RunsInternal.Count - 1];
+            }
 
-            if (ci.FontRun == null)
-                ci.FontRun = _fontRuns[_fontRuns.Count - 1];
+            if (fr == null)
+                return CaretInfo.None;
+
+            // Setup caret coordinates
+            ci.CaretXCoord = ci.CodePointIndex < 0 ? 0 : fr.GetXCoordOfCodePointIndex(ci.CodePointIndex);
+            ci.CaretRectangle = CalculateCaretRectangle(ci, fr);
 
             return ci;
         }
+
+        SKRect CalculateCaretRectangle(CaretInfo ci, FontRun fr)
+        {
+            if (ci.CodePointIndex < 0)
+                return SKRect.Empty;
+
+            // Get the font run to be used for caret metrics
+            fr = GetFontRunForCaretMetrics(ci, fr);
+
+            // Setup the basic rectangle
+            var rect = new SKRect();
+            rect.Left = ci.CaretXCoord;
+            rect.Top = fr.Line.YCoord + fr.Line.BaseLine + fr.Ascent;
+            rect.Right = rect.Left;
+            rect.Bottom = fr.Line.YCoord + fr.Line.BaseLine + fr.Descent;
+
+            // Apply slant if italic
+            if (fr.Style.FontItalic)
+            {
+                rect.Left -= rect.Height / 14;
+                rect.Right = rect.Left + rect.Height / 5;
+            }
+
+            return rect;
+        }
+
+        /// <summary>
+        /// Internal helper to get the font run that should
+        /// be used for caret metrics.
+        /// </summary>
+        /// <remarks>
+        /// The returned font run is the font run of the previous
+        /// character, or the same character if the first font run
+        /// on the line.
+        /// </remarks>
+        /// <returns>The determined font run</returns>
+        FontRun GetFontRunForCaretMetrics(CaretInfo ci, FontRun fr)
+        {
+            // Same font run?
+            if (ci.CodePointIndex > fr.Start)
+                return fr;
+
+            // Try to get the previous font run in this line
+            var lineRuns = fr.Line.Runs as List<FontRun>;
+            int index = lineRuns.IndexOf(fr);
+            if (index <= 0)
+                return fr;
+
+            // Use the previous font run
+            return lineRuns[index - 1];
+        }
+
 
         /// <summary>
         /// Find the font run holding a code point index
@@ -757,7 +866,7 @@ public IReadOnlyList<StyleRun> StyleRuns
         public int FindFontRunForCodePointIndex(int codePointIndex)
         {
             // Past end of text?
-            if (codePointIndex >= EndIndex)
+            if (codePointIndex > MeasuredLength)
                 return -1;
 
             // Look up font run
@@ -768,10 +877,16 @@ public IReadOnlyList<StyleRun> StyleRuns
             if (frIndex < 0)
                 frIndex = ~frIndex;
 
+            if (frIndex == _fontRuns.Count)
+                frIndex = _fontRuns.Count - 1;
+
+            if (frIndex < 0)
+                return -1;
+
             // Return the font run
             var fr = _fontRuns[frIndex];
             System.Diagnostics.Debug.Assert(codePointIndex >= fr.Start);
-            System.Diagnostics.Debug.Assert(codePointIndex < fr.End);
+            System.Diagnostics.Debug.Assert(codePointIndex <= fr.End);
             return frIndex;
         }
 
@@ -1769,8 +1884,15 @@ public IReadOnlyList<StyleRun> StyleRuns
             // Remove all trailing whitespace from the line
             for (int i = line.Runs.Count - 1; i >= 0; i--)
             {
-                if (line.Runs[i].RunKind == FontRunKind.TrailingWhitespace)
+                var r = line.Runs[i];
+                if (r.RunKind == FontRunKind.TrailingWhitespace)
+                {
                     line.RunsInternal.RemoveAt(i);
+                    if (postLayout)
+                    {
+                        _fontRuns.Remove(r);
+                    }
+                }
             }
 
             // Calculate the total width of the line
@@ -1806,6 +1928,8 @@ public IReadOnlyList<StyleRun> StyleRuns
                     {
                         removeWidth -= fr.Width;
                         line.RunsInternal.RemoveAt(i);
+                        if (postLayout)
+                            _fontRuns.Remove(fr);
                         continue;
                     }
 
@@ -1815,6 +1939,8 @@ public IReadOnlyList<StyleRun> StyleRuns
                     {
                         // Nothing fits, remove it all
                         line.RunsInternal.RemoveAt(i);
+                        if (postLayout)
+                            _fontRuns.Remove(fr);
                     }
                     else
                     {
@@ -1824,7 +1950,10 @@ public IReadOnlyList<StyleRun> StyleRuns
                         // Keep the remaining part in case we need it later (not sure why,
                         // but seems wise).
                         if (!postLayout)
+                        {
                             _fontRuns.Insert(_fontRuns.IndexOf(fr) + 1, remaining);
+                            _fontRuns.Remove(fr);
+                        }
                     }
 
                     break;

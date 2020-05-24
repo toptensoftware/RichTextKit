@@ -11,8 +11,6 @@ namespace SandboxDriver
             FontMapper.Default = new SandboxFontMapper();
         }
 
-        SKTypeface _fontAwesome;
-
         public int ContentModeCount = 13;
         public int ContentMode = 0;
         public TextDirection BaseDirection = TextDirection.LTR;
@@ -250,10 +248,6 @@ namespace SandboxDriver
                 }
 
                 ci = _textBlock.GetCaretInfo(htr.Value.ClosestCodePointIndex);
-                if (ci.Value.NextCodePointIndex > 700)
-                {
-                    int x = 3;
-                }
             }
 
             if (ShowMeasuredSize)

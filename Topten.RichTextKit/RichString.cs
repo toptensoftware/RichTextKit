@@ -1,4 +1,19 @@
-﻿using SkiaSharp;
+﻿// RichTextKit
+// Copyright © 2019 Topten Software. All Rights Reserved.
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); you may 
+// not use this product except in compliance with the License. You may obtain 
+// a copy of the License at
+// 
+// http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software 
+// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT 
+// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
+// License for the specific language governing permissions and limitations 
+// under the License.
+
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -469,6 +484,145 @@ namespace Topten.RichTextKit
             }
         }
 
+        /// <summary>
+        /// Gets the total length of the string in code points
+        /// </summary>
+        public int Length
+        {
+            get
+            {
+                Layout();
+                return _totalLength;
+            }
+        }
+
+        /// <summary>
+        /// Gets the measured length of the string up to the truncation point
+        /// in code points
+        /// </summary>
+        public int MeasuredLength
+        {
+            get
+            {
+                Layout();
+                return _measuredLength;
+            }
+        }
+
+        /// <summary>
+        /// Hit test this string
+        /// </summary>
+        /// <param name="x">The x-coordinate relative to top left of the string</param>
+        /// <param name="y">The x-coordinate relative to top left of the string</param>
+        /// <returns>A HitTestResult</returns>
+        public HitTestResult HitTest(float x, float y)
+        {
+            // Make sure layout is up to date
+            Layout();
+
+            // Find the closest paragraph
+            var para = FindClosestParagraph(y);
+
+            // Get it's paint positio
+            var paintPos = para.TextBlockPaintPosition(this);
+
+            // Hit test
+            var htr = para.TextBlock.HitTest(x - paintPos.X, y - paintPos.Y);
+
+            // Convert the hit test record from TextBlock relative indices
+            // to rich string relative indicies
+            htr.ClosestLine += para.LineOffset;
+            htr.ClosestCodePointIndex += para.CodePointOffset;
+            if (htr.OverLine >= 0)
+                htr.OverLine += para.LineOffset;
+            if (htr.OverCodePointIndex >= 0)
+                htr.OverCodePointIndex += para.CodePointOffset;
+
+            // Done
+            return htr;
+        }
+
+        ParagraphInfo FindClosestParagraph(float y)
+        {
+            // Work out which text block is closest
+            ParagraphInfo pPrev = null;
+            foreach (var p in _paragraphs)
+            {
+                // Ignore truncated paragraphs
+                if (p.Truncated)
+                    break;
+
+                // Is it before this paragraph's text block?
+                if (y < p.yPosition + p.MarginTop && pPrev != null)
+                {
+                    // Is it closer to this paragraph or the previous
+                    // NB: We compare the text block coords, not the paragraphs
+                    //     so that regardless of paragraph margins we always
+                    //     hit test against the closer text block
+                    var distPrev = y - (pPrev.yPosition + pPrev.TextBlock.MeasuredHeight);
+                    var distThis = y - (p.yPosition + p.MarginTop);
+                    if (Math.Abs(distPrev) < Math.Abs(distThis))
+                        return pPrev;
+                    else
+                        return p;
+                }
+
+                // Is it within this paragraph's textblock?
+                if (y < p.yPosition + p.MarginTop + p.TextBlock.MeasuredHeight)
+                {
+                    return p;
+                }
+
+                // Store the previous paragraph
+                pPrev = p;
+            }
+
+            return pPrev;
+        }
+
+
+        /// <summary>
+        /// Calculates useful information for displaying a caret
+        /// </summary>
+        /// <param name="codePointIndex">The code point index of the caret</param>
+        /// <returns>A CaretInfo struct</returns>
+        public CaretInfo GetCaretInfo(int codePointIndex)
+        {
+            Layout();
+
+            if (codePointIndex < 0)
+                codePointIndex = 0;
+            if (codePointIndex > MeasuredLength)
+                codePointIndex = MeasuredLength;
+
+            // Find the paragraph containing that code point
+            var p = ParagraphForCodePointIndex(codePointIndex);
+
+            // Get the caret info
+            var ci = p.TextBlock.GetCaretInfo(codePointIndex - p.CodePointOffset);
+
+            // Adjust it
+            ci.CodePointIndex += p.CodePointOffset;
+
+            // Get it's paint position
+            var paintPos = p.TextBlockPaintPosition(this);
+            ci.CaretXCoord += paintPos.X;
+            ci.CaretRectangle.Offset(paintPos);
+
+            return ci;
+        }
+
+        ParagraphInfo ParagraphForCodePointIndex(int index)
+        {
+            for (int i=1; i<_paragraphs.Count; i++)
+            {
+                if (index < _paragraphs[i].CodePointOffset)
+                    return _paragraphs[i - 1];
+            }
+            return _paragraphs[_paragraphs.Count - 1];
+        }
+
+
 
         void InvalidateLayout()
         {
@@ -514,8 +668,8 @@ namespace Topten.RichTextKit
                 // Layout the paragraph
                 p.Layout(ref lctx);
 
-                // If this paragraph wasn't completely clipped, then update the measured width
-                if (!p.Clipped)
+                // If this paragraph wasn't completely truncated, then update the measured width
+                if (!p.Truncated)
                 {
                     if (p.TextBlock.MeasuredWidth > _measuredWidth)
                         _measuredWidth = p.TextBlock.MeasuredWidth;
@@ -528,7 +682,9 @@ namespace Topten.RichTextKit
 
             _measuredHeight = lctx.yPosition;
             _measuredLines = lctx.lineCount;
-            _truncated = lctx.Clipped;
+            _truncated = lctx.Truncated;
+            _measuredLength = lctx.MeasuredLength;
+            _totalLength = lctx.TotalLength;
         }
 
         struct PaintContext
@@ -544,7 +700,7 @@ namespace Topten.RichTextKit
         {
             public float yPosition;
             public int lineCount;
-            public bool Clipped;
+            public bool Truncated;
 
             public float? maxWidth;
             public float? maxHeight;
@@ -553,6 +709,8 @@ namespace Topten.RichTextKit
             public TextDirection? baseDirection;
             public StyleManager styleManager;
             public ParagraphInfo previousParagraph;
+            public int MeasuredLength;
+            public int TotalLength;
         }
 
 
@@ -578,6 +736,8 @@ namespace Topten.RichTextKit
         float _measuredHeight;
         int _measuredLines;
         bool _truncated;
+        int _measuredLength;
+        int _totalLength;
 
         List<ParagraphInfo> _paragraphs = new List<ParagraphInfo>();
 
@@ -600,36 +760,93 @@ namespace Topten.RichTextKit
             public void DiscardLayout()
             {
                 TextBlock = null;
-                Clipped = false;
+                Truncated = false;
             }
 
-            public void Paint(ref PaintContext ctx)
+            // The position at which to paint this text block
+            // relative to the top left of the entire string
+            public SKPoint TextBlockPaintPosition(RichString owner)
             {
-                if (Clipped)
-                    return;
-
                 // Adjust x-position according to resolved text alignment to prevent
                 // having to re-calculate the TextBlock's layout
-                float yPos = ctx.paintPosition.Y + this.yPosition + MarginTop;
-                float xPos = ctx.paintPosition.X + MarginLeft;
-                if (!ctx.owner.MaxWidth.HasValue)
+                float yPos = this.yPosition + MarginTop;
+                float xPos = MarginLeft;
+                if (!owner.MaxWidth.HasValue)
                 {
                     switch (TextBlock.ResolveTextAlignment())
                     {
                         case RichTextKit.TextAlignment.Center:
-                            xPos += (ctx.owner.MeasuredWidth - TextBlock.MeasuredWidth)/2;
+                            xPos += (owner.MeasuredWidth - TextBlock.MeasuredWidth) / 2;
                             break;
 
                         case RichTextKit.TextAlignment.Right:
-                            xPos += ctx.owner.MeasuredWidth - TextBlock.MeasuredWidth;
+                            xPos += owner.MeasuredWidth - TextBlock.MeasuredWidth;
                             break;
                     }
                 }
+                return new SKPoint(xPos, yPos);
+            }
+
+            public void Paint(ref PaintContext ctx)
+            {
+                if (Truncated)
+                    return;
+
+                int? oldSelStart = null;
+                int? oldSelEnd = null;
+                if (ctx.textPaintOptions != null)
+                {
+                    // Save old selection ranges
+                    oldSelStart = ctx.textPaintOptions.SelectionStart;
+                    oldSelEnd = ctx.textPaintOptions.SelectionEnd;
+
+                    if (oldSelEnd.HasValue && oldSelEnd.Value < this.CodePointOffset)
+                    {
+                        // Selection is before this paragraph
+                        ctx.textPaintOptions.SelectionStart = null;
+                        ctx.textPaintOptions.SelectionEnd = null;
+                    }
+                    else if (oldSelStart.HasValue && oldSelStart.Value >= this.CodePointOffset + this.TextBlock.MeasuredLength)
+                    {
+                        // Selection is after this paragraph
+                        ctx.textPaintOptions.SelectionStart = null;
+                        ctx.textPaintOptions.SelectionEnd = null;
+                    }
+                    else
+                    {
+                        // Selection intersects with this paragraph
+                        if (oldSelStart.HasValue)
+                        {
+                            if (oldSelStart.Value < this.CodePointOffset)
+                                ctx.textPaintOptions.SelectionStart = 0;
+                            else
+                                ctx.textPaintOptions.SelectionStart = oldSelStart.Value - this.CodePointOffset;
+                        }
+
+                        if (oldSelEnd.HasValue)
+                        {
+                            if (oldSelEnd.Value < this.CodePointOffset + this.TextBlock.MeasuredLength)
+                                ctx.textPaintOptions.SelectionEnd = oldSelEnd.Value - this.CodePointOffset;
+                            else
+                                ctx.textPaintOptions.SelectionEnd = this.TextBlock.MeasuredLength;
+                        }
+                    }
+                }
+
 
                 // Paint it
-                TextBlock.Paint(ctx.canvas, new SKPoint(xPos, yPos), ctx.textPaintOptions);
+                TextBlock.Paint(ctx.canvas, ctx.paintPosition + TextBlockPaintPosition(ctx.owner), ctx.textPaintOptions);
 
+                // Restore selection indicies
+                if (ctx.textPaintOptions != null)
+                {
+                    ctx.textPaintOptions.SelectionStart = oldSelStart;
+                    ctx.textPaintOptions.SelectionEnd = oldSelEnd;
+                }
             }
+
+            public int CodePointOffset;
+            public int LineOffset;
 
             // Layout this paragraph
             public void Layout(ref LayoutContext ctx)
@@ -637,25 +854,32 @@ namespace Topten.RichTextKit
                 // Store y position of this block
                 this.yPosition = ctx.yPosition;
 
-                // Text alread clipped?
-                if (ctx.Clipped)
-                {
-                    this.Clipped = true;
-                    return;
-                }
-
-                // Not clipped
-                this.Clipped = false;
-
                 // Create the text block
-                bool textBlockPopulated = true;
                 if (TextBlock == null)
                 {
                     TextBlock = new TextBlock();
-                    textBlockPopulated = false;
+                    var buildContext = new BuildContext()
+                    {
+                        StyleManager = ctx.styleManager,
+                        TextBlock = TextBlock,
+                    };
+                    foreach (var i in _items)
+                    {
+                        i.Build(buildContext);
+                    }
                 }
+                
+                // Store code point offset of this paragraph
+                CodePointOffset = ctx.TotalLength;
+                LineOffset = ctx.lineCount;
+                ctx.TotalLength += TextBlock.Length;
 
-                // Set it up
+                // Text already truncated?
+                Truncated = ctx.Truncated;
+                if (Truncated)
+                    return;
+
+                // Set the TextBlock
                 TextBlock.Alignment = TextAlignment ?? ctx.textAlignment ?? RichTextKit.TextAlignment.Auto;
                 TextBlock.BaseDirection = BaseDirection ?? ctx.baseDirection ?? RichTextKit.TextDirection.Auto;
 
@@ -689,35 +913,22 @@ namespace Topten.RichTextKit
                     TextBlock.MaxLines = null;
                 }
 
-                // Clipped?
+                // Truncated?
                 if (TextBlock.MaxLines == 0 || TextBlock.MaxHeight == 0)
                 {
                     TextBlock = null;
-                    Clipped = true;
-                    ctx.Clipped = true;
+                    Truncated = true;
+                    ctx.Truncated = true;
                     return;
-                }
-
-                // Add text to the text block
-                if (!textBlockPopulated)
-                {
-                    var buildContext = new BuildContext()
-                    {
-                        StyleManager = ctx.styleManager,
-                        TextBlock = TextBlock,
-                    };
-                    foreach (var i in _items)
-                    {
-                        i.Build(buildContext);
-                    }
                 }
 
                 // Update the yPosition and stop further processing if truncated
                 ctx.yPosition += TextBlock.MeasuredHeight + MarginTop;
                 ctx.lineCount += TextBlock.Lines.Count;
+                ctx.MeasuredLength += TextBlock.MeasuredLength;
                 if (!TextBlock.Truncated)
                 {
-                    // Only add the bottom margin if it wasn't clipped
+                    // Only add the bottom margin if it wasn't truncated
                     ctx.yPosition += MarginBottom;
                 }
                 else
@@ -727,8 +938,8 @@ namespace Topten.RichTextKit
                         ctx.previousParagraph.TextBlock.AddEllipsis();
                     }
 
-                    // All following blocks should be clipped
-                    ctx.Clipped = true;
+                    // All following blocks should be truncated
+                    ctx.Truncated = true;
                 }
             }
 
@@ -739,7 +950,7 @@ namespace Topten.RichTextKit
             public float MarginBottom;
             public TextAlignment? TextAlignment;
             public TextDirection? BaseDirection;
-            public bool Clipped;
+            public bool Truncated;
             public float yPosition;     // Laid out y-position
 
             public List<Item> _items = new List<Item>();

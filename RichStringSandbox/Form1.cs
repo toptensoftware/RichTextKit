@@ -16,10 +16,12 @@ namespace RichStringSandbox
 
             _richString = new RichString()
                         .FontSize(28).FontFamily("Open Sans")
-                        .Alignment(TextAlignment.Left)
+                        .Alignment(TextAlignment.Right)
                         .Add("Para1")
+                        .Add("🌐 🍪 🍕 🚀 ")
                         .Paragraph()
                         .Paragraph()
+                        .Alignment(TextAlignment.Left)
                         .Add("Para2a\nParam2b")
                         ;
         }
@@ -59,11 +61,12 @@ namespace RichStringSandbox
         bool _useMaxWidth;
         bool _useMaxHeight;
 
+        const float margin = 60;
+
         void OnRender(SKCanvas canvas)
         {
             canvas.Clear(new SKColor(0xFFFFFFFF));
 
-            float margin = 30;
 
             float canvasWidth = canvas.LocalClipBounds.Width;
             float canvasHeight = canvas.LocalClipBounds.Height;
@@ -75,7 +78,7 @@ namespace RichStringSandbox
             if (!_useMaxWidth)
                 width = null;
 
-            using (var gridlinePaint = new SKPaint() { Color = new SKColor(0xFFFF0000), StrokeWidth = 1 })
+            using (var gridlinePaint = new SKPaint() { Color = new SKColor(0x20000000), StrokeWidth = 1 })
             {
                 canvas.DrawLine(new SKPoint(margin, 0), new SKPoint(margin, (float)canvasHeight), gridlinePaint);
                 if (width.HasValue)
@@ -88,8 +91,52 @@ namespace RichStringSandbox
             _richString.MaxWidth = width;
             _richString.MaxHeight = height;
 
+            var state = $"Measured: {_richString.MeasuredWidth} x {_richString.MeasuredHeight} Lines: {_richString.LineCount} Truncated: {_richString.Truncated} Length: {_richString.MeasuredLength}";
+            canvas.DrawText(state, margin, 20, new SKPaint()
+            {
+                Typeface = SKTypeface.FromFamilyName("Arial"),
+                TextSize = 12,
+                IsAntialias = true,
+            });
 
-            _richString.Paint(canvas, new SKPoint(margin, margin));
+            state = $"Hit Test: Over {_htr.OverCodePointIndex} Line {_htr.OverLine}.  Closest: {_htr.ClosestCodePointIndex} Line {_htr.ClosestLine}";
+            canvas.DrawText(state, margin, 40, new SKPaint()
+            {
+                Typeface = SKTypeface.FromFamilyName("Arial"),
+                TextSize = 12,
+                IsAntialias = true,
+            });
+
+            var options = new TextPaintOptions()
+            {
+                SelectionColor = new SKColor(0x60FF0000),
+            };
+
+            if (_htr.OverCodePointIndex >= 0)
+            {
+                options.SelectionStart = _htr.OverCodePointIndex;
+                options.SelectionEnd = options.SelectionStart + 1;// _textBlock.CaretIndicies[_textBlock.LookupCaretIndex(htr.Value.OverCodePointIndex) + 1];
+            }
+
+            _richString.Paint(canvas, new SKPoint(margin, margin), options);
+
+            if (_htr.ClosestCodePointIndex >= 0)
+            {
+                var ci = _richString.GetCaretInfo(_htr.ClosestCodePointIndex);
+                using (var paint = new SKPaint()
+                {
+                    Color = new SKColor(0xFF000000),
+                    IsStroke = true,
+                    IsAntialias = true,
+                    StrokeWidth = 1,
+                })
+                {
+                    var rect = ci.CaretRectangle;
+                    rect.Offset(margin, margin);
+                    canvas.DrawLine(rect.Right, rect.Top, rect.Left, rect.Bottom, paint);
+                }
+            }
+
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -174,10 +221,17 @@ namespace RichStringSandbox
             //Invalidate();
         }
 
+        HitTestResult _htr;
+
         private void Form1_MouseMove(object sender, MouseEventArgs e)
         {
-            //_driver.HitTest(e.X * 96.0f / DeviceDpi, e.Y * 96.0f / DeviceDpi);
-            //Invalidate();
+            var htr = _richString.HitTest(e.X * 96.0f / DeviceDpi - margin, e.Y * 96.0f / DeviceDpi - margin);
+
+            if (!_htr.Equals(htr))
+            {
+                _htr = htr;
+                Invalidate();
+            }
         }
 
         private void Form1_Load(object sender, System.EventArgs e)

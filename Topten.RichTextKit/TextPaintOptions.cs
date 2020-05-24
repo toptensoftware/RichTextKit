@@ -28,6 +28,23 @@ namespace Topten.RichTextKit
     public class TextPaintOptions
     {
         /// <summary>
+        /// Constructs a new text paint options
+        /// </summary>
+        public TextPaintOptions()
+        { 
+        }
+
+
+        /// <summary>
+        /// Creates a clone of this object
+        /// </summary>
+        /// <returns>The closed object</returns>
+        public TextPaintOptions Clone()
+        {
+            return (TextPaintOptions)this.MemberwiseClone();
+        }
+
+        /// <summary>
         /// An optional code point index of the start of a selection range.
         /// </summary>
         /// <remarks>
