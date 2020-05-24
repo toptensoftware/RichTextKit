@@ -67,5 +67,44 @@ namespace Topten.RichTextKit
         /// and shape of the caret, see [Caret Information](/caret).
         /// </remarks>
         public int ClosestCodePointIndex;
+
+        /// <summary>
+        /// Compares this object to another instance
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            return obj is HitTestResult result &&
+                   OverLine == result.OverLine &&
+                   ClosestLine == result.ClosestLine &&
+                   OverCodePointIndex == result.OverCodePointIndex &&
+                   ClosestCodePointIndex == result.ClosestCodePointIndex;
+        }
+
+        /// <summary>
+        /// Gets a hash code for this object
+        /// </summary>
+        /// <returns>The hash value</returns>
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        /// <summary>
+        /// Check is this is the "none" hit test result
+        /// </summary>
+        public bool IsNone => ClosestCodePointIndex < 0;
+
+        /// <summary>
+        /// Hit test result indicating no hit, or untested hit
+        /// </summary>
+        public static HitTestResult None = new HitTestResult()
+        {
+            OverLine = -1,
+            OverCodePointIndex = -1,
+            ClosestLine = -1,
+            ClosestCodePointIndex = -1,
+        };
     }
 }
