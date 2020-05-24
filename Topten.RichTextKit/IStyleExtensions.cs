@@ -49,16 +49,44 @@ namespace Topten.RichTextKit
                 return false;
             if (This.FontWeight != other.FontWeight)
                 return false;
-            if (This.FontVariant != other.FontVariant)
-                return false;
             if (This.FontItalic != other.FontItalic)
                 return false;
             if (This.LineHeight != other.LineHeight)
                 return false;
             if (This.TextDirection != other.TextDirection)
                 return false;
+            if (This.LetterSpacing != other.LetterSpacing)
+                return false;
+            if (This.FontVariant != other.FontVariant)
+                return false;
             return true;
         }
+
+        /// <summary>
+        /// Compares this style to another and returns true if both will have the same
+        /// layout, but not necessarily the same appearance (eg: color change, underline etc...)
+        /// </summary>
+        /// <param name="This">The style instance</param>
+        /// <param name="other">The other style instance to compare to</param>
+        /// <returns>True if both styles will give the same layout</returns>
+        public static bool IsSame(this IStyle This, IStyle other)
+        {
+            if (This == null && other == null)
+                return true;
+            if (This == null || other == null)
+                return false;
+            if (!This.HasSameLayout(other))
+                return false;
+            if (This.TextColor != other.TextColor)
+                return false;
+            if (This.Underline != other.Underline)
+                return false;
+            if (This.StrikeThrough != other.StrikeThrough)
+                return false;
+            return true;
+        }
+
+
 
     }
 }
