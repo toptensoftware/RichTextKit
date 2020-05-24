@@ -44,7 +44,7 @@ namespace Topten.RichTextKit
         /// </summary>
         public StyleManager()
         {
-            CurrentStyle = new Style();
+            _currentStyle = FromStyle(new Style());
             _defaultStyle = _currentStyle;
         }
 
@@ -77,6 +77,10 @@ namespace Topten.RichTextKit
         /// <returns></returns>
         public IStyle FromStyle(IStyle value)
         {
+            // Is it a style we already own? Just re-use it.
+            if (IsOwned(value))
+                return value;
+
             return Update(value.FontFamily, value.FontSize, value.FontWeight, value.FontItalic,
                             value.Underline, value.StrikeThrough, value.LineHeight, value.TextColor,
                             value.LetterSpacing, value.FontVariant, value.TextDirection);
@@ -244,8 +248,9 @@ namespace Topten.RichTextKit
             if (!_styleMap.TryGetValue(key, out var style))
             {
                 // Create a new style
-                style = new Style()
+                style = new StyleManagerStyle()
                 {
+                    Owner = this,
                     FontFamily = rFontFamily,
                     FontSize = rFontSize,
                     FontWeight = rFontWeight,
@@ -259,6 +264,9 @@ namespace Topten.RichTextKit
                     TextDirection = rTextDirection,
                 };
 
+                // Seal it
+                style.Seal();
+
                 // Add to map
                 _styleMap.Add(key, style);
             }
@@ -267,10 +275,23 @@ namespace Topten.RichTextKit
             return _currentStyle = style;
         }
 
+        // Check is a style is owned by this style manager
+        bool IsOwned(IStyle style)
+        {
+            return style is StyleManagerStyle sms && sms.Owner == this;
+        }
+
+        /// <summary>
+        /// Internal wrapper around Style to attach our owner reference check
+        /// </summary>
+        class StyleManagerStyle : Style
+        {
+            public StyleManager Owner;
+        }
+
         Dictionary<string, Style> _styleMap = new Dictionary<string, Style>();
         Stack<IStyle> _userStack = new Stack<IStyle>();
         IStyle _defaultStyle = new Style();
         IStyle _currentStyle;
-
     }
 }
