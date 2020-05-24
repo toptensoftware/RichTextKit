@@ -8,7 +8,7 @@ when working with RichTextKit.</p>
 <h2 id="rich-strings">Rich Strings</h2>
 <p>The easiest way to work with RichTextKit is with the <code>RichString</code> class which
 provides a convenient set of methods for constructing richly decorated text.</p>
-<pre class="language-txt"><code class="language-txt">// Create a RichString
+<pre class="language-csharp"><code class="language-csharp">// Create a RichString
 var rs = new RichString()
     .Alignment(TextAlignment.Center)
     .FontFamily(&quot;Segoe UI&quot;)
@@ -19,15 +19,15 @@ var rs = new RichString()
     .Add(&quot;This is a test string&quot;);
 </code></pre>
 <p>If you want to wrap and/or crop it, set the Max properties:</p>
-<pre class="language-txt"><code class="language-txt">rs.MaxWidth = 640;
+<pre class="language-csharp"><code class="language-csharp">rs.MaxWidth = 640;
 rs.MaxHeight = 480;
 </code></pre>
 <p>And then you can paint it:</p>
-<pre class="language-txt"><code class="language-txt">// Paint it
+<pre class="language-csharp"><code class="language-csharp">// Paint it
 rs.Paint(skia_canvas, new SKPoint(50, 50));
 </code></pre>
 <p>You can also get it's measured size:</p>
-<pre class="language-txt"><code class="language-txt">Console.WriteLine($&quot;Size: {rs.MeasuredWidth} x {rs.MeasuredHeight});
+<pre class="language-csharp"><code class="language-csharp">Console.WriteLine($&quot;Size: {rs.MeasuredWidth} x {rs.MeasuredHeight});
 </code></pre>
 <p>and lots more.  See the <a href="./ref/Topten.RichTextKit.RichString">RichString</a> class for details.</p>
 <h2 id="text-blocks">Text Blocks</h2>

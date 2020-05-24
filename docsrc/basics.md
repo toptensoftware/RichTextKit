@@ -12,7 +12,7 @@ when working with RichTextKit.
 The easiest way to work with RichTextKit is with the `RichString` class which
 provides a convenient set of methods for constructing richly decorated text.
 
-~~~
+~~~csharp
 // Create a RichString
 var rs = new RichString()
     .Alignment(TextAlignment.Center)
@@ -26,21 +26,21 @@ var rs = new RichString()
 
 If you want to wrap and/or crop it, set the Max properties:
 
-~~~
+~~~csharp
 rs.MaxWidth = 640;
 rs.MaxHeight = 480;
 ~~~
 
 And then you can paint it:
 
-~~~
+~~~csharp
 // Paint it
 rs.Paint(skia_canvas, new SKPoint(50, 50));
 ~~~
 
 You can also get it's measured size:
 
-~~~
+~~~csharp
 Console.WriteLine($"Size: {rs.MeasuredWidth} x {rs.MeasuredHeight});
 ~~~
 
