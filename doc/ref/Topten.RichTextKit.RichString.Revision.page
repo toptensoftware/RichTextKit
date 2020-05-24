@@ -1,0 +1,40 @@
+---
+title: "RichString.Revision"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 data-nav-secondary-text="Definition" id="definition">RichString.Revision Property</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.RichString">RichString</a><br />
+                        </small>
+</p>
+
+
+
+
+<p>Returns the revision number of the content of this rich text string</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public uint Revision { get; }</code></pre>
+
+<h2 id="remarks">Remarks</h2><p>If the revision number of a text string has not changed then painting it
+again will result in the exact same representation as the previous time.</p>
+
+<h2 id="property-type">Property Type</h2>    <table class="name-description">
+        <tr>
+            <td><a href="https://docs.microsoft.com/dotnet/api/System.UInt32">uint</a></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+

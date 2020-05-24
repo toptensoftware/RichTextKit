@@ -110,6 +110,11 @@ in code points</p>
 </td>
             </tr>
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.Revision">Revision</a></td>
+                <td><p>Returns the revision number of the content of this rich text string</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.RichString.Truncated">Truncated</a></td>
                 <td><p>Indicates if the text was truncated due to max height or max lines
 constraints</p>

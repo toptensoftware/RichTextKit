@@ -129,6 +129,7 @@ navTree:
           - text: Methods
             subItems:
               - text: HasSameLayout|./ref/Topten.RichTextKit.IStyleExtensions.HasSameLayout
+              - text: IsSame|./ref/Topten.RichTextKit.IStyleExtensions.IsSame
               - text: Key|./ref/Topten.RichTextKit.IStyleExtensions.Key
       - text: RichString
         subItems:
@@ -147,6 +148,7 @@ navTree:
               - text: MeasuredHeight|./ref/Topten.RichTextKit.RichString.MeasuredHeight
               - text: MeasuredLength|./ref/Topten.RichTextKit.RichString.MeasuredLength
               - text: MeasuredWidth|./ref/Topten.RichTextKit.RichString.MeasuredWidth
+              - text: Revision|./ref/Topten.RichTextKit.RichString.Revision
               - text: Truncated|./ref/Topten.RichTextKit.RichString.Truncated
           - text: Methods
             subItems:
@@ -200,6 +202,7 @@ navTree:
           - text: Methods
             subItems:
               - text: Modify|./ref/Topten.RichTextKit.Style.Modify
+              - text: Seal|./ref/Topten.RichTextKit.Style.Seal
       - text: StyleManager
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.StyleManager

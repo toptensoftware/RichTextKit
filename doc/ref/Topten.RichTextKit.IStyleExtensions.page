@@ -39,6 +39,12 @@ layout, but not necessarily the same appearance (eg: color change, underline etc
 </td>
             </tr>
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.IStyleExtensions.IsSame">IsSame(this IStyle, IStyle)</a></td>
+                <td><p>Compares this style to another and returns true if both will have the same
+layout, but not necessarily the same appearance (eg: color change, underline etc...)</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.IStyleExtensions.Key">Key(this IStyle)</a></td>
                 <td><p>Generates a string key that uniquely identifies the formatting characteristics
 of this style.</p>
