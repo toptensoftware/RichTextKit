@@ -32,42 +32,9 @@ namespace Topten.RichTextKit
         public int CodePointIndex;
 
         /// <summary>
-        /// The code point index of the next cluster.
-        /// </summary>
-        /// <remarks>
-        /// If the code point index refers to the last code point in the
-        /// text block then this property returns the current code point index.
-        /// </remarks>
-        public int NextCodePointIndex;
-
-        /// <summary>
-        /// The code point index of the previous cluster.
-        /// </summary>
-        /// <remarks>
-        /// If the code point index refers to the first code point in the
-        /// text block then this property returns 0.
-        /// </remarks>
-        public int PreviousCodePointIndex;
-
-        /// <summary>
-        /// The number of code points in this cluster.
-        /// </summary>
-        public int CodePointCount => NextCodePointIndex - CodePointIndex;
-
-        /// <summary>
-        /// The font run that contains the code point.
-        /// </summary>
-        public FontRun FontRun;
-
-        /// <summary>
-        /// The style run that contains the code point.
-        /// </summary>
-        public StyleRun StyleRun;
-
-        /// <summary>
         /// The X-coordinate where the caret should be displayed for this code point.
         /// </summary>
-        public float CaretXCoord => CodePointIndex < 0 ? 0 : FontRun.GetXCoordOfCodePointIndex(CodePointIndex);
+        public float CaretXCoord;
 
         /// <summary>
         /// A rectangle describing where the caret should be drawn, relative to the top-left
@@ -90,59 +57,21 @@ namespace Topten.RichTextKit
         /// coordinates of the returned rectangle and get the x-coordinate from the 
         /// <see cref="CaretXCoord"/> property.
         /// </remarks>
-        public SKRect CaretRectangle
-        {
-            get
-            {
-                if (CodePointIndex < 0)
-                    return SKRect.Empty;
-
-                // Get the font run to be used for caret metrics
-                var fr = GetFontRunForCaretMetrics();
-
-                // Setup the basic rectangle
-                var rect = new SKRect();
-                rect.Left = CaretXCoord;
-                rect.Top = fr.Line.YCoord + fr.Line.BaseLine + fr.Ascent;
-                rect.Right = rect.Left;
-                rect.Bottom = fr.Line.YCoord + fr.Line.BaseLine + fr.Descent;
-
-                // Apply slant if italic
-                if (fr.Style.FontItalic)
-                {
-                    rect.Left -= rect.Height / 14;
-                    rect.Right = rect.Left + rect.Height / 5;
-                }
-
-                return rect;
-            }
-        }
+        public SKRect CaretRectangle;
 
         /// <summary>
-        /// Internal helper to get the font run that should
-        /// be used for caret metrics.
+        /// Checks if this caret info represents a caret position of none, or not found
         /// </summary>
-        /// <remarks>
-        /// The returned font run is the font run of the previous
-        /// character, or the same character if the first font run
-        /// on the line.
-        /// </remarks>
-        /// <returns>The determined font run</returns>
-        FontRun GetFontRunForCaretMetrics()
+        public bool IsNone => CodePointIndex < 0;
+
+        /// <summary>
+        /// Place holder caret info structure for no caret
+        /// </summary>
+        public static CaretInfo None = new CaretInfo()
         {
-            // Same font run?
-            if (CodePointIndex > FontRun.Start)
-                return FontRun;
+            CodePointIndex = -1,
+        };
 
-            // Try to get the previous font run in this line
-            var lineRuns = FontRun.Line.Runs as List<FontRun>;
-            int index = lineRuns.IndexOf(FontRun);
-            if (index <= 0)
-                return FontRun;
-
-            // Use the previous font run
-            return lineRuns[index - 1];
-        }
 
         /*
          * Commented out as untested.
@@ -184,6 +113,39 @@ namespace Topten.RichTextKit
                 return FontRun.GetCodePointXCoord(Direction == TextDirection.RTL ? CodePointIndex : NextCodePointIndex);
             }
         }
+        /// <summary>
+        /// The code point index of the next cluster.
+        /// </summary>
+        /// <remarks>
+        /// If the code point index refers to the last code point in the
+        /// text block then this property returns the current code point index.
+        /// </remarks>
+        public int NextCodePointIndex;
+
+        /// <summary>
+        /// The code point index of the previous cluster.
+        /// </summary>
+        /// <remarks>
+        /// If the code point index refers to the first code point in the
+        /// text block then this property returns 0.
+        /// </remarks>
+        public int PreviousCodePointIndex;
+
+        /// <summary>
+        /// The number of code points in this cluster.
+        /// </summary>
+        public int CodePointCount => NextCodePointIndex - CodePointIndex;
+
+        /// <summary>
+        /// The font run that contains the code point.
+        /// </summary>
+        public FontRun FontRun;
+
+        /// <summary>
+        /// The style run that contains the code point.
+        /// </summary>
+        public StyleRun StyleRun;
+
         */
     }
 }
