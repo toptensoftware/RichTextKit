@@ -1,0 +1,39 @@
+---
+title: "RichString.Truncated"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 data-nav-secondary-text="Definition" id="definition">RichString.Truncated Property</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.RichString">RichString</a><br />
+                        </small>
+</p>
+
+
+
+
+<p>Indicates if the text was truncated due to max height or max lines
+constraints</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public bool Truncated { get; }</code></pre>
+
+
+<h2 id="property-type">Property Type</h2>    <table class="name-description">
+        <tr>
+            <td><a href="https://docs.microsoft.com/dotnet/api/System.Boolean">bool</a></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+

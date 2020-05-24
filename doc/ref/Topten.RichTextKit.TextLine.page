@@ -49,8 +49,18 @@ import: "../.common.page"
 </td>
             </tr>
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextLine.End">End</a></td>
+                <td><p>The code point index of the first character after this line</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextLine.Height">Height</a></td>
                 <td><p>Gets the height of this line</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextLine.Length">Length</a></td>
+                <td><p>The length of this line in codepoints</p>
 </td>
             </tr>
             <tr>
@@ -76,6 +86,11 @@ import: "../.common.page"
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextLine.Runs">Runs</a></td>
                 <td><p>Gets the set of text runs comprising this line.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextLine.Start">Start</a></td>
+                <td><p>Code point index of start of this line</p>
 </td>
             </tr>
             <tr>

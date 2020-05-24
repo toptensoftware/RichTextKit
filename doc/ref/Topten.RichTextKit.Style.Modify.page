@@ -1,0 +1,138 @@
+---
+title: "Style.Modify"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">Style.Modify Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Style">Style</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Modifies this style with one or more attribute changes and returns a new style</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public Style Modify(string fontFamily = null, Nullable&lt;float&gt; fontSize = null, Nullable&lt;int&gt; fontWeight = null, Nullable&lt;bool&gt; fontItalic = null, Nullable&lt;UnderlineStyle&gt; underline = null, Nullable&lt;StrikeThroughStyle&gt; strikeThrough = null, Nullable&lt;float&gt; lineHeight = null, Nullable&lt;SkiaSharp.SKColor&gt; textColor = null, Nullable&lt;float&gt; letterSpacing = null, Nullable&lt;FontVariant&gt; fontVariant = null, Nullable&lt;TextDirection&gt; textDirection = null);</code></pre>
+
+<h2 id="remarks">Remarks</h2><p>Note this method always creates a new style instance.To avoid creating excessive
+style instances, consider using the StyleManager which caches instances of styles
+with the same attributes</p>
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.String">string</a> fontFamily
+ = null                </td>
+                <td><p>The new font family</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;float&gt;</a> fontSize
+ = null                </td>
+                <td><p>The new font size</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;int&gt;</a> fontWeight
+ = null                </td>
+                <td><p>The new font weight</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;bool&gt;</a> fontItalic
+ = null                </td>
+                <td><p>The new font italic</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;UnderlineStyle&gt;</a> underline
+ = null                </td>
+                <td><p>The new underline style</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;StrikeThroughStyle&gt;</a> strikeThrough
+ = null                </td>
+                <td><p>The new strike-through style</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;float&gt;</a> lineHeight
+ = null                </td>
+                <td><p>The new line height</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;SkiaSharp.SKColor&gt;</a> textColor
+ = null                </td>
+                <td><p>The new text color</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;float&gt;</a> letterSpacing
+ = null                </td>
+                <td><p>The new letterSpacing</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;FontVariant&gt;</a> fontVariant
+ = null                </td>
+                <td><p>The new font variant</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;TextDirection&gt;</a> textDirection
+ = null                </td>
+                <td><p>The new text direction</p>
+</td>
+            </tr>
+    </table>
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.Style">Style</a></td>
+            <td><p>A new style with the passed attributes changed</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

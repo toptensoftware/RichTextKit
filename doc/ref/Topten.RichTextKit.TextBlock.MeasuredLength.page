@@ -1,0 +1,41 @@
+---
+title: "TextBlock.MeasuredLength"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 data-nav-secondary-text="Definition" id="definition">TextBlock.MeasuredLength Property</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.TextBlock">TextBlock</a><br />
+                        </small>
+</p>
+
+
+
+
+<p>The length of the displayed text (in code points)</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public int MeasuredLength { get; }</code></pre>
+
+<h2 id="remarks">Remarks</h2><p>If the text is truncated, this is the index of the point
+at which the ellipsis was inserted.  If the text it not
+truncated, is the length of all added text.</p>
+
+<h2 id="property-type">Property Type</h2>    <table class="name-description">
+        <tr>
+            <td><a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+

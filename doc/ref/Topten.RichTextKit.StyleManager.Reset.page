@@ -1,0 +1,39 @@
+---
+title: "StyleManager.Reset"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">StyleManager.Reset Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.StyleManager">StyleManager</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Resets the current style to the default style and resets the internal
+Push/Pop style stack to empty.</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void Reset();</code></pre>
+
+
+
+
+
+
+
+
+

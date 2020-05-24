@@ -3,7 +3,26 @@ title: "Controlling Layout"
 isMarkdown: false
 ---
 <h1 id="controlling-layout">Controlling Layout</h1>
-<p>The following  properties can be used to control the layout of a text block:</p>
+<p>The following properties can be used to control the layout of a RichString:</p>
+<ul>
+<li><a href="./ref/Topten.RichTextKit.RichString.MaxWidth">Topten.RichTextKit.RichString.MaxWidth</a></li>
+<li><a href="./ref/Topten.RichTextKit.RichString.MaxHeight">Topten.RichTextKit.RichString.MaxHeight</a></li>
+<li><a href="./ref/Topten.RichTextKit.RichString.MaxLines">Topten.RichTextKit.RichString.MaxLines</a></li>
+<li><a href="./ref/Topten.RichTextKit.RichString.DefaultAlignment">Topten.RichTextKit.RichString.DefaultAlignment</a></li>
+<li><a href="./ref/Topten.RichTextKit.RichString.DefaultDirection">Topten.RichTextKit.RichString.DefaultDirection</a></li>
+</ul>
+<p>Per-paragraph control of layout is available through the following
+fluent methods:</p>
+<ul>
+<li>[P:Topten.RichTextKit.RichString.MarginLeft]</li>
+<li>[P:Topten.RichTextKit.RichString.MarginTop]</li>
+<li>[P:Topten.RichTextKit.RichString.MarginRight]</li>
+<li>[P:Topten.RichTextKit.RichString.MarginBottom]</li>
+<li>[P:Topten.RichTextKit.RichString.Alignment]</li>
+<li>[P:Topten.RichTextKit.RichString.TextDirection]</li>
+</ul>
+<h1 id="textblocks">TextBlocks</h1>
+<p>The following  properties can be used to control the layout of a TextBlock:</p>
 <ul>
 <li><a href="./ref/Topten.RichTextKit.TextBlock.MaxWidth">Topten.RichTextKit.TextBlock.MaxWidth</a></li>
 <li><a href="./ref/Topten.RichTextKit.TextBlock.MaxHeight">Topten.RichTextKit.TextBlock.MaxHeight</a></li>

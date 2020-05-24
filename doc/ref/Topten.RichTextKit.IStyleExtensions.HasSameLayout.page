@@ -1,0 +1,66 @@
+---
+title: "IStyleExtensions.HasSameLayout"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">IStyleExtensions.HasSameLayout Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.IStyleExtensions">IStyleExtensions</a><br />
+                    
+                Extends: <a href="./../ref/Topten.RichTextKit.IStyle"> IStyle</a><br />
+                </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Compares this style to another and returns true if both will have the same
+layout, but not necessarily the same appearance (eg: color change, underline etc...)</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public static bool HasSameLayout(this IStyle This, IStyle other);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    this 
+                    <a href="./../ref/Topten.RichTextKit.IStyle">IStyle</a> This
+                </td>
+                <td><p>The style instance</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.IStyle">IStyle</a> other
+                </td>
+                <td><p>The other style instance to compare to</p>
+</td>
+            </tr>
+    </table>
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="https://docs.microsoft.com/dotnet/api/System.Boolean">bool</a></td>
+            <td><p>True if both styles will give the same layout</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

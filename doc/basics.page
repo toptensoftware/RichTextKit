@@ -5,15 +5,34 @@ isMarkdown: false
 <h1 id="basic-concepts">Basic Concepts</h1>
 <p>The page describes some basic concepts that are important to understand
 when working with RichTextKit.</p>
+<h2 id="rich-strings">Rich Strings</h2>
+<p>The easiest way to work with RichTextKit is with the <code>RichString</code> class which
+provides a convenient set of methods for constructing richly decorated text.</p>
+<pre class="language-txt"><code class="language-txt">// Create a RichString
+var rs = new RichString()
+    .Alignment(TextAlignment.Center)
+    .FontFamily(&quot;Segoe UI&quot;)
+    .MarginBottom(20)
+    .Add(&quot;Welcome To RichTextKit&quot;, fontSize:24, fontWeight: 700, fontItalic: true)
+    .Paragraph().Alignment(TextAlignment.Left)
+    .FontSize(18)
+    .Add(&quot;This is a test string&quot;);
+</code></pre>
+<p>If you want to wrap and/or crop it, set the Max properties:</p>
+<pre class="language-txt"><code class="language-txt">rs.MaxWidth = 640;
+rs.MaxHeight = 480;
+</code></pre>
+<p>And then you can paint it:</p>
+<pre class="language-txt"><code class="language-txt">// Paint it
+rs.Paint(skia_canvas, new SKPoint(50, 50));
+</code></pre>
+<p>You can also get it's measured size:</p>
+<pre class="language-txt"><code class="language-txt">Console.WriteLine($&quot;Size: {rs.MeasuredWidth} x {rs.MeasuredHeight});
+</code></pre>
+<p>and lots more.  See the <a href="./ref/Topten.RichTextKit.RichString">RichString</a> class for details.</p>
 <h2 id="text-blocks">Text Blocks</h2>
-<p>RichTextKit primarily works with individual blocks of text where each is
-essentially a paragraph.</p>
-<p>RichTextKit doesn't provide document level constructs like list items,
-block quotes, tables, table cells, divs etc...  This project is strictly
-about laying out a single block of text with rich (aka attributed) text
-and then providing various functions for working with that text block.</p>
-<p>RichTextKit doesn't have a concept of a DOM - that's a higher level concept
-that RichTextKit is not attempting to solve.</p>
+<p>Text blocks are a lower level concept that describes a single block of
+text.  Internally RichString builds a single text block for each paragraph.</p>
 <p>Text blocks can contain forced line breaks with a newline character (<code>\n</code>).
 These should be considered as in-paragraph &quot;soft returns&quot;, as opposed to
 hard paragraph terminators.</p>
@@ -25,6 +44,8 @@ may be added in the future.</p>
 text block is comprised of one of more runs of text each tagged with a
 single style and these text runs are referred to a &quot;style runs&quot;.</p>
 <p>Style runs are represented by the <a href="./ref/Topten.RichTextKit.StyleRun">StyleRun</a> class.</p>
+<p>Styles are only used if dealing with TextBlocks directly and generally don't
+need to be used if you're using the higher-level RichString interface.</p>
 <h2 id="font-fallback">Font Fallback</h2>
 <p>Font fallback is the process of switching to a different font when the specified
 font doesn't contain the required glyphs.</p>

@@ -1,0 +1,40 @@
+---
+title: "RichString.MaxWidth"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 data-nav-secondary-text="Definition" id="definition">RichString.MaxWidth Property</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.RichString">RichString</a><br />
+                        </small>
+</p>
+
+
+
+
+<p>The max width property sets the maximum width of a line, after which
+the line will be wrapped onto the next line.</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public Nullable&lt;float&gt; MaxWidth { get; set; }</code></pre>
+
+<h2 id="remarks">Remarks</h2><p>This property can be set to null, in which case lines won't be wrapped.</p>
+
+<h2 id="property-type">Property Type</h2>    <table class="name-description">
+        <tr>
+            <td><a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;float&gt;</a></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+

@@ -3,18 +3,17 @@ title: "Rendering Text"
 isMarkdown: false
 ---
 <h1 id="rendering-text">Rendering Text</h1>
-<p>Once you've created and initialized a text block, you can render it to a SkiaSharp canvas
-using its <a href="(./ref/Topten.RichTextKit.TextBlock.Paint)">Paint()</a> method:</p>
+<p>Text can be rendered using  <a href="(./ref/Topten.RichTextKit.RichString.Paint)">RichString.Paint()</a> or <a href="(./ref/Topten.RichTextKit.TextBlock.Paint)">TextBlock.Paint()</a> methods:</p>
 <pre class="language-csharp"><code class="language-csharp">// Paint at (0,0)
-tb.Paint(canvas);
+textBlockOrRichString.Paint(canvas);
 </code></pre>
 <p>By default the text will be rendered at the position (0,0).  <code>Use SKCanvas.Translate()</code> to set
 the paint position or pass the position as a second parameter:</p>
 <pre class="language-csharp"><code class="language-csharp">// Paint at (100,100)
-tb.Paint(canvas, new SKPoint(100,100));
+textBlockOrRichString.Paint(canvas, new SKPoint(100,100));
 </code></pre>
 <h2 id="rendering-with-a-selection-highlight">Rendering with a Selection Highlight</h2>
-<p>A text block can also be rendered with part of the text highlighted.</p>
+<p>Text can also be rendered with part of the text highlighted.</p>
 <pre class="language-csharp"><code class="language-csharp">// Highlight code points 10 through 19...
 var options = new TextPaintOptions()
 {
@@ -24,7 +23,7 @@ var options = new TextPaintOptions()
 }
 
 // Paint with options
-tb.Paint(canvas, new SKPaint(100,100), options);
+textBlockOrRichString.Paint(canvas, new SKPaint(100,100), options);
 </code></pre>
 <h2 id="other-render-options">Other Render Options</h2>
 <p><a href="./ref/Topten.RichTextKit.TextPaintOptions">TextPaintOptions</a> also has settings to control anti-aliasing and LCD text rendering.</p>

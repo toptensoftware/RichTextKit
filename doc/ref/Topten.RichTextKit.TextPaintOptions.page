@@ -33,7 +33,8 @@ import: "../.common.page"
     <table class="name-description">
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextPaintOptions..ctor">TextPaintOptions()</a></td>
-                <td></td>
+                <td><p>Constructs a new text paint options</p>
+</td>
             </tr>
     </table>
 
@@ -78,6 +79,14 @@ a selection range.</p>
             </tr>
     </table>
 
+    <h2 id="methods">Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextPaintOptions.Clone">Clone()</a></td>
+                <td><p>Creates a clone of this object</p>
+</td>
+            </tr>
+    </table>
 
 
 

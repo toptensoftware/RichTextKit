@@ -1,0 +1,185 @@
+---
+title: "RichString.Add"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">RichString.Add Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.RichString">RichString</a><br />
+                        </small>
+</p>
+
+
+
+
+
+    <h2 id="overloads">Overloads</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="#Topten.RichTextKit-RichString.Add-System-String">Add(string)</a></td>
+                <td><p>Append text to this RichString</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="#Topten.RichTextKit-RichString.Add-System-String-System-String-System-Nullable-System-Single--System-Nullable-System-Int32--System-Nullable-System-Boolean--System-Nullable-Topten.RichTextKit-UnderlineStyle--System-Nullable-Topten.RichTextKit-StrikeThroughStyle--System-Nullable-System-Single--System-Nullable-SkiaSharp-SKColor--System-Nullable-System-Single--System-Nullable-Topten.RichTextKit-FontVariant--System-Nullable-Topten.RichTextKit-TextDirection-">Add(string, string, Nullable&lt;float&gt;, Nullable&lt;int&gt;, Nullable&lt;bool&gt;, Nullable&lt;UnderlineStyle&gt;, Nullable&lt;StrikeThroughStyle&gt;, Nullable&lt;float&gt;, Nullable&lt;SkiaSharp.SKColor&gt;, Nullable&lt;float&gt;, Nullable&lt;FontVariant&gt;, Nullable&lt;TextDirection&gt;)</a></td>
+                <td><p>Adds text with various style attributes changed</p>
+</td>
+            </tr>
+    </table>
+
+
+    <h2 id="Topten.RichTextKit-RichString.Add-System-String">Add(string)</h2>
+
+<p>Append text to this RichString</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public RichString Add(string text);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.String">string</a> text
+                </td>
+                <td><p>The text to append</p>
+</td>
+            </tr>
+    </table>
+<h3>Returns</h3>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.RichString">RichString</a></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+    <h2 id="Topten.RichTextKit-RichString.Add-System-String-System-String-System-Nullable-System-Single--System-Nullable-System-Int32--System-Nullable-System-Boolean--System-Nullable-Topten.RichTextKit-UnderlineStyle--System-Nullable-Topten.RichTextKit-StrikeThroughStyle--System-Nullable-System-Single--System-Nullable-SkiaSharp-SKColor--System-Nullable-System-Single--System-Nullable-Topten.RichTextKit-FontVariant--System-Nullable-Topten.RichTextKit-TextDirection-">Add(string, string, Nullable&lt;float&gt;, Nullable&lt;int&gt;, Nullable&lt;bool&gt;, Nullable&lt;UnderlineStyle&gt;, Nullable&lt;StrikeThroughStyle&gt;, Nullable&lt;float&gt;, Nullable&lt;SkiaSharp.SKColor&gt;, Nullable&lt;float&gt;, Nullable&lt;FontVariant&gt;, Nullable&lt;TextDirection&gt;)</h2>
+
+<p>Adds text with various style attributes changed</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public RichString Add(string text, string fontFamily = null, Nullable&lt;float&gt; fontSize = null, Nullable&lt;int&gt; fontWeight = null, Nullable&lt;bool&gt; fontItalic = null, Nullable&lt;UnderlineStyle&gt; underline = null, Nullable&lt;StrikeThroughStyle&gt; strikeThrough = null, Nullable&lt;float&gt; lineHeight = null, Nullable&lt;SkiaSharp.SKColor&gt; textColor = null, Nullable&lt;float&gt; letterSpacing = null, Nullable&lt;FontVariant&gt; fontVariant = null, Nullable&lt;TextDirection&gt; textDirection = null);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.String">string</a> text
+                </td>
+                <td><p>The text to append</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.String">string</a> fontFamily
+ = null                </td>
+                <td><p>The new font family</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;float&gt;</a> fontSize
+ = null                </td>
+                <td><p>The new font size</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;int&gt;</a> fontWeight
+ = null                </td>
+                <td><p>The new font weight</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;bool&gt;</a> fontItalic
+ = null                </td>
+                <td><p>The new font italic</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;UnderlineStyle&gt;</a> underline
+ = null                </td>
+                <td><p>The new underline style</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;StrikeThroughStyle&gt;</a> strikeThrough
+ = null                </td>
+                <td><p>The new strike-through style</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;float&gt;</a> lineHeight
+ = null                </td>
+                <td><p>The new line height</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;SkiaSharp.SKColor&gt;</a> textColor
+ = null                </td>
+                <td><p>The new text color</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;float&gt;</a> letterSpacing
+ = null                </td>
+                <td><p>The new character spacing</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;FontVariant&gt;</a> fontVariant
+ = null                </td>
+                <td><p>The new font variant</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;TextDirection&gt;</a> textDirection
+ = null                </td>
+                <td><p>The new text direction</p>
+</td>
+            </tr>
+    </table>
+<h3>Returns</h3>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.RichString">RichString</a></td>
+            <td><p>A reference to the same RichString instance</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

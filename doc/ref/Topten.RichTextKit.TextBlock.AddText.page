@@ -42,6 +42,11 @@ import: "../.common.page"
 
 <pre class="language-csharp"><code class="language-csharp">public StyleRun AddText(string text, IStyle style);</code></pre>
 
+<h3>Remarks</h3><p>The added text will be internally coverted to UTF32.</p>
+<p>Note that all text indicies returned by and accepted by this object will
+be UTF32 &quot;code point indicies&quot;.  To convert between UTF16 character indicies
+and UTF32 code point indicies use the <a href="./../ref/Topten.RichTextKit.TextBlock.CodePointToCharacterIndex">CodePointToCharacterIndex(int)</a>
+and <a href="./../ref/Topten.RichTextKit.TextBlock.CharacterToCodePointIndex">CharacterToCodePointIndex(int)</a> methods</p>
 
 <h3>Parameters</h3>    <table class="name-description">
             <tr>

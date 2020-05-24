@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>The length of this run (in codepoints)</p>
+<p>The length of this run in codepoints</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public int Length;</code></pre>

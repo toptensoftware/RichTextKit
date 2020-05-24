@@ -2,11 +2,20 @@
 title: "Measuring Text"
 isMarkdown: false
 ---
-<h1 id="measuring-text">Measuring Text</h1>
+<h1 id="measuring-richstring">Measuring RichString</h1>
+<p>The <code>RichString</code> class provides various measurements of its contained text.</p>
+<ul>
+<li><a href="./ref/Topten.RichTextKit.RichString.MeasuredWidth">Topten.RichTextKit.RichString.MeasuredWidth</a></li>
+<li><a href="./ref/Topten.RichTextKit.RichString.MeasuredHeight">Topten.RichTextKit.RichString.MeasuredHeight</a></li>
+<li><a href="./ref/Topten.RichTextKit.RichString.MeasuredLength">Topten.RichTextKit.RichString.MeasuredLength</a></li>
+<li><a href="./ref/Topten.RichTextKit.RichString.LineCount">Topten.RichTextKit.RichString.LineCount</a></li>
+</ul>
+<h1 id="measuring-textblock">Measuring TextBlock</h1>
 <p>The <code>TextBlock</code> class provides various measurements of its contained text.</p>
 <ul>
 <li><a href="./ref/Topten.RichTextKit.TextBlock.MeasuredWidth">Topten.RichTextKit.TextBlock.MeasuredWidth</a></li>
 <li><a href="./ref/Topten.RichTextKit.TextBlock.MeasuredHeight">Topten.RichTextKit.TextBlock.MeasuredHeight</a></li>
+<li><a href="./ref/Topten.RichTextKit.TextBlock.MeasuredLength">Topten.RichTextKit.TextBlock.MeasuredLength</a></li>
 <li><a href="./ref/Topten.RichTextKit.TextBlock.MeasuredPadding">Topten.RichTextKit.TextBlock.MeasuredPadding</a></li>
 <li><a href="./ref/Topten.RichTextKit.TextBlock.MeasuredOverhang">Topten.RichTextKit.TextBlock.MeasuredOverhang</a></li>
 </ul>

@@ -1,0 +1,55 @@
+---
+title: "RichString.Underline"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">RichString.Underline Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.RichString">RichString</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Changes the underline style</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public RichString Underline(UnderlineStyle value = Gapped);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.UnderlineStyle">UnderlineStyle</a> value
+ = Gapped                </td>
+                <td><p>The new underline style</p>
+</td>
+            </tr>
+    </table>
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.RichString">RichString</a></td>
+            <td><p>A reference to the same RichString instance</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

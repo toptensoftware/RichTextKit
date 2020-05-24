@@ -73,6 +73,11 @@ font; otherwise False (defaults to false).</p>
 </td>
             </tr>
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Style.LetterSpacing">LetterSpacing</a></td>
+                <td><p>The character spacing for text in this run (defaults to 0).</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Style.LineHeight">LineHeight</a></td>
                 <td><p>The line height for text in this run as a multiplier (defaults to 1.0).</p>
 </td>
@@ -99,12 +104,35 @@ font; otherwise False (defaults to false).</p>
             </tr>
     </table>
 
+    <h2 id="methods">Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Style.Modify">Modify(string, Nullable&lt;float&gt;, Nullable&lt;int&gt;, Nullable&lt;bool&gt;, Nullable&lt;UnderlineStyle&gt;, Nullable&lt;StrikeThroughStyle&gt;, Nullable&lt;float&gt;, Nullable&lt;SkiaSharp.SKColor&gt;, Nullable&lt;float&gt;, Nullable&lt;FontVariant&gt;, Nullable&lt;TextDirection&gt;)</a></td>
+                <td><p>Modifies this style with one or more attribute changes and returns a new style</p>
+</td>
+            </tr>
+    </table>
 
 
 
 
 
 
+    <h2 id="extension-methods">Extension Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.IStyleExtensions.HasSameLayout">HasSameLayout(this IStyle, IStyle)</a></td>
+                <td><p>Compares this style to another and returns true if both will have the same
+layout, but not necessarily the same appearance (eg: color change, underline etc...)</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.IStyleExtensions.Key">Key(this IStyle)</a></td>
+                <td><p>Generates a string key that uniquely identifies the formatting characteristics
+of this style.</p>
+</td>
+            </tr>
+    </table>
 
 
 

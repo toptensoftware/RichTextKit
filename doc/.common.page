@@ -1,6 +1,6 @@
 ---
 projectTitle: RichTextKit
-projectSubTitle: v0.1
+projectSubTitle: v0.2
 projectUrlPrefix: /richtextkit/
 prismLanguages:
   - csharp
@@ -36,16 +36,13 @@ navTree:
           - text: Overview|./ref/Topten.RichTextKit.CaretInfo
           - text: Fields
             subItems:
-              - text: CodePointIndex|./ref/Topten.RichTextKit.CaretInfo.CodePointIndex
-              - text: FontRun|./ref/Topten.RichTextKit.CaretInfo.FontRun
-              - text: NextCodePointIndex|./ref/Topten.RichTextKit.CaretInfo.NextCodePointIndex
-              - text: PreviousCodePointIndex|./ref/Topten.RichTextKit.CaretInfo.PreviousCodePointIndex
-              - text: StyleRun|./ref/Topten.RichTextKit.CaretInfo.StyleRun
-          - text: Properties
-            subItems:
               - text: CaretRectangle|./ref/Topten.RichTextKit.CaretInfo.CaretRectangle
               - text: CaretXCoord|./ref/Topten.RichTextKit.CaretInfo.CaretXCoord
-              - text: CodePointCount|./ref/Topten.RichTextKit.CaretInfo.CodePointCount
+              - text: CodePointIndex|./ref/Topten.RichTextKit.CaretInfo.CodePointIndex
+              - text: None|./ref/Topten.RichTextKit.CaretInfo.None
+          - text: Properties
+            subItems:
+              - text: IsNone|./ref/Topten.RichTextKit.CaretInfo.IsNone
       - text: FontMapper
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.FontMapper
@@ -104,8 +101,12 @@ navTree:
             subItems:
               - text: ClosestCodePointIndex|./ref/Topten.RichTextKit.HitTestResult.ClosestCodePointIndex
               - text: ClosestLine|./ref/Topten.RichTextKit.HitTestResult.ClosestLine
+              - text: None|./ref/Topten.RichTextKit.HitTestResult.None
               - text: OverCodePointIndex|./ref/Topten.RichTextKit.HitTestResult.OverCodePointIndex
               - text: OverLine|./ref/Topten.RichTextKit.HitTestResult.OverLine
+          - text: Properties
+            subItems:
+              - text: IsNone|./ref/Topten.RichTextKit.HitTestResult.IsNone
       - text: IStyle
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.IStyle
@@ -116,11 +117,66 @@ navTree:
               - text: FontSize|./ref/Topten.RichTextKit.IStyle.FontSize
               - text: FontVariant|./ref/Topten.RichTextKit.IStyle.FontVariant
               - text: FontWeight|./ref/Topten.RichTextKit.IStyle.FontWeight
+              - text: LetterSpacing|./ref/Topten.RichTextKit.IStyle.LetterSpacing
               - text: LineHeight|./ref/Topten.RichTextKit.IStyle.LineHeight
               - text: StrikeThrough|./ref/Topten.RichTextKit.IStyle.StrikeThrough
               - text: TextColor|./ref/Topten.RichTextKit.IStyle.TextColor
               - text: TextDirection|./ref/Topten.RichTextKit.IStyle.TextDirection
               - text: Underline|./ref/Topten.RichTextKit.IStyle.Underline
+      - text: IStyleExtensions
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.IStyleExtensions
+          - text: Methods
+            subItems:
+              - text: HasSameLayout|./ref/Topten.RichTextKit.IStyleExtensions.HasSameLayout
+              - text: Key|./ref/Topten.RichTextKit.IStyleExtensions.Key
+      - text: RichString
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.RichString
+          - text: Constructors|./ref/Topten.RichTextKit.RichString..ctor
+          - text: Properties
+            subItems:
+              - text: DefaultAlignment|./ref/Topten.RichTextKit.RichString.DefaultAlignment
+              - text: DefaultDirection|./ref/Topten.RichTextKit.RichString.DefaultDirection
+              - text: DefaultStyle|./ref/Topten.RichTextKit.RichString.DefaultStyle
+              - text: Length|./ref/Topten.RichTextKit.RichString.Length
+              - text: LineCount|./ref/Topten.RichTextKit.RichString.LineCount
+              - text: MaxHeight|./ref/Topten.RichTextKit.RichString.MaxHeight
+              - text: MaxLines|./ref/Topten.RichTextKit.RichString.MaxLines
+              - text: MaxWidth|./ref/Topten.RichTextKit.RichString.MaxWidth
+              - text: MeasuredHeight|./ref/Topten.RichTextKit.RichString.MeasuredHeight
+              - text: MeasuredLength|./ref/Topten.RichTextKit.RichString.MeasuredLength
+              - text: MeasuredWidth|./ref/Topten.RichTextKit.RichString.MeasuredWidth
+              - text: Truncated|./ref/Topten.RichTextKit.RichString.Truncated
+          - text: Methods
+            subItems:
+              - text: Add|./ref/Topten.RichTextKit.RichString.Add
+              - text: Alignment|./ref/Topten.RichTextKit.RichString.Alignment
+              - text: BaseDirection|./ref/Topten.RichTextKit.RichString.BaseDirection
+              - text: Bold|./ref/Topten.RichTextKit.RichString.Bold
+              - text: DiscardLayout|./ref/Topten.RichTextKit.RichString.DiscardLayout
+              - text: FontFamily|./ref/Topten.RichTextKit.RichString.FontFamily
+              - text: FontItalic|./ref/Topten.RichTextKit.RichString.FontItalic
+              - text: FontSize|./ref/Topten.RichTextKit.RichString.FontSize
+              - text: FontVariant|./ref/Topten.RichTextKit.RichString.FontVariant
+              - text: FontWeight|./ref/Topten.RichTextKit.RichString.FontWeight
+              - text: GetCaretInfo|./ref/Topten.RichTextKit.RichString.GetCaretInfo
+              - text: HitTest|./ref/Topten.RichTextKit.RichString.HitTest
+              - text: LetterSpacing|./ref/Topten.RichTextKit.RichString.LetterSpacing
+              - text: LineHeight|./ref/Topten.RichTextKit.RichString.LineHeight
+              - text: MarginBottom|./ref/Topten.RichTextKit.RichString.MarginBottom
+              - text: MarginLeft|./ref/Topten.RichTextKit.RichString.MarginLeft
+              - text: MarginRight|./ref/Topten.RichTextKit.RichString.MarginRight
+              - text: MarginTop|./ref/Topten.RichTextKit.RichString.MarginTop
+              - text: Normal|./ref/Topten.RichTextKit.RichString.Normal
+              - text: Paint|./ref/Topten.RichTextKit.RichString.Paint
+              - text: Paragraph|./ref/Topten.RichTextKit.RichString.Paragraph
+              - text: Pop|./ref/Topten.RichTextKit.RichString.Pop
+              - text: Push|./ref/Topten.RichTextKit.RichString.Push
+              - text: StrikeThrough|./ref/Topten.RichTextKit.RichString.StrikeThrough
+              - text: TextColor|./ref/Topten.RichTextKit.RichString.TextColor
+              - text: TextDirection|./ref/Topten.RichTextKit.RichString.TextDirection
+              - text: Underline|./ref/Topten.RichTextKit.RichString.Underline
       - text: StrikeThroughStyle
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.StrikeThroughStyle
@@ -135,11 +191,45 @@ navTree:
               - text: FontSize|./ref/Topten.RichTextKit.Style.FontSize
               - text: FontVariant|./ref/Topten.RichTextKit.Style.FontVariant
               - text: FontWeight|./ref/Topten.RichTextKit.Style.FontWeight
+              - text: LetterSpacing|./ref/Topten.RichTextKit.Style.LetterSpacing
               - text: LineHeight|./ref/Topten.RichTextKit.Style.LineHeight
               - text: StrikeThrough|./ref/Topten.RichTextKit.Style.StrikeThrough
               - text: TextColor|./ref/Topten.RichTextKit.Style.TextColor
               - text: TextDirection|./ref/Topten.RichTextKit.Style.TextDirection
               - text: Underline|./ref/Topten.RichTextKit.Style.Underline
+          - text: Methods
+            subItems:
+              - text: Modify|./ref/Topten.RichTextKit.Style.Modify
+      - text: StyleManager
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.StyleManager
+          - text: Constructors|./ref/Topten.RichTextKit.StyleManager..ctor
+          - text: Fields
+            subItems:
+              - text: Default|./ref/Topten.RichTextKit.StyleManager.Default
+          - text: Properties
+            subItems:
+              - text: CurrentStyle|./ref/Topten.RichTextKit.StyleManager.CurrentStyle
+              - text: DefaultStyle|./ref/Topten.RichTextKit.StyleManager.DefaultStyle
+          - text: Methods
+            subItems:
+              - text: Bold|./ref/Topten.RichTextKit.StyleManager.Bold
+              - text: FontFamily|./ref/Topten.RichTextKit.StyleManager.FontFamily
+              - text: FontItalic|./ref/Topten.RichTextKit.StyleManager.FontItalic
+              - text: FontSize|./ref/Topten.RichTextKit.StyleManager.FontSize
+              - text: FontVariant|./ref/Topten.RichTextKit.StyleManager.FontVariant
+              - text: FontWeight|./ref/Topten.RichTextKit.StyleManager.FontWeight
+              - text: FromStyle|./ref/Topten.RichTextKit.StyleManager.FromStyle
+              - text: LetterSpacing|./ref/Topten.RichTextKit.StyleManager.LetterSpacing
+              - text: LineHeight|./ref/Topten.RichTextKit.StyleManager.LineHeight
+              - text: Pop|./ref/Topten.RichTextKit.StyleManager.Pop
+              - text: Push|./ref/Topten.RichTextKit.StyleManager.Push
+              - text: Reset|./ref/Topten.RichTextKit.StyleManager.Reset
+              - text: StrikeThrough|./ref/Topten.RichTextKit.StyleManager.StrikeThrough
+              - text: TextColor|./ref/Topten.RichTextKit.StyleManager.TextColor
+              - text: TextDirection|./ref/Topten.RichTextKit.StyleManager.TextDirection
+              - text: Underline|./ref/Topten.RichTextKit.StyleManager.Underline
+              - text: Update|./ref/Topten.RichTextKit.StyleManager.Update
       - text: StyleRun
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.StyleRun
@@ -166,19 +256,26 @@ navTree:
               - text: CaretIndicies|./ref/Topten.RichTextKit.TextBlock.CaretIndicies
               - text: FontMapper|./ref/Topten.RichTextKit.TextBlock.FontMapper
               - text: FontRuns|./ref/Topten.RichTextKit.TextBlock.FontRuns
+              - text: Length|./ref/Topten.RichTextKit.TextBlock.Length
+              - text: LineCount|./ref/Topten.RichTextKit.TextBlock.LineCount
               - text: Lines|./ref/Topten.RichTextKit.TextBlock.Lines
               - text: MaxHeight|./ref/Topten.RichTextKit.TextBlock.MaxHeight
               - text: MaxLines|./ref/Topten.RichTextKit.TextBlock.MaxLines
               - text: MaxWidth|./ref/Topten.RichTextKit.TextBlock.MaxWidth
               - text: MeasuredHeight|./ref/Topten.RichTextKit.TextBlock.MeasuredHeight
+              - text: MeasuredLength|./ref/Topten.RichTextKit.TextBlock.MeasuredLength
               - text: MeasuredOverhang|./ref/Topten.RichTextKit.TextBlock.MeasuredOverhang
               - text: MeasuredPadding|./ref/Topten.RichTextKit.TextBlock.MeasuredPadding
               - text: MeasuredWidth|./ref/Topten.RichTextKit.TextBlock.MeasuredWidth
               - text: StyleRuns|./ref/Topten.RichTextKit.TextBlock.StyleRuns
+              - text: Truncated|./ref/Topten.RichTextKit.TextBlock.Truncated
           - text: Methods
             subItems:
+              - text: AddEllipsis|./ref/Topten.RichTextKit.TextBlock.AddEllipsis
               - text: AddText|./ref/Topten.RichTextKit.TextBlock.AddText
+              - text: CharacterToCodePointIndex|./ref/Topten.RichTextKit.TextBlock.CharacterToCodePointIndex
               - text: Clear|./ref/Topten.RichTextKit.TextBlock.Clear
+              - text: CodePointToCharacterIndex|./ref/Topten.RichTextKit.TextBlock.CodePointToCharacterIndex
               - text: FindFontRunForCodePointIndex|./ref/Topten.RichTextKit.TextBlock.FindFontRunForCodePointIndex
               - text: GetCaretInfo|./ref/Topten.RichTextKit.TextBlock.GetCaretInfo
               - text: HitTest|./ref/Topten.RichTextKit.TextBlock.HitTest
@@ -196,12 +293,15 @@ navTree:
           - text: Properties
             subItems:
               - text: BaseLine|./ref/Topten.RichTextKit.TextLine.BaseLine
+              - text: End|./ref/Topten.RichTextKit.TextLine.End
               - text: Height|./ref/Topten.RichTextKit.TextLine.Height
+              - text: Length|./ref/Topten.RichTextKit.TextLine.Length
               - text: MaxAscent|./ref/Topten.RichTextKit.TextLine.MaxAscent
               - text: MaxDescent|./ref/Topten.RichTextKit.TextLine.MaxDescent
               - text: NextLine|./ref/Topten.RichTextKit.TextLine.NextLine
               - text: PreviousLine|./ref/Topten.RichTextKit.TextLine.PreviousLine
               - text: Runs|./ref/Topten.RichTextKit.TextLine.Runs
+              - text: Start|./ref/Topten.RichTextKit.TextLine.Start
               - text: TextBlock|./ref/Topten.RichTextKit.TextLine.TextBlock
               - text: TextHeight|./ref/Topten.RichTextKit.TextLine.TextHeight
               - text: Width|./ref/Topten.RichTextKit.TextLine.Width
@@ -220,6 +320,9 @@ navTree:
               - text: SelectionColor|./ref/Topten.RichTextKit.TextPaintOptions.SelectionColor
               - text: SelectionEnd|./ref/Topten.RichTextKit.TextPaintOptions.SelectionEnd
               - text: SelectionStart|./ref/Topten.RichTextKit.TextPaintOptions.SelectionStart
+          - text: Methods
+            subItems:
+              - text: Clone|./ref/Topten.RichTextKit.TextPaintOptions.Clone
       - text: UnderlineStyle
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.UnderlineStyle

@@ -23,6 +23,7 @@ import: "../.common.page"
 
 
 
+<p>Constructs a new text paint options</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public TextPaintOptions();</code></pre>

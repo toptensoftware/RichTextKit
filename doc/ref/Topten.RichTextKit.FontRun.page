@@ -74,7 +74,7 @@ the same font and style attributes.</p>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.FontRun.Length">Length</a></td>
-                <td><p>The length of this run (in codepoints)</p>
+                <td><p>The length of this run in codepoints</p>
 </td>
             </tr>
             <tr>
@@ -89,7 +89,7 @@ the same font and style attributes.</p>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.FontRun.Start">Start</a></td>
-                <td><p>Index into _codePoints buffer of the start of this run</p>
+                <td><p>Code point index of the start of this run</p>
 </td>
             </tr>
             <tr>

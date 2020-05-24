@@ -4,7 +4,7 @@ isMarkdown: false
 import: "../.common.page"
 ---
 
-<h1 data-nav-secondary-text="Definition" id="definition">CaretInfo.CaretRectangle Property</h1>
+<h1 data-nav-secondary-text="Definition" id="definition">CaretInfo.CaretRectangle Field</h1>
 
 
 <p>
@@ -24,7 +24,7 @@ corner of the text block. The caret should be drawn from the returned rectangle'
 top-right to bottom-left.</p>
 
 
-<pre class="language-csharp"><code class="language-csharp">public SkiaSharp.SKRect CaretRectangle { get; }</code></pre>
+<pre class="language-csharp"><code class="language-csharp">public SkiaSharp.SKRect CaretRectangle;</code></pre>
 
 <h2 id="remarks">Remarks</h2><p>This will be based on the <em>previous</em> character on this line (or the same character
 if this is first character in the line).</p>
@@ -38,7 +38,7 @@ coordinate to the bottom-left coordinate.</p>
 coordinates of the returned rectangle and get the x-coordinate from the
 <a href="./../ref/Topten.RichTextKit.CaretInfo.CaretXCoord">CaretXCoord</a> property.</p>
 
-<h2 id="property-type">Property Type</h2>    <table class="name-description">
+<h2 id="field-type">Field Type</h2>    <table class="name-description">
         <tr>
             <td>SkiaSharp.SKRect</td>
             <td></td>

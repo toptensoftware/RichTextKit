@@ -4,7 +4,7 @@ isMarkdown: false
 import: "../.common.page"
 ---
 
-<h1 data-nav-secondary-text="Definition" id="definition">CaretInfo.CaretXCoord Property</h1>
+<h1 data-nav-secondary-text="Definition" id="definition">CaretInfo.CaretXCoord Field</h1>
 
 
 <p>
@@ -22,10 +22,10 @@ import: "../.common.page"
 <p>The X-coordinate where the caret should be displayed for this code point.</p>
 
 
-<pre class="language-csharp"><code class="language-csharp">public float CaretXCoord { get; }</code></pre>
+<pre class="language-csharp"><code class="language-csharp">public float CaretXCoord;</code></pre>
 
 
-<h2 id="property-type">Property Type</h2>    <table class="name-description">
+<h2 id="field-type">Field Type</h2>    <table class="name-description">
         <tr>
             <td><a href="https://docs.microsoft.com/dotnet/api/System.Single">float</a></td>
             <td></td>

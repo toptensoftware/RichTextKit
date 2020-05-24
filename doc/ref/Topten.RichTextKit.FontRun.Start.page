@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>Index into _codePoints buffer of the start of this run</p>
+<p>Code point index of the start of this run</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public int Start;</code></pre>

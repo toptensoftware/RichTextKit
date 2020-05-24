@@ -1,10 +1,10 @@
 ---
-title: "CaretInfo.CodePointCount"
+title: "RichString.LineCount"
 isMarkdown: false
 import: "../.common.page"
 ---
 
-<h1 data-nav-secondary-text="Definition" id="definition">CaretInfo.CodePointCount Property</h1>
+<h1 data-nav-secondary-text="Definition" id="definition">RichString.LineCount Property</h1>
 
 
 <p>
@@ -12,17 +12,17 @@ import: "../.common.page"
         Assembly: Topten.RichTextKit.dll<br />
         Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
 
-                Declaring Type: <a href="./../ref/Topten.RichTextKit.CaretInfo">CaretInfo</a><br />
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.RichString">RichString</a><br />
                         </small>
 </p>
 
 
 
 
-<p>The number of code points in this cluster.</p>
+<p>The number of lines in the text</p>
 
 
-<pre class="language-csharp"><code class="language-csharp">public int CodePointCount { get; }</code></pre>
+<pre class="language-csharp"><code class="language-csharp">public int LineCount { get; }</code></pre>
 
 
 <h2 id="property-type">Property Type</h2>    <table class="name-description">

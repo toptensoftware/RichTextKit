@@ -21,9 +21,26 @@ the same font and style attributes.</p>
 </td>
             </tr>
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.IStyleExtensions"> IStyleExtensions</a></td>
+                <td><p>Extension methods for working with IStyle</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString"> RichString</a></td>
+                <td><p>Represents a string decorated with rich text information including
+various helper methods for constructing rich text strings with a
+fluent-like API.</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Style"> Style</a></td>
                 <td><p>A basic implementation of IStyle interface provides styling
 information for a run of text.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager"> StyleManager</a></td>
+                <td><p>Helper class for managing RichTextKit styles.</p>
 </td>
             </tr>
             <tr>

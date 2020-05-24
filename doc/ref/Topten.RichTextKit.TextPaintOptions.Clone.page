@@ -1,0 +1,45 @@
+---
+title: "TextPaintOptions.Clone"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">TextPaintOptions.Clone Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.TextPaintOptions">TextPaintOptions</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Creates a clone of this object</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public TextPaintOptions Clone();</code></pre>
+
+
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.TextPaintOptions">TextPaintOptions</a></td>
+            <td><p>The closed object</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

@@ -1,0 +1,170 @@
+---
+title: "Topten.RichTextKit.StyleManager"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">StyleManager Class</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+            </small>
+</p>
+
+
+<p>Helper class for managing RichTextKit styles.</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public class StyleManager</code></pre>
+
+    <h2 id="inherits">Inheritance</h2>
+    <p>
+        StyleManager
+ &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.Object">object</a>    </p>
+
+
+
+    <h2 id="remarks">Remarks</h2>
+<p>The StyleManager can be used to simplify the creation of styles by
+maintaining a current style that incremental changes can be made to.</p>
+<p>eg: turn bold on, underline off, change font family etc...</p>
+<p>The StyleManager also implements an internal stack to simplify applying
+a particular style and then popping back to the previous style.</p>
+
+
+    <h2 id="constructors">Constructors</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager..ctor">StyleManager()</a></td>
+                <td><p>Constructs a new StyleManager</p>
+</td>
+            </tr>
+    </table>
+
+
+
+    <h2 id="fields">Fields</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.Default">Default</a></td>
+                <td><p>The default style manager instance</p>
+</td>
+            </tr>
+    </table>
+
+    <h2 id="properties">Properties</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.CurrentStyle">CurrentStyle</a></td>
+                <td><p>The current style</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.DefaultStyle">DefaultStyle</a></td>
+                <td><p>The default style to be be used when Reset is called</p>
+</td>
+            </tr>
+    </table>
+
+    <h2 id="methods">Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.Bold">Bold(bool)</a></td>
+                <td><p>Changes the font weight and returns an update IStyle (short cut to FontWeight)</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.FontFamily">FontFamily(string)</a></td>
+                <td><p>Changes the font family and returns an updated IStyle</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.FontItalic">FontItalic(bool)</a></td>
+                <td><p>Changes the font italic setting and returns an updated IStyle</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.FontSize">FontSize(float)</a></td>
+                <td><p>Changes the font size and returns an updated IStyle</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.FontVariant">FontVariant(FontVariant)</a></td>
+                <td><p>Changes the font variant and returns an updated IStyle</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.FontWeight">FontWeight(int)</a></td>
+                <td><p>Changes the font weight and returns an updated IStyle</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.FromStyle">FromStyle(IStyle)</a></td>
+                <td><p>Get a style that matches all the style attributes of the supplied style</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.LetterSpacing">LetterSpacing(float)</a></td>
+                <td><p>Changes the character spacing and returns an updated IStyle</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.LineHeight">LineHeight(float)</a></td>
+                <td><p>Changes the line height and returns an updated IStyle</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.Pop">Pop()</a></td>
+                <td><p>Restores the current state on an internal stack</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.Push">Push()</a></td>
+                <td><p>Saves the current state on an internal stack</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.Reset">Reset()</a></td>
+                <td><p>Resets the current style to the default style and resets the internal
+Push/Pop style stack to empty.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.StrikeThrough">StrikeThrough(StrikeThroughStyle)</a></td>
+                <td><p>Changes the strikethrough style and returns an updated IStyle</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.TextColor">TextColor(SkiaSharp.SKColor)</a></td>
+                <td><p>Changes the text color and returns an updated IStyle</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.TextDirection">TextDirection(TextDirection)</a></td>
+                <td><p>Changes the text direction and returns an updated IStyle</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.Underline">Underline(UnderlineStyle)</a></td>
+                <td><p>Changes the underline style and returns an updated IStyle</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.Update">Update(string, Nullable&lt;float&gt;, Nullable&lt;int&gt;, Nullable&lt;bool&gt;, Nullable&lt;UnderlineStyle&gt;, Nullable&lt;StrikeThroughStyle&gt;, Nullable&lt;float&gt;, Nullable&lt;SkiaSharp.SKColor&gt;, Nullable&lt;float&gt;, Nullable&lt;FontVariant&gt;, Nullable&lt;TextDirection&gt;)</a></td>
+                <td><p>Update the current style by applying one or more changes to the current
+style.</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,276 @@
+---
+title: "Topten.RichTextKit.RichString"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">RichString Class</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+            </small>
+</p>
+
+
+<p>Represents a string decorated with rich text information including
+various helper methods for constructing rich text strings with a
+fluent-like API.</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public class RichString</code></pre>
+
+    <h2 id="inherits">Inheritance</h2>
+    <p>
+        RichString
+ &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.Object">object</a>    </p>
+
+
+
+
+
+    <h2 id="constructors">Constructors</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString..ctor">RichString(string)</a></td>
+                <td><p>Constructs a new rich text string</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+    <h2 id="properties">Properties</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.DefaultAlignment">DefaultAlignment</a></td>
+                <td><p>Sets the default text alignment for cases where
+the rich text doesn't specify an alignment</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.DefaultDirection">DefaultDirection</a></td>
+                <td><p>The default base text direction for cases where the rich text
+doesn't explicitly specify a text direction</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.DefaultStyle">DefaultStyle</a></td>
+                <td><p>The default base text direction for cases where the rich text
+doesn't explicitly specify a text direction</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.Length">Length</a></td>
+                <td><p>Gets the total length of the string in code points</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.LineCount">LineCount</a></td>
+                <td><p>The number of lines in the text</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.MaxHeight">MaxHeight</a></td>
+                <td><p>The maximum height of the TextBlock after which lines will be
+truncated and the final line will be appended with an
+ellipsis (<code>...</code>) character.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.MaxLines">MaxLines</a></td>
+                <td><p>The maximum number of lines after which lines will be
+truncated and the final line will be appended with an
+ellipsis (<code>...</code>) character.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.MaxWidth">MaxWidth</a></td>
+                <td><p>The max width property sets the maximum width of a line, after which
+the line will be wrapped onto the next line.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.MeasuredHeight">MeasuredHeight</a></td>
+                <td><p>The total height of all lines.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.MeasuredLength">MeasuredLength</a></td>
+                <td><p>Gets the measured length of the string up to the truncation point
+in code points</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.MeasuredWidth">MeasuredWidth</a></td>
+                <td><p>The width of the widest line of text.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.Truncated">Truncated</a></td>
+                <td><p>Indicates if the text was truncated due to max height or max lines
+constraints</p>
+</td>
+            </tr>
+    </table>
+
+    <h2 id="methods">Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.Add#Topten.RichTextKit-RichString.Add-System-String">Add(string)</a></td>
+                <td><p>Append text to this RichString</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.Add#Topten.RichTextKit-RichString.Add-System-String-System-String-System-Nullable-System-Single--System-Nullable-System-Int32--System-Nullable-System-Boolean--System-Nullable-Topten.RichTextKit-UnderlineStyle--System-Nullable-Topten.RichTextKit-StrikeThroughStyle--System-Nullable-System-Single--System-Nullable-SkiaSharp-SKColor--System-Nullable-System-Single--System-Nullable-Topten.RichTextKit-FontVariant--System-Nullable-Topten.RichTextKit-TextDirection-">Add(string, string, Nullable&lt;float&gt;, Nullable&lt;int&gt;, Nullable&lt;bool&gt;, Nullable&lt;UnderlineStyle&gt;, Nullable&lt;StrikeThroughStyle&gt;, Nullable&lt;float&gt;, Nullable&lt;SkiaSharp.SKColor&gt;, Nullable&lt;float&gt;, Nullable&lt;FontVariant&gt;, Nullable&lt;TextDirection&gt;)</a></td>
+                <td><p>Adds text with various style attributes changed</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.Alignment">Alignment(TextAlignment)</a></td>
+                <td><p>Sets the text alignment of the current paragraph</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.BaseDirection">BaseDirection(TextDirection)</a></td>
+                <td><p>Sets the base text direction of the current paragraph</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.Bold">Bold(bool)</a></td>
+                <td><p>Changes the font weight to bold or normal</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.DiscardLayout">DiscardLayout()</a></td>
+                <td><p>Discards all internal layout structures</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.FontFamily">FontFamily(string)</a></td>
+                <td><p>Changes the font family</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.FontItalic">FontItalic(bool)</a></td>
+                <td><p>Changes the font italic setting</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.FontSize">FontSize(float)</a></td>
+                <td><p>Changes the font size</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.FontVariant">FontVariant(FontVariant)</a></td>
+                <td><p>Changes the font variant</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.FontWeight">FontWeight(int)</a></td>
+                <td><p>Changes the font weight</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.GetCaretInfo">GetCaretInfo(int)</a></td>
+                <td><p>Calculates useful information for displaying a caret</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.HitTest">HitTest(float, float)</a></td>
+                <td><p>Hit test this string</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.LetterSpacing">LetterSpacing(float)</a></td>
+                <td><p>Changes the character spacing</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.LineHeight">LineHeight(float)</a></td>
+                <td><p>Changes the line height</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.MarginBottom">MarginBottom(float)</a></td>
+                <td><p>Sets the bottom margin of the current paragraph</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.MarginLeft">MarginLeft(float)</a></td>
+                <td><p>Sets the left margin of the current paragraph</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.MarginRight">MarginRight(float)</a></td>
+                <td><p>Sets the right margin of the current paragraph</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.MarginTop">MarginTop(float)</a></td>
+                <td><p>Sets the top margin of the current paragraph</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.Normal">Normal()</a></td>
+                <td><p>Resets to normal font (normal weight, italic off, underline off, strike through off, font variant off</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.Paint#Topten.RichTextKit-RichString.Paint-SkiaSharp-SKCanvas-Topten.RichTextKit-TextPaintOptions">Paint(SkiaSharp.SKCanvas, TextPaintOptions)</a></td>
+                <td><p>Paint this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.Paint#Topten.RichTextKit-RichString.Paint-SkiaSharp-SKCanvas-SkiaSharp-SKPoint-Topten.RichTextKit-TextPaintOptions">Paint(SkiaSharp.SKCanvas, SkiaSharp.SKPoint, TextPaintOptions)</a></td>
+                <td><p>Paint this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.Paragraph">Paragraph()</a></td>
+                <td><p>Starts a new text paragraph</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.Pop">Pop()</a></td>
+                <td><p>Restores a previous saved style from the internal stack</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.Push">Push()</a></td>
+                <td><p>Saves the current style to an internal stack</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.StrikeThrough">StrikeThrough(StrikeThroughStyle)</a></td>
+                <td><p>Changes the strike-through style</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.TextColor">TextColor(SkiaSharp.SKColor)</a></td>
+                <td><p>Changes the text color</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.TextDirection">TextDirection(TextDirection)</a></td>
+                <td><p>Changes the text direction</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.Underline">Underline(UnderlineStyle)</a></td>
+                <td><p>Changes the underline style</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+

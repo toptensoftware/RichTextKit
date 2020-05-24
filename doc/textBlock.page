@@ -3,7 +3,10 @@ title: "Creating a TextBlock"
 isMarkdown: false
 ---
 <h1 id="creating-a-textblock">Creating a TextBlock</h1>
-<p>The primary class  you work with when using RichTextKit is the <a href="./ref/Topten.RichTextKit.TextBlock">TextBlock</a> class.  This section describes how to create a text block and add text to it.</p>
+<p>The TextBlock class is a low-level class for working with a single block of text.  In
+general you probably don't need to use this class as the higher level RichString class
+is easier to work with and provides most of the same capabilities.</p>
+<p>Never-the-less, this section describes how to work with the TextBlock class.</p>
 <h2 id="create-a-text-block">Create a Text block</h2>
 <p>To create a text block, simply create a new instance of the TextBlock class.  You'll
 probably also want to set some layout properties like the maximum width and the text alignment:</p>

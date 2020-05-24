@@ -8,7 +8,8 @@ to show the current insert position.  Although RichTextKit doesn't provide
 any editing capabilities, it does include the ability to calculate where
 the caret should be displayed.</p>
 <p>To determine where the caret should be displayed, call the
-<a href="./ref/Topten.RichTextKit.TextBlock.GetCaretInfo">GetCaretInfo</a>
+<a href="./ref/Topten.RichTextKit.RichString.GetCaretInfo">RichString.GetCaretInfo</a> or
+<a href="./ref/Topten.RichTextKit.TextBlock.GetCaretInfo">TextBlock.GetCaretInfo</a>
 method which will return a <a href="./ref/Topten.RichTextKit.CaretInfo">CaretInfo</a> structure describing
 where the caret should be drawn, the shape of the caret (sloped for italic) and
 other useful details about the current caret position.</p>

@@ -1,0 +1,47 @@
+---
+title: "TextBlock.AddEllipsis"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">TextBlock.AddEllipsis Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.TextBlock">TextBlock</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Appends an ellipsis to this text block</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void AddEllipsis();</code></pre>
+
+<h2 id="remarks">Remarks</h2><p>This method checks if the text block has already been truncated and if
+not appends an ellipsis without changing the measured vertical layout of the
+text block.  The ellipsis only remains in effect until the block's layout
+is recalculated.</p>
+<p>The text block must have at least one line.  If the block contains no text,
+then use AddText(&quot;\n&quot;, style) to create a single line with an attached style
+but no text.</p>
+<p>The intended purpose of this is to included an ellipsis on this text block
+when a following text block doesn't fit.</p>
+
+
+
+
+
+
+
+

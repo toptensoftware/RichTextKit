@@ -1,0 +1,39 @@
+---
+title: "RichString.DefaultDirection"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 data-nav-secondary-text="Definition" id="definition">RichString.DefaultDirection Property</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.RichString">RichString</a><br />
+                        </small>
+</p>
+
+
+
+
+<p>The default base text direction for cases where the rich text
+doesn't explicitly specify a text direction</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public TextDirection DefaultDirection { get; set; }</code></pre>
+
+
+<h2 id="property-type">Property Type</h2>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.TextDirection">TextDirection</a></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+
