@@ -14,6 +14,7 @@ namespace RichStringSandbox
             ResizeRedraw = true;
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
 
+            /*
             _richString = new RichString()
                         .FontSize(18).FontFamily("Open Sans")
                         .Alignment(TextAlignment.Center).MarginBottom(20)
@@ -22,6 +23,17 @@ namespace RichStringSandbox
                         .Alignment(TextAlignment.Left)
                         .Add("Para2a\nParam2b")
                         ;
+            */
+            var rs = new RichString()
+                .Alignment(TextAlignment.Center)
+                .FontFamily("Segoe UI")
+                .MarginBottom(20)
+                .Add("Welcome To RichTextKit", fontSize:24, fontWeight: 700, fontItalic: true)
+                .Paragraph().Alignment(TextAlignment.Left)
+                .FontSize(18)
+                .Add("This is a test string");
+
+            _richString = rs;
         }
 
         private Bitmap _bitmap;

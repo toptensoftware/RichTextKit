@@ -1,5 +1,5 @@
 ﻿// RichTextKit
-// Copyright © 2019 Topten Software. All Rights Reserved.
+// Copyright © 2019-2020 Topten Software. All Rights Reserved.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may 
 // not use this product except in compliance with the License. You may obtain 
@@ -14,7 +14,7 @@
 // under the License.
 
 // RichTextKit
-// Copyright © 2019 Topten Software. All Rights Reserved.
+// Copyright © 2019-2020 Topten Software. All Rights Reserved.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may 
 // not use this product except in compliance with the License. You may obtain 

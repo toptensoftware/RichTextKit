@@ -7,19 +7,50 @@ title: Basic Concepts
 The page describes some basic concepts that are important to understand
 when working with RichTextKit.
 
+## Rich Strings
+
+The easiest way to work with RichTextKit is with the `RichString` class which
+provides a convenient set of methods for constructing richly decorated text.
+
+~~~
+// Create a RichString
+var rs = new RichString()
+    .Alignment(TextAlignment.Center)
+    .FontFamily("Segoe UI")
+    .MarginBottom(20)
+    .Add("Welcome To RichTextKit", fontSize:24, fontWeight: 700, fontItalic: true)
+    .Paragraph().Alignment(TextAlignment.Left)
+    .FontSize(18)
+    .Add("This is a test string");
+~~~
+
+If you want to wrap and/or crop it, set the Max properties:
+
+~~~
+rs.MaxWidth = 640;
+rs.MaxHeight = 480;
+~~~
+
+And then you can paint it:
+
+~~~
+// Paint it
+rs.Paint(skia_canvas, new SKPoint(50, 50));
+~~~
+
+You can also get it's measured size:
+
+~~~
+Console.WriteLine($"Size: {rs.MeasuredWidth} x {rs.MeasuredHeight});
+~~~
+
+and lots more.  See the [T:Topten.RichTextKit.RichString] class for details.
+
 
 ## Text Blocks
 
-RichTextKit primarily works with individual blocks of text where each is
-essentially a paragraph.
-
-RichTextKit doesn't provide document level constructs like list items, 
-block quotes, tables, table cells, divs etc...  This project is strictly
-about laying out a single block of text with rich (aka attributed) text
-and then providing various functions for working with that text block.
-
-RichTextKit doesn't have a concept of a DOM - that's a higher level concept 
-that RichTextKit is not attempting to solve.
+Text blocks are a lower level concept that describes a single block of 
+text.  Internally RichString builds a single text block for each paragraph.
 
 Text blocks can contain forced line breaks with a newline character (`\n`).
 These should be considered as in-paragraph "soft returns", as opposed to
@@ -37,6 +68,9 @@ text block is comprised of one of more runs of text each tagged with a
 single style and these text runs are referred to a "style runs".
 
 Style runs are represented by the [T:Topten.RichTextKit.StyleRun] class.
+
+Styles are only used if dealing with TextBlocks directly and generally don't 
+need to be used if you're using the higher-level RichString interface.
 
 ## Font Fallback
 

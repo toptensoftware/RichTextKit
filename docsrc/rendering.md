@@ -4,12 +4,11 @@ title: Rendering Text
 
 # Rendering Text
 
-Once you've created and initialized a text block, you can render it to a SkiaSharp canvas
-using its [Paint()]((./ref/Topten.RichTextKit.TextBlock.Paint)) method:
+Text can be rendered using  [RichString.Paint()]((./ref/Topten.RichTextKit.RichString.Paint)) or [TextBlock.Paint()]((./ref/Topten.RichTextKit.TextBlock.Paint)) methods:
 
 ~~~csharp
 // Paint at (0,0)
-tb.Paint(canvas);
+textBlockOrRichString.Paint(canvas);
 ~~~
 
 By default the text will be rendered at the position (0,0).  `Use SKCanvas.Translate()` to set
@@ -17,13 +16,13 @@ the paint position or pass the position as a second parameter:
 
 ~~~csharp
 // Paint at (100,100)
-tb.Paint(canvas, new SKPoint(100,100));
+textBlockOrRichString.Paint(canvas, new SKPoint(100,100));
 ~~~
 
 
 ## Rendering with a Selection Highlight
 
-A text block can also be rendered with part of the text highlighted.
+Text can also be rendered with part of the text highlighted.
 
 ~~~csharp
 // Highlight code points 10 through 19...
@@ -35,7 +34,7 @@ var options = new TextPaintOptions()
 }
 
 // Paint with options
-tb.Paint(canvas, new SKPaint(100,100), options);
+textBlockOrRichString.Paint(canvas, new SKPaint(100,100), options);
 ~~~
 
 

@@ -4,7 +4,11 @@ title: Creating a TextBlock
 
 # Creating a TextBlock
 
-The primary class  you work with when using RichTextKit is the [T:Topten.RichTextKit.TextBlock] class.  This section describes how to create a text block and add text to it.
+The TextBlock class is a low-level class for working with a single block of text.  In 
+general you probably don't need to use this class as the higher level RichString class
+is easier to work with and provides most of the same capabilities.
+
+Never-the-less, this section describes how to work with the TextBlock class.
 
 ## Create a Text block
 

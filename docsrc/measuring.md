@@ -2,12 +2,23 @@
 title: Measuring Text
 ---
 
-# Measuring Text
+# Measuring RichString
+
+The `RichString` class provides various measurements of its contained text.
+
+* [P:Topten.RichTextKit.RichString.MeasuredWidth]
+* [P:Topten.RichTextKit.RichString.MeasuredHeight]
+* [P:Topten.RichTextKit.RichString.MeasuredLength]
+* [P:Topten.RichTextKit.RichString.LineCount]
+
+
+# Measuring TextBlock
 
 The `TextBlock` class provides various measurements of its contained text.
 
 * [P:Topten.RichTextKit.TextBlock.MeasuredWidth]
 * [P:Topten.RichTextKit.TextBlock.MeasuredHeight]
+* [P:Topten.RichTextKit.TextBlock.MeasuredLength]
 * [P:Topten.RichTextKit.TextBlock.MeasuredPadding]
 * [P:Topten.RichTextKit.TextBlock.MeasuredOverhang]
 

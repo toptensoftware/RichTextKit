@@ -1,5 +1,5 @@
 ﻿// RichTextKit
-// Copyright © 2019 Topten Software. All Rights Reserved.
+// Copyright © 2019-2020 Topten Software. All Rights Reserved.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may 
 // not use this product except in compliance with the License. You may obtain 
@@ -400,6 +400,17 @@ namespace Topten.RichTextKit
             }
         }
 
+        /// <summary>
+        /// Paint this text block
+        /// </summary>
+        /// <param name="canvas">The Skia canvas to paint to</param>
+        /// <param name="options">Options controlling the paint operation</param>
+        public void Paint(
+            SKCanvas canvas,
+            TextPaintOptions options = null)
+        {
+            Paint(canvas, SKPoint.Empty, options);
+        }
 
         /// <summary>
         /// Paint this text block
@@ -408,9 +419,9 @@ namespace Topten.RichTextKit
         /// <param name="position">The top left position within the canvas to draw at</param>
         /// <param name="options">Options controlling the paint operation</param>
         public void Paint(
-            SKCanvas canvas,
-            SKPoint position,
-            TextPaintOptions options = null)
+        SKCanvas canvas,
+        SKPoint position,
+        TextPaintOptions options = null)
         {
             Layout();
 
