@@ -1309,7 +1309,7 @@ public IReadOnlyList<StyleRun> StyleRuns
         {
             // Shape the text
             var shaper = TextShaper.ForTypeface(typeface);
-            var shaped = shaper.Shape(_textShapingBuffers, codePoints, style, direction, codePoints.Start, asFallbackFor);
+            var shaped = shaper.Shape(_textShapingBuffers, codePoints, style, direction, codePoints.Start, asFallbackFor, ResolveTextAlignment());
 
             // Create the run
             var fontRun = FontRun.Pool.Value.Get();

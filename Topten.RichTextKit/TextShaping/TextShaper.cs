@@ -210,8 +210,9 @@ namespace Topten.RichTextKit
         /// <param name="direction">LTR or RTL direction</param>
         /// <param name="clusterAdjustment">A value to add to all reported cluster numbers</param>
         /// <param name="asFallbackFor">The type face this font is a fallback for</param>
+        /// <param name="textAlignment">The text alignment of the paragraph, used to control placement of glyphs within character cell when letter spacing used</param>
         /// <returns>A TextShaper.Result representing the shaped text</returns>
-        public Result Shape(ResultBufferSet bufferSet, Slice<int> codePoints, IStyle style, TextDirection direction, int clusterAdjustment, SKTypeface asFallbackFor)
+        public Result Shape(ResultBufferSet bufferSet, Slice<int> codePoints, IStyle style, TextDirection direction, int clusterAdjustment, SKTypeface asFallbackFor, TextAlignment textAlignment)
         {
             // Work out if we need to force this to a fixed pitch and if
             // so the unscale character width we need to use
@@ -224,6 +225,24 @@ namespace Topten.RichTextKit
                     forceFixedPitchWidth = originalTypefaceShaper._fixedCharacterWidth;
                 }
             }
+
+            // Work out how much to shift glyphs in the character cell when using letter spacing
+            // The idea here is to align the glyphs within the character cell the same way as the
+            // text block alignment so that left/right aligned text still aligns with the margin
+            // and centered text is still centered (and not shifted slightly due to the extra 
+            // space that would be at the right with normal letter spacing).
+            float glyphLetterSpacingAdjustment = 0;
+            switch (textAlignment)
+            {
+                case TextAlignment.Right:
+                    glyphLetterSpacingAdjustment = style.LetterSpacing;
+                    break;
+
+                case TextAlignment.Center:
+                    glyphLetterSpacingAdjustment = style.LetterSpacing / 2;
+                    break;
+            }
+
 
             using (var buffer = new HarfBuzzSharp.Buffer())
             {
@@ -287,6 +306,7 @@ namespace Topten.RichTextKit
                     r.GlyphIndicies[i] = (ushort)gi[i].Codepoint;
                     r.Clusters[i] = (int)gi[i].Cluster + clusterAdjustment;
 
+                    
                     // Update code point positions
                     if (!rtl)
                     {
@@ -304,13 +324,18 @@ namespace Topten.RichTextKit
 
                     // Update glyph position
                     r.GlyphPositions[i] = new SKPoint(
-                        cursorX + pos.XOffset * glyphScale,
+                        cursorX + pos.XOffset * glyphScale + glyphLetterSpacingAdjustment,
                         cursorY - pos.YOffset * glyphScale + glyphVOffset
                         );
 
                     // Update cursor position
                     cursorX += pos.XAdvance * glyphScale;
                     cursorY += pos.YAdvance * glyphScale;
+
+                    if (i+1 == gi.Length || gi[i].Cluster != gi[i+1].Cluster)
+                    {
+                        cursorX += style.LetterSpacing;
+                    }
 
                     // Are we falling back for a fixed pitch font and is the next character a 
                     // new cluster?  If so advance by the width of the original font, not this

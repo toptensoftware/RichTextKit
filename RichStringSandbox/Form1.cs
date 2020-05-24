@@ -15,11 +15,9 @@ namespace RichStringSandbox
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
 
             _richString = new RichString()
-                        .FontSize(28).FontFamily("Open Sans")
-                        .Alignment(TextAlignment.Right)
-                        .Add("Para1")
-                        .Add("🌐 🍪 🍕 🚀 ")
-                        .Paragraph()
+                        .FontSize(18).FontFamily("Open Sans")
+                        .Alignment(TextAlignment.Center).MarginBottom(20)
+                        .Add("CHARACTER SPACING!!", letterSpacing: 10, fontSize: 28)
                         .Paragraph()
                         .Alignment(TextAlignment.Left)
                         .Add("Para2a\nParam2b")

@@ -100,6 +100,15 @@ namespace Topten.RichTextKit
         } = new SKColor(0xFF000000);
 
         /// <summary>
+        /// The character spacing for text in this run (defaults to 0).
+        /// </summary>
+        public float LetterSpacing
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// The font variant (ie: super/sub-script) for text in this run.
         /// </summary>
         public FontVariant FontVariant
@@ -134,6 +143,7 @@ namespace Topten.RichTextKit
         /// <param name="strikeThrough">The new strike-through style</param>
         /// <param name="lineHeight">The new line height</param>
         /// <param name="textColor">The new text color</param>
+        /// <param name="letterSpacing">The new letterSpacing</param>
         /// <param name="fontVariant">The new font variant</param>
         /// <param name="textDirection">The new text direction</param>
         /// <returns>A new style with the passed attributes changed</returns>
@@ -146,6 +156,7 @@ namespace Topten.RichTextKit
                StrikeThroughStyle? strikeThrough = null,
                float? lineHeight = null,
                SKColor? textColor = null,
+               float? letterSpacing = null,
                FontVariant? fontVariant = null,
                TextDirection? textDirection = null
             )
@@ -161,6 +172,7 @@ namespace Topten.RichTextKit
                 StrikeThrough = strikeThrough ?? this.StrikeThrough,
                 LineHeight = lineHeight ?? this.LineHeight,
                 TextColor = textColor ?? this.TextColor,
+                LetterSpacing = letterSpacing ?? this.LetterSpacing,
                 FontVariant = fontVariant ?? this.FontVariant,
                 TextDirection = textDirection ?? this.TextDirection,
             };

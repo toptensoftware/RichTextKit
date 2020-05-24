@@ -57,6 +57,7 @@ namespace Topten.RichTextKit
         /// <param name="strikeThrough">The new strike-through style</param>
         /// <param name="lineHeight">The new line height</param>
         /// <param name="textColor">The new text color</param>
+        /// <param name="letterSpacing">The new character spacing</param>
         /// <param name="fontVariant">The new font variant</param>
         /// <param name="textDirection">The new text direction</param>
         /// <returns>A reference to the same RichString instance</returns>
@@ -69,6 +70,7 @@ namespace Topten.RichTextKit
            StrikeThroughStyle? strikeThrough = null,
            float? lineHeight = null,
            SKColor? textColor = null,
+           float? letterSpacing = null,
            FontVariant? fontVariant = null,
            TextDirection? textDirection = null
         )
@@ -85,6 +87,7 @@ namespace Topten.RichTextKit
             if (lineHeight.HasValue) LineHeight(lineHeight.Value);
             if (textColor.HasValue) TextColor(textColor.Value);
             if (fontVariant.HasValue) FontVariant(fontVariant.Value);
+            if (letterSpacing.HasValue) LetterSpacing(letterSpacing.Value);
             if (textDirection.HasValue) TextDirection(textDirection.Value);
             Add(text);
             Pop();
@@ -155,6 +158,13 @@ namespace Topten.RichTextKit
         /// <param name="value">The new font weight</param>
         /// <returns>A reference to the same RichString instance</returns>
         public RichString TextColor(SKColor value) => Append(new TextColorItem(value));
+
+        /// <summary>
+        /// Changes the character spacing
+        /// </summary>
+        /// <param name="value">The new character spacing</param>
+        /// <returns>A reference to the same RichString instance</returns>
+        public RichString LetterSpacing(float value) => Append(new LetterSpacingItem(value));
 
         /// <summary>
         /// Changes the font variant
@@ -1100,6 +1110,21 @@ namespace Topten.RichTextKit
             public override void Build(BuildContext ctx)
             {
                 ctx.StyleManager.TextColor(_value);
+            }
+        }
+
+        class LetterSpacingItem : Item
+        {
+            public LetterSpacingItem(float value)
+            {
+                _value = value;
+            }
+
+            float _value;
+
+            public override void Build(BuildContext ctx)
+            {
+                ctx.StyleManager.LetterSpacing(_value);
             }
         }
 

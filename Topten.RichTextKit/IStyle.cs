@@ -69,6 +69,11 @@ namespace Topten.RichTextKit
         SKColor TextColor { get; }
 
         /// <summary>
+        /// Extra spacing between each character
+        /// </summary>
+        float LetterSpacing { get; }
+
+        /// <summary>
         /// The font variant (ie: super/sub-script) for text in this run.
         /// </summary>
         FontVariant FontVariant { get; }

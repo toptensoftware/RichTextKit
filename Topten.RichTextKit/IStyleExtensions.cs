@@ -31,7 +31,7 @@ namespace Topten.RichTextKit
         /// <returns>A key string</returns>
         public static string Key(this IStyle This)
         {
-            return $"{This.FontFamily}.{This.FontSize}.{This.FontWeight}.{This.FontItalic}.{This.Underline}.{This.StrikeThrough}.{This.LineHeight}.{This.TextColor}.{This.FontVariant}.{This.TextDirection}";        
+            return $"{This.FontFamily}.{This.FontSize}.{This.FontWeight}.{This.FontItalic}.{This.Underline}.{This.StrikeThrough}.{This.LineHeight}.{This.TextColor}.{This.LetterSpacing}.{This.FontVariant}.{This.TextDirection}";        
         }
 
         /// <summary>
