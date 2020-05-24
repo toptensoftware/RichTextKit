@@ -562,6 +562,20 @@ namespace Topten.RichTextKit
             }
         }
 
+        /// <summary>
+        /// Provides the plain-text equivalent of this RichString
+        /// </summary>
+        /// <returns>A plain-text string</returns>
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            foreach (var p in _paragraphs)
+            {
+                p.Build(sb);
+            }
+            return sb.ToString();
+        }
+
 
         /// <summary>
         /// Hit test this string
@@ -854,6 +868,14 @@ namespace Topten.RichTextKit
                 return new SKPoint(xPos, yPos);
             }
 
+            public void Build(StringBuilder sb)
+            {
+                foreach (var i in _items)
+                {
+                    i.Build(sb);
+                }
+            }
+
             public void Paint(ref PaintContext ctx)
             {
                 if (Truncated)
@@ -1032,6 +1054,7 @@ namespace Topten.RichTextKit
         abstract class Item
         {
             public abstract void Build(BuildContext ctx);
+            public virtual void Build(StringBuilder sb) { }
         }
 
 
@@ -1047,6 +1070,11 @@ namespace Topten.RichTextKit
             public override void Build(BuildContext ctx)
             {
                 ctx.TextBlock.AddText(_text, ctx.StyleManager.CurrentStyle);
+            }
+
+            public override void Build(StringBuilder sb)
+            {
+                sb.Append(_text);
             }
         }
 
