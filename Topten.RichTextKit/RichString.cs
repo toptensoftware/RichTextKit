@@ -83,6 +83,7 @@ namespace Topten.RichTextKit
             if (fontFamily != null) FontFamily(fontFamily);
             if (fontSize.HasValue) FontSize(fontSize.Value);
             if (fontWeight.HasValue) FontWeight(fontWeight.Value);
+            if (fontItalic.HasValue) FontItalic(fontItalic.Value);
             if (underline.HasValue) Underline(underline.Value);
             if (strikeThrough.HasValue) StrikeThrough(strikeThrough.Value);
             if (lineHeight.HasValue) LineHeight(lineHeight.Value);
