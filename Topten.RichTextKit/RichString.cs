@@ -396,8 +396,8 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// The default base text direction for cases where the rich text
-        /// doesn't explicitly specify a text direction
+        /// The default text style to be used as the current style at the start of the rich string.
+        /// Subsequent formatting operations will be applied over this base style.
         /// </summary>
         public IStyle DefaultStyle
         {
