@@ -1,0 +1,45 @@
+---
+title: "RichString.ToString"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">RichString.ToString Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.RichString">RichString</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Provides the plain-text equivalent of this RichString</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public override string ToString();</code></pre>
+
+
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="https://docs.microsoft.com/dotnet/api/System.String">string</a></td>
+            <td><p>A plain-text string</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+
