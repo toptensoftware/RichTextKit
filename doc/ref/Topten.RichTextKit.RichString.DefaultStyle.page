@@ -19,8 +19,8 @@ import: "../.common.page"
 
 
 
-<p>The default base text direction for cases where the rich text
-doesn't explicitly specify a text direction</p>
+<p>The default text style to be used as the current style at the start of the rich string.
+Subsequent formatting operations will be applied over this base style.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public IStyle DefaultStyle { get; set; }</code></pre>
