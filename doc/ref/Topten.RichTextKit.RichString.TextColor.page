@@ -35,7 +35,7 @@ import: "../.common.page"
                     
                     SkiaSharp.SKColor value
                 </td>
-                <td><p>The new font weight</p>
+                <td><p>The new text color</p>
 </td>
             </tr>
     </table>

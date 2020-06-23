@@ -23,11 +23,13 @@ import: "../.common.page"
 
 
 
-<p>Lays out the provided text and returns paragraph</p>
+<p>Updates the internal layout of the text block</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public void Layout();</code></pre>
 
+<h2 id="remarks">Remarks</h2><p>Generally you don't need to call this method as the layout
+will be automatically updated as needed.</p>
 
 
 

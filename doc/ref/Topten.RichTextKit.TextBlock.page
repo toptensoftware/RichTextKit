@@ -192,7 +192,7 @@ constraints</p>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextBlock.Layout">Layout()</a></td>
-                <td><p>Lays out the provided text and returns paragraph</p>
+                <td><p>Updates the internal layout of the text block</p>
 </td>
             </tr>
             <tr>
