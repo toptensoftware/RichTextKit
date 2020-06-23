@@ -32,11 +32,9 @@ if (bt.options.official)
     bt.git_tag();
 
     // Push nuget package
-    /*
     bt.run(`dotnet nuget push`,
            `./Build/Release/*.${bt.options.version.build}.nupkg`,
            `--source "https://api.nuget.org/v3/index.json"`);
-    */
 }
 
 
