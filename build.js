@@ -1,10 +1,4 @@
-var bt = require('./BuildTools/buildTools.js')
-
-// Used for generation version.* files
-bt.options.companyName = "Topten Software";
-
-// Load version info
-bt.version();
+var bt = require('./buildtools/buildTools.js')
 
 if (bt.options.official)
 {
@@ -14,24 +8,35 @@ if (bt.options.official)
     // Clock version
     bt.clock_version();
 
-    // Force clean
-    bt.options.clean = true;
-    bt.clean("./Build");
-
-    // Run Tests
-    bt.dntest("Release", "Topten.RichTextKit.Test");
+    // Clean build directory
+    bt.run("rm -rf ./Build");
 }
 
 // Build
-bt.dnbuild("Release", "Topten.RichTextKit");
+bt.run("dotnet build Topten.RichTextKit -c Release")
 
 if (bt.options.official)
 {
+    // Run tests
+    bt.run("dotnet test Topten.RichTextKit.Test -c Release");
+
+    // Build docs
+    if (!bt.options.nodoc)
+    {
+        bt.run(`docsanity`);
+        bt.run(`git add doc`);
+        bt.run(`git commit --allow-empty -m "Updated documentation"`);
+    }
+
     // Tag and commit
     bt.git_tag();
 
     // Push nuget package
-    bt.nupush(`./build/Release/Topten.RichTextKit/*.${bt.options.version.build}.nupkg`, `https://api.nuget.org/v3/index.json`);
+    /*
+    bt.run(`dotnet nuget push`,
+           `./Build/Release/*.${bt.options.version.build}.nupkg`,
+           `--source "https://api.nuget.org/v3/index.json"`);
+    */
 }
 
 

@@ -339,9 +339,12 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// Lays out the provided text and returns paragraph
+        /// Updates the internal layout of the text block
         /// </summary>
-        /// <returns>A paragraph that can be drawn</returns>
+        /// <remarks>
+        /// Generally you don't need to call this method as the layout
+        /// will be automatically updated as needed.
+        /// </remarks>
         public void Layout()
         {
             // Needed?

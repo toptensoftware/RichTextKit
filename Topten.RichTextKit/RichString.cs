@@ -157,7 +157,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Changes the text color
         /// </summary>
-        /// <param name="value">The new font weight</param>
+        /// <param name="value">The new text color</param>
         /// <returns>A reference to the same RichString instance</returns>
         public RichString TextColor(SKColor value) => Append(new TextColorItem(value));
 
