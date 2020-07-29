@@ -182,5 +182,11 @@ namespace Topten.RichTextKit.Utils
         /// A shared empty slice of type T
         /// </summary>
         public static Slice<T> Empty => new Slice<T>();
+
+        /// <summary>
+        /// Get the slice as a Span
+        /// </summary>
+        /// <returns></returns>
+        public Span<T> AsSpan() => new Span<T>(_array, _start, _length);
     }
 }

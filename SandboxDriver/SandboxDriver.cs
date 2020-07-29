@@ -110,9 +110,6 @@ namespace SandboxDriver
                     break;
 
                 case 1:
-                    _textBlock.AddText("\n\n", styleNormal);
-                    //_textBlock.AddEllipsis();
-                    /*
                     _textBlock.AddText("Hello Wor", styleNormal);
                     _textBlock.AddText("ld", styleRed);
                     _textBlock.AddText(". This is normal 18px. These are emojis: 🌐 🍪 🍕 🚀 🏴‍☠️", styleNormal);
@@ -129,7 +126,6 @@ namespace SandboxDriver
                     _textBlock.AddText("हालाँकि प्रचलित रूप पूज", styleNormal);
                     _textBlock.AddText(", Han: ", styleNormal);
                     _textBlock.AddText("緳 踥踕", styleNormal);
-                    */
                     break;
 
                 case 2:

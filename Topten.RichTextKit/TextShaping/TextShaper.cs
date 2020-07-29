@@ -247,7 +247,7 @@ namespace Topten.RichTextKit
             using (var buffer = new HarfBuzzSharp.Buffer())
             {
                 // Setup buffer
-                buffer.AddUtf32(new ReadOnlySpan<int>(codePoints.Underlying, codePoints.Start, codePoints.Length), 0, -1);
+                buffer.AddUtf32(codePoints.AsSpan(), 0, -1);
 
                 // Setup directionality (if supplied)
                 switch (direction)

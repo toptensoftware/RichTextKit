@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0;net45</TargetFrameworks>
+    <TargetFrameworks>net462</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SkiaSharp" Version="1.68.0" />
+    <PackageReference Include="SkiaSharp" Version="2.80.1" />
   </ItemGroup>
   
   <ItemGroup>

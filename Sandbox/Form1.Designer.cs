@@ -35,7 +35,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1402, 724);
+            this.ClientSize = new System.Drawing.Size(1576, 1025);
             this.Name = "Form1";
             this.Text = "RichTextKit Sandbox";
             this.Load += new System.EventHandler(this.Form1_Load);

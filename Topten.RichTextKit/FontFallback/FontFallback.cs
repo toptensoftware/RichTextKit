@@ -36,95 +36,96 @@ namespace Topten.RichTextKit
 
         public static IEnumerable<Run> GetFontRuns(Slice<int> codePoints, SKTypeface typeface)
         {
+            // Get the font manager - we'll use this to select font fallbacks
             var fontManager = SKFontManager.Default;
 
-            int currentRunPos = 0;
-            SKTypeface currentRunTypeface = null;
-            int pos = 0;
-            List<Run> runs = new List<Run>();
+            // Get glyphs using the top-level typeface
+            var glyphs = new ushort[codePoints.Length];
+            var font = new SKFont(typeface);
+            font.GetGlyphs(codePoints.AsSpan(), glyphs);
 
-            unsafe
+            // Look for subspans that need font fallback (where glyphs are zero)
+            int runStart = 0;
+            for (int i = 0; i < codePoints.Length; i++)
             {
-                fixed (int* pCodePoints = codePoints.Underlying)
+                // Do we need fallback for this character?
+                if (glyphs[i] == 0)
                 {
-                    int* pch = pCodePoints + codePoints.Start;
-                    int length = codePoints.Length;
-                    while (pos < length)
+                    // Check if there's a fallback available, if not, might as well continue with the current top-level typeface
+                    var subSpanTypeface = fontManager.MatchCharacter(typeface.FamilyName, typeface.FontWeight, typeface.FontWidth, typeface.FontSlant, null, codePoints[i]);
+                    if (subSpanTypeface == null)
+                        continue;
+
+                    // We can do font fallback...
+
+                    // Flush the current top-level run
+                    if (i > runStart)
                     {
-                        var RunFace = typeface;
-
-                        int count = 0;
-                        if (pch[pos] <= 32)
+                        yield return new Run()
                         {
-                            // Control characters and space always map to current typeface
-                            count = 1;
-                            RunFace = currentRunTypeface ?? typeface;
-                        }
-                        else
-                        {
-                            // Consume as many characters as possible using the requested type face
-                            count = typeface.GetGlyphs((IntPtr)(pch + pos), length - pos, SKEncoding.Utf32, out var glyphs);
-                        }
-
-                        // Couldn't be mapped to current font, try to find a replacement
-                        if (count == 0)
-                        {
-                            // Find fallback font
-                            RunFace = fontManager.MatchCharacter(typeface.FamilyName, typeface.FontWeight, typeface.FontWidth, typeface.FontSlant, null, pch[pos]);
-                            count = 1;
-                            if (RunFace == null)
-                            {
-                                RunFace = typeface;
-                                count = 1;
-                            }
-                            else
-                            {
-                                // Consume as many as possible
-                                count = RunFace.GetGlyphs((IntPtr)(pch + pos), length - pos, SKEncoding.Utf32, out var glyphs);
-
-                                // But don't take control characters or spaces...
-                                for (int i = 1; i < count; i++)
-                                {
-                                    if (pch[pos] <= 32)
-                                    {
-                                        count = i;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-
-                        // Do we need to start a new Run?
-                        if (currentRunTypeface != RunFace)
-                        {
-                            flushCurrentRun();
-                            currentRunTypeface = RunFace;
-                            currentRunPos = pos;
-                        }
-
-                        // Move on
-                        pos += count;
+                            Start = runStart,
+                            Length = i - runStart,
+                            Typeface = typeface,
+                        };
                     }
+
+                    // Count how many unmatched characters
+                    var unmatchedStart = i;
+                    var unmatchedEnd = i + 1;
+                    while (unmatchedEnd < codePoints.Length && glyphs[unmatchedEnd] == 0)
+                        unmatchedEnd++;
+                    var unmatchedLength = unmatchedEnd - unmatchedStart;
+
+                    // Match the missing characters
+                    while (unmatchedLength > 0)
+                    {
+                        // Find the font fallback using the first character
+                        subSpanTypeface = fontManager.MatchCharacter(typeface.FamilyName, typeface.FontWeight, typeface.FontWidth, typeface.FontSlant, null, codePoints[unmatchedStart]);
+                        if (subSpanTypeface == null)
+                        {
+                            unmatchedEnd = unmatchedStart;
+                            break;
+                        }
+                        var subSpanFont = new SKFont(subSpanTypeface);
+
+                        // Get the glyphs over the current unmatched range
+                        subSpanFont.GetGlyphs(codePoints.SubSlice(unmatchedStart, unmatchedLength).AsSpan(), new Span<ushort>(glyphs, unmatchedStart, unmatchedLength));
+
+                        // Count how many characters were matched
+                        var fallbackStart = unmatchedStart;
+                        var fallbackEnd = unmatchedStart + 1;
+                        while (fallbackEnd < unmatchedEnd && glyphs[fallbackEnd] != 0)
+                            fallbackEnd++;
+                        var fallbackLength = fallbackEnd - fallbackStart;
+
+                        // Yield this font fallback run
+                        yield return new Run()
+                        {
+                            Start = fallbackStart,
+                            Length = fallbackLength,
+                            Typeface = subSpanTypeface,
+                        };
+
+                        // Continue selecting font fallbacks until the entire unmatched ranges has been matched
+                        unmatchedStart += fallbackLength;
+                        unmatchedLength -= fallbackLength;
+                    }
+
+                    // Move onto the next top level span
+                    i = unmatchedEnd - 1;           // account for i++ on for loop
+                    runStart = unmatchedEnd;
                 }
             }
 
-            // Flush the final Run
-            flushCurrentRun();
-
-            // Done
-            return runs;
-
-            void flushCurrentRun()
+            // Flush find run
+            if (codePoints.Length > runStart)
             {
-                if (currentRunTypeface != null)
+                yield return new Run()
                 {
-                    runs.Add(new Run()
-                    {
-                        Start = currentRunPos,
-                        Length = pos - currentRunPos,
-                        Typeface = currentRunTypeface,
-                    });
-                }
+                    Start = runStart,
+                    Length = codePoints.Length - runStart,
+                    Typeface = typeface,
+                };
             }
         }
     }
