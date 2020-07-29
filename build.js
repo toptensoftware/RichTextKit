@@ -34,7 +34,7 @@ if (bt.options.official)
     // Push nuget package
     bt.run(`dotnet nuget push`,
            `./Build/Release/*.${bt.options.version.build}.nupkg`,
-           `--source nuget.org`);
+           `--source nuget.org --NoSymbols`);
 }
 
 
