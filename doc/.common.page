@@ -1,6 +1,6 @@
 ---
 projectTitle: RichTextKit
-projectSubTitle: v0.2
+projectSubTitle: v0.3
 projectUrlPrefix: /richtextkit/
 prismLanguages:
   - csharp
@@ -378,6 +378,7 @@ navTree:
               - text: Underlying|./ref/Topten.RichTextKit.Utils.Slice[T].Underlying
           - text: Methods
             subItems:
+              - text: AsSpan|./ref/Topten.RichTextKit.Utils.Slice[T].AsSpan
               - text: Clear|./ref/Topten.RichTextKit.Utils.Slice[T].Clear
               - text: Fill|./ref/Topten.RichTextKit.Utils.Slice[T].Fill
               - text: Set|./ref/Topten.RichTextKit.Utils.Slice[T].Set

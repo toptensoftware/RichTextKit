@@ -89,6 +89,11 @@ import: "../.common.page"
     <h2 id="methods">Methods</h2>
     <table class="name-description">
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T].AsSpan">AsSpan()</a></td>
+                <td><p>Get the slice as a Span</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T].Clear">Clear()</a></td>
                 <td><p>Clears the entire slice content</p>
 </td>
