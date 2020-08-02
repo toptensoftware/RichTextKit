@@ -25,10 +25,12 @@ namespace Topten.RichTextKit
             // Load trie resources
             _bidiTrie = new UnicodeTrie(typeof(LineBreaker).Assembly.GetManifestResourceStream("Topten.RichTextKit.Resources.BidiData.trie"));
             _classesTrie = new UnicodeTrie(typeof(LineBreaker).Assembly.GetManifestResourceStream("Topten.RichTextKit.Resources.LineBreakClasses.trie"));
+            _boundaryTrie = new UnicodeTrie(typeof(LineBreaker).Assembly.GetManifestResourceStream("Topten.RichTextKit.Resources.BoundaryGroupData.trie"));
         }
 
         static UnicodeTrie _bidiTrie;
         static UnicodeTrie _classesTrie;
+        static UnicodeTrie _boundaryTrie;
 
         /// <summary>
         /// Get the directionality of a Unicode Code Point
@@ -80,6 +82,14 @@ namespace Topten.RichTextKit
             return (LineBreakClass)_classesTrie.Get(codePoint);
         }
 
-
+        /// <summary>
+        /// Get the line break class for a Unicode Code Point
+        /// </summary>
+        /// <param name="codePoint">The code point in question</param>
+        /// <returns>The code point's line break class</returns>
+        public static BoundaryGroup BoundaryGroup(int codePoint)
+        {
+            return (BoundaryGroup)_boundaryTrie.Get(codePoint);
+        }
     }
 }

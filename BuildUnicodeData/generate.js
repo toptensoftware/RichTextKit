@@ -13,6 +13,13 @@ var PairedBracketType = {
   c : 2
 };
 
+var BoundaryGroup = {
+  AlphaDigit : 0,
+  Ignore : 1,
+  Space : 2,
+  Punctuation : 3,
+};
+
 var Directionality = {
   // Strong types
   L: 0,
@@ -99,7 +106,8 @@ function processUnicodeData()
   // http://www.unicode.org/Public/UNIDATA/UnicodeData.txt
   var data = fs.readFileSync("UnicodeData.txt", "utf8")
   var lines = data.split('\n');
-  const trie = new UnicodeTrieBuilder(Directionality.L);
+  //const trie = new UnicodeTrieBuilder(Directionality.L);
+  const boundaryTrie = new UnicodeTrieBuilder(BoundaryGroup.AlphaDigit);
 
   for (var i=0; i<lines.length; i++)
   {
@@ -112,17 +120,67 @@ function processUnicodeData()
           // Get the directionality
           var dir = parts[4];
           var cls = Directionality[dir];
-
           if (cls === undefined)
           {
               console.log("Error: ", codePoint, "unknown class", dir);
           }
           else
           {
-            bidi[codePoint] = cls << 24;
+              bidi[codePoint] = cls << 24;
           }
+
+          switch (parts[2])
+          {
+              case "Cc":
+              case "Cf":
+              case "Cs":
+              case "Co":
+              case "Cn":
+              case "Mc":
+              case "Zs":
+              case "Zl":
+              case "Zp":
+                boundaryTrie.set(codePoint, BoundaryGroup.Space);
+                break;
+
+              case "Pc":
+              case "Pd":
+              case "Ps":
+              case "Pe":
+              case "Pi":
+              case "Pf":
+              case "Po":
+              case "Sm":
+              case "Sc":
+              case "Sk":
+              case "So":
+                boundaryTrie.set(codePoint, BoundaryGroup.Punctuation);
+                break;
+
+              case "Nd":
+              case "Nl":
+              case "No":
+              case "Lu":
+              case "Ll":
+              case "Lt":
+              case "LC":
+              case "Lm":
+              case "Lo":
+                boundaryTrie.set(codePoint, BoundaryGroup.AlphaDigit);
+                break;
+
+              case "Mn":
+              case "Me":
+                boundaryTrie.set(codePoint, BoundaryGroup.None);
+                break;
+              
+              default:
+                throw new Error(`Unrecognized general category: ${parts[2]}`);
+          }
+
       }
   }
+  fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/BoundaryGroupData.trie', boundaryTrie.toBuffer());
 }
 
   

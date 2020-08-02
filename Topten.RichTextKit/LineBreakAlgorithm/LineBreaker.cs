@@ -67,7 +67,7 @@ namespace Topten.RichTextKit
         int _LB30a = 0;
 
         /// <summary>
-        /// Enumerate all line breaks (optionally in reverse order)
+        /// Enumerate all line breaks
         /// </summary>
         /// <returns>A collection of line break positions</returns>
         public List<LineBreak> GetBreaks()
