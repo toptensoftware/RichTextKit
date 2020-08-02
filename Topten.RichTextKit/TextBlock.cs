@@ -227,6 +227,9 @@ namespace Topten.RichTextKit
             // Add run
             _styleRuns.Add(run);
 
+            // Need new layout
+            InvalidateLayout();
+
             return run;
         }
 
