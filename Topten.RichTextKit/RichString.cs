@@ -650,12 +650,8 @@ namespace Topten.RichTextKit
         }
 
 
-        /// <summary>
-        /// Calculates useful information for displaying a caret
-        /// </summary>
-        /// <param name="codePointIndex">The code point index of the caret</param>
-        /// <returns>A CaretInfo struct, or CaretInfo.None</returns>
-        public CaretInfo GetCaretInfo(int codePointIndex)
+        /// <inheritdoc cref="TextBlock.GetCaretInfo(int, bool)/>
+        public CaretInfo GetCaretInfo(int codePointIndex, bool altPosition)
         {
             Layout();
 
@@ -677,7 +673,7 @@ namespace Topten.RichTextKit
 
 
             // Get the caret info
-            var ci = p.TextBlock.GetCaretInfo(codePointIndex - p.CodePointOffset);
+            var ci = p.TextBlock.GetCaretInfo(codePointIndex - p.CodePointOffset, altPosition);
 
             // Adjust it
             ci.CodePointIndex += p.CodePointOffset;

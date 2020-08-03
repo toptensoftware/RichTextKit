@@ -69,6 +69,16 @@ namespace Topten.RichTextKit
         public int ClosestCodePointIndex;
 
         /// <summary>
+        /// Indicates that the point is closest to the alternate caret position
+        /// of ClosestCodePointIndex.
+        /// </summary>
+        /// <remarks>
+        /// This property indicates if the tested point is beyond the end of
+        /// a word wrapped line and not at the start of the following line.
+        /// </remarks>
+        public bool AltCaretPosition;
+
+        /// <summary>
         /// Compares this object to another instance
         /// </summary>
         /// <param name="obj"></param>

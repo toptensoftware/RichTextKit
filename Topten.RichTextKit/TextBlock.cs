@@ -364,6 +364,7 @@ namespace Topten.RichTextKit
             _fontRuns.Clear();
             _lines.Clear();
             _caretIndicies.Clear();
+            _wordBoundaryIndicies.Clear();
             _measuredHeight = 0;
             _measuredWidth = 0;
             _leftOverhang = null;
@@ -650,6 +651,17 @@ public IReadOnlyList<StyleRun> StyleRuns
         /// <summary>
         /// Hit test this block of text
         /// </summary>
+        /// <param name="lineIndex">The line to be hit test</param>
+        /// <param name="x">The x-coordinate relative to top left of the block</param>
+        /// <returns>A HitTestResult</returns>
+        public HitTestResult HitTestLine(int lineIndex, float x)
+        {
+            return _lines[lineIndex].HitTest(x);
+        }
+
+        /// <summary>
+        /// Hit test this block of text
+        /// </summary>
         /// <param name="x">The x-coordinate relative to top left of the block</param>
         /// <param name="y">The x-coordinate relative to top left of the block</param>
         /// <returns>A HitTestResult</returns>
@@ -740,6 +752,35 @@ public IReadOnlyList<StyleRun> StyleRuns
         }
 
         /// <summary>
+        /// Retrieves a list of all valid caret positions
+        /// </summary>
+        public IReadOnlyList<int> WordBoundaryIndicies
+        {
+            get
+            {
+                // Find word boundaries (if not already done)
+                if (_wordBoundaryIndicies.Count == 0)
+                {
+                    _wordBoundaryIndicies = WordBoundaryAlgorithm.FindWordBoundaries(_codePoints.AsSlice()).ToList();
+                }
+                return _wordBoundaryIndicies;
+            }
+        }
+
+
+        /// <summary>
+        /// Retrieves a list of the indicies of the first code point in each line
+        /// </summary>
+        public IReadOnlyList<int> LineIndicies
+        {
+            get
+            {
+                return _lines.Select(x => x.Start).ToList();
+            }
+        }
+
+
+        /// <summary>
         /// Given a code point index, find the index in the CaretIndicies
         /// </summary>
         /// <param name="codePointIndex">The code point index to lookup</param>
@@ -756,9 +797,15 @@ public IReadOnlyList<StyleRun> StyleRuns
         /// <summary>
         /// Calculates useful information for displaying a caret
         /// </summary>
+        /// <remarks>
+        /// When altPosition is true, if the code point index indicates the first
+        /// code point after a line break, the returned caret position will be the
+        /// end of the previous line (instead of the start of the next line)
+        /// </remarks>
         /// <param name="codePointIndex">The code point index of the caret</param>
+        /// <param name="altPosition">Returns the alternate caret position for the code point index</param>
         /// <returns>A CaretInfo struct</returns>
-        public CaretInfo GetCaretInfo(int codePointIndex)
+        public CaretInfo GetCaretInfo(int codePointIndex, bool altPosition)
         {
             // Empty text block?
             if (_codePoints.Length == 0 || codePointIndex < 0 || _lines.Count == 0)
@@ -788,10 +835,14 @@ public IReadOnlyList<StyleRun> StyleRuns
                 if (fr.Start == codePointIndex && frIndex > 0)
                 {
                     var frPrior = _fontRuns[frIndex - 1];
-                    if (frPrior.Direction == TextDirection.RTL && frPrior.End == codePointIndex)
+                    if (frPrior.End == codePointIndex)
                     {
-                        if (frPrior.RunKind != FontRunKind.TrailingWhitespace)
+                        if (altPosition ||
+                            (frPrior.Direction == TextDirection.RTL &&
+                             frPrior.RunKind != FontRunKind.TrailingWhitespace))
+                        {
                             fr = frPrior;
+                        }
                     }
                 }
             }
@@ -808,6 +859,7 @@ public IReadOnlyList<StyleRun> StyleRuns
             // Setup caret coordinates
             ci.CaretXCoord = ci.CodePointIndex < 0 ? 0 : fr.GetXCoordOfCodePointIndex(ci.CodePointIndex);
             ci.CaretRectangle = CalculateCaretRectangle(ci, fr);
+            ci.LineIndex = _lines.IndexOf(fr.Line);
 
             return ci;
         }
@@ -1023,6 +1075,11 @@ public IReadOnlyList<StyleRun> StyleRuns
         /// Calculated valid caret indicies
         /// </summary>
         List<int> _caretIndicies = new List<int>();
+
+        /// <summary>
+        /// Calculated word boundary caret indicies
+        /// </summary>
+        List<int> _wordBoundaryIndicies = new List<int>();
 
         /// <summary>
         /// Resolve the text alignment when set to Auto

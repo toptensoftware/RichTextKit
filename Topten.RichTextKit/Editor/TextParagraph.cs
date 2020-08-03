@@ -14,6 +14,7 @@
 // under the License.
 
 using SkiaSharp;
+using System.Collections.Generic;
 
 namespace Topten.RichTextKit.Editor
 {
@@ -52,10 +53,22 @@ namespace Topten.RichTextKit.Editor
         public override void Paint(SKCanvas canvas, TextPaintOptions options) => _textBlock.Paint(canvas, new SKPoint(ContentXCoord, ContentYCoord), options);
         
         /// <inheritdoc />
-        public override CaretInfo GetCaretInfo(int codePointIndex) => _textBlock.GetCaretInfo(codePointIndex);
+        public override CaretInfo GetCaretInfo(int codePointIndex, bool altPosition) => _textBlock.GetCaretInfo(codePointIndex, altPosition);
 
         /// <inheritdoc />
         public override HitTestResult HitTest(float x, float y) => _textBlock.HitTest(x, y);
+
+        /// <inheritdoc />
+        public override HitTestResult HitTestLine(int lineIndex, float x) => _textBlock.HitTestLine(lineIndex, x);
+
+        /// <inheritdoc />
+        public override IReadOnlyList<int> CaretIndicies => _textBlock.CaretIndicies;
+
+        /// <inheritdoc />
+        public override IReadOnlyList<int> WordBoundaryIndicies => _textBlock.WordBoundaryIndicies;
+
+        /// <inheritdoc />
+        public override IReadOnlyList<int> LineIndicies => _textBlock.LineIndicies;
 
         /// <inheritdoc />
         public override float ContentWidth => _textBlock.MeasuredWidth;

@@ -14,6 +14,7 @@
 // under the License.
 
 using SkiaSharp;
+using System.Collections.Generic;
 
 namespace Topten.RichTextKit.Editor
 {
@@ -49,8 +50,9 @@ namespace Topten.RichTextKit.Editor
         /// The returned caret info should be relative to the paragraph's content
         /// </remarks>
         /// <param name="codePointIndex">The code point index relative to the start of the paragraph</param>
+        /// <param name="altPosition">Returns the alternate caret position for the code point index</param>
         /// <returns>A CaretInfo struct, or CaretInfo.None</returns>
-        public abstract CaretInfo GetCaretInfo(int codePointIndex);
+        public abstract CaretInfo GetCaretInfo(int codePointIndex, bool altPosition);
 
         /// <summary>
         /// Hit test this paragraph
@@ -59,6 +61,32 @@ namespace Topten.RichTextKit.Editor
         /// <param name="y">The x-coordinate relative to top left of the paragraph content</param>
         /// <returns>A HitTestResult</returns>
         public abstract HitTestResult HitTest(float x, float y);
+
+        /// <summary>
+        /// Hit test a line in this paragraph
+        /// </summary>
+        /// <remarks>
+        /// The number of lines can be determined from LineIndicies.Count.
+        /// </remarks>
+        /// <param name="lineIndex">The line number to be tested</param>
+        /// <param name="x">The x-coordinate relative to left of the paragraph content</param>
+        /// <returns>A HitTestResult</returns>
+        public abstract HitTestResult HitTestLine(int lineIndex, float x);
+
+        /// <summary>
+        /// Retrieves a list of all valid caret positions
+        /// </summary>
+        public abstract IReadOnlyList<int> CaretIndicies { get; }
+
+        /// <summary>
+        /// Retrieves a list of all valid word boundary caret positions
+        /// </summary>
+        public abstract IReadOnlyList<int> WordBoundaryIndicies { get; }
+
+        /// <summary>
+        /// Retrieves a list of code point indicies of the start of each line
+        /// </summary>
+        public abstract IReadOnlyList<int> LineIndicies { get; }
 
         /// <summary>
         /// Gets the length of this paragraph in code points

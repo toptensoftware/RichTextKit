@@ -215,8 +215,9 @@ namespace Topten.RichTextKit.Editor
         /// Calculates useful information for displaying a caret
         /// </summary>
         /// <param name="codePointIndex">The code point index of the caret</param>
+        /// <param name="altPosition">Returns the alternate caret position for the code point index</param>
         /// <returns>A CaretInfo struct, or CaretInfo.None</returns>
-        public CaretInfo GetCaretInfo(int codePointIndex)
+        public CaretInfo GetCaretInfo(int codePointIndex, bool altPosition)
         {
             // Make sure layout up to date
             Layout();
@@ -226,16 +227,262 @@ namespace Topten.RichTextKit.Editor
             var para = _paragraphs[paraIndex];
 
             // Get caret info
-            var ci = para.GetCaretInfo(indexInParagraph);
+            var ci = para.GetCaretInfo(indexInParagraph, altPosition);
 
             // Adjust caret info to be relative to document
             ci.CodePointIndex += para.CodePointIndex;
             ci.CaretXCoord += para.ContentXCoord;
             ci.CaretRectangle.Offset(new SKPoint(para.ContentXCoord, para.ContentYCoord));
+            ci.LineIndex = -1;      // Line numbers not supported on TextDocument
 
             // Done
             return ci;
         }
+
+
+        /// <summary>
+        /// Handles keyboard navigation events
+        /// </summary>
+        /// <param name="kind">The direction and type of caret movement</param>
+        /// <param name="position">The current caret position</param>
+        /// <param name="pageSize">Specifies the page size for page up/down navigation</param>
+        /// <returns>The new caret position</returns>
+        public CaretPosition Navigate(NavigationKind kind, CaretPosition position, float pageSize)
+        {
+            switch (kind)
+            {
+                case NavigationKind.CharacterLeft:
+                {
+                    // Get the paragraph and position in paragraph
+                    int paraIndex = GetParagraphForCodePointIndex(position.CodePointIndex, out var paraCodePointIndex);
+                    var para = _paragraphs[paraIndex];
+
+                    // Find the current caret index
+                    var caretIndicies = para.CaretIndicies;
+                    var ii = caretIndicies.BinarySearch(paraCodePointIndex, (a, b) => a.CompareTo(b));
+                    if (ii == 0)
+                    {
+                        // At start of paragraph, move to the preceding paragraph (or document home)
+                        if (paraIndex > 0)
+                            return new CaretPosition(_paragraphs[paraIndex - 1].CodePointIndex + _paragraphs[paraIndex - 1].Length - 1);
+                        else
+                            return new CaretPosition(0);
+                    }
+
+                    // Move to previous caret position in this paragraph
+                    if (ii < 0)
+                        ii = ~ii;
+                    return new CaretPosition(para.CodePointIndex + caretIndicies[ii - 1]);
+                }
+
+                case NavigationKind.CharacterRight:
+                {
+                    // Get the paragraph and position in paragraph
+                    int paraIndex = GetParagraphForCodePointIndex(position.CodePointIndex, out var paraCodePointIndex);
+                    var para = _paragraphs[paraIndex];
+
+                    // Find the current caret index
+                    var caretIndicies = para.CaretIndicies;
+                    var ii = caretIndicies.BinarySearch(paraCodePointIndex, (a, b) => a.CompareTo(b));
+                    if (ii >= caretIndicies.Count-1)
+                    {
+                        // At end of paragraph, move to the next paragraph (or document end)
+                        if (paraIndex + 1 < _paragraphs.Count)
+                            return new CaretPosition(_paragraphs[paraIndex + 1].CodePointIndex);
+                        else
+                            return new CaretPosition(Length);
+                    }
+
+                    // Move to next caret position in this paragraph
+                    if (ii < 0)
+                        ii = (~ii) - 1;
+                    return new CaretPosition(para.CodePointIndex + caretIndicies[ii + 1]);
+                }
+
+                case NavigationKind.LineUp:
+                {
+                    // Get the paragraph and position in paragraph
+                    int paraIndex = GetParagraphForCodePointIndex(position.CodePointIndex, out var paraCodePointIndex);
+                    var para = _paragraphs[paraIndex];
+
+                    // Get the line number the caret is on
+                    var ci = para.GetCaretInfo(paraCodePointIndex, position.AltPosition);
+
+                    // Work out which line to hit test
+                    var lineIndex = ci.LineIndex - 1; 
+                    var xCoord = position.GhostXCoord ?? (ci.CaretXCoord + MarginLeft + para.MarginLeft);
+                    if (lineIndex < 0)
+                    {
+                        if (paraIndex == 0)
+                            return position;
+                        para = _paragraphs[paraIndex - 1];
+                        lineIndex = para.LineIndicies.Count - 1;
+                    }
+
+                    // Hit test the line
+                    var htr = para.HitTestLine(lineIndex, xCoord - MarginLeft - para.MarginLeft);
+                    return new CaretPosition(para.CodePointIndex + htr.ClosestCodePointIndex, htr.AltCaretPosition, ghostXCoord: xCoord);
+                }
+
+                case NavigationKind.LineDown:
+                {
+                    // Get the paragraph and position in paragraph
+                    int paraIndex = GetParagraphForCodePointIndex(position.CodePointIndex, out var paraCodePointIndex);
+                    var para = _paragraphs[paraIndex];
+
+                    // Get the line number the caret is on
+                    var ci = para.GetCaretInfo(paraCodePointIndex, position.AltPosition);
+
+                    // Work out which line to hit test
+                    var lineIndex = ci.LineIndex + 1;
+                    var xCoord = position.GhostXCoord ?? (ci.CaretXCoord + MarginLeft + para.MarginLeft);
+                    if (lineIndex >= para.LineIndicies.Count)
+                    {
+                        if (paraIndex + 1 >= _paragraphs.Count)
+                            return position;
+                        para = _paragraphs[paraIndex + 1];
+                        lineIndex = 0;
+                    }
+
+                    // Hit test the line
+                    var htr = para.HitTestLine(lineIndex, xCoord - MarginLeft - para.MarginLeft);
+                    return new CaretPosition(para.CodePointIndex + htr.ClosestCodePointIndex, htr.AltCaretPosition, ghostXCoord: xCoord);
+                }
+
+                case NavigationKind.WordLeft:
+                {
+                    // Get the paragraph and position in paragraph
+                    int paraIndex = GetParagraphForCodePointIndex(position.CodePointIndex, out var paraCodePointIndex);
+                    var para = _paragraphs[paraIndex];
+
+                    // Find the current caret index
+                    var wordIndicies = para.WordBoundaryIndicies;
+                    var ii = wordIndicies.BinarySearch(paraCodePointIndex, (a, b) => a.CompareTo(b));
+                    if (ii == 0)
+                    {
+                        // At start of paragraph, move to the preceding paragraph (or document home)
+                        if (paraIndex > 0)
+                            return new CaretPosition(_paragraphs[paraIndex - 1].CodePointIndex + _paragraphs[paraIndex - 1].Length - 1);
+                        else
+                            return new CaretPosition(0);
+                    }
+
+                    // Move to previous word position in this paragraph
+                    if (ii < 0)
+                        ii = ~ii;
+                    return new CaretPosition(para.CodePointIndex + wordIndicies[ii - 1]);
+                }
+
+                case NavigationKind.WordRight:
+                {
+                    // Get the paragraph and position in paragraph
+                    int paraIndex = GetParagraphForCodePointIndex(position.CodePointIndex, out var paraCodePointIndex);
+                    var para = _paragraphs[paraIndex];
+
+                    // Find the current caret index
+                    var wordIndicies = para.WordBoundaryIndicies;
+                    var ii = wordIndicies.BinarySearch(paraCodePointIndex, (a, b) => a.CompareTo(b));
+                    if (ii >= wordIndicies.Count - 1)
+                    {
+                        // At end of paragraph, move to the next paragraph (or document end)
+                        if (paraIndex + 1 < _paragraphs.Count)
+                            return new CaretPosition(_paragraphs[paraIndex + 1].CodePointIndex);
+                        else
+                            return new CaretPosition(Length);
+                    }
+
+                    // Move to next word position in this paragraph
+                    if (ii < 0)
+                        ii = (~ii) - 1;
+                    return new CaretPosition(para.CodePointIndex + wordIndicies[ii + 1]);
+                }
+
+                case NavigationKind.PageUp:
+                {
+                    // Get current caret position
+                    var ci = this.GetCaretInfo(position.CodePointIndex, position.AltPosition);
+
+                    // Work out which XCoord to use
+                    var xCoord = position.GhostXCoord ?? ci.CaretXCoord;
+    
+                    // Hit test one page up
+                    var htr = this.HitTest(xCoord, ci.CaretRectangle.Top - pageSize);
+
+                    // Convert to caret position
+                    return new CaretPosition(htr.ClosestCodePointIndex, htr.AltCaretPosition, ghostXCoord: xCoord);
+                }
+
+                case NavigationKind.PageDown:
+                {
+                    // Get current caret position
+                    var ci = this.GetCaretInfo(position.CodePointIndex, position.AltPosition);
+
+                    // Work out which XCoord to use
+                    var xCoord = position.GhostXCoord ?? ci.CaretXCoord;
+
+                    // Hit test one page down
+                    var htr = this.HitTest(xCoord, ci.CaretRectangle.Top + pageSize);
+
+                    // Convert to caret position
+                    return new CaretPosition(htr.ClosestCodePointIndex, htr.AltCaretPosition, ghostXCoord: xCoord);
+                }
+
+
+                case NavigationKind.LineHome:
+                {
+                    // Get the paragraph and position in paragraph
+                    int paraIndex = GetParagraphForCodePointIndex(position.CodePointIndex, out var paraCodePointIndex);
+                    var para = _paragraphs[paraIndex];
+
+                    // Get the line number the caret is on
+                    var ci = para.GetCaretInfo(paraCodePointIndex, position.AltPosition);
+
+                    // Get the line indicies
+                    var lineIndicies = para.LineIndicies;
+
+                    // Handle out of range
+                    if (ci.LineIndex < 0)
+                        return new CaretPosition(para.CodePointIndex);
+                    if (ci.LineIndex >= lineIndicies.Count)
+                        return new CaretPosition(para.CodePointIndex + para.Length - 1);
+
+                    // Return code point index of this line
+                    return new CaretPosition(para.CodePointIndex + lineIndicies[ci.LineIndex]);
+                }
+
+                case NavigationKind.LineEnd:
+                {
+                    // Get the paragraph and position in paragraph
+                    int paraIndex = GetParagraphForCodePointIndex(position.CodePointIndex, out var paraCodePointIndex);
+                    var para = _paragraphs[paraIndex];
+
+                    // Get the line number the caret is on
+                    var ci = para.GetCaretInfo(paraCodePointIndex, position.AltPosition);
+
+                    // Get the line indicies
+                    var lineIndicies = para.LineIndicies;
+
+                    // Handle out of range
+                    if (ci.LineIndex < 0)
+                        return new CaretPosition(para.CodePointIndex);
+                    if (ci.LineIndex+1 >= lineIndicies.Count)
+                        return new CaretPosition(para.CodePointIndex + para.Length - 1);
+
+                    // Return code point index of the next line, but with alternate caret position
+                    // so caret appears at the end of this line
+                    return new CaretPosition(para.CodePointIndex + lineIndicies[ci.LineIndex + 1], altPosition: true);
+                }
+
+                case NavigationKind.DocumentHome:
+                    return new CaretPosition(0);
+
+                case NavigationKind.DocumentEnd:
+                    return new CaretPosition(Length, true);
+            }
+
+            throw new ArgumentException("Unknown navigation kind");
+        }
+
 
         /// <summary>
         /// Given a code point index relative to the document, return which
