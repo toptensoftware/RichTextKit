@@ -21,7 +21,12 @@ namespace Topten.RichTextKit.Editor
     /// Defines a kind of keyboard navigation
     /// </summary>
     public enum NavigationKind
-    { 
+    {
+        /// <summary>
+        /// No movement
+        /// </summary>
+        None,
+
         /// <summary>
         /// Move one character to the left
         /// </summary>
