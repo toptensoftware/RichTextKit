@@ -393,11 +393,9 @@ namespace Topten.RichTextKit.Editor
                 // Get the line indicies
                 var lineIndicies = para.LineIndicies;
 
-                // Handle out of range (should never happen)
+                // Handle out of range
                 if (ci.LineIndex < 0)
                     return new CaretPosition(para.CodePointIndex);
-                if (ci.LineIndex >= lineIndicies.Count)
-                    return new CaretPosition(para.CodePointIndex + para.Length - 1);
 
                 if (direction < 0)
                 {
@@ -406,6 +404,10 @@ namespace Topten.RichTextKit.Editor
                 }
                 else
                 {
+                    // Last unwrapped line?
+                    if (ci.LineIndex + 1 >= lineIndicies.Count)
+                        return new CaretPosition(para.CodePointIndex + para.Length - 1);
+
                     // Return code point index of the next line, but with alternate caret position
                     // so caret appears at the end of this line
                     return new CaretPosition(para.CodePointIndex + lineIndicies[ci.LineIndex + 1], altPosition: true);
