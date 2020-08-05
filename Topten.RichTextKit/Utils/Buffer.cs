@@ -46,6 +46,11 @@ namespace Topten.RichTextKit.Utils
         T[] _data;
 
         /// <summary>
+        /// The data held by this buffer
+        /// </summary>
+        public T[] Underlying => _data;
+
+        /// <summary>
         /// The used length of the buffer
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -124,6 +129,53 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
+        /// Inserts room into the buffer
+        /// </summary>
+        /// <param name="position">The position to insert at</param>
+        /// <param name="length">The length to insert</param>
+        /// <param name="clear">Whether to clear the inserted part of the buffer</param>
+        /// <returns>The new buffer area as a slice</returns>
+        public Slice<T> Insert(int position, int length, bool clear = true)
+        {
+            // Grow internal buffer?
+            GrowBuffer(_length + length);
+
+            // Shuffle existing to make room for inserted data
+            if (position < _length)
+            {
+                Array.Copy(_data, position, _data, position + length, _length - position);
+            }
+            
+            // Update the length
+            _length += length;
+
+            // Clear it?
+            if (clear)
+                Array.Clear(_data, position, length);
+
+            // Return slice
+            return SubSlice(position, length);
+        }
+
+        /// <summary>
+        /// Insert a slice of data into this buffer
+        /// </summary>
+        /// <param name="position">The position to insert at</param>
+        /// <param name="data">The data to insert</param>
+        /// <returns>The newly inserted data as a slice</returns>
+        public Slice<T> Insert(int position, Slice<T> data)
+        {
+            // Make room
+            var slice = Insert(position, data.Length, false);
+
+            // Copy in the source slice
+            Array.Copy(data.Underlying, data.Start, _data, position, data.Length);
+
+            // Return slice
+            return slice;
+        }
+
+        /// <summary>
         /// Adds to the buffer, returning a slice of requested size
         /// </summary>
         /// <param name="length">Number of elements to add</param>
@@ -131,19 +183,7 @@ namespace Topten.RichTextKit.Utils
         /// <returns>A slice representing the allocated elements.</returns>
         public Slice<T> Add(int length, bool clear = true)
         {
-            // Save position
-            int pos = Length;
-
-            // Grow internal buffer?
-            GrowBuffer(_length + length);
-            _length += length;
-
-            // Clear it?
-            if (clear)
-                Array.Clear(_data, pos, length);
-
-            // Return subslice
-            return SubSlice(pos, length);
+            return Insert(_length, length, clear);
         }
 
         /// <summary>
@@ -164,6 +204,29 @@ namespace Topten.RichTextKit.Utils
 
             // Return position
             return SubSlice(pos, slice.Length);
+        }
+
+        /// <summary>
+        /// Delete a section of the buffer
+        /// </summary>
+        /// <param name="from">The position to delete from</param>
+        /// <param name="length">The length to of the deletion</param>
+        public void Delete(int from, int length)
+        {
+            // Clamp to buffer size
+            if (from >= _length)
+                return;
+            if (from + length >= _length)
+                length = _length - from;
+
+            // Shuffle trailing data
+            if (from + length < _length)
+            {
+                Array.Copy(_data, from + length, _data, from, _length - (from + length));
+            }
+
+            // Update length
+            _length -= length;
         }
 
         /// <summary>
@@ -216,27 +279,5 @@ namespace Topten.RichTextKit.Utils
         {
             return new ArraySliceEnumerator<T>(_data, 0, _length);
         }
-
-        /*
-        public T[] SetMapping(Slice<T> data, Slice<int> mapping)
-        {
-            Length = mapping.Length;
-            for (int i = 0; i < Length; i++)
-            {
-                _data[i] = data[mapping[i]];
-            }
-            return _data;
-        }
-
-        public T[] GetMapping(Slice<T> data, Slice<int> mapping)
-        {
-            int len = mapping.Length;
-            for (int i = 0; i < len; i++)
-            {
-                data[mapping[i]] = _data[i];
-            }
-            return _data;
-        }
-        */
     }
 }

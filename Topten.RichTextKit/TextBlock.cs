@@ -1,4 +1,5 @@
-﻿// RichTextKit
+﻿
+// RichTextKit
 // Copyright © 2019-2020 Topten Software. All Rights Reserved.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may 
@@ -16,6 +17,7 @@
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -168,10 +170,6 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Converts a code point index to a character index
         /// </summary>
-        /// <remarks>
-        /// This method only works when the text buffer was built using the 
-        /// AddText(string) method
-        /// </remarks>
         /// <param name="codePointIndex">The code point index to convert</param>
         /// <returns>The converted index</returns>
         public int CodePointToCharacterIndex(int codePointIndex)
@@ -182,10 +180,6 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Converts a character index to a code point index
         /// </summary>
-        /// <remarks>
-        /// This method only works when the text buffer was built using the 
-        /// AddText(string) method
-        /// </remarks>
         /// <param name="characterIndex">The character index to convert</param>
         /// <returns>The converted index</returns>
         public int CharacterToCodePointIndex(int characterIndex)
@@ -194,7 +188,7 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// Add text to this paragraph
+        /// Add text to this text block
         /// </summary>
         /// <remarks>
         /// The added text will be internally coverted to UTF32.  
@@ -258,7 +252,255 @@ namespace Topten.RichTextKit
             // Add run
             _styleRuns.Add(run);
 
+            // Need new layout
+            InvalidateLayout();
+
             return run;
+        }
+
+        /// <summary>
+        /// Add text to this text block
+        /// </summary>
+        /// <remarks>
+        /// If the style is null, the new text will acquire the style of the character
+        /// before the insertion point. If the text block is currently empty the style
+        /// must be supplied.  If inserting at the start of a non-empty text block the
+        /// style will be that of the first existing style run
+        /// </remarks>
+        /// <param name="position">The position to insert the text</param>
+        /// <param name="text">The text to add</param>
+        /// <param name="style">The style of the text (optional)</param>
+        public void InsertText(int position, Slice<int> text, IStyle style = null)
+        {
+            // Redundant?
+            if (text.Length == 0)
+                return;
+
+            if (style == null && _styleRuns.Count == 0)
+                throw new InvalidOperationException("Must supply style when inserting into an empty text block");
+
+            // Add to UTF-32 buffer
+            var utf32 = _codePoints.Insert(position, text);
+
+            // Update style runs
+            int newRunIndex = -1;
+            for (int i = 0; i < _styleRuns.Count; i++)
+            {
+                // Get the style run
+                var sr = _styleRuns[i];
+
+                // Before inserted text?
+                if (sr.End < position)
+                    continue;
+
+                // Special case for inserting at very start of text block
+                // with no supplied style.
+                if (sr.Start == 0 && position == 0 && style == null)
+                {
+                    sr.Length += utf32.Length;
+                    continue;
+                }
+
+                // After inserted text?
+                if (sr.Start >= position)
+                {
+                    sr.Start += utf32.Length;
+                    continue;
+                }
+
+                // Inserting exactly at the end of a style run?
+                if (sr.End == position)
+                {
+                    if (style == null || style == sr.Style)
+                    {
+                        // Extend the existing run
+                        sr.Length += utf32.Length;
+
+                        // Force style to null to suppress later creation
+                        // of a style run for it.
+                        style = null;
+                    }
+                    else
+                    {
+                        // Remember this is where to insert the new
+                        // style run
+                        newRunIndex = i + 1;
+                    }
+                    continue;
+                }
+
+                Debug.Assert(sr.End > position);
+                Debug.Assert(sr.Start < position);
+
+                // Inserting inside an existing run
+                if (style == null || style == sr.Style)
+                {
+                    // Extend the existing style run to cover
+                    // the newly inserted text with the same style
+                    sr.Length += utf32.Length;
+
+                    // Force style to null to suppress later creation
+                    // of a style run for it.
+                    style = null;
+                }
+                else
+                {
+                    // Split this run and insert the new style run between
+
+                    // Create the second part
+                    var split = StyleRun.Pool.Value.Get();
+                    split.TextBlock = this;
+                    split.CodePointBuffer = _codePoints;
+                    split.Start = position + Length;
+                    split.Length = sr.End - position;
+                    split.Style = sr.Style;
+                    _styleRuns.Insert(i + 1, split);
+
+                    // Shorten this part
+                    sr.Length = position - sr.Start;
+
+                    // Insert the newly styled run after this one
+                    newRunIndex = i + 1;
+
+                    // Skip the second part of the split in this for loop
+                    // as we've already calculated it
+                    i++;
+                }
+            }
+
+            // Create a new style run
+            if (style != null)
+            {
+                var run = StyleRun.Pool.Value.Get();
+                run.TextBlock = this;
+                run.CodePointBuffer = _codePoints;
+                run.Start = utf32.Start;
+                run.Length = utf32.Length;
+                run.Style = style;
+                _hasTextDirectionOverrides |= style.TextDirection != TextDirection.Auto;
+                _styleRuns.Insert(newRunIndex, run);
+            }
+
+
+            // Need new layout
+            InvalidateLayout();
+        }
+
+        /// <summary>
+        /// Deletes text from this text block
+        /// </summary>
+        /// <param name="position">The code point index to delete from</param>
+        /// <param name="length">The number of code points to delete</param>
+        public void DeleteText(int position, int length)
+        {
+            if (length == 0)
+                return;
+
+            // Delete text from the code point buffer
+            _codePoints.Delete(position, length);
+
+            // Fix up style runs
+            for (int i = 0; i < _styleRuns.Count; i++)
+            {
+                // Get the run
+                var sr = _styleRuns[i];
+
+                // Ignore runs before the deleted range
+                if (sr.End <= position)
+                    continue;
+
+                // Runs that start before the deleted range
+                if (sr.Start < position)
+                {
+                    if (sr.End <= position + length)
+                    {
+                        // Truncate runs the overlap with the start of the delete range
+                        sr.Length = position - sr.Start;
+                        continue;
+                    }
+                    else
+                    {
+                        // Shorten runs that completely cover the deleted range
+                        sr.Length -= length;
+                        continue;
+                    }
+                }
+
+                // Runs that start within the deleted range
+                if (sr.Start < position + length)
+                {
+                    if (sr.End <= position + length)
+                    {
+                        // Delete runs that are completely within the deleted range
+                        _styleRuns.RemoveAt(i);
+                        StyleRun.Pool.Value.Return(sr);
+                        i--;
+                        continue;
+                    }
+                    else
+                    {
+                        // Runs that overlap the end of the deleted range, just
+                        // keep the part past the deleted range
+                        sr.Length = sr.End - (position + length);
+                        sr.Start = position;
+                        continue;
+                    }
+                }
+
+                // Run is after the deleted range, shuffle it back
+                sr.Start -= length;
+            }
+
+            // coalesc runs
+            if (_styleRuns.Count > 0)
+            {
+                var prev = _styleRuns[0];
+                for (int i = 1; i < _styleRuns.Count; i++)
+                {
+                    if (_styleRuns[i].Style == prev.Style)
+                    {
+                        prev.Length += _styleRuns[i].Length;
+                        _styleRuns.RemoveAt(i);
+                        i--;
+                        continue;
+                    }
+
+                    prev = _styleRuns[i];
+                }
+            }
+
+            // Need new layout
+            InvalidateLayout();
+        }
+
+        [Conditional("DEBUG")]
+        void CheckStyleRuns()
+        {
+            if (_styleRuns.Count > 0)
+            {
+                // Must start at zero
+                Debug.Assert(_styleRuns[0].Start == 0);
+
+                // Must cover entire code point buffer
+                Debug.Assert(_styleRuns[_styleRuns.Count - 1].End == _codePoints.Length);
+
+                var prev = _styleRuns[0];
+                for (int i = 1; i < _styleRuns.Count; i++)
+                {
+                    // All runs must have a length
+                    Debug.Assert(_styleRuns[i].Length > 0);
+
+                    // All runs must be consecutive and joined end to end
+                    Debug.Assert(_styleRuns[i].Start == prev.End);
+
+                    prev = _styleRuns[i];
+                }
+            }
+            else
+            {
+                // If no style runs then mustn't have any code points either
+                Debug.Assert(_codePoints.Length == 0);
+            }
         }
 
         /// <summary>
@@ -953,6 +1195,7 @@ public IReadOnlyList<StyleRun> StyleRuns
         /// </summary>
         void InvalidateLayout()
         {
+            CheckStyleRuns();
             _needsLayout = true;
         }
 

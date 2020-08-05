@@ -294,7 +294,7 @@ namespace Topten.RichTextKit.Editor
                     throw new ArgumentException("Unknown navigation kind");
             }
 
-            // Helper for character and word left/right
+            // Helper for character/word left/right
             CaretPosition navigateIndicies(int direction, Func<Paragraph, IReadOnlyList<int>> getIndicies)
             {
                 // Get the paragraph and position in paragraph
@@ -430,6 +430,103 @@ namespace Topten.RichTextKit.Editor
                 return new CaretPosition(htr.ClosestCodePointIndex, htr.AltCaretPosition, ghostXCoord: xCoord);
             }
 
+        }
+
+        /// <summary>
+        /// Given a caret position, find an enclosing selection range for the
+        /// current word, line, paragraph or document
+        /// </summary>
+        /// <param name="position">The caret position to select from</param>
+        /// <param name="kind">The kind of selection to return</param>
+        /// <returns></returns>
+        public TextRange GetSelectionRange(CaretPosition position, SelectionKind kind)
+        {
+            switch (kind)
+            {
+                case SelectionKind.None:
+                    return new TextRange(position.CodePointIndex, position.CodePointIndex, position.AltPosition);
+
+                case SelectionKind.Word:
+                    return getWordRange();
+
+                case SelectionKind.Line:
+                    return getLineRange();
+
+                case SelectionKind.Paragraph:
+                    return getParagraphRange();
+
+                case SelectionKind.Document:
+                    return new TextRange(0, Length, true);
+
+                default:
+                    throw new ArgumentException("Unknown navigation kind");
+            }
+
+            // Helper to get a word range
+            TextRange getWordRange()
+            {
+                // Get the paragraph and position in paragraph
+                int paraIndex = GetParagraphForCodePointIndex(position.CodePointIndex, out var paraCodePointIndex);
+                var para = _paragraphs[paraIndex];
+
+                // Find the word boundaries for this paragraph and find 
+                // the current word
+                var indicies = para.WordBoundaryIndicies;
+                var ii = indicies.BinarySearch(paraCodePointIndex);
+                if (ii < 0)
+                    ii = (~ii - 1);
+                if (ii >= indicies.Count)
+                    ii = indicies.Count - 1;
+
+                // Create text range covering the entire word
+                return new TextRange(
+                    para.CodePointIndex + indicies[ii],
+                    para.CodePointIndex + indicies[ii + 1],
+                    true
+                );
+            }
+
+            // Helper to get a line range
+            TextRange getLineRange()
+            {
+                // Get the paragraph and position in paragraph
+                int paraIndex = GetParagraphForCodePointIndex(position.CodePointIndex, out var paraCodePointIndex);
+                var para = _paragraphs[paraIndex];
+
+                // Get the line number the caret is on
+                var ci = para.GetCaretInfo(paraCodePointIndex, position.AltPosition);
+
+                // Get the line indicies
+                var lineIndicies = para.LineIndicies;
+
+                // Handle out of range (should never happen)
+                if (ci.LineIndex < 0)
+                    ci.LineIndex = 0;
+                if (ci.LineIndex >= lineIndicies.Count)
+                    ci.LineIndex = lineIndicies.Count - 1;
+
+                // Return the line range
+                return new TextRange(
+                    para.CodePointIndex + lineIndicies[ci.LineIndex],
+                    para.CodePointIndex + lineIndicies[ci.LineIndex + 1],
+                    true
+                );
+            }
+
+            // Helper to get a paragraph range
+            TextRange getParagraphRange()
+            {
+                // Get the paragraph and position in paragraph
+                int paraIndex = GetParagraphForCodePointIndex(position.CodePointIndex, out var paraCodePointIndex);
+                var para = _paragraphs[paraIndex];
+
+                // Create text range covering the entire paragraph
+                return new TextRange(
+                    para.CodePointIndex,
+                    para.CodePointIndex + para.Length,
+                    true
+                );
+            }
         }
 
 
