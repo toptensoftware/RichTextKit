@@ -49,10 +49,9 @@ namespace Topten.RichTextKit.Editor
         /// <remarks>
         /// The returned caret info should be relative to the paragraph's content
         /// </remarks>
-        /// <param name="codePointIndex">The code point index relative to the start of the paragraph</param>
-        /// <param name="altPosition">Returns the alternate caret position for the code point index</param>
+        /// <param name="position">The caret position</param>
         /// <returns>A CaretInfo struct, or CaretInfo.None</returns>
-        public abstract CaretInfo GetCaretInfo(int codePointIndex, bool altPosition);
+        public abstract CaretInfo GetCaretInfo(CaretPosition position);
 
         /// <summary>
         /// Hit test this paragraph

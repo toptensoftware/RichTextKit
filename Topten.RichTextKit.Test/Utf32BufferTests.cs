@@ -9,8 +9,6 @@ namespace Topten.RichTextKit.Test
 {
     public class Utf32BufferTests
     {
-        const string mixedString = "This\na\nstring\n🌐 🍪 🍕 🚀\n يتكلّم \n हालाँकि प्रचलित रूप पूज 緳 踥踕";
-
         [Fact]
         public void AddText()
         {
@@ -56,6 +54,37 @@ namespace Topten.RichTextKit.Test
             // Assert
             Assert.Equal("abcd", buf.ToString());
         }
+
+        [Fact]
+        public void DeleteTextStart()
+        {
+            // Arrange
+            var buf = new Utf32Buffer();
+
+            // Act
+            buf.Add("abxx🌐xxcd");
+            buf.Delete(0, 5);
+
+            // Assert
+            Assert.Equal("xxcd", buf.ToString());
+        }
+
+        [Fact]
+        public void DeleteTextEnd()
+        {
+            // Arrange
+            var buf = new Utf32Buffer();
+
+            // Act
+            buf.Add("abxx🌐xxcd");
+            buf.Delete(4, 5);
+
+            // Assert
+            Assert.Equal("abxx", buf.ToString());
+        }
+
+
+        const string mixedString = "This\na\nstring\n🌐 🍪 🍕 🚀\n يتكلّم \n हालाँकि प्रचलित रूप पूज 緳 踥踕";
 
 
         [Fact]

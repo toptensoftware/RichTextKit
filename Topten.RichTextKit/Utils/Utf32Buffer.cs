@@ -74,6 +74,16 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
+        /// Appends text to this buffer, converting from UTF-16 to UTF-32
+        /// </summary>
+        /// <param name="str">The string of text to be inserted</param>
+        /// <returns>A slice representing the added UTF-32 data.</returns>
+        public Slice<int> Add(ReadOnlySpan<char> str)
+        {
+            return Insert(Length, str);
+        }
+
+        /// <summary>
         /// Appends utf32 data to this buffer
         /// </summary>
         /// <param name="position">Position to insert the string</param>
@@ -92,6 +102,17 @@ namespace Topten.RichTextKit.Utils
         /// <param name="str">The string of text to be inserted</param>
         /// <returns>A slice representing the added UTF-32 data.</returns>
         public Slice<int> Insert(int position, string str)
+        {
+            return Insert(position, str.AsSpan());
+        }
+
+        /// <summary>
+        /// Inserts text to this buffer, converting from UTF-16 to UTF-32
+        /// </summary>
+        /// <param name="position">The position to insert the string</param>
+        /// <param name="str">The string of text to be inserted</param>
+        /// <returns>A slice representing the added UTF-32 data.</returns>
+        public Slice<int> Insert(int position, ReadOnlySpan<char> str)
         {
             // Remember old length
             int oldLength = Length;

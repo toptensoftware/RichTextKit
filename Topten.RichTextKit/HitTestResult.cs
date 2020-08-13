@@ -78,6 +78,12 @@ namespace Topten.RichTextKit
         /// </remarks>
         public bool AltCaretPosition;
 
+
+        /// <summary>
+        /// Helper to get the closest position as a CaretPosition
+        /// </summary>
+        public CaretPosition CaretPosition => new CaretPosition(ClosestCodePointIndex, AltCaretPosition);
+
         /// <summary>
         /// Compares this object to another instance
         /// </summary>

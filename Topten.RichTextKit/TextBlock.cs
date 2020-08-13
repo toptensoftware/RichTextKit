@@ -19,8 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Topten.RichTextKit.Utils;
 
 namespace Topten.RichTextKit
@@ -200,10 +198,10 @@ namespace Topten.RichTextKit
         /// </remarks>
         /// <param name="text">The text to add</param>
         /// <param name="style">The style of the text</param>
-        public StyleRun AddText(string text, IStyle style)
+        public StyleRun AddText(ReadOnlySpan<char> text, IStyle style)
         {
             // Quit if redundant
-            if (string.IsNullOrEmpty(text))
+            if (text.Length == 0)
                 return null;
 
             // Add to  buffer
@@ -262,6 +260,24 @@ namespace Topten.RichTextKit
         /// Add text to this text block
         /// </summary>
         /// <remarks>
+        /// The added text will be internally coverted to UTF32.  
+        /// 
+        /// Note that all text indicies returned by and accepted by this object will 
+        /// be UTF32 "code point indicies".  To convert between UTF16 character indicies 
+        /// and UTF32 code point indicies use the <see cref="CodePointToCharacterIndex(int)"/> 
+        /// and <see cref="CharacterToCodePointIndex(int)"/> methods
+        /// </remarks>
+        /// <param name="text">The text to add</param>
+        /// <param name="style">The style of the text</param>
+        public StyleRun AddText(string text, IStyle style)
+        {
+            return AddText(text.AsSpan(), style);
+        }
+
+        /// <summary>
+        /// Add text to this text block
+        /// </summary>
+        /// <remarks>
         /// If the style is null, the new text will acquire the style of the character
         /// before the insertion point. If the text block is currently empty the style
         /// must be supplied.  If inserting at the start of a non-empty text block the
@@ -283,107 +299,63 @@ namespace Topten.RichTextKit
             var utf32 = _codePoints.Insert(position, text);
 
             // Update style runs
-            int newRunIndex = -1;
-            for (int i = 0; i < _styleRuns.Count; i++)
-            {
-                // Get the style run
-                var sr = _styleRuns[i];
+            FinishInsert(utf32, style);
+        }
 
-                // Before inserted text?
-                if (sr.End < position)
-                    continue;
+        /// <summary>
+        /// Add text to this text block
+        /// </summary>
+        /// <remarks>
+        /// If the style is null, the new text will acquire the style of the character
+        /// before the insertion point. If the text block is currently empty the style
+        /// must be supplied.  If inserting at the start of a non-empty text block the
+        /// style will be that of the first existing style run
+        /// </remarks>
+        /// <param name="position">The position to insert the text</param>
+        /// <param name="text">The text to add</param>
+        /// <param name="style">The style of the text (optional)</param>
+        public void InsertText(int position, ReadOnlySpan<char> text, IStyle style = null)
+        {
+            // Redundant?
+            if (text.Length == 0)
+                return;
 
-                // Special case for inserting at very start of text block
-                // with no supplied style.
-                if (sr.Start == 0 && position == 0 && style == null)
-                {
-                    sr.Length += utf32.Length;
-                    continue;
-                }
+            if (style == null && _styleRuns.Count == 0)
+                throw new InvalidOperationException("Must supply style when inserting into an empty text block");
 
-                // After inserted text?
-                if (sr.Start >= position)
-                {
-                    sr.Start += utf32.Length;
-                    continue;
-                }
+            // Add to UTF-32 buffer
+            var utf32 = _codePoints.Insert(position, text);
 
-                // Inserting exactly at the end of a style run?
-                if (sr.End == position)
-                {
-                    if (style == null || style == sr.Style)
-                    {
-                        // Extend the existing run
-                        sr.Length += utf32.Length;
+            // Update style runs
+            FinishInsert(utf32, style);
+        }
 
-                        // Force style to null to suppress later creation
-                        // of a style run for it.
-                        style = null;
-                    }
-                    else
-                    {
-                        // Remember this is where to insert the new
-                        // style run
-                        newRunIndex = i + 1;
-                    }
-                    continue;
-                }
+        /// <summary>
+        /// Add text to this text block
+        /// </summary>
+        /// <remarks>
+        /// If the style is null, the new text will acquire the style of the character
+        /// before the insertion point. If the text block is currently empty the style
+        /// must be supplied.  If inserting at the start of a non-empty text block the
+        /// style will be that of the first existing style run
+        /// </remarks>
+        /// <param name="position">The position to insert the text</param>
+        /// <param name="text">The text to add</param>
+        /// <param name="style">The style of the text (optional)</param>
+        public void InsertText(int position, string text, IStyle style = null)
+        {
+            // Redundant?
+            if (text.Length == 0)
+                return;
 
-                Debug.Assert(sr.End > position);
-                Debug.Assert(sr.Start < position);
+            if (style == null && _styleRuns.Count == 0)
+                throw new InvalidOperationException("Must supply style when inserting into an empty text block");
 
-                // Inserting inside an existing run
-                if (style == null || style == sr.Style)
-                {
-                    // Extend the existing style run to cover
-                    // the newly inserted text with the same style
-                    sr.Length += utf32.Length;
+            // Add to UTF-32 buffer
+            var utf32 = _codePoints.Insert(position, text);
 
-                    // Force style to null to suppress later creation
-                    // of a style run for it.
-                    style = null;
-                }
-                else
-                {
-                    // Split this run and insert the new style run between
-
-                    // Create the second part
-                    var split = StyleRun.Pool.Value.Get();
-                    split.TextBlock = this;
-                    split.CodePointBuffer = _codePoints;
-                    split.Start = position + Length;
-                    split.Length = sr.End - position;
-                    split.Style = sr.Style;
-                    _styleRuns.Insert(i + 1, split);
-
-                    // Shorten this part
-                    sr.Length = position - sr.Start;
-
-                    // Insert the newly styled run after this one
-                    newRunIndex = i + 1;
-
-                    // Skip the second part of the split in this for loop
-                    // as we've already calculated it
-                    i++;
-                }
-            }
-
-            // Create a new style run
-            if (style != null)
-            {
-                var run = StyleRun.Pool.Value.Get();
-                run.TextBlock = this;
-                run.CodePointBuffer = _codePoints;
-                run.Start = utf32.Start;
-                run.Length = utf32.Length;
-                run.Style = style;
-                _hasTextDirectionOverrides |= style.TextDirection != TextDirection.Auto;
-                _styleRuns.Insert(newRunIndex, run);
-            }
-
-
-            // Need new layout
-            InvalidateLayout();
+            // Update style runs
+            FinishInsert(utf32, style);
         }
 
         /// <summary>
@@ -452,55 +424,121 @@ namespace Topten.RichTextKit
             }
 
             // coalesc runs
-            if (_styleRuns.Count > 0)
-            {
-                var prev = _styleRuns[0];
-                for (int i = 1; i < _styleRuns.Count; i++)
-                {
-                    if (_styleRuns[i].Style == prev.Style)
-                    {
-                        prev.Length += _styleRuns[i].Length;
-                        _styleRuns.RemoveAt(i);
-                        i--;
-                        continue;
-                    }
-
-                    prev = _styleRuns[i];
-                }
-            }
+            CoalescStyleRuns();
 
             // Need new layout
             InvalidateLayout();
         }
 
-        [Conditional("DEBUG")]
-        void CheckStyleRuns()
+        /// <summary>
+        /// Overwrites the styles of existing text in the text block
+        /// </summary>
+        /// <param name="position">The code point index of the start of the text</param>
+        /// <param name="length">The length of the text</param>
+        /// <param name="style">The new style to be applied</param>
+        public void ApplyStyle(int position, int length, IStyle style)
         {
-            if (_styleRuns.Count > 0)
+            // Check args
+            if (position < 0 || position + length > this.Length)
+                throw new ArgumentException("Invalid range");
+            if (style == null)
+                throw new ArgumentNullException(nameof(style));
+
+            // Redundant?
+            if (length == 0)
+                return;
+
+            // Easy case when applying same style to entire text block
+            if (position == 0 && length == this.Length)
             {
-                // Must start at zero
-                Debug.Assert(_styleRuns[0].Start == 0);
-
-                // Must cover entire code point buffer
-                Debug.Assert(_styleRuns[_styleRuns.Count - 1].End == _codePoints.Length);
-
-                var prev = _styleRuns[0];
-                for (int i = 1; i < _styleRuns.Count; i++)
+                // Remove excess runs
+                while (_styleRuns.Count > 1)
                 {
-                    // All runs must have a length
-                    Debug.Assert(_styleRuns[i].Length > 0);
+                    StyleRun.Pool.Value.Return(_styleRuns[1]);
+                    _styleRuns.RemoveAt(1);
+                }
+                
+                // Reconfigure the first
+                _styleRuns[0].Start = 0;
+                _styleRuns[0].Length = length;
+                _styleRuns[0].Style = style;
 
-                    // All runs must be consecutive and joined end to end
-                    Debug.Assert(_styleRuns[i].Start == prev.End);
+                // Reset text direction overrides flag
+                _hasTextDirectionOverrides = style.TextDirection != TextDirection.Auto;
 
-                    prev = _styleRuns[i];
+                // Invalidate and done
+                InvalidateLayout();
+                return;
+            }
+
+            // Get all intersecting runs
+            int newRunPos = -1;
+            foreach (var subRun in _styleRuns.GetIntersectingRunsReverse(position, length))
+            {
+                if (subRun.Partial)
+                {
+                    var run = _styleRuns[subRun.Index];
+
+
+                    if (subRun.Offset == 0)
+                    {
+                        // Overlaps start of existing run, keep end
+                        run.Start += subRun.Length;
+                        run.Length -= subRun.Length;
+                        newRunPos = subRun.Index;
+                    }
+                    else if (subRun.Offset + subRun.Length == run.Length)
+                    {
+                        // Overlaps end of existing run, keep start
+                        run.Length = subRun.Offset;
+                        newRunPos = subRun.Index + 1;
+                    }
+                    else
+                    {
+                        // Internal to existing run, keep start and end
+
+                        // Create new run for end
+                        var endRun = StyleRun.Pool.Value.Get();
+                        endRun.TextBlock = this;
+                        endRun.CodePointBuffer = _codePoints;
+                        endRun.Start = run.Start + subRun.Offset + subRun.Length;
+                        endRun.Length = run.End - endRun.Start;
+                        endRun.Style = run.Style;
+                        _styleRuns.Insert(subRun.Index + 1, endRun);
+
+                        // Shorten the existing run to keep start
+                        run.Length = subRun.Offset;
+
+                        newRunPos = subRun.Index + 1;
+                    }
+                }
+                else
+                {
+                    // Remove completely covered style runs
+                    StyleRun.Pool.Value.Return(_styleRuns[subRun.Index]);
+                    _styleRuns.RemoveAt(subRun.Index);
+                    newRunPos = subRun.Index;
                 }
             }
-            else
-            {
-                // If no style runs then mustn't have any code points either
-                Debug.Assert(_codePoints.Length == 0);
-            }
+
+            // Create style run for the new style
+            var newRun = StyleRun.Pool.Value.Get();
+            newRun.TextBlock = this;
+            newRun.CodePointBuffer = _codePoints;
+            newRun.Start = position;
+            newRun.Length = length;
+            newRun.Style = style;
+
+            _hasTextDirectionOverrides |= style.TextDirection != TextDirection.Auto;
+
+            // Insert it
+            _styleRuns.Insert(newRunPos, newRun);
+
+            // Coalesc
+            CoalescStyleRuns();
+
+            // Need to redo layout
+            InvalidateLayout();
         }
 
         /// <summary>
@@ -627,10 +665,10 @@ namespace Topten.RichTextKit
             }
         }
 
-/// <summary>
-/// Get the text runs as added by AddText
-/// </summary>
-public IReadOnlyList<StyleRun> StyleRuns
+        /// <summary>
+        /// Get the text runs as added by AddText
+        /// </summary>
+        public IReadOnlyList<StyleRun> StyleRuns
         {
             get
             {
@@ -684,10 +722,10 @@ public IReadOnlyList<StyleRun> StyleRuns
             };
 
             // Prepare selection
-            if (options.SelectionStart.HasValue && options.SelectionEnd.HasValue)
+            if (options.Selection.HasValue)
             {
-                ctx.SelectionStart = Math.Min(options.SelectionStart.Value, options.SelectionEnd.Value);
-                ctx.SelectionEnd = Math.Max(options.SelectionStart.Value, options.SelectionEnd.Value);
+                ctx.SelectionStart = options.Selection.Value.Minimum;
+                ctx.SelectionEnd = options.Selection.Value.Maximum;
                 ctx.PaintSelectionBackground = new SKPaint()
                 {
                     Color = options.SelectionColor,
@@ -963,7 +1001,176 @@ public IReadOnlyList<StyleRun> StyleRuns
         }
 
 
-        // Build map of all caret positions
+        /// <summary>
+        /// Completes the insertion of text by inserting it's style run
+        /// and updating the offsets of existing style runs.
+        /// </summary>
+        /// <param name="utf32">The utf32 slice that was inserted</param>
+        /// <param name="style">The style of the inserted text</param>
+        void FinishInsert(Slice<int> utf32, IStyle style)
+        {
+            // Update style runs
+            int newRunIndex = 0;
+            for (int i = 0; i < _styleRuns.Count; i++)
+            {
+                // Get the style run
+                var sr = _styleRuns[i];
+
+                // Before inserted text?
+                if (sr.End < utf32.Start)
+                    continue;
+
+                // Special case for inserting at very start of text block
+                // with no supplied style.
+                if (sr.Start == 0 && utf32.Start == 0 && style == null)
+                {
+                    sr.Length += utf32.Length;
+                    continue;
+                }
+
+                // After inserted text?
+                if (sr.Start >= utf32.Start)
+                {
+                    sr.Start += utf32.Length;
+                    continue;
+                }
+
+                // Inserting exactly at the end of a style run?
+                if (sr.End == utf32.Start)
+                {
+                    if (style == null || style == sr.Style)
+                    {
+                        // Extend the existing run
+                        sr.Length += utf32.Length;
+
+                        // Force style to null to suppress later creation
+                        // of a style run for it.
+                        style = null;
+                    }
+                    else
+                    {
+                        // Remember this is where to insert the new
+                        // style run
+                        newRunIndex = i + 1;
+                    }
+                    continue;
+                }
+
+                Debug.Assert(sr.End > utf32.Start);
+                Debug.Assert(sr.Start < utf32.Start);
+
+                // Inserting inside an existing run
+                if (style == null || style == sr.Style)
+                {
+                    // Extend the existing style run to cover
+                    // the newly inserted text with the same style
+                    sr.Length += utf32.Length;
+
+                    // Force style to null to suppress later creation
+                    // of a style run for it.
+                    style = null;
+                }
+                else
+                {
+                    // Split this run and insert the new style run between
+
+                    // Create the second part
+                    var split = StyleRun.Pool.Value.Get();
+                    split.TextBlock = this;
+                    split.CodePointBuffer = _codePoints;
+                    split.Start = utf32.Start + utf32.Length;
+                    split.Length = sr.End - utf32.Start;
+                    split.Style = sr.Style;
+                    _styleRuns.Insert(i + 1, split);
+
+                    // Shorten this part
+                    sr.Length = utf32.Start - sr.Start;
+
+                    // Insert the newly styled run after this one
+                    newRunIndex = i + 1;
+
+                    // Skip the second part of the split in this for loop
+                    // as we've already calculated it
+                    i++;
+                }
+            }
+
+            // Create a new style run
+            if (style != null)
+            {
+                var run = StyleRun.Pool.Value.Get();
+                run.TextBlock = this;
+                run.CodePointBuffer = _codePoints;
+                run.Start = utf32.Start;
+                run.Length = utf32.Length;
+                run.Style = style;
+                _hasTextDirectionOverrides |= style.TextDirection != TextDirection.Auto;
+                _styleRuns.Insert(newRunIndex, run);
+            }
+
+            // Coalesc if necessary
+            if ((newRunIndex > 0 && _styleRuns[newRunIndex - 1].Style == style) ||
+                (newRunIndex + 1 < _styleRuns.Count && _styleRuns[newRunIndex + 1].Style == style))
+            {
+                CoalescStyleRuns();
+            }
+
+
+            // Need new layout
+            InvalidateLayout();
+        }
+
+        /// <summary>
+        /// Combines any consecutive style runs with the same style
+        /// into a single run
+        /// </summary>
+        void CoalescStyleRuns()
+        {
+            // Nothing to do if no style runs
+            if (_styleRuns.Count == 0)
+            {
+                _hasTextDirectionOverrides = false;
+                return;
+            }
+
+            // Since we're iterating the entire set of style runs, might as 
+            // we recalculate this flag while we're at it
+            _hasTextDirectionOverrides = _styleRuns[0].Style.TextDirection != TextDirection.Auto;
+
+            // No need to coalesc a single run
+            if (_styleRuns.Count == 1)
+                return;
+
+            // Coalesc...
+            var prev = _styleRuns[0];
+            for (int i = 1; i < _styleRuns.Count; i++)
+            {
+                // Get the run
+                var run = _styleRuns[i];
+
+                // Update flag
+                _hasTextDirectionOverrides |= run.Style.TextDirection != TextDirection.Auto;
+
+                // Can run be coalesced?
+                if (run.Style == prev.Style)
+                {
+                    // Yes
+                    prev.Length += run.Length;
+                    StyleRun.Pool.Value.Return(run);
+                    _styleRuns.RemoveAt(i);
+                    i--;
+                }
+                else
+                {
+                    // No, move on..
+                    prev = run;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Build map of all caret positions 
+        /// </summary>
         void BuildCaretIndicies()
         {
             Layout();
@@ -1044,42 +1251,41 @@ public IReadOnlyList<StyleRun> StyleRuns
         /// code point after a line break, the returned caret position will be the
         /// end of the previous line (instead of the start of the next line)
         /// </remarks>
-        /// <param name="codePointIndex">The code point index of the caret</param>
-        /// <param name="altPosition">Returns the alternate caret position for the code point index</param>
+        /// <param name="position">The caret position</param>
         /// <returns>A CaretInfo struct</returns>
-        public CaretInfo GetCaretInfo(int codePointIndex, bool altPosition)
+        public CaretInfo GetCaretInfo(CaretPosition position)
         {
             // Empty text block?
-            if (_codePoints.Length == 0 || codePointIndex < 0 || _lines.Count == 0)
+            if (_codePoints.Length == 0 || position.CodePointIndex < 0 || _lines.Count == 0)
             {
                 return CaretInfo.None;
             }
 
             // Past the measured length?
-            if (codePointIndex > MeasuredLength)
+            if (position.CodePointIndex > MeasuredLength)
             {
                 return CaretInfo.None;
             }
 
             // Look up the caret index
-            int cpii = LookupCaretIndex(codePointIndex);
+            int cpii = LookupCaretIndex(position.CodePointIndex);
 
             // Create caret info
             var ci = new CaretInfo();
             ci.CodePointIndex = _caretIndicies[cpii];
 
-            var frIndex = FindFontRunForCodePointIndex(codePointIndex);
+            var frIndex = FindFontRunForCodePointIndex(position.CodePointIndex);
             FontRun fr = null;
             if (frIndex >= 0)
             {
                 fr = _fontRuns[frIndex];
 
-                if (fr.Start == codePointIndex && frIndex > 0)
+                if (fr.Start == position.CodePointIndex && frIndex > 0)
                 {
                     var frPrior = _fontRuns[frIndex - 1];
-                    if (frPrior.End == codePointIndex)
+                    if (frPrior.End == position.CodePointIndex)
                     {
-                        if (altPosition ||
+                        if (position.AltPosition ||
                             (frPrior.Direction == TextDirection.RTL &&
                              frPrior.RunKind != FontRunKind.TrailingWhitespace))
                         {
@@ -1195,7 +1401,10 @@ public IReadOnlyList<StyleRun> StyleRuns
         /// </summary>
         void InvalidateLayout()
         {
-            CheckStyleRuns();
+            // Make sure style runs are valid (debug only)
+            _styleRuns.CheckValid(_codePoints.Length);
+
+            // Set layout flag
             _needsLayout = true;
         }
 

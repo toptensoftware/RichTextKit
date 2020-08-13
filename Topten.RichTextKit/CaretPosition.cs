@@ -15,7 +15,7 @@
 
 using SkiaSharp;
 
-namespace Topten.RichTextKit.Editor
+namespace Topten.RichTextKit
 {
     /// <summary>
     /// Stores state information about a caret position
@@ -34,12 +34,10 @@ namespace Topten.RichTextKit.Editor
         /// </summary>
         /// <param name="codePointIndex">The code point index of the caret</param>
         /// <param name="altPosition">Whether the caret should be displayed in its alternative position</param>
-        /// <param name="ghostXCoord">The ghost x-coord, or null</param>
-        public CaretPosition(int codePointIndex, bool altPosition = false, float? ghostXCoord = null)
+        public CaretPosition(int codePointIndex, bool altPosition = false)
         {
             CodePointIndex = codePointIndex;
             AltPosition = altPosition;
-            GhostXCoord = ghostXCoord;
         }
 
         /// <summary>
@@ -53,17 +51,5 @@ namespace Topten.RichTextKit.Editor
         /// point index is exactly on a line break.
         /// </summary>
         public bool AltPosition;
-
-        /// <summary>
-        /// The X-Coord to maintain when moving vertically.
-        /// </summary>
-        /// <remarks>
-        /// This property will be null after any horizontal movement
-        /// or edit operations.  During vertical movement (line up/down and
-        /// page up/down) it's used to store the x-coord at the start of
-        /// the movement and used to maintain that x-position while continuing
-        /// to move vertically.
-        /// </remarks>
-        public float? GhostXCoord;
     }
 }

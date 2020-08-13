@@ -673,7 +673,7 @@ namespace Topten.RichTextKit
 
 
             // Get the caret info
-            var ci = p.TextBlock.GetCaretInfo(codePointIndex - p.CodePointOffset, altPosition);
+            var ci = p.TextBlock.GetCaretInfo(new CaretPosition(codePointIndex - p.CodePointOffset, altPosition));
 
             // Adjust it
             ci.CodePointIndex += p.CodePointOffset;
@@ -878,44 +878,15 @@ namespace Topten.RichTextKit
                 if (Truncated)
                     return;
 
-                int? oldSelStart = null;
-                int? oldSelEnd = null;
+                TextRange? oldSel = null;
                 if (ctx.textPaintOptions != null)
                 {
                     // Save old selection ranges
-                    oldSelStart = ctx.textPaintOptions.SelectionStart;
-                    oldSelEnd = ctx.textPaintOptions.SelectionEnd;
+                    oldSel = ctx.textPaintOptions.Selection;
 
-                    if (oldSelEnd.HasValue && oldSelEnd.Value < this.CodePointOffset)
+                    if (oldSel.HasValue)
                     {
-                        // Selection is before this paragraph
-                        ctx.textPaintOptions.SelectionStart = null;
-                        ctx.textPaintOptions.SelectionEnd = null;
-                    }
-                    else if (oldSelStart.HasValue && oldSelStart.Value >= this.CodePointOffset + this.TextBlock.MeasuredLength)
-                    {
-                        // Selection is after this paragraph
-                        ctx.textPaintOptions.SelectionStart = null;
-                        ctx.textPaintOptions.SelectionEnd = null;
-                    }
-                    else
-                    {
-                        // Selection intersects with this paragraph
-                        if (oldSelStart.HasValue)
-                        {
-                            if (oldSelStart.Value < this.CodePointOffset)
-                                ctx.textPaintOptions.SelectionStart = 0;
-                            else
-                                ctx.textPaintOptions.SelectionStart = oldSelStart.Value - this.CodePointOffset;
-                        }
-
-                        if (oldSelEnd.HasValue)
-                        {
-                            if (oldSelEnd.Value < this.CodePointOffset + this.TextBlock.MeasuredLength)
-                                ctx.textPaintOptions.SelectionEnd = oldSelEnd.Value - this.CodePointOffset;
-                            else
-                                ctx.textPaintOptions.SelectionEnd = this.TextBlock.MeasuredLength;
-                        }
+                        ctx.textPaintOptions.Selection = oldSel.Value.Offset(-this.CodePointOffset);
                     }
                 }
 
@@ -924,10 +895,9 @@ namespace Topten.RichTextKit
                 TextBlock.Paint(ctx.canvas, ctx.paintPosition + TextBlockPaintPosition(ctx.owner), ctx.textPaintOptions);
 
                 // Restore selection indicies
-                if (ctx.textPaintOptions != null)
+                if (oldSel.HasValue)
                 {
-                    ctx.textPaintOptions.SelectionStart = oldSelStart;
-                    ctx.textPaintOptions.SelectionEnd = oldSelEnd;
+                    ctx.textPaintOptions.Selection = oldSel;
                 }
             }
 

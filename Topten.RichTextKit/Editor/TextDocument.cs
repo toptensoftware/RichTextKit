@@ -50,33 +50,50 @@ namespace Topten.RichTextKit.Editor
         /// Paint this text block
         /// </summary>
         /// <param name="canvas">The Skia canvas to paint to</param>
+        /// <param name="fromYCoord">The top Y-Coord of the visible part of the document</param>
+        /// <param name="toYCoord">The bottom Y-Coord of the visible part of the document</param>
         /// <param name="options">Options controlling the paint operation</param>
-        public void Paint(
-            SKCanvas canvas,
-            TextPaintOptions options = null)
+        public void Paint(SKCanvas canvas, float fromYCoord, float toYCoord, TextPaintOptions options = null)
         {
             // Make sure layout up to date
             Layout();
 
-            // Paint all paragraphs      
-            // TODO: Optimize to only paint visible paragraphs 
-            foreach (var p in _paragraphs)
+            // Find the starting paragraph
+            int startParaIndex = _paragraphs.BinarySearch(fromYCoord, (para, a) =>
             {
-                // Adjust the selection range to local code point offset
-                if (options != null)
-                {
-                    options.SelectionStart -= p.CodePointIndex;
-                    options.SelectionEnd -= p.CodePointIndex;
-                }
+                if (para.ContentYCoord > a)
+                    return 1;
+                if (para.ContentYCoord + para.ContentHeight < a)
+                    return -1;
+                return 0;
+            });
+            if (startParaIndex < 0)
+                startParaIndex = ~startParaIndex;
 
-                // Paint the paragraph
+            // Offset the selection range to be relative to the first paragraph
+            // that will be painted
+            if (options?.Selection != null) 
+            {
+                options.Selection = options.Selection.Value.Offset(-_paragraphs[startParaIndex].CodePointIndex);
+            }
+
+            // Paint...  
+            for (int i=startParaIndex; i < _paragraphs.Count; i++)
+            {
+                // Get the paragraph
+                var p = _paragraphs[i];
+
+                // Quit if past the region to be painted?
+                if (p.ContentYCoord > toYCoord)
+                    break;
+
+                // Paint it
                 p.Paint(canvas, options);
 
-                // Revert selection range
-                if (options != null)
+                // Update the selection range for the next paragraph
+                if (options?.Selection != null)
                 {
-                    options.SelectionStart += p.CodePointIndex;
-                    options.SelectionEnd += p.CodePointIndex;
+                    options.Selection = options.Selection.Value.Offset(-p.Length);
                 }
             }
         }
@@ -217,17 +234,17 @@ namespace Topten.RichTextKit.Editor
         /// <param name="codePointIndex">The code point index of the caret</param>
         /// <param name="altPosition">Returns the alternate caret position for the code point index</param>
         /// <returns>A CaretInfo struct, or CaretInfo.None</returns>
-        public CaretInfo GetCaretInfo(int codePointIndex, bool altPosition)
+        public CaretInfo GetCaretInfo(CaretPosition position)
         {
             // Make sure layout up to date
             Layout();
 
             // Find the paragraph
-            var paraIndex = GetParagraphForCodePointIndex(codePointIndex, out var indexInParagraph);
+            var paraIndex = GetParagraphForCodePointIndex(position, out var indexInParagraph);
             var para = _paragraphs[paraIndex];
 
             // Get caret info
-            var ci = para.GetCaretInfo(indexInParagraph, altPosition);
+            var ci = para.GetCaretInfo(new CaretPosition(indexInParagraph, position.AltPosition));
 
             // Adjust caret info to be relative to document
             ci.CodePointIndex += para.CodePointIndex;
@@ -246,48 +263,58 @@ namespace Topten.RichTextKit.Editor
         /// <param name="position">The current caret position</param>
         /// <param name="kind">The direction and type of caret movement</param>
         /// <param name="pageSize">Specifies the page size for page up/down navigation</param>
+        /// <param name="ghostXCoord">Transient storage for XCoord of caret during vertical navigation</param>
         /// <returns>The new caret position</returns>
-        public CaretPosition Navigate(CaretPosition position, NavigationKind kind, float pageSize)
+        public CaretPosition Navigate(CaretPosition position, NavigationKind kind, float pageSize, ref float? ghostXCoord)
         {
             switch (kind)
             {
                 case NavigationKind.None:
+                    ghostXCoord = null;
                     return position;
 
                 case NavigationKind.CharacterLeft:
+                    ghostXCoord = null;
                     return navigateIndicies(-1, p => p.CaretIndicies);
 
                 case NavigationKind.CharacterRight:
+                    ghostXCoord = null;
                     return navigateIndicies(1, p => p.CaretIndicies);
 
                 case NavigationKind.LineUp:
-                    return navigateLine(-1);
+                    return navigateLine(-1, ref ghostXCoord);
 
                 case NavigationKind.LineDown:
-                    return navigateLine(1);
+                    return navigateLine(1, ref ghostXCoord);
 
                 case NavigationKind.WordLeft:
+                    ghostXCoord = null;
                     return navigateIndicies(-1, p => p.WordBoundaryIndicies);
 
                 case NavigationKind.WordRight:
+                    ghostXCoord = null;
                     return navigateIndicies(1, p => p.WordBoundaryIndicies);
 
                 case NavigationKind.PageUp:
-                    return navigatePage(-1);
+                    return navigatePage(-1, ref ghostXCoord);
 
                 case NavigationKind.PageDown:
-                    return navigatePage(1);
+                    return navigatePage(1, ref ghostXCoord);
 
                 case NavigationKind.LineHome:
+                    ghostXCoord = null;
                     return navigateLineEnd(-1);
 
                 case NavigationKind.LineEnd:
+                    ghostXCoord = null;
                     return navigateLineEnd(1);
 
                 case NavigationKind.DocumentHome:
+                    ghostXCoord = null;
                     return new CaretPosition(0);
 
                 case NavigationKind.DocumentEnd:
+                    ghostXCoord = null;
                     return new CaretPosition(Length, true);
 
                 default:
@@ -298,7 +325,7 @@ namespace Topten.RichTextKit.Editor
             CaretPosition navigateIndicies(int direction, Func<Paragraph, IReadOnlyList<int>> getIndicies)
             {
                 // Get the paragraph and position in paragraph
-                int paraIndex = GetParagraphForCodePointIndex(position.CodePointIndex, out var paraCodePointIndex);
+                int paraIndex = GetParagraphForCodePointIndex(position, out var paraCodePointIndex);
                 var para = _paragraphs[paraIndex];
 
                 // Find the current caret index
@@ -338,17 +365,18 @@ namespace Topten.RichTextKit.Editor
             }
 
             // Helper for line up/down
-            CaretPosition navigateLine(int direction)
+            CaretPosition navigateLine(int direction, ref float? xCoord)
             {
                 // Get the paragraph and position in paragraph
-                int paraIndex = GetParagraphForCodePointIndex(position.CodePointIndex, out var paraCodePointIndex);
+                int paraIndex = GetParagraphForCodePointIndex(position, out var paraCodePointIndex);
                 var para = _paragraphs[paraIndex];
 
                 // Get the line number the caret is on
-                var ci = para.GetCaretInfo(paraCodePointIndex, position.AltPosition);
+                var ci = para.GetCaretInfo(new CaretPosition(paraCodePointIndex, position.AltPosition));
 
                 // Resolve the xcoord
-                var xCoord = position.GhostXCoord ?? (ci.CaretXCoord + MarginLeft + para.MarginLeft);
+                if (xCoord == null)
+                    xCoord = ci.CaretXCoord + MarginLeft + para.MarginLeft;
 
                 // Work out which line to hit test
                 var lineIndex = ci.LineIndex + direction;
@@ -358,7 +386,7 @@ namespace Topten.RichTextKit.Editor
                 {
                     // Top of document?
                     if (paraIndex == 0)
-                        return new CaretPosition(0);
+                        return position;
 
                     // Move to last line of previous paragraph
                     para = _paragraphs[paraIndex - 1];
@@ -368,7 +396,7 @@ namespace Topten.RichTextKit.Editor
                 {
                     // End of document?
                     if (paraIndex + 1 >= _paragraphs.Count)
-                        return new CaretPosition(Length);
+                        return position;
 
                     // Move to first line of next paragraph
                     para = _paragraphs[paraIndex + 1];
@@ -376,19 +404,19 @@ namespace Topten.RichTextKit.Editor
                 }
 
                 // Hit test the line
-                var htr = para.HitTestLine(lineIndex, xCoord - MarginLeft - para.MarginLeft);
-                return new CaretPosition(para.CodePointIndex + htr.ClosestCodePointIndex, htr.AltCaretPosition, ghostXCoord: xCoord);
+                var htr = para.HitTestLine(lineIndex, xCoord.Value - MarginLeft - para.MarginLeft);
+                return new CaretPosition(para.CodePointIndex + htr.ClosestCodePointIndex, htr.AltCaretPosition);
             }
 
             // Helper for line home/end
             CaretPosition navigateLineEnd(int direction)
             {
                 // Get the paragraph and position in paragraph
-                int paraIndex = GetParagraphForCodePointIndex(position.CodePointIndex, out var paraCodePointIndex);
+                int paraIndex = GetParagraphForCodePointIndex(position, out var paraCodePointIndex);
                 var para = _paragraphs[paraIndex];
 
                 // Get the line number the caret is on
-                var ci = para.GetCaretInfo(paraCodePointIndex, position.AltPosition);
+                var ci = para.GetCaretInfo(new CaretPosition(paraCodePointIndex, position.AltPosition));
 
                 // Get the line indicies
                 var lineIndicies = para.LineIndicies;
@@ -415,19 +443,20 @@ namespace Topten.RichTextKit.Editor
             }
 
             // Helper for page up/down
-            CaretPosition navigatePage(int direction)
+            CaretPosition navigatePage(int direction, ref float? xCoord)
             {
                 // Get current caret position
-                var ci = this.GetCaretInfo(position.CodePointIndex, position.AltPosition);
+                var ci = this.GetCaretInfo(position);
 
                 // Work out which XCoord to use
-                var xCoord = position.GhostXCoord ?? ci.CaretXCoord;
+                if (xCoord == null)
+                    xCoord = ci.CaretXCoord;
 
                 // Hit test one page up
-                var htr = this.HitTest(xCoord, ci.CaretRectangle.Top + pageSize * direction);
+                var htr = this.HitTest(xCoord.Value, ci.CaretRectangle.MidY + pageSize * direction);
 
                 // Convert to caret position
-                return new CaretPosition(htr.ClosestCodePointIndex, htr.AltCaretPosition, ghostXCoord: xCoord);
+                return new CaretPosition(htr.ClosestCodePointIndex, htr.AltCaretPosition);
             }
 
         }
@@ -466,7 +495,7 @@ namespace Topten.RichTextKit.Editor
             TextRange getWordRange()
             {
                 // Get the paragraph and position in paragraph
-                int paraIndex = GetParagraphForCodePointIndex(position.CodePointIndex, out var paraCodePointIndex);
+                int paraIndex = GetParagraphForCodePointIndex(position, out var paraCodePointIndex);
                 var para = _paragraphs[paraIndex];
 
                 // Find the word boundaries for this paragraph and find 
@@ -490,11 +519,11 @@ namespace Topten.RichTextKit.Editor
             TextRange getLineRange()
             {
                 // Get the paragraph and position in paragraph
-                int paraIndex = GetParagraphForCodePointIndex(position.CodePointIndex, out var paraCodePointIndex);
+                int paraIndex = GetParagraphForCodePointIndex(position, out var paraCodePointIndex);
                 var para = _paragraphs[paraIndex];
 
                 // Get the line number the caret is on
-                var ci = para.GetCaretInfo(paraCodePointIndex, position.AltPosition);
+                var ci = para.GetCaretInfo(new CaretPosition(paraCodePointIndex, position.AltPosition));
 
                 // Get the line indicies
                 var lineIndicies = para.LineIndicies;
@@ -506,18 +535,31 @@ namespace Topten.RichTextKit.Editor
                     ci.LineIndex = lineIndicies.Count - 1;
 
                 // Return the line range
-                return new TextRange(
-                    para.CodePointIndex + lineIndicies[ci.LineIndex],
-                    para.CodePointIndex + lineIndicies[ci.LineIndex + 1],
-                    true
-                );
+                if (ci.LineIndex + 1 < lineIndicies.Count)
+                {
+                    // Line within the paragraph
+                    return new TextRange(
+                        para.CodePointIndex + lineIndicies[ci.LineIndex],
+                        para.CodePointIndex + lineIndicies[ci.LineIndex + 1],
+                        true
+                    );
+                }
+                else
+                {
+                    // Last line
+                    return new TextRange(
+                        para.CodePointIndex + lineIndicies[ci.LineIndex],
+                        para.CodePointIndex + para.Length,
+                        true
+                    );
+                }
             }
 
             // Helper to get a paragraph range
             TextRange getParagraphRange()
             {
                 // Get the paragraph and position in paragraph
-                int paraIndex = GetParagraphForCodePointIndex(position.CodePointIndex, out var paraCodePointIndex);
+                int paraIndex = GetParagraphForCodePointIndex(position, out var paraCodePointIndex);
                 var para = _paragraphs[paraIndex];
 
                 // Create text range covering the entire paragraph
@@ -534,16 +576,15 @@ namespace Topten.RichTextKit.Editor
         /// Given a code point index relative to the document, return which
         /// paragraph contains that code point and the offset within the paragraph
         /// </summary>
-        /// <param name="codePointIndex"></param>
-        /// <param name="indexInParagraph"></param>
+        /// <param name="position">The caret position to locate the paragraph for</param>
         /// <returns>The index of the paragraph</returns>
-        int GetParagraphForCodePointIndex(int codePointIndex, out int indexInParagraph)
+        int GetParagraphForCodePointIndex(CaretPosition pos, out int indexInParagraph)
         {
             // Ensure layout is valid
             Layout();
 
             // Search paragraphs
-            int paraIndex = _paragraphs.BinarySearch(codePointIndex, (para, a) => 
+            int paraIndex = _paragraphs.BinarySearch(pos.CodePointIndex, (para, a) => 
             {
                 if (a < para.CodePointIndex)
                     return 1;
@@ -559,11 +600,17 @@ namespace Topten.RichTextKit.Editor
                 paraIndex = _paragraphs.Count - 1;
 
             // Work out offset within paragraph
-            indexInParagraph = codePointIndex - _paragraphs[paraIndex].CodePointIndex;
+            indexInParagraph = pos.CodePointIndex - _paragraphs[paraIndex].CodePointIndex;
+
+            if (indexInParagraph == 0 && pos.AltPosition && paraIndex > 0)
+            {
+                paraIndex--;
+                indexInParagraph = _paragraphs[paraIndex].Length;
+            }
 
             // Clamp to end of paragraph
-            if (indexInParagraph >= _paragraphs[paraIndex].Length)
-                indexInParagraph = _paragraphs[paraIndex].Length - 1;
+            if (indexInParagraph > _paragraphs[paraIndex].Length)
+                indexInParagraph = _paragraphs[paraIndex].Length;
 
             System.Diagnostics.Debug.Assert(indexInParagraph >= 0);
 
