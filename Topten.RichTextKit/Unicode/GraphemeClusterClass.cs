@@ -16,32 +16,23 @@
 namespace Topten.RichTextKit
 {
     /// <summary>
-    /// Unicode boundary group classes
+    /// Unicode grapheme cluster classes
     /// </summary>
     /// <remarks>
     /// Note, these need to match those used by the JavaScript script that
     /// generates the .trie resources
     /// </remarks>
-    enum BoundaryGroup
+    enum GraphemeClusterClass
     {
-        /// <summary>
-        /// Character is an letter or number
-        /// </summary>
-        AlphaDigit = 0,
-
-        /// <summary>
-        /// Character should be ignored when locating word boundaries
-        /// </summary>
-        Ignore = 1,
-
-        /// <summary>
-        /// Character is a spacing character
-        /// </summary>
-        Space = 2,
-
-        /// <summary>
-        /// Character is a punctuation character
-        /// </summary>
-        Punctuation = 3,
+        Any = 0,
+        CR = 1,
+        LF = 2,
+        Control = 3,
+        Extend = 4,
+        L = 5,
+        V = 6,
+        T = 7,
+        LV = 8,
+        LVT = 9
     }
 }

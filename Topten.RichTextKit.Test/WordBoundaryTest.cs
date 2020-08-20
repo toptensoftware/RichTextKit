@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using Topten.RichTextKit.Utils;
 using Xunit;
 
 namespace Topten.RichTextKit.Test
 {
-    public class BoundaryTest
+    public class WordBoundaryTest
     {
         [Fact]
         public void SingleWordTest()
@@ -87,6 +89,26 @@ namespace Topten.RichTextKit.Test
             Assert.Equal(0, boundaries[0]);
             Assert.Equal(6, boundaries[1]);
             Assert.Equal(9, boundaries[2]);
+        }
+
+        [Fact]
+        public void TestIsWordBoundary()
+        {
+            var str = new Utf32Buffer("Hello () World").AsSlice();
+
+            // Get the boundaries (assuming FindWordBoundaries is correct)
+            var boundaries = WordBoundaryAlgorithm.FindWordBoundaries(str).ToList();
+
+            var boundaries2 = new List<int>();
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (WordBoundaryAlgorithm.IsWordBoundary(str.SubSlice(0, i), str.SubSlice(i, str.Length - i)))
+                {
+                    boundaries2.Add(i);
+                }
+            }
+
+            Assert.Equal(boundaries, boundaries2);
         }
 
     }

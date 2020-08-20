@@ -15,13 +15,14 @@
 
 using SkiaSharp;
 using System.Collections.Generic;
+using Topten.RichTextKit.Utils;
 
 namespace Topten.RichTextKit.Editor
 {
     /// <summary>
     /// Abstract base class for all TextDocument paragraphs
     /// </summary>
-    public abstract class Paragraph
+    public abstract class Paragraph : IRun
     {
         /// <summary>
         /// Constructs a new Paragraph
@@ -107,6 +108,26 @@ namespace Topten.RichTextKit.Editor
         public abstract float ContentWidth { get; }
 
         /// <summary>
+        /// Gets the TextBlock associated with this paragraph
+        /// </summary>
+        /// <remarks>
+        /// Non-text paragraphs should return null
+        /// </remarks>
+        public virtual TextBlock TextBlock { get => null; }
+
+        /// <summary>
+        /// Copy all style attributes from this paragraph to another
+        /// </summary>
+        /// <param name="other">The paragraph to copy style from</param>
+        public virtual void CopyStyleFrom(Paragraph other)
+        {
+            this.MarginLeft = other.MarginLeft;
+            this.MarginTop = other.MarginTop;
+            this.MarginRight = other.MarginRight;
+            this.MarginBottom = other.MarginBottom;
+        }
+
+        /// <summary>
         /// The X-coordinate of this paragraph's content (ie: after applying margin)
         /// </summary>
         /// <remarks>
@@ -150,5 +171,10 @@ namespace Topten.RichTextKit.Editor
         /// The bottom margin
         /// </summary>
         public float MarginBottom { get; internal set; }
+
+        // Explicit implementation of IRun so we can use RunExtensions
+        // with the paragraphs collection.
+        int IRun.Offset => CodePointIndex;
+        int IRun.Length => Length;
     }
 }

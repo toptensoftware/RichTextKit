@@ -159,6 +159,15 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
+        /// Creates a copy of this slice on a new underlying array
+        /// </summary>
+        /// <returns>A slice representing the copy</returns>
+        public Slice<T> Copy()
+        {
+            return new Slice<T>(ToArray());
+        }
+
+        /// <summary>
         /// Gets the underlying array
         /// </summary>
         public T[] Underlying => _array;
@@ -177,6 +186,44 @@ namespace Topten.RichTextKit.Utils
         {
             return new ArraySliceEnumerator<T>(_array, _start, _length);
         }
+
+        /// <summary>
+        /// Split this slice on a delimiter
+        /// </summary>
+        /// <param name=""></param>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public IEnumerable<Slice<T>> Split(T delimiter)
+        {
+            int start = 0;
+            for (int i = 0; i < Length; i++)
+            {
+                if (this[i].Equals(delimiter))
+                {
+                    yield return SubSlice(start, i - start);
+                    start = i + 1;
+                }
+            }
+            yield return SubSlice(start, Length - start);
+        }
+
+        /// <summary>
+        /// Check if the slice contains a value
+        /// </summary>
+        /// <param name="value">The value to search for</param>
+        /// <returns>The index of the first occurance, or -1 if not found</returns>
+        public int IndexOf(T value)
+        {
+            for (int i = 0; i < Length; i++)
+            {
+                if (this[i].Equals(value))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
 
         /// <summary>
         /// A shared empty slice of type T

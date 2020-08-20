@@ -44,6 +44,26 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
+        /// Split the utf32 buffer on a codepoint type
+        /// </summary>
+        /// <param name=""></param>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public IEnumerable<Slice<int>> Split(int codePoint)
+        {
+            int start = 0;
+            for (int i = 0; i < Length; i++)
+            {
+                if (Underlying[i] == codePoint)
+                {
+                    yield return SubSlice(start, i - start);
+                    start = i + 1;
+                }
+            }
+            yield return SubSlice(start, Length - start);
+        }
+
+        /// <summary>
         /// Clears this buffer.
         /// </summary>
         public new void Clear()

@@ -23,14 +23,16 @@ namespace Topten.RichTextKit
         static UnicodeClasses()
         {
             // Load trie resources
-            _bidiTrie = new UnicodeTrie(typeof(LineBreaker).Assembly.GetManifestResourceStream("Topten.RichTextKit.Resources.BidiData.trie"));
+            _bidiTrie = new UnicodeTrie(typeof(LineBreaker).Assembly.GetManifestResourceStream("Topten.RichTextKit.Resources.BidiClasses.trie"));
             _classesTrie = new UnicodeTrie(typeof(LineBreaker).Assembly.GetManifestResourceStream("Topten.RichTextKit.Resources.LineBreakClasses.trie"));
-            _boundaryTrie = new UnicodeTrie(typeof(LineBreaker).Assembly.GetManifestResourceStream("Topten.RichTextKit.Resources.BoundaryGroupData.trie"));
+            _boundaryTrie = new UnicodeTrie(typeof(LineBreaker).Assembly.GetManifestResourceStream("Topten.RichTextKit.Resources.WordBoundaryClasses.trie"));
+            _graphemeTrie= new UnicodeTrie(typeof(LineBreaker).Assembly.GetManifestResourceStream("Topten.RichTextKit.Resources.GraphemeClusterClasses.trie"));
         }
 
         static UnicodeTrie _bidiTrie;
         static UnicodeTrie _classesTrie;
         static UnicodeTrie _boundaryTrie;
+        static UnicodeTrie _graphemeTrie;
 
         /// <summary>
         /// Get the directionality of a Unicode Code Point
@@ -87,9 +89,19 @@ namespace Topten.RichTextKit
         /// </summary>
         /// <param name="codePoint">The code point in question</param>
         /// <returns>The code point's line break class</returns>
-        public static BoundaryGroup BoundaryGroup(int codePoint)
+        public static WordBoundaryClass BoundaryGroup(int codePoint)
         {
-            return (BoundaryGroup)_boundaryTrie.Get(codePoint);
+            return (WordBoundaryClass)_boundaryTrie.Get(codePoint);
+        }
+
+        /// <summary>
+        /// Get the grapheme cluster class for a Unicode Code Point
+        /// </summary>
+        /// <param name="codePoint">The code point in question</param>
+        /// <returns>The code point's grapheme cluster class</returns>
+        public static GraphemeClusterClass GraphemeClusterClass(int codePoint)
+        {
+            return (GraphemeClusterClass)_boundaryTrie.Get(codePoint);
         }
     }
 }

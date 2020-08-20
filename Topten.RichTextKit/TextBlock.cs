@@ -198,11 +198,11 @@ namespace Topten.RichTextKit
         /// </remarks>
         /// <param name="text">The text to add</param>
         /// <param name="style">The style of the text</param>
-        public StyleRun AddText(ReadOnlySpan<char> text, IStyle style)
+        public void AddText(ReadOnlySpan<char> text, IStyle style)
         {
             // Quit if redundant
             if (text.Length == 0)
-                return null;
+                return;
 
             // Add to  buffer
             var utf32 = _codePoints.Add(text);
@@ -221,8 +221,6 @@ namespace Topten.RichTextKit
 
             // Need new layout
             InvalidateLayout();
-
-            return run;
         }
 
         /// <summary>
@@ -230,10 +228,10 @@ namespace Topten.RichTextKit
         /// </summary>
         /// <param name="text">The text to add</param>
         /// <param name="style">The style of the text</param>
-        public StyleRun AddText(Slice<int> text, IStyle style)
+        public void AddText(Slice<int> text, IStyle style)
         {
             if (text.Length == 0)
-                return null;
+                return;
 
             // Add to UTF-32 buffer
             var utf32 = _codePoints.Add(text);
@@ -252,8 +250,6 @@ namespace Topten.RichTextKit
 
             // Need new layout
             InvalidateLayout();
-
-            return run;
         }
 
         /// <summary>
@@ -269,9 +265,34 @@ namespace Topten.RichTextKit
         /// </remarks>
         /// <param name="text">The text to add</param>
         /// <param name="style">The style of the text</param>
-        public StyleRun AddText(string text, IStyle style)
+        public void AddText(string text, IStyle style)
         {
-            return AddText(text.AsSpan(), style);
+            AddText(text.AsSpan(), style);
+        }
+
+        /// <summary>
+        /// Add all the text from another text block to this text block
+        /// </summary>
+        /// <param name="text">Text to add</param>
+        public void AddText(TextBlock text)
+        {
+            foreach (var sr in text.StyleRuns)
+            {
+                AddText(sr.CodePoints, sr.Style);
+            }
+        }
+
+        /// <summary>
+        /// Add all the text from another text block to this text block
+        /// </summary>
+        /// <param name="text">Text to add</param>
+        public void InsertText(int offset, TextBlock text)
+        {
+            foreach (var sr in text.StyleRuns)
+            {
+                InsertText(offset, sr.CodePoints, sr.Style);
+                offset += sr.CodePoints.Length;
+            }
         }
 
         /// <summary>
@@ -542,6 +563,31 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
+        /// Split this text block at the specified code point index
+        /// </summary>
+        /// <param name="codePointIndex">The code point index of the split position</param>
+        /// <returns>A new text block with the RHS split part of the text</returns>
+        public TextBlock Extract(int from, int length)
+        {
+            // Create a new text block with the same attributes as this one
+            var other = new TextBlock();
+            other.Alignment = this.Alignment;
+            other.BaseDirection = this.BaseDirection;
+            other.MaxWidth = this.MaxWidth;
+            other.MaxHeight = this.MaxHeight;
+            other.MaxLines = this.MaxLines;
+
+            // Copy text to the new paragraph
+            foreach (var subRun in _styleRuns.GetInterectingRuns(from, length))
+            {
+                var sr = _styleRuns[subRun.Index];
+                other.AddText(sr.CodePoints.SubSlice(subRun.Offset, subRun.Length), sr.Style);
+            }
+
+            return other;
+        }
+
+        /// <summary>
         /// Appends an ellipsis to this text block
         /// </summary>
         /// <remarks>
@@ -784,6 +830,11 @@ namespace Topten.RichTextKit
         /// The length of the added text in code points
         /// </summary>
         public int Length => _codePoints.Length;
+
+        /// <summary>
+        /// Get the code points of this text block
+        /// </summary>
+        public Utf32Buffer CodePoints => _codePoints;
 
         /// <summary>
         /// The length of the displayed text (in code points)

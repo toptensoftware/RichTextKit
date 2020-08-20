@@ -243,7 +243,10 @@ namespace Topten.RichTextKit
                     // as this would cause the cursor to appear on the next line).
                     if (lastRun.RunKind == FontRunKind.TrailingWhitespace || lastRun.RunKind == FontRunKind.Ellipsis)
                     {
-                        if (lastRun.CodePoints.Length > 0 && lastRun.CodePoints[lastRun.CodePoints.Length - 1] == '\n')
+                        if (lastRun.CodePoints.Length > 0 && 
+                            (lastRun.CodePoints[lastRun.CodePoints.Length - 1] == '\n') ||
+                            (lastRun.CodePoints[lastRun.CodePoints.Length - 1] == 0x2029)
+                            )
                         {
                             htr.ClosestCodePointIndex = lastRun.End - 1;
                             return;

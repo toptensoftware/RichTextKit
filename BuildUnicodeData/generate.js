@@ -3,14 +3,9 @@ const request = require('request');
 const UnicodeTrieBuilder = require('unicode-trie/builder');
 
 var PairedBracketType = {
-  // Not a bracket
-  n : 0,
-
-  // Opening bracket
-  o : 1,
-
-  // Closing bracket
-  c : 2
+  n : 0,      // Not a bracket
+  o : 1,      // Opening bracket
+  c : 2       // Closing bracket
 };
 
 var BoundaryGroup = {
@@ -18,6 +13,19 @@ var BoundaryGroup = {
   Ignore : 1,
   Space : 2,
   Punctuation : 3,
+};
+
+var ClusterGroup = {
+  Any : 0,
+  CR : 1,
+  LF : 2,
+  Control : 3,
+  Extend : 4,
+  L : 5,
+  V : 6,
+  T : 7,
+  LV : 8,
+  LVT : 9
 };
 
 var Directionality = {
@@ -101,13 +109,16 @@ var LineBreakClass = {
 
 var bidi = {};
 
+const boundaryTrie = new UnicodeTrieBuilder(BoundaryGroup.AlphaDigit);
+const clusterDataTrie = new UnicodeTrieBuilder(ClusterGroup.Any);
+const lineBreaksTrie = new UnicodeTrieBuilder(LineBreakClass.XX);
+const bidiDataTrie = new UnicodeTrieBuilder(0);
+
 function processUnicodeData()
 {
   // http://www.unicode.org/Public/UNIDATA/UnicodeData.txt
   var data = fs.readFileSync("UnicodeData.txt", "utf8")
   var lines = data.split('\n');
-  //const trie = new UnicodeTrieBuilder(Directionality.L);
-  const boundaryTrie = new UnicodeTrieBuilder(BoundaryGroup.AlphaDigit);
 
   for (var i=0; i<lines.length; i++)
   {
@@ -129,6 +140,23 @@ function processUnicodeData()
               bidi[codePoint] = cls << 24;
           }
 
+          // Build cluster trie
+          switch (parts[2])
+          {
+              case "Cc":
+              case "Cf":
+              case "Zl":
+              case "Zp":
+                if (codePoint == 0x0D)  
+                  clusterDataTrie.set(codePoint, ClusterGroup.CR);
+                else if (codePoint == 0x0A)
+                  clusterDataTrie.set(codePoint, ClusterGroup.LF);
+                else if (codePoint != 0x200C && codePoint != 0x200D)
+                  clusterDataTrie.set(codePoint, ClusterGroup.Control);
+                break;
+          }
+
+          // Build word boundary trie
           switch (parts[2])
           {
               case "Cc":
@@ -180,10 +208,61 @@ function processUnicodeData()
 
       }
   }
-  fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/BoundaryGroupData.trie', boundaryTrie.toBuffer());
 }
 
   
+function processDerivedCoreProperties()
+{
+  var data = fs.readFileSync("DerivedCoreProperties.txt", "utf8")
+
+  var re = /^([0-9A-F]+)(?:\.\.([0-9A-F]+))?\s*;\s*(.*?)\s*#/gm
+  var m;
+  while (m = re.exec(data))
+  {
+    var from = parseInt(m[1], 16);
+    var to = m[2] === undefined ? from : parseInt(m[2], 16);
+    var prop = m[3];
+
+    if (prop == "Grapheme_Extend")
+    {
+      clusterDataTrie.setRange(from, to, ClusterGroup.Extend);
+    }
+  }
+}
+
+function processHangulSyllableTypes()
+{
+  var data = fs.readFileSync("HangulSyllableType.txt", "utf8")
+
+  var re = /^([0-9A-F]+)(?:\.\.([0-9A-F]+))?\s*;\s*(.*?)\s*#/gm
+  var m;
+  while (m = re.exec(data))
+  {
+    var from = parseInt(m[1], 16);
+    var to = m[2] === undefined ? from : parseInt(m[2], 16);
+    var prop = m[3];
+
+    switch (prop)
+    {
+      case "L":
+        clusterDataTrie.setRange(from, to, ClusterGroup.L, true);
+        break;
+      case "V":
+        clusterDataTrie.setRange(from, to, ClusterGroup.V, true);
+        break;
+      case "T":
+        clusterDataTrie.setRange(from, to, ClusterGroup.T, true);
+        break;
+      case "LV":
+        clusterDataTrie.setRange(from, to, ClusterGroup.LV, true);
+        break;
+      case "LVT":
+        clusterDataTrie.setRange(from, to, ClusterGroup.LVT, true);
+        break;
+      }
+  }
+}
+
 function processBidiBrackets()
 {
   // https://www.unicode.org/Public/UCD/latest/ucd/BidiBrackets.txt
@@ -213,26 +292,23 @@ function processBidiBrackets()
         bidi[codePoint] |= (codePointOther | (kind << 16));
       }
   }
+
 }
 
 function buildBidiTrie()
 {
-  processUnicodeData();
   processBidiBrackets();
 
-  const trie = new UnicodeTrieBuilder(0);
   var keys = Object.keys(bidi);
   for (var i=0; i<keys.length; i++)
   {
     if (bidi[keys[i]] != 0)
     {
       var cp = parseInt(keys[i]);
-      //console.log(cp.toString(16), " => ", bidi[cp].toString(16));
-      trie.set(cp, bidi[cp]);
+      bidiDataTrie.set(cp, bidi[cp]);
     }
   }
 
-  fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/BidiData.trie', trie.toBuffer());
 }
 
 
@@ -246,7 +322,6 @@ function buildLineBreaksTrie()
   let start = null;
   let end = null;
   let type = null;
-  const trie = new UnicodeTrieBuilder(LineBreakClass.XX);
 
   // collect entries in the linebreaking table into ranges
   // to keep things smaller.
@@ -264,7 +339,7 @@ function buildLineBreaksTrie()
     }
 
     if ((type != null) && (rangeType !== type)) {
-      trie.setRange(parseInt(start, 16), parseInt(end, 16), LineBreakClass[type], true);
+      lineBreaksTrie.setRange(parseInt(start, 16), parseInt(end, 16), LineBreakClass[type], true);
       type = null;
     }
 
@@ -276,11 +351,16 @@ function buildLineBreaksTrie()
     end = rangeEnd;
   }
 
-  trie.setRange(parseInt(start, 16), parseInt(end, 16), LineBreakClass[type], true);
-
-  // write the trie to a file
-  fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/LineBreakClasses.trie', trie.toBuffer());
+  lineBreaksTrie.setRange(parseInt(start, 16), parseInt(end, 16), LineBreakClass[type], true);
 }
 
+processUnicodeData();
+processDerivedCoreProperties();
+processHangulSyllableTypes();
 buildBidiTrie();
 buildLineBreaksTrie();
+
+fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/GraphemeClusterClasses.trie', clusterDataTrie.toBuffer());
+fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/WordBoundaryClasses.trie', boundaryTrie.toBuffer());
+fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/LineBreakClasses.trie', lineBreaksTrie.toBuffer());
+fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/BidiClasses.trie', bidiDataTrie.toBuffer());

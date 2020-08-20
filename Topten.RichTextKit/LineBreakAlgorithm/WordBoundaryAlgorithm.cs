@@ -38,21 +38,21 @@ namespace Topten.RichTextKit
 
             // Find all boundaries
             bool inWord = false;
-            var wordGroup = BoundaryGroup.Ignore;
+            var wordGroup = WordBoundaryClass.Ignore;
             for (int i=0; i<codePoints.Length; i++)
             {
                 // Get group
                 var bg = UnicodeClasses.BoundaryGroup(codePoints[i]);
 
                 // Ignore?
-                if (bg == BoundaryGroup.Ignore)
+                if (bg == WordBoundaryClass.Ignore)
                     continue;
 
                 // Ignore spaces before word
                 if (!inWord)
                 {
                     // Ignore spaces before word
-                    if (bg == BoundaryGroup.Space)
+                    if (bg == WordBoundaryClass.Space)
                         continue;
 
                     // Found start of word
@@ -68,7 +68,7 @@ namespace Topten.RichTextKit
                 // We're in a word group, check for change of kind
                 if (wordGroup != bg)
                 {
-                    if (bg == BoundaryGroup.Space)
+                    if (bg == WordBoundaryClass.Space)
                     {
                         inWord = false;
                     }
@@ -86,5 +86,38 @@ namespace Topten.RichTextKit
                 yield return codePoints.Length;
             }
         }
+
+        /// <summary>
+        /// Check if the characters at the boundary between strings is a word boundary
+        /// </summary>
+        /// <param name="a">The first string</param>
+        /// <param name="b">The second string</param>
+        /// <returns>True if this is a word boundary</returns>
+        public static bool IsWordBoundary(Slice<int> a, Slice<int> b)
+        {
+            // If either empty, assume it's a boundary
+            if (a.Length == 0)
+                return true;
+            if (b.Length == 0)
+                return true;
+
+            // Get the last non-ignore character from 'first string
+            var aGroup = WordBoundaryClass.Ignore;
+            for (int i = a.Length - 1; i >= 0 && aGroup == WordBoundaryClass.Ignore; i--)
+            {
+                aGroup = UnicodeClasses.BoundaryGroup(a[i]);
+            }
+
+            // Get the first non-ignore character from second string
+            var bGroup = WordBoundaryClass.Ignore;
+            for (int i = 0; i < b.Length && bGroup == WordBoundaryClass.Ignore; i++)
+            {
+                bGroup = UnicodeClasses.BoundaryGroup(b[i]);
+            }
+
+            // Check if boundary
+            return aGroup != bGroup && bGroup != WordBoundaryClass.Space;
+        }
+
     }
 }

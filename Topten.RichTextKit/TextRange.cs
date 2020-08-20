@@ -75,6 +75,14 @@ namespace Topten.RichTextKit
         public bool AltPosition;
 
         /// <summary>
+        /// Get the length of this range
+        /// </summary>
+        /// <remarks>
+        /// Will return negative if the range isn't normalized
+        /// </remarks>
+        public int Length => End - Start;
+
+        /// <summary>
         /// Offset this text range by the specified amount
         /// </summary>
         /// <param name="delta">The number of code points to offset the range by</param>
@@ -91,7 +99,7 @@ namespace Topten.RichTextKit
         {
             get
             {
-                return new TextRange(End, Start, true);
+                return new TextRange(End, Start, false);
             }
         }
 
@@ -187,13 +195,13 @@ namespace Topten.RichTextKit
             {
                 return new TextRange(
                     Math.Min(a.Minimum, b.Minimum),
-                    Math.Max(a.Maximum, b.Maximum), true);
+                    Math.Max(a.Maximum, b.Maximum), b.AltPosition);
             }
             else
             {
                 return new TextRange(
                     Math.Max(a.Maximum, b.Maximum),
-                    Math.Min(a.Minimum, b.Minimum), false);
+                    Math.Min(a.Minimum, b.Minimum), b.AltPosition);
             }
         }
     }

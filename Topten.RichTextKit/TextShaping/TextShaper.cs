@@ -332,6 +332,13 @@ namespace Topten.RichTextKit
                     cursorX += pos.XAdvance * glyphScale;
                     cursorY += pos.YAdvance * glyphScale;
 
+                    // Ensure paragraph separator character (0x2029) has some
+                    // width so it can be seen as part of the selection in the editor.
+                    if (pos.XAdvance == 0 && codePoints[(int)gi[i].Cluster] == 0x2029)
+                    {
+                        cursorX += style.FontSize * 2 / 3;
+                    }
+
                     if (i+1 == gi.Length || gi[i].Cluster != gi[i+1].Cluster)
                     {
                         cursorX += style.LetterSpacing;

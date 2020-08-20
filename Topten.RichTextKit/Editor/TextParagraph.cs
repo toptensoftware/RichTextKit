@@ -15,6 +15,7 @@
 
 using SkiaSharp;
 using System.Collections.Generic;
+using Topten.RichTextKit.Utils;
 
 namespace Topten.RichTextKit.Editor
 {
@@ -29,9 +30,20 @@ namespace Topten.RichTextKit.Editor
         public TextParagraph(string text)
         {
             // Temporary code for now to setup some content...
+            _textBlock = new TextBlock();
             _textBlock.AddText(text, new Style() { FontFamily = "Open Sans", FontSize = 16 });
             MarginTop = 10;
             MarginBottom = 10;
+        }
+
+        // Create a new textblock by copying the content of another
+        public TextParagraph(TextParagraph source, int from, int length)
+        {
+            // Copy the text block
+            _textBlock = source.TextBlock.Extract(from, length);
+
+            // Copy styles
+            CopyStyleFrom(source);
         }
 
         /// <inheritdoc />
@@ -71,15 +83,26 @@ namespace Topten.RichTextKit.Editor
         public override IReadOnlyList<int> LineIndicies => _textBlock.LineIndicies;
 
         /// <inheritdoc />
+        public override int Length => _textBlock.Length;
+
+        /// <inheritdoc />
         public override float ContentWidth => _textBlock.MeasuredWidth;
 
         /// <inheritdoc />
         public override float ContentHeight => _textBlock.MeasuredHeight;
 
         /// <inheritdoc />
-        public override int Length => _textBlock.Length;
+        public override TextBlock TextBlock => _textBlock;
+
+        /// <inheritdoc />
+        public override void CopyStyleFrom(Paragraph other)
+        {
+            base.CopyStyleFrom(other);
+            _textBlock.Alignment = other.TextBlock.Alignment;
+            _textBlock.BaseDirection = other.TextBlock.BaseDirection;
+        }
 
         // Private attributes
-        TextBlock _textBlock = new TextBlock();
+        TextBlock _textBlock;
     }
 }
