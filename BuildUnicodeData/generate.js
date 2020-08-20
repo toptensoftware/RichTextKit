@@ -316,7 +316,6 @@ function buildLineBreaksTrie()
   // http://www.unicode.org/Public/7.0.0/ucd/LineBreak.txt'
   var data = fs.readFileSync("LineBreak.txt", "utf8");
 
-    /*
   var re = /^([0-9A-F]+)(?:\.\.([0-9A-F]+))?\s*;\s*(.*?)\s*#/gm
   var m;
   while (m = re.exec(data))
@@ -327,45 +326,6 @@ function buildLineBreaksTrie()
 
     lineBreakClassesTrie.setRange(from, to, LineBreakClass[prop], true);
   }
-  */
-
-  const matches = data.match(/^[0-9A-F]+(\.\.[0-9A-F]+)?;[A-Z][A-Z0-9][A-Z]?/gm);
-
-  let start = null;
-  let end = null;
-  let type = null;
-
-  // collect entries in the linebreaking table into ranges
-  // to keep things smaller.
-  for (let match of matches) {
-    var rangeEnd, rangeType;
-    match = match.split(/;|\.\.\.?/);
-    const rangeStart = match[0];
-
-    if (match.length === 3) {
-      rangeEnd = match[1];
-      rangeType = match[2];
-    } else {
-      rangeEnd = rangeStart;
-      rangeType = match[1];
-    }
-
-    if (((type != null) && (rangeType !== type)) || parseInt(rangeStart, 16) != parseInt(end, 16) + 1)
-//    if ((type != null) && (rangeType !== type))
-    {
-      lineBreakClassesTrie.setRange(parseInt(start, 16), parseInt(end, 16), LineBreakClass[type], true);
-      type = null;
-    }
-
-    if ((type == null)) {
-      start = rangeStart;
-      type = rangeType;
-    }
-
-    end = rangeEnd;
-  }
-
-  lineBreakClassesTrie.setRange(parseInt(start, 16), parseInt(end, 16), LineBreakClass[type], true);
 }
 
 processUnicodeData();
