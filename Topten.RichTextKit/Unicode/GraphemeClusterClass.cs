@@ -33,6 +33,10 @@ namespace Topten.RichTextKit
         V = 6,
         T = 7,
         LV = 8,
-        LVT = 9
+        LVT = 9,
+        Prepend = 10,
+        Regional_Indicator = 11,
+        SpacingMark = 12,
+        ZWJ = 13,
     }
 }

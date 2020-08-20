@@ -24,7 +24,11 @@ var GraphemeClusterClass = {
   V : 6,
   T : 7,
   LV : 8,
-  LVT : 9
+  LVT : 9,
+  Prepend : 10,
+  Regional_Indicator : 11,
+  SpacingMark : 12,
+  ZWJ: 13,
 };
 
 var Directionality = {
@@ -139,22 +143,6 @@ function processUnicodeData()
               bidi[codePoint] = cls << 24;
           }
 
-          // Build cluster trie
-          switch (parts[2])
-          {
-              case "Cc":
-              case "Cf":
-              case "Zl":
-              case "Zp":
-                if (codePoint == 0x0D)  
-                  graphemeClusterClassesTrie.set(codePoint, GraphemeClusterClass.CR);
-                else if (codePoint == 0x0A)
-                  graphemeClusterClassesTrie.set(codePoint, GraphemeClusterClass.LF);
-                else if (codePoint != 0x200C && codePoint != 0x200D)
-                  graphemeClusterClassesTrie.set(codePoint, GraphemeClusterClass.Control);
-                break;
-          }
-
           // Build word boundary trie
           switch (parts[2])
           {
@@ -209,7 +197,8 @@ function processUnicodeData()
   }
 }
 
-  
+
+/*
 function processDerivedCoreProperties()
 {
   var data = fs.readFileSync("DerivedCoreProperties.txt", "utf8")
@@ -221,17 +210,14 @@ function processDerivedCoreProperties()
     var from = parseInt(m[1], 16);
     var to = m[2] === undefined ? from : parseInt(m[2], 16);
     var prop = m[3];
-
-    if (prop == "Grapheme_Extend")
-    {
-      graphemeClusterClassesTrie.setRange(from, to, GraphemeClusterClass.Extend);
-    }
   }
 }
+*/
 
-function processHangulSyllableTypes()
+function processGraphemeBreakProperty()
 {
-  var data = fs.readFileSync("HangulSyllableType.txt", "utf8")
+  //  http://www.unicode.org/Public/UCD/latest/ucd/auxiliary/GraphemeBreakProperty.txt
+  var data = fs.readFileSync("GraphemeBreakProperty.txt", "utf8")
 
   var re = /^([0-9A-F]+)(?:\.\.([0-9A-F]+))?\s*;\s*(.*?)\s*#/gm
   var m;
@@ -241,24 +227,12 @@ function processHangulSyllableTypes()
     var to = m[2] === undefined ? from : parseInt(m[2], 16);
     var prop = m[3];
 
-    switch (prop)
+    if (!GraphemeClusterClass[prop])
     {
-      case "L":
-        graphemeClusterClassesTrie.setRange(from, to, GraphemeClusterClass.L, true);
-        break;
-      case "V":
-        graphemeClusterClassesTrie.setRange(from, to, GraphemeClusterClass.V, true);
-        break;
-      case "T":
-        graphemeClusterClassesTrie.setRange(from, to, GraphemeClusterClass.T, true);
-        break;
-      case "LV":
-        graphemeClusterClassesTrie.setRange(from, to, GraphemeClusterClass.LV, true);
-        break;
-      case "LVT":
-        graphemeClusterClassesTrie.setRange(from, to, GraphemeClusterClass.LVT, true);
-        break;
-      }
+      throw new Error(`Unknown grapheme cluster property ${prop}`);
+    }
+
+    graphemeClusterClassesTrie.setRange(from, to, GraphemeClusterClass[prop], true);
   }
 }
 
@@ -329,8 +303,7 @@ function buildLineBreaksTrie()
 }
 
 processUnicodeData();
-processDerivedCoreProperties();
-processHangulSyllableTypes();
+processGraphemeBreakProperty();
 buildBidiTrie();
 buildLineBreaksTrie();
 
