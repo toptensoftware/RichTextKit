@@ -1,5 +1,4 @@
 const fs = require('fs');
-const request = require('request');
 const UnicodeTrieBuilder = require('unicode-trie/builder');
 
 var PairedBracketType = {
@@ -8,14 +7,14 @@ var PairedBracketType = {
   c : 2       // Closing bracket
 };
 
-var BoundaryGroup = {
+var WordBoundaryClass = {
   AlphaDigit : 0,
   Ignore : 1,
   Space : 2,
   Punctuation : 3,
 };
 
-var ClusterGroup = {
+var GraphemeClusterClass = {
   Any : 0,
   CR : 1,
   LF : 2,
@@ -109,10 +108,10 @@ var LineBreakClass = {
 
 var bidi = {};
 
-const boundaryTrie = new UnicodeTrieBuilder(BoundaryGroup.AlphaDigit);
-const clusterDataTrie = new UnicodeTrieBuilder(ClusterGroup.Any);
-const lineBreaksTrie = new UnicodeTrieBuilder(LineBreakClass.XX);
-const bidiDataTrie = new UnicodeTrieBuilder(0);
+const wordBoundaryClassesTrie = new UnicodeTrieBuilder(WordBoundaryClass.AlphaDigit);
+const graphemeClusterClassesTrie = new UnicodeTrieBuilder(GraphemeClusterClass.Any);
+const lineBreakClassesTrie = new UnicodeTrieBuilder(LineBreakClass.XX);
+const bidiClassesTrie = new UnicodeTrieBuilder(0);
 
 function processUnicodeData()
 {
@@ -148,11 +147,11 @@ function processUnicodeData()
               case "Zl":
               case "Zp":
                 if (codePoint == 0x0D)  
-                  clusterDataTrie.set(codePoint, ClusterGroup.CR);
+                  graphemeClusterClassesTrie.set(codePoint, GraphemeClusterClass.CR);
                 else if (codePoint == 0x0A)
-                  clusterDataTrie.set(codePoint, ClusterGroup.LF);
+                  graphemeClusterClassesTrie.set(codePoint, GraphemeClusterClass.LF);
                 else if (codePoint != 0x200C && codePoint != 0x200D)
-                  clusterDataTrie.set(codePoint, ClusterGroup.Control);
+                  graphemeClusterClassesTrie.set(codePoint, GraphemeClusterClass.Control);
                 break;
           }
 
@@ -168,7 +167,7 @@ function processUnicodeData()
               case "Zs":
               case "Zl":
               case "Zp":
-                boundaryTrie.set(codePoint, BoundaryGroup.Space);
+                wordBoundaryClassesTrie.set(codePoint, WordBoundaryClass.Space);
                 break;
 
               case "Pc":
@@ -182,7 +181,7 @@ function processUnicodeData()
               case "Sc":
               case "Sk":
               case "So":
-                boundaryTrie.set(codePoint, BoundaryGroup.Punctuation);
+                wordBoundaryClassesTrie.set(codePoint, WordBoundaryClass.Punctuation);
                 break;
 
               case "Nd":
@@ -194,12 +193,12 @@ function processUnicodeData()
               case "LC":
               case "Lm":
               case "Lo":
-                boundaryTrie.set(codePoint, BoundaryGroup.AlphaDigit);
+                wordBoundaryClassesTrie.set(codePoint, WordBoundaryClass.AlphaDigit);
                 break;
 
               case "Mn":
               case "Me":
-                boundaryTrie.set(codePoint, BoundaryGroup.None);
+                wordBoundaryClassesTrie.set(codePoint, WordBoundaryClass.None);
                 break;
               
               default:
@@ -225,7 +224,7 @@ function processDerivedCoreProperties()
 
     if (prop == "Grapheme_Extend")
     {
-      clusterDataTrie.setRange(from, to, ClusterGroup.Extend);
+      graphemeClusterClassesTrie.setRange(from, to, GraphemeClusterClass.Extend);
     }
   }
 }
@@ -245,19 +244,19 @@ function processHangulSyllableTypes()
     switch (prop)
     {
       case "L":
-        clusterDataTrie.setRange(from, to, ClusterGroup.L, true);
+        graphemeClusterClassesTrie.setRange(from, to, GraphemeClusterClass.L, true);
         break;
       case "V":
-        clusterDataTrie.setRange(from, to, ClusterGroup.V, true);
+        graphemeClusterClassesTrie.setRange(from, to, GraphemeClusterClass.V, true);
         break;
       case "T":
-        clusterDataTrie.setRange(from, to, ClusterGroup.T, true);
+        graphemeClusterClassesTrie.setRange(from, to, GraphemeClusterClass.T, true);
         break;
       case "LV":
-        clusterDataTrie.setRange(from, to, ClusterGroup.LV, true);
+        graphemeClusterClassesTrie.setRange(from, to, GraphemeClusterClass.LV, true);
         break;
       case "LVT":
-        clusterDataTrie.setRange(from, to, ClusterGroup.LVT, true);
+        graphemeClusterClassesTrie.setRange(from, to, GraphemeClusterClass.LVT, true);
         break;
       }
   }
@@ -305,7 +304,7 @@ function buildBidiTrie()
     if (bidi[keys[i]] != 0)
     {
       var cp = parseInt(keys[i]);
-      bidiDataTrie.set(cp, bidi[cp]);
+      bidiClassesTrie.set(cp, bidi[cp]);
     }
   }
 
@@ -339,7 +338,7 @@ function buildLineBreaksTrie()
     }
 
     if ((type != null) && (rangeType !== type)) {
-      lineBreaksTrie.setRange(parseInt(start, 16), parseInt(end, 16), LineBreakClass[type], true);
+      lineBreakClassesTrie.setRange(parseInt(start, 16), parseInt(end, 16), LineBreakClass[type], true);
       type = null;
     }
 
@@ -351,7 +350,7 @@ function buildLineBreaksTrie()
     end = rangeEnd;
   }
 
-  lineBreaksTrie.setRange(parseInt(start, 16), parseInt(end, 16), LineBreakClass[type], true);
+  lineBreakClassesTrie.setRange(parseInt(start, 16), parseInt(end, 16), LineBreakClass[type], true);
 }
 
 processUnicodeData();
@@ -360,7 +359,7 @@ processHangulSyllableTypes();
 buildBidiTrie();
 buildLineBreaksTrie();
 
-fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/GraphemeClusterClasses.trie', clusterDataTrie.toBuffer());
-fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/WordBoundaryClasses.trie', boundaryTrie.toBuffer());
-fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/LineBreakClasses.trie', lineBreaksTrie.toBuffer());
-fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/BidiClasses.trie', bidiDataTrie.toBuffer());
+fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/GraphemeClusterClasses.trie', graphemeClusterClassesTrie.toBuffer());
+fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/WordBoundaryClasses.trie', wordBoundaryClassesTrie.toBuffer());
+fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/LineBreakClasses.trie', lineBreakClassesTrie.toBuffer());
+fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/BidiClasses.trie', bidiClassesTrie.toBuffer());
