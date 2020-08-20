@@ -20,15 +20,21 @@ var GraphemeClusterClass = {
   LF : 2,
   Control : 3,
   Extend : 4,
-  L : 5,
-  V : 6,
-  T : 7,
-  LV : 8,
-  LVT : 9,
-  Prepend : 10,
-  Regional_Indicator : 11,
-  SpacingMark : 12,
-  ZWJ: 13,
+  Regional_Indicator : 5,
+  Prepend : 6,
+  SpacingMark : 7,
+  L : 8,
+  V : 9,
+  T : 10,
+  LV : 11,
+  LVT : 12,
+  ExtPict : 13,
+  ZWJ : 14,
+
+  // Pseudo classes, not generated from character data but used by pair table
+  SOT : 15,
+  EOT : 16,
+  ExtPictZwg : 17,
 };
 
 var Directionality = {
@@ -236,6 +242,28 @@ function processGraphemeBreakProperty()
   }
 }
 
+function processEmojiData()
+{
+  // https://www.unicode.org/Public/13.0.0/ucd/emoji/emoji-data.txt
+  var data = fs.readFileSync("emoji-data.txt", "utf8")
+
+  var re = /^([0-9A-F]+)(?:\.\.([0-9A-F]+))?\s*;\s*(.*?)\s*#/gm
+  var m;
+  while (m = re.exec(data))
+  {
+    var from = parseInt(m[1], 16);
+    var to = m[2] === undefined ? from : parseInt(m[2], 16);
+    var prop = m[3];
+
+    if (prop == "Extended_Pictographic")
+    {
+      console.log(`${from} -> ${to} = ${prop}`)
+      graphemeClusterClassesTrie.setRange(from, to, GraphemeClusterClass.ExtPict, true);
+    }
+  }
+}
+
+
 function processBidiBrackets()
 {
   // https://www.unicode.org/Public/UCD/latest/ucd/BidiBrackets.txt
@@ -304,6 +332,7 @@ function buildLineBreaksTrie()
 
 processUnicodeData();
 processGraphemeBreakProperty();
+processEmojiData();
 buildBidiTrie();
 buildLineBreaksTrie();
 

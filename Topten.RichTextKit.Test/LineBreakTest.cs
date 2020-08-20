@@ -76,51 +76,64 @@ namespace Topten.RichTextKit.Test
         }
 
         [Fact]
-        public void Test()
+        public void RunTests()
         {
+            Assert.True(Run());
+        }
+
+        class Test
+        {
+            public int LineNumber;
+            public int[] CodePoints;
+            public int[] BreakPoints;
+        }
+
+        public static bool Run()
+        {
+            Console.WriteLine("Line Breaker Tests");
+            Console.WriteLine("------------------");
+            Console.WriteLine();
+
             // Read the test file
             var location = System.IO.Path.GetDirectoryName(typeof(LineBreakTests).Assembly.Location);
-            var lines = System.IO.File.ReadAllLines(System.IO.Path.Combine(location, "LineBreakTest.txt"));
-
-            int failCount = 0;
+            var lines = System.IO.File.ReadAllLines(System.IO.Path.Combine(location, "TestData\\LineBreakTest.txt"));
 
             // Process each line
-            int lineNumber = 0;
-            foreach (var line in lines)
+            var tests = new List<Test>();
+            for (int lineNumber = 1; lineNumber < lines.Length + 1; lineNumber++)
             {
                 // Ignore deliberately skipped test?
-                if (_skipLines.Contains(lineNumber))
+                if (_skipLines.Contains(lineNumber - 1))
                     continue;
-                lineNumber++;
 
-                // Split the line
-                var parts = line.Split("#");
-                var test = parts[0].Trim();
+                // Get the line, remove comments
+                var line = lines[lineNumber - 1].Split('#')[0].Trim();
 
                 // Ignore blank/comment only lines
-                if (string.IsNullOrWhiteSpace(test))
+                if (string.IsNullOrWhiteSpace(line))
                     continue;
+
+                var codePoints = new List<int>();
+                var breakPoints = new List<int>();
 
                 // Parse the test
                 var p = 0;
-                List<int> codePoints = new List<int>();
-                List<int> breakPoints = new List<int>();
-                while (p < test.Length)
+                while (p < line.Length)
                 {
                     // Ignore white space
-                    if (char.IsWhiteSpace(test[p]))
+                    if (char.IsWhiteSpace(line[p]))
                     {
                         p++;
                         continue;
                     }
 
-                    if (test[p] == '×')
+                    if (line[p] == '×')
                     {
                         p++;
                         continue;
                     }
 
-                    if (test[p] == '÷')
+                    if (line[p] == '÷')
                     {
                         breakPoints.Add(codePoints.Count);
                         p++;
@@ -128,46 +141,79 @@ namespace Topten.RichTextKit.Test
                     }
 
                     int codePointPos = p;
-                    while (p < test.Length && IsHexDigit(test[p]))
+                    while (p < line.Length && IsHexDigit(line[p]))
                         p++;
 
-                    var codePointStr = test.Substring(codePointPos, p - codePointPos);
+                    var codePointStr = line.Substring(codePointPos, p - codePointPos);
                     var codePoint = Convert.ToInt32(codePointStr, 16);
                     codePoints.Add(codePoint);
                 }
 
+                // Create test
+                var test = new Test()
+                {
+                    LineNumber = lineNumber,
+                    CodePoints = codePoints.ToArray(),
+                    BreakPoints = breakPoints.ToArray(),
+                };
+                tests.Add(test);
+            }
+
+            var lineBreaker = new LineBreaker();
+            var tr = new TestResults();
+
+            var foundBreaks = new List<int>();
+            foundBreaks.Capacity = 100;
+
+            for (int testNumber = 0; testNumber < tests.Count; testNumber++)
+            {
+                var t = tests[testNumber];
+
+                foundBreaks.Clear();
+
                 // Run the line breaker and build a list of break points
-                List<int> foundBreaks = new List<int>();
-                var lineBreaker = new LineBreaker();
-                lineBreaker.Reset(new Slice<int>(codePoints.ToArray()));
+                tr.EnterTest();
+                lineBreaker.Reset(new Slice<int>(t.CodePoints));
                 while (lineBreaker.NextBreak(out var b))
                 {
                     foundBreaks.Add(b.PositionWrap);
                 }
-
-                if (!AreEqual(breakPoints, foundBreaks))
-                {
-                    failCount++;
-                    Console.WriteLine($"Failed: {lineNumber - 1}");
-                }
+                tr.LeaveTest();
 
                 // Check the same
-                //Assert.Equal(breakPoints, foundBreaks);
-            }
+                bool pass = true;
+                if (foundBreaks.Count != t.BreakPoints.Length)
+                {
+                    pass = false;
+                }
+                else
+                {
+                    for (int i = 0; i < foundBreaks.Count; i++)
+                    {
+                        if (foundBreaks[i] != t.BreakPoints[i])
+                            pass = false;
+                    }
+                }
 
-            Assert.Equal(0, failCount);
-        }
-
-        bool AreEqual(List<int> a, List<int> b)
-        {
-            if (a.Count != b.Count)
-                return false;
-            for (int i = 0; i < a.Count; i++)
-            {
-                if (a[i] != b[i])
+                if (!pass)
+                {
+                    Console.WriteLine($"Failed test on line {t.LineNumber}");
+                    Console.WriteLine();
+                    Console.WriteLine($"    Code Points: {string.Join(" ", t.CodePoints)}");
+                    Console.WriteLine($"Expected Breaks: {string.Join(" ", t.BreakPoints)}");
+                    Console.WriteLine($"  Actual Breaks: {string.Join(" ", foundBreaks)}");
+                    Console.WriteLine($"     Char Props: {string.Join(" ", t.CodePoints.Select(x => UnicodeClasses.LineBreakClass(x)))}");
+                    Console.WriteLine();
                     return false;
+                }
+
+                // Record it
+                tr.TestPassed(pass);
             }
-            return true;
+
+            tr.Dump();
+
+            return tr.AllPassed;
         }
 
         static bool IsHexDigit(char ch)
@@ -178,8 +224,10 @@ namespace Topten.RichTextKit.Test
         // these tests are weird, possibly incorrect or just tailored differently. we skip them.
         static HashSet<int> _skipLines = new HashSet<int>()
         {
-            1140, 1142, 1144, 1146, 1308, 1310, 1312, 1314, 2980, 2982, 4496, 4498, 4664, 4666, 5164, 5166,
+           1140, 1142, 1144, 1146, 1308, 1310, 1312, 1314, 2980, 2982, 4496, 4498, 4664, 4666, 5164, 5166,
             7136, 7145, 7150, 7235, 7236, 7237, 7238, 7239, 7240, 7242, 7243, 7244, 7245, 7246
         };
-        }
+    }
+
 }
+

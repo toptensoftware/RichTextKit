@@ -101,7 +101,7 @@ namespace Topten.RichTextKit
         /// <returns>The code point's grapheme cluster class</returns>
         public static GraphemeClusterClass GraphemeClusterClass(int codePoint)
         {
-            return (GraphemeClusterClass)_boundaryTrie.Get(codePoint);
+            return (GraphemeClusterClass)_graphemeTrie.Get(codePoint);
         }
     }
 }

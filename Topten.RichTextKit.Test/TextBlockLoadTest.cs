@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Topten.RichTextKit;
 
-namespace TestBench
+namespace Topten.RichTextKit.Test
 {
     public static class TextBlockLoadTest
     {
