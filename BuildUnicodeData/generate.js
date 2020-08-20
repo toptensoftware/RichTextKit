@@ -1,16 +1,40 @@
 const fs = require('fs');
-const request = require('request');
 const UnicodeTrieBuilder = require('unicode-trie/builder');
 
 var PairedBracketType = {
-  // Not a bracket
-  n : 0,
+  n : 0,      // Not a bracket
+  o : 1,      // Opening bracket
+  c : 2       // Closing bracket
+};
 
-  // Opening bracket
-  o : 1,
+var WordBoundaryClass = {
+  AlphaDigit : 0,
+  Ignore : 1,
+  Space : 2,
+  Punctuation : 3,
+};
 
-  // Closing bracket
-  c : 2
+var GraphemeClusterClass = {
+  Any : 0,
+  CR : 1,
+  LF : 2,
+  Control : 3,
+  Extend : 4,
+  Regional_Indicator : 5,
+  Prepend : 6,
+  SpacingMark : 7,
+  L : 8,
+  V : 9,
+  T : 10,
+  LV : 11,
+  LVT : 12,
+  ExtPict : 13,
+  ZWJ : 14,
+
+  // Pseudo classes, not generated from character data but used by pair table
+  SOT : 15,
+  EOT : 16,
+  ExtPictZwg : 17,
 };
 
 var Directionality = {
@@ -94,12 +118,16 @@ var LineBreakClass = {
 
 var bidi = {};
 
+const wordBoundaryClassesTrie = new UnicodeTrieBuilder(WordBoundaryClass.AlphaDigit);
+const graphemeClusterClassesTrie = new UnicodeTrieBuilder(GraphemeClusterClass.Any);
+const lineBreakClassesTrie = new UnicodeTrieBuilder(LineBreakClass.XX);
+const bidiClassesTrie = new UnicodeTrieBuilder(0);
+
 function processUnicodeData()
 {
   // http://www.unicode.org/Public/UNIDATA/UnicodeData.txt
   var data = fs.readFileSync("UnicodeData.txt", "utf8")
   var lines = data.split('\n');
-  const trie = new UnicodeTrieBuilder(Directionality.L);
 
   for (var i=0; i<lines.length; i++)
   {
@@ -112,20 +140,130 @@ function processUnicodeData()
           // Get the directionality
           var dir = parts[4];
           var cls = Directionality[dir];
-
           if (cls === undefined)
           {
               console.log("Error: ", codePoint, "unknown class", dir);
           }
           else
           {
-            bidi[codePoint] = cls << 24;
+              bidi[codePoint] = cls << 24;
           }
+
+          // Build word boundary trie
+          switch (parts[2])
+          {
+              case "Cc":
+              case "Cf":
+              case "Cs":
+              case "Co":
+              case "Cn":
+              case "Mc":
+              case "Zs":
+              case "Zl":
+              case "Zp":
+                wordBoundaryClassesTrie.set(codePoint, WordBoundaryClass.Space);
+                break;
+
+              case "Pc":
+              case "Pd":
+              case "Ps":
+              case "Pe":
+              case "Pi":
+              case "Pf":
+              case "Po":
+              case "Sm":
+              case "Sc":
+              case "Sk":
+              case "So":
+                wordBoundaryClassesTrie.set(codePoint, WordBoundaryClass.Punctuation);
+                break;
+
+              case "Nd":
+              case "Nl":
+              case "No":
+              case "Lu":
+              case "Ll":
+              case "Lt":
+              case "LC":
+              case "Lm":
+              case "Lo":
+                wordBoundaryClassesTrie.set(codePoint, WordBoundaryClass.AlphaDigit);
+                break;
+
+              case "Mn":
+              case "Me":
+                wordBoundaryClassesTrie.set(codePoint, WordBoundaryClass.None);
+                break;
+              
+              default:
+                throw new Error(`Unrecognized general category: ${parts[2]}`);
+          }
+
       }
   }
 }
 
-  
+
+/*
+function processDerivedCoreProperties()
+{
+  var data = fs.readFileSync("DerivedCoreProperties.txt", "utf8")
+
+  var re = /^([0-9A-F]+)(?:\.\.([0-9A-F]+))?\s*;\s*(.*?)\s*#/gm
+  var m;
+  while (m = re.exec(data))
+  {
+    var from = parseInt(m[1], 16);
+    var to = m[2] === undefined ? from : parseInt(m[2], 16);
+    var prop = m[3];
+  }
+}
+*/
+
+function processGraphemeBreakProperty()
+{
+  //  http://www.unicode.org/Public/UCD/latest/ucd/auxiliary/GraphemeBreakProperty.txt
+  var data = fs.readFileSync("GraphemeBreakProperty.txt", "utf8")
+
+  var re = /^([0-9A-F]+)(?:\.\.([0-9A-F]+))?\s*;\s*(.*?)\s*#/gm
+  var m;
+  while (m = re.exec(data))
+  {
+    var from = parseInt(m[1], 16);
+    var to = m[2] === undefined ? from : parseInt(m[2], 16);
+    var prop = m[3];
+
+    if (!GraphemeClusterClass[prop])
+    {
+      throw new Error(`Unknown grapheme cluster property ${prop}`);
+    }
+
+    graphemeClusterClassesTrie.setRange(from, to, GraphemeClusterClass[prop], true);
+  }
+}
+
+function processEmojiData()
+{
+  // https://www.unicode.org/Public/13.0.0/ucd/emoji/emoji-data.txt
+  var data = fs.readFileSync("emoji-data.txt", "utf8")
+
+  var re = /^([0-9A-F]+)(?:\.\.([0-9A-F]+))?\s*;\s*(.*?)\s*#/gm
+  var m;
+  while (m = re.exec(data))
+  {
+    var from = parseInt(m[1], 16);
+    var to = m[2] === undefined ? from : parseInt(m[2], 16);
+    var prop = m[3];
+
+    if (prop == "Extended_Pictographic")
+    {
+      console.log(`${from} -> ${to} = ${prop}`)
+      graphemeClusterClassesTrie.setRange(from, to, GraphemeClusterClass.ExtPict, true);
+    }
+  }
+}
+
+
 function processBidiBrackets()
 {
   // https://www.unicode.org/Public/UCD/latest/ucd/BidiBrackets.txt
@@ -155,26 +293,23 @@ function processBidiBrackets()
         bidi[codePoint] |= (codePointOther | (kind << 16));
       }
   }
+
 }
 
 function buildBidiTrie()
 {
-  processUnicodeData();
   processBidiBrackets();
 
-  const trie = new UnicodeTrieBuilder(0);
   var keys = Object.keys(bidi);
   for (var i=0; i<keys.length; i++)
   {
     if (bidi[keys[i]] != 0)
     {
       var cp = parseInt(keys[i]);
-      //console.log(cp.toString(16), " => ", bidi[cp].toString(16));
-      trie.set(cp, bidi[cp]);
+      bidiClassesTrie.set(cp, bidi[cp]);
     }
   }
 
-  fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/BidiData.trie', trie.toBuffer());
 }
 
 
@@ -183,46 +318,25 @@ function buildLineBreaksTrie()
   // http://www.unicode.org/Public/7.0.0/ucd/LineBreak.txt'
   var data = fs.readFileSync("LineBreak.txt", "utf8");
 
-  const matches = data.match(/^[0-9A-F]+(\.\.[0-9A-F]+)?;[A-Z][A-Z0-9][A-Z]?/gm);
+  var re = /^([0-9A-F]+)(?:\.\.([0-9A-F]+))?\s*;\s*(.*?)\s*#/gm
+  var m;
+  while (m = re.exec(data))
+  {
+    var from = parseInt(m[1], 16);
+    var to = m[2] === undefined ? from : parseInt(m[2], 16);
+    var prop = m[3];
 
-  let start = null;
-  let end = null;
-  let type = null;
-  const trie = new UnicodeTrieBuilder(LineBreakClass.XX);
-
-  // collect entries in the linebreaking table into ranges
-  // to keep things smaller.
-  for (let match of matches) {
-    var rangeEnd, rangeType;
-    match = match.split(/;|\.\.\.?/);
-    const rangeStart = match[0];
-
-    if (match.length === 3) {
-      rangeEnd = match[1];
-      rangeType = match[2];
-    } else {
-      rangeEnd = rangeStart;
-      rangeType = match[1];
-    }
-
-    if ((type != null) && (rangeType !== type)) {
-      trie.setRange(parseInt(start, 16), parseInt(end, 16), LineBreakClass[type], true);
-      type = null;
-    }
-
-    if ((type == null)) {
-      start = rangeStart;
-      type = rangeType;
-    }
-
-    end = rangeEnd;
+    lineBreakClassesTrie.setRange(from, to, LineBreakClass[prop], true);
   }
-
-  trie.setRange(parseInt(start, 16), parseInt(end, 16), LineBreakClass[type], true);
-
-  // write the trie to a file
-  fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/LineBreakClasses.trie', trie.toBuffer());
 }
 
+processUnicodeData();
+processGraphemeBreakProperty();
+processEmojiData();
 buildBidiTrie();
 buildLineBreaksTrie();
+
+fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/GraphemeClusterClasses.trie', graphemeClusterClassesTrie.toBuffer());
+fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/WordBoundaryClasses.trie', wordBoundaryClassesTrie.toBuffer());
+fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/LineBreakClasses.trie', lineBreakClassesTrie.toBuffer());
+fs.writeFileSync(__dirname + '/../Topten.RichTextKit/Resources/BidiClasses.trie', bidiClassesTrie.toBuffer());

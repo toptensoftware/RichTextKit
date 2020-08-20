@@ -56,6 +56,10 @@ namespace Topten.RichTextKit
                     if (subSpanTypeface == null)
                         continue;
 
+                    // Must be a cluster boundary
+                    if (!GraphemeClusterAlgorithm.IsBoundary(codePoints, i))
+                        continue;
+
                     // We can do font fallback...
 
                     // Flush the current top-level run
@@ -72,8 +76,11 @@ namespace Topten.RichTextKit
                     // Count how many unmatched characters
                     var unmatchedStart = i;
                     var unmatchedEnd = i + 1;
-                    while (unmatchedEnd < codePoints.Length && glyphs[unmatchedEnd] == 0)
+                    while (unmatchedEnd < codePoints.Length &&
+                            (glyphs[unmatchedEnd] == 0 || !GraphemeClusterAlgorithm.IsBoundary(codePoints, unmatchedEnd)))
+                    {
                         unmatchedEnd++;
+                    }
                     var unmatchedLength = unmatchedEnd - unmatchedStart;
 
                     // Match the missing characters

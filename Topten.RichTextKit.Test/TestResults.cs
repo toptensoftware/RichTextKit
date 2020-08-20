@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace TestBench
+namespace Topten.RichTextKit.Test
 {
     public class TestResults
     {

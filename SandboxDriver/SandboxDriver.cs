@@ -104,7 +104,7 @@ namespace SandboxDriver
                     _textBlock.AddText(" and ", styleNormal);
                     _textBlock.AddText("fonts", styleScript);
                     _textBlock.AddText(".\n\n", styleNormal);
-                    _textBlock.AddText("Font fallback means emojis work: 🌐 🍪 🍕 🚀 and ", styleNormal);
+                    _textBlock.AddText("Font fallback means emojis work: 🙍‍♀️ 🌐 🍪 🍕 🚀 and ", styleNormal);
                     _textBlock.AddText("text shaping and bi-directional text support means complex scripts and languages like Arabic: مرحبا بالعالم, Japanese: ハローワールド, Chinese: 世界您好 and Hindi: हैलो वर्ल्ड are rendered correctly!\n\n", styleNormal);
                     _textBlock.AddText("RichTextKit also supports left/center/right text alignment, word wrapping, truncation with ellipsis place-holder, text measurement, hit testing, painting a selection range, caret position & shape helpers.", styleNormal);
                     break;

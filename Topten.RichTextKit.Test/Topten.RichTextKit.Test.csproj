@@ -18,8 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TestBench\TestBench.csproj" />
     <ProjectReference Include="..\Topten.RichTextKit\Topten.RichTextKit.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="TestData\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

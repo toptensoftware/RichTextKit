@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using Topten.RichTextKit;
 using Topten.RichTextKit.Utils;
+using Xunit;
 
-namespace TestBench
+namespace Topten.RichTextKit.Test
 {
-    public static class BidiCharacterTest
+    public class BidiCharacterTest
     {
         class Test
         {
@@ -19,6 +20,12 @@ namespace TestBench
             public int[] ResolvedOrder;
         }
 
+        [Fact]
+        public void RunTests()
+        {
+            Assert.True(Run());
+        }
+
         public static bool Run()
         {
             Console.WriteLine("Bidi Character Tests");
@@ -26,8 +33,8 @@ namespace TestBench
             Console.WriteLine();
 
             // Read the test file
-            var location = System.IO.Path.GetDirectoryName(typeof(Program).Assembly.Location);
-            var lines = System.IO.File.ReadAllLines(System.IO.Path.Combine(location, "BidiCharacterTest.txt"));
+            var location = System.IO.Path.GetDirectoryName(typeof(BidiCharacterTest).Assembly.Location);
+            var lines = System.IO.File.ReadAllLines(System.IO.Path.Combine(location, "TestData\\BidiCharacterTest.txt"));
 
             // Parse lines
             var tests = new List<Test>();
