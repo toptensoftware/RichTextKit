@@ -11,7 +11,7 @@ namespace Topten.RichTextKit.Editor
     {
         /// <summary>
         /// Notifies that the document is about to change
-        /// </summary>
+        /// </summary>C:\Users\Brad\Projects\RichTextKit\Topten.RichTextKit\Editor\ITextDocumentView.cs
         /// <param name="view">The view initiating the change</param>
         void OnDocumentWillChange(ITextDocumentView view);
 

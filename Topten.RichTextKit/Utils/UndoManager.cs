@@ -21,79 +21,6 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Event fired when any operation (or group of operations) starts
-        /// </summary>
-        public event Action StartOperation;
-
-        /// <summary>
-        /// Event fired when any operation (or group of operations) ends
-        /// </summary>
-        public event Action EndOperation;
-
-        /// <summary>
-        /// Notifies that an operation (or group of operations) is about to start
-        /// </summary>
-        protected virtual void OnStartOperation()
-        {
-            StartOperation?.Invoke();
-        }
-
-        /// <summary>
-        /// Notifies that an operation (or group of operations) has finished
-        /// </summary>
-        protected virtual void OnEndOperation()
-        {
-            EndOperation?.Invoke();
-        }
-
-        /// <summary>
-        /// Fired when the modified state of the document changes
-        /// </summary>
-        public event Action ModifiedChanged;
-
-        /// <summary>
-        /// Notifies when the modified state of the document changes
-        /// </summary>
-        public void OnModifiedChanged()
-        {
-            ModifiedChanged?.Invoke();
-        }
-
-        /// <summary>
-        /// Checks if the document is currently modified
-        /// </summary>
-        public bool IsModified
-        {
-            get
-            {
-                return _unmodifiedPos != _currentPos;
-            }
-        }
-
-        /// <summary>
-        /// Mark the document as currently unmodified
-        /// </summary>
-        /// <remarks>
-        /// Typically this method would be called when the document
-        /// is saved.
-        /// </remarks>
-        public void MarkUnmodified()
-        {
-            // Remember if was modified
-            bool wasModified = IsModified;
-
-            // Mark as currently unmodified
-            _unmodifiedPos = _currentPos;
-
-            // Prevent additions to the open item
-            Seal();
-
-            // Fire modified changed event
-            if (wasModified)
-                OnModifiedChanged();
-        }
-
-        /// <summary>
         /// Execute an undo unit and add it to the manager 
         /// </summary>
         /// <param name="context">The document context object</param>
@@ -101,7 +28,7 @@ namespace Topten.RichTextKit.Utils
         public void Do(UndoUnit<T> unit)
         {
             // Only if not blocked
-            if (Blocked)
+            if (IsBlocked)
                 throw new InvalidOperationException("Attempt to execute undo operation while blocked");
 
             // Fire start
@@ -198,121 +125,6 @@ namespace Topten.RichTextKit.Utils
                 OnModifiedChanged();
         }
 
-
-        /// <summary>
-        /// Seals the last item to prevent changes
-        /// </summary>
-        public void Seal()
-        {
-            if (_units.Count > 0)
-                _units[_units.Count - 1].Seal();
-        }
-
-
-        /// <summary>
-        /// Get the current unsealed unit
-        /// </summary>
-        /// <returns>The unsealed unit if available, otherwise null</returns>
-        public UndoUnit<T> GetUnsealedUnit()
-        {
-            // Don't allow coalescing while we have open groups.
-            if (_openGroups.Count > 0)
-                return null;
-
-            var unit = GetUndoUnit();
-
-            if (unit == null)
-                return null;
-
-            if (unit.Sealed)
-                return null;
-
-            return unit;
-        }
-
-        /// <summary>
-        /// Retrieves the unit that would be executed on Undo
-        /// </summary>
-        /// <returns>An UndoUnit, or null</returns>
-        public UndoUnit<T> GetUndoUnit()
-        {
-            if (_currentPos > 0)
-                return _units[_currentPos - 1];
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// Retrieves the unit that would be executed on Redo
-        /// </summary>
-        /// <returns>An UndoUnit, or null</returns>
-        public UndoUnit<T> GetRedoUnit()
-        {
-            if (_currentPos < _units.Count)
-                return _units[_currentPos];
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// Adds a unit to the undo manager without executing it
-        /// </summary>
-        /// <param name="unit">The UndoUnit to add</param>
-        void Add(UndoUnit<T> unit)
-        {
-            if (Blocked)
-                throw new InvalidOperationException("Attempt to add undo operation while blocked");
-
-            if (CurrentGroup != null)
-            {
-                CurrentGroup.Add(unit);
-            }
-            else
-            {
-                RemoveAllRedoUnits();
-                _units.Add(unit);
-
-                // Limit undo stack size
-                if (_units.Count > _maxUnits)
-                {
-                    // Update unmodified index
-                    if (_unmodifiedPos >= 0)
-                        _unmodifiedPos--;
-
-                    // Remove
-                    _units.RemoveAt(0);
-                }
-                else
-                {
-                    _currentPos++;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Removes all units in the redo queue
-        /// </summary>
-        void RemoveAllRedoUnits()
-        {
-            System.Diagnostics.Debug.Assert(_openGroups.Count == 0);
-
-            // If the unmodified position has been undone
-            // we can never get back to clean position
-            if (_unmodifiedPos > _currentPos)
-            {
-                _unmodifiedPos = -1;
-            }
-
-            // Remove redo units
-            while (_currentPos < _units.Count)
-            {
-                _units.RemoveAt(_currentPos);
-            }
-
-            // Seal the last item
-            Seal();
-        }
-
         /// <summary>
         /// Stars a group operation
         /// </summary>
@@ -330,7 +142,7 @@ namespace Topten.RichTextKit.Utils
         /// <returns>An IDisposable that when disposed will close the group</returns>
         public IDisposable OpenGroup(UndoGroup<T> group)
         {
-            if (Blocked)
+            if (IsBlocked)
                 throw new InvalidOperationException("Attempt to add undo group while blocked");
 
             // First group?
@@ -355,9 +167,9 @@ namespace Topten.RichTextKit.Utils
         /// <summary>
         /// Ends the current group operation
         /// </summary>
-        public void EndGroup()
+        public void CloseGroup()
         {
-            if (Blocked)
+            if (IsBlocked)
                 throw new InvalidOperationException("Attempt to end undo group while blocked");
 
             if (CurrentGroup == null)
@@ -376,36 +188,6 @@ namespace Topten.RichTextKit.Utils
             // End operation if no open groups
             if (_openGroups.Count == 0)
                 OnEndOperation();
-        }
-
-        /// <summary>
-        /// Checks if the undo manager is currently blocked
-        /// </summary>
-        public bool Blocked
-        {
-            get
-            {
-                return _blockDepth > 0;
-            }
-        }
-
-        /// <summary>
-        /// Blocks the undo manager
-        /// </summary>
-        public void Block()
-        {
-            _blockDepth++;
-            Seal();
-        }
-
-        /// <summary>
-        /// Unblocks the undo manager
-        /// </summary>
-        public void Unblock()
-        {
-            if (_blockDepth == 0)
-                throw new InvalidOperationException("Attempt to unblock already unblocked undo manager");
-            _blockDepth--;
         }
 
         /// <summary>
@@ -472,6 +254,225 @@ namespace Topten.RichTextKit.Utils
             }
         }
 
+        /// <summary>
+        /// Event fired when any operation (or group of operations) starts
+        /// </summary>
+        public event Action StartOperation;
+
+        /// <summary>
+        /// Event fired when any operation (or group of operations) ends
+        /// </summary>
+        public event Action EndOperation;
+
+        /// <summary>
+        /// Fired when the modified state of the document changes
+        /// </summary>
+        public event Action ModifiedChanged;
+
+        /// <summary>
+        /// Checks if the document is currently modified
+        /// </summary>
+        public bool IsModified
+        {
+            get
+            {
+                return _unmodifiedPos != _currentPos;
+            }
+        }
+
+        /// <summary>
+        /// Mark the document as currently unmodified
+        /// </summary>
+        /// <remarks>
+        /// Typically this method would be called when the document
+        /// is saved.
+        /// </remarks>
+        public void MarkUnmodified()
+        {
+            // Remember if was modified
+            bool wasModified = IsModified;
+
+            // Mark as currently unmodified
+            _unmodifiedPos = _currentPos;
+
+            // Prevent additions to the open item
+            Seal();
+
+            // Fire modified changed event
+            if (wasModified)
+                OnModifiedChanged();
+        }
+
+        /// <summary>
+        /// Seals the last item to prevent changes
+        /// </summary>
+        public void Seal()
+        {
+            if (_units.Count > 0)
+                _units[_units.Count - 1].Seal();
+        }
+
+        /// <summary>
+        /// Get the current unsealed unit
+        /// </summary>
+        /// <returns>The unsealed unit if available, otherwise null</returns>
+        public UndoUnit<T> GetUnsealedUnit()
+        {
+            // Don't allow coalescing while we have open groups.
+            if (_openGroups.Count > 0)
+                return null;
+
+            var unit = GetUndoUnit();
+
+            if (unit == null)
+                return null;
+
+            if (unit.Sealed)
+                return null;
+
+            return unit;
+        }
+
+        /// <summary>
+        /// Retrieves the unit that would be executed on Undo
+        /// </summary>
+        /// <returns>An UndoUnit, or null</returns>
+        public UndoUnit<T> GetUndoUnit()
+        {
+            if (_currentPos > 0)
+                return _units[_currentPos - 1];
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// Retrieves the unit that would be executed on Redo
+        /// </summary>
+        /// <returns>An UndoUnit, or null</returns>
+        public UndoUnit<T> GetRedoUnit()
+        {
+            if (_currentPos < _units.Count)
+                return _units[_currentPos];
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// Notifies that an operation (or group of operations) is about to start
+        /// </summary>
+        protected virtual void OnStartOperation()
+        {
+            StartOperation?.Invoke();
+        }
+
+        /// <summary>
+        /// Notifies that an operation (or group of operations) has finished
+        /// </summary>
+        protected virtual void OnEndOperation()
+        {
+            EndOperation?.Invoke();
+        }
+
+        /// <summary>
+        /// Notifies when the modified state of the document changes
+        /// </summary>
+        protected virtual void OnModifiedChanged()
+        {
+            ModifiedChanged?.Invoke();
+        }
+
+        /// <summary>
+        /// Adds a unit to the undo manager without executing it
+        /// </summary>
+        /// <param name="unit">The UndoUnit to add</param>
+        void Add(UndoUnit<T> unit)
+        {
+            if (IsBlocked)
+                throw new InvalidOperationException("Attempt to add undo operation while blocked");
+
+            if (CurrentGroup != null)
+            {
+                CurrentGroup.Add(unit);
+            }
+            else
+            {
+                RemoveAllRedoUnits();
+                _units.Add(unit);
+
+                // Limit undo stack size
+                if (_units.Count > _maxUnits)
+                {
+                    // Update unmodified index
+                    if (_unmodifiedPos >= 0)
+                        _unmodifiedPos--;
+
+                    // Remove
+                    _units.RemoveAt(0);
+                }
+                else
+                {
+                    _currentPos++;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes all units in the redo queue
+        /// </summary>
+        void RemoveAllRedoUnits()
+        {
+            System.Diagnostics.Debug.Assert(_openGroups.Count == 0);
+
+            // If the unmodified position has been undone
+            // we can never get back to clean position
+            if (_unmodifiedPos > _currentPos)
+            {
+                _unmodifiedPos = -1;
+            }
+
+            // Remove redo units
+            while (_currentPos < _units.Count)
+            {
+                _units.RemoveAt(_currentPos);
+            }
+
+            // Seal the last item
+            Seal();
+        }
+
+        /// <summary>
+        /// Checks if the undo manager is currently blocked
+        /// </summary>
+        bool IsBlocked
+        {
+            get
+            {
+                return _blockDepth > 0;
+            }
+        }
+
+        /// <summary>
+        /// Blocks the undo manager
+        /// </summary>
+        void Block()
+        {
+            _blockDepth++;
+            Seal();
+        }
+
+        /// <summary>
+        /// Unblocks the undo manager
+        /// </summary>
+        void Unblock()
+        {
+            if (_blockDepth == 0)
+                throw new InvalidOperationException("Attempt to unblock already unblocked undo manager");
+            _blockDepth--;
+        }
+
+        /// <summary>
+        /// Get the currently undo group
+        /// </summary>
         UndoGroup<T> CurrentGroup
         {
             get
@@ -494,7 +495,7 @@ namespace Topten.RichTextKit.Utils
 
             public void Dispose()
             {
-                _owner.EndGroup();
+                _owner.CloseGroup();
             }
         }
 

@@ -15,6 +15,7 @@
 
 using System;
 using System.IO;
+using System.Xml.Schema;
 
 namespace Topten.RichTextKit
 {
@@ -175,6 +176,62 @@ namespace Topten.RichTextKit
                 newEnd = maxCodePointIndex;
 
             return new TextRange(newStart, newEnd, AltPosition);
+        }
+
+
+        /// <summary>
+        /// Create an updated text range that tries to represent the same
+        /// piece of text from before an edit to after the edit.
+        /// </summary>
+        /// <param name="codePointIndex">The position of the edit</param>
+        /// <param name="oldLength">The length of text deleted</param>
+        /// <param name="newLength">The length of text inserted</param>
+        /// <returns>An updated text range</returns>
+        public TextRange UpdateForEdit(int codePointIndex, int oldLength, int newLength)
+        {
+            int delta = newLength - oldLength;
+
+            // After this range?
+            if (codePointIndex > Maximum)
+                return this;
+
+            // Before this range?
+            if (codePointIndex + oldLength <= Minimum)
+                return new TextRange(Start + delta, End + delta, AltPosition);
+
+            // Entire range?
+            if (codePointIndex <= Minimum && codePointIndex + oldLength >= Maximum)
+                return new TextRange(codePointIndex, codePointIndex, AltPosition);
+    
+            // Inside this range?
+            if (codePointIndex >= Minimum && codePointIndex + oldLength <= Maximum)
+            {
+                if (Start < End)
+                    return new TextRange(Start, End + delta, AltPosition);
+                else
+                    return new TextRange(End, Start + delta, AltPosition);
+            }
+
+            // Overlap start of this range?
+            if (codePointIndex < Minimum && codePointIndex + oldLength >= Minimum)
+            {
+                if (Start < End)
+                    return new TextRange(codePointIndex + newLength, End + delta, AltPosition);
+                else
+                    return new TextRange(Start + delta, codePointIndex + newLength, AltPosition);
+            }
+
+            // Overlap end of this range?
+            if (codePointIndex >= Minimum && codePointIndex + oldLength > Maximum)
+            {
+                if (Start < End)
+                    return new TextRange(Start, codePointIndex, AltPosition);
+                else
+                    return new TextRange(codePointIndex, End, AltPosition);
+            }
+
+            // Should never get here.
+            return new TextRange();
         }
 
         /// <summary>

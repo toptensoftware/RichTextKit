@@ -604,14 +604,20 @@ namespace Topten.RichTextKit.Editor
         /// <summary>
         /// Delete a section of the document
         /// </summary>
+        /// <remarks>
+        /// Returns the index of the first paragraph affected
+        /// </remarks>
         /// <param name="range">The range to be deleted</param>
-        void DeleteInternal(TextRange range)
+        int DeleteInternal(TextRange range)
         {
             // Iterate over the sections to be deleted
             int joinParagraph = -1;
+            int firstParagraph = -1;
             foreach (var subRun in _paragraphs.GetIntersectingRunsReverse(range.Start, range.Length))
             {
                 Debug.Assert(joinParagraph == -1);
+
+                firstParagraph = subRun.Index;
 
                 // Is it a partial paragraph deletion?
                 if (subRun.Partial)
@@ -670,6 +676,8 @@ namespace Topten.RichTextKit.Editor
 
             // Layout is now invalid
             InvalidateLayout();
+
+            return firstParagraph;
         }
 
         /// <summary>
@@ -677,7 +685,8 @@ namespace Topten.RichTextKit.Editor
         /// </summary>
         /// <param name="position">The position to insert the text at</param>
         /// <param name="text">The text to insert</param>
-        void InsertInternal(int position, Slice<int> codePoints)
+        /// <returns>The index of the first paragraph affected</returns>
+        int InsertInternal(int position, Slice<int> codePoints)
         {
             // Find the position in the document
             var paraIndex = GetParagraphForCodePointIndex(new CaretPosition(position), out var indexInParagraph);
@@ -687,7 +696,7 @@ namespace Topten.RichTextKit.Editor
             if (para.TextBlock == null)
             {
                 // TODO:
-                return;
+                throw new NotImplementedException();
             }
 
             // Split the passed text into paragraphs
@@ -697,13 +706,16 @@ namespace Topten.RichTextKit.Editor
                 // Split the paragraph at the insertion point into paragraphs A and B
                 var paraA = para;
                 var paraB = new TextParagraph(para as TextParagraph, indexInParagraph, para.Length);
-                _undoManager.Do(new UndoDeleteText(paraA.TextBlock, indexInParagraph, para.TextBlock.Length - indexInParagraph - 1));
+                if (para.TextBlock.Length - indexInParagraph - 1 != 0)
+                    _undoManager.Do(new UndoDeleteText(paraA.TextBlock, indexInParagraph, para.TextBlock.Length - indexInParagraph - 1));
 
                 // Append the first part of the inserted text to the end of paragraph A
-                _undoManager.Do(new UndoInsertText(paraA.TextBlock, indexInParagraph, parts[0]));
+                if (parts[0].Length != 0)
+                    _undoManager.Do(new UndoInsertText(paraA.TextBlock, indexInParagraph, parts[0]));
 
                 // Prepend the last text part of the inserted text to the start paragraph B
-                _undoManager.Do(new UndoInsertText(paraB.TextBlock, 0, parts[parts.Length - 1]));
+                if (parts[parts.Length - 1].Length != 0)
+                    _undoManager.Do(new UndoInsertText(paraB.TextBlock, 0, parts[parts.Length - 1]));
 
                 // We could do this above, but by doing it after the above InsertText operations
                 // we prevent subsequent typing from be coalesced into this unit.
@@ -722,6 +734,8 @@ namespace Topten.RichTextKit.Editor
             {
                 _undoManager.Do(new UndoInsertText(para.TextBlock, indexInParagraph, parts[0]));
             }
+
+            return paraIndex;
         }
 
         /// <summary>
@@ -800,11 +814,14 @@ namespace Topten.RichTextKit.Editor
                     InsertInternal(range.Minimum, codePoints);
                 }
 
-                // Store group info
-                group.CodePointIndex = range.Minimum;
-                group.OldLength = range.Normalized.Length;
-                group.NewLength = codePoints.Length;
-                group.Semantics = semantics;
+                // Setup document change info on the group
+                group.SetDocumentChangeInfo(new DocumentChangeInfo()
+                {
+                    CodePointIndex = range.Minimum,
+                    OldLength = range.Normalized.Length,
+                    NewLength = codePoints.Length,
+                    Semantics = semantics,
+                });
             }
 
             _initiatingView = null;
@@ -830,6 +847,33 @@ namespace Topten.RichTextKit.Editor
             _initiatingView = view;
             _undoManager.Redo();
             _initiatingView = null;
+        }
+
+        /// <summary>
+        /// Get the text for a part of the document
+        /// </summary>
+        /// <param name="range">The text to retrieve</param>
+        /// <returns>The text as a Utf32Buffer</returns>
+        public Utf32Buffer GetText(TextRange range)
+        {
+            // Normalize and clamp range
+            range = range.Normalized.Clamp(Length - 1);
+
+            // Get all subruns
+            var buf = new Utf32Buffer();
+            foreach (var subrun in _paragraphs.GetInterectingRuns(range.Start, range.Length))
+            {
+                // Get the paragraph
+                var para = _paragraphs[subrun.Index];
+                if (para.TextBlock == null)
+                    throw new NotImplementedException();
+
+                // Add the text
+                buf.Add(para.TextBlock.CodePoints.SubSlice(subrun.Offset, subrun.Length));
+            }
+
+            // Done!
+            return buf;
         }
 
         /// <summary>
@@ -999,7 +1043,7 @@ namespace Topten.RichTextKit.Editor
         /// <param name="info">Info about the changes to the document</param>
         internal void FireDocumentChange(DocumentChangeInfo info)
         {
-            // Invalidate layout
+            // Layout is now invalid
             InvalidateLayout();
 
             // Notify all views

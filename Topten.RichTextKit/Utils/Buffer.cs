@@ -270,6 +270,46 @@ namespace Topten.RichTextKit.Utils
             return SubSlice(0, _length);
         }
 
+        /// <summary>
+        /// Split the utf32 buffer on a codepoint type
+        /// </summary>
+        /// <param name=""></param>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public IEnumerable<Slice<T>> Split(T delim)
+        {
+            int start = 0;
+            for (int i = 0; i < Length; i++)
+            {
+                if (_data[i].Equals(delim))
+                {
+                    yield return SubSlice(start, i - start);
+                    start = i + 1;
+                }
+            }
+            yield return SubSlice(start, Length - start);
+        }
+
+        /// <summary>
+        /// Replaces all instances of a value in the buffer with another value
+        /// </summary>
+        /// <param name="oldValue">The value to replace</param>
+        /// <param name="newValue">The new value</param>
+        /// <returns>The number of replacements made</returns>
+        public int Replace(T oldValue, T newValue)
+        {
+            int count = 0;
+            for (int i = 0; i < Length; i++)
+            {
+                if (_data[i].Equals(oldValue))
+                {
+                    _data[i] = newValue;
+                    count++;
+                }
+            }
+            return count;
+        }
+
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             return new ArraySliceEnumerator<T>(_data, 0, _length);

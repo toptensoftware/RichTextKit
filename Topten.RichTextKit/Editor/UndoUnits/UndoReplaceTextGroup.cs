@@ -11,10 +11,10 @@ namespace Topten.RichTextKit.Editor.UndoUnits
         public bool TryExtend(TextDocument context, TextRange range, Slice<int> codePoints, EditSemantics semantics)
         {
             // Extend typing?
-            if (semantics == EditSemantics.Typing && this.Semantics == EditSemantics.Typing)
+            if (semantics == EditSemantics.Typing && _info.Semantics == EditSemantics.Typing)
             {
                 // Mustn't be replacing a range and must be at the correct position
-                if (range.IsRange || CodePointIndex + NewLength != range.Start)
+                if (range.IsRange || _info.CodePointIndex + _info.NewLength != range.Start)
                     return false;
 
                 // Mustn't be inserting any paragraph breaks
@@ -30,24 +30,25 @@ namespace Topten.RichTextKit.Editor.UndoUnits
                 if (!insertUnit.Append(codePoints))
                     return false;
 
-                // Update the group
-                NewLength += codePoints.Length;
-
                 // Fire notifications
                 context.FireDocumentWillChange();
                 context.FireDocumentChange(new DocumentChangeInfo()
                 {
-                    CodePointIndex = range.Start,
+                    CodePointIndex = _info.CodePointIndex + _info.NewLength,
                     OldLength = 0,
                     NewLength = codePoints.Length,
                     Semantics = semantics,
                 });
                 context.FireDocumentDidChange();
+
+                // Update the group
+                _info.NewLength += codePoints.Length;
+
                 return true;
             }
 
             // Extend backspace?
-            if (semantics == EditSemantics.Backspace && this.Semantics == EditSemantics.Backspace)
+            if (semantics == EditSemantics.Backspace && _info.Semantics == EditSemantics.Backspace)
             {
                 // Get the last delete unit
                 var deleteUnit = this.LastUnit as UndoDeleteText;
@@ -55,32 +56,33 @@ namespace Topten.RichTextKit.Editor.UndoUnits
                     return false;
 
                 // Must be deleting text immediately before
-                if (range.End != this.CodePointIndex)
+                if (range.End != _info.CodePointIndex)
                     return false;
 
                 // Extend the delete unit
                 if (!deleteUnit.ExtendBackspace(range.Length))
                     return false;
 
-                // Update self
-                CodePointIndex -= range.Length;
-                OldLength += range.Length;
-
                 // Fire change events
                 context.FireDocumentWillChange();
                 context.FireDocumentChange(new DocumentChangeInfo()
                 {
-                    CodePointIndex = range.Start,
+                    CodePointIndex = _info.CodePointIndex - range.Length,
                     OldLength = range.Length,
                     NewLength = 0,
                     Semantics = semantics,
                 });
                 context.FireDocumentDidChange();
+
+                // Update self
+                _info.CodePointIndex -= range.Length;
+                _info.OldLength += range.Length;
+
                 return true;
             }
 
             // Extend delete forward?
-            if (semantics == EditSemantics.ForwardDelete && this.Semantics == EditSemantics.ForwardDelete)
+            if (semantics == EditSemantics.ForwardDelete && _info.Semantics == EditSemantics.ForwardDelete)
             {
                 // Get the last delete unit
                 var deleteUnit = this.LastUnit as UndoDeleteText;
@@ -88,7 +90,7 @@ namespace Topten.RichTextKit.Editor.UndoUnits
                     return false;
 
                 // Must be deleting text immediately after
-                if (range.Start != this.CodePointIndex)
+                if (range.Start != _info.CodePointIndex)
                     return false;
 
                 // Extend the delete unit
@@ -96,13 +98,13 @@ namespace Topten.RichTextKit.Editor.UndoUnits
                     return false;
 
                 // Update self
-                OldLength += range.Length;
+                _info.OldLength += range.Length;
 
                 // Fire change events
                 context.FireDocumentWillChange();
                 context.FireDocumentChange(new DocumentChangeInfo()
                 {
-                    CodePointIndex = range.Start,
+                    CodePointIndex = _info.CodePointIndex,
                     OldLength = range.Length,
                     NewLength = 0,
                     Semantics = semantics,
@@ -114,54 +116,40 @@ namespace Topten.RichTextKit.Editor.UndoUnits
             return false;
         }
 
-        public override void OnOpen(TextDocument context)
-        {
-            base.OnOpen(context);
-        }
-
         public override void OnClose(TextDocument context)
         {
             base.OnClose(context);
-
-            context.FireDocumentChange(new DocumentChangeInfo()
-            {
-                CodePointIndex = CodePointIndex,
-                OldLength = OldLength,
-                NewLength = NewLength,
-                Semantics = Semantics,
-            });
+            context.FireDocumentChange(_info);
         }
+
 
         public override void Undo(TextDocument context)
         {
+            // Make the change
             base.Undo(context);
 
-            context.FireDocumentChange(new DocumentChangeInfo()
-            {
-                CodePointIndex = CodePointIndex,
-                OldLength = NewLength,
-                NewLength = OldLength,
-                IsUndoing = true,
-                Semantics = Semantics,
-            });
+            // Fire the undo version of the info by swapping the
+            // old and new length and setting the undo flag
+            var undoInfo = _info;
+            undoInfo.IsUndoing = true;
+            SwapHelper.Swap(ref undoInfo.OldLength, ref undoInfo.NewLength);
+            context.FireDocumentChange(undoInfo);
         }
 
         public override void Redo(TextDocument context)
         {
+            // Make the change
             base.Redo(context);
 
-            context.FireDocumentChange(new DocumentChangeInfo()
-            {
-                CodePointIndex = CodePointIndex,
-                OldLength = OldLength,
-                NewLength = NewLength,
-                Semantics = Semantics,
-            });
+            // Fire event
+            context.FireDocumentChange(_info);
         }
 
-        public int CodePointIndex { get; set; }
-        public int OldLength { get; set; }
-        public int NewLength { get; set; }
-        public EditSemantics Semantics { get; set; }
+        public void SetDocumentChangeInfo(DocumentChangeInfo info)
+        {
+            _info = info;
+        }
+
+        DocumentChangeInfo _info;
     }
 }

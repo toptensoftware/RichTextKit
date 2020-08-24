@@ -25,21 +25,6 @@ namespace Topten.RichTextKit.Editor
         public int NewLength;
 
         /// <summary>
-        /// The Y co-ordinate of the start of the change
-        /// </summary>
-        public float YCoord;
-
-        /// <summary>
-        /// The old height of the section of the document that was changed
-        /// </summary>
-        public float OldHeight;
-
-        /// <summary>
-        /// The new height of the section of the document that was changed
-        /// </summary>
-        public float NewHeight;
-
-        /// <summary>
         /// True if the current edit operation is the result of an
         /// undo operation.
         /// </summary>
