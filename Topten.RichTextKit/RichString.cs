@@ -727,7 +727,7 @@ namespace Topten.RichTextKit
                 maxLines = _maxLines,
                 textAlignment = _textAlignment,
                 baseDirection = _baseDirection,
-                styleManager = StyleManager.Default,
+                styleManager = StyleManager.Default.Value,
                 previousParagraph = null,
             };
 
