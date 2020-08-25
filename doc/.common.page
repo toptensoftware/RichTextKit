@@ -207,9 +207,6 @@ navTree:
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.StyleManager
           - text: Constructors|./ref/Topten.RichTextKit.StyleManager..ctor
-          - text: Fields
-            subItems:
-              - text: Default|./ref/Topten.RichTextKit.StyleManager.Default
           - text: Properties
             subItems:
               - text: CurrentStyle|./ref/Topten.RichTextKit.StyleManager.CurrentStyle
