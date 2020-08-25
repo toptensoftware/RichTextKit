@@ -731,7 +731,7 @@ namespace Topten.RichTextKit
                 maxLines = _maxLines,
                 textAlignment = _textAlignment,
                 baseDirection = _baseDirection,
-                styleManager = StyleManager.Default,
+                styleManager = StyleManager.Default.Value,
                 previousParagraph = null,
             };
 
@@ -802,6 +802,8 @@ namespace Topten.RichTextKit
             Invalidate();
             return this;
         }
+
+        StyleManager _styleManager;
 
         bool _revisionValid = false;
         uint _revision = 0;

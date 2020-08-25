@@ -17,6 +17,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace Topten.RichTextKit
 {
@@ -35,9 +36,10 @@ namespace Topten.RichTextKit
     public class StyleManager
     {
         /// <summary>
-        /// The default style manager instance
+        /// A per-thread instance that can be re-used as often
+        /// as necessary.
         /// </summary>
-        public static StyleManager Default = new StyleManager();
+        internal static ThreadLocal<StyleManager> Default = new ThreadLocal<StyleManager>(() => new StyleManager());
 
         /// <summary>
         /// Constructs a new StyleManager
