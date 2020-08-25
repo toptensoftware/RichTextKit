@@ -803,8 +803,6 @@ namespace Topten.RichTextKit
             return this;
         }
 
-        StyleManager _styleManager;
-
         bool _revisionValid = false;
         uint _revision = 0;
         bool _needsLayout = true;
