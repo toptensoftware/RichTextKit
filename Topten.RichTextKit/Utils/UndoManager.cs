@@ -637,6 +637,16 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
+        /// Adds a unit to this group
+        /// </summary>
+        /// <param name="unit">The UndoUnit to be added</param>
+        public void Insert(int position, UndoUnit<T> unit)
+        {
+            unit.Group = this;
+            _units.Insert(position, unit);
+        }
+
+        /// <summary>
         /// Gets the last UndoUnit in this group
         /// </summary>
         public UndoUnit<T> LastUnit
@@ -649,6 +659,11 @@ namespace Topten.RichTextKit.Utils
                     return null;
             }
         }
+
+        /// <summary>
+        /// Get the list of units in this group
+        /// </summary>
+        public IReadOnlyList<UndoUnit<T>> Units => _units;
 
         /// <summary>
         /// The method on the UndoGroup class is never called by the 

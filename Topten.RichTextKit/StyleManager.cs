@@ -36,10 +36,9 @@ namespace Topten.RichTextKit
     public class StyleManager
     {
         /// <summary>
-        /// A per-thread instance that can be re-used as often
-        /// as necessary.
+        /// A per-thread style manager
         /// </summary>
-        internal static ThreadLocal<StyleManager> Default = new ThreadLocal<StyleManager>(() => new StyleManager());
+        public static ThreadLocal<StyleManager> Default = new ThreadLocal<StyleManager>(() => new StyleManager());
 
         /// <summary>
         /// Constructs a new StyleManager

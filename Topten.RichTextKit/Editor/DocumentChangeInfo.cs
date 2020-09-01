@@ -35,5 +35,10 @@ namespace Topten.RichTextKit.Editor
         /// </summary>
         public EditSemantics Semantics;
 
+        /// <summary>
+        /// Offset of the IME caret from the code point index
+        /// </summary>
+        public int ImeCaretOffset;
+
     }
 }

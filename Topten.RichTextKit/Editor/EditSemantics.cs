@@ -41,5 +41,15 @@ namespace Topten.RichTextKit.Editor
         /// Special behaviour typing text one character at time
         /// </summary>
         Typing,
+
+        /// <summary>
+        /// Special behaviour for overtyping existing text
+        /// </summary>
+        Overtype,
+
+        /// <summary>
+        /// Special behaviour for displaying the composition string of an IME
+        /// </summary>
+        ImeComposition,
     }
 }

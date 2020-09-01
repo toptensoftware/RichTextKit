@@ -40,7 +40,7 @@ namespace Topten.RichTextKit.Editor
         public TextParagraph(TextParagraph source, int from, int length)
         {
             // Copy the text block
-            _textBlock = source.TextBlock.Extract(from, length);
+            _textBlock = source.TextBlock.Copy(from, length);
 
             // Copy styles
             CopyStyleFrom(source);

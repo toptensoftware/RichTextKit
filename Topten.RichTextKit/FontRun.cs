@@ -596,7 +596,7 @@ namespace Topten.RichTextKit
                         {
                             // Work out underline metrics
                             float underlineYPos = Line.YCoord + Line.BaseLine + (_font.Metrics.UnderlinePosition ?? 0);
-                            paint.StrokeWidth = _font.Metrics.UnderlineThickness ?? 0;
+                            paint.StrokeWidth = _font.Metrics.UnderlineThickness ?? 1;
 
                             if (Style.Underline == UnderlineStyle.Gapped)
                             {
@@ -621,8 +621,26 @@ namespace Topten.RichTextKit
                             }
                             else
                             {
+                                switch (Style.Underline)
+                                {
+                                    case UnderlineStyle.ImeInput:
+                                        paint.PathEffect = SKPathEffect.CreateDash(new float[] { paint.StrokeWidth, paint.StrokeWidth }, paint.StrokeWidth);
+                                        break;
+
+                                    case UnderlineStyle.ImeConverted:
+                                        paint.PathEffect = SKPathEffect.CreateDash(new float[] { paint.StrokeWidth, paint.StrokeWidth }, paint.StrokeWidth);
+                                        break;
+
+                                    case UnderlineStyle.ImeTargetConverted:
+                                        paint.StrokeWidth *= 2;
+                                        break;
+
+                                    case UnderlineStyle.ImeTargetNonConverted:
+                                        break;
+                                }
                                 // Paint solid underline
                                 ctx.Canvas.DrawLine(new SKPoint(XCoord, underlineYPos), new SKPoint(XCoord + Width, underlineYPos), paint);
+                                paint.PathEffect = null;
                             }
                         }
 

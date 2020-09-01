@@ -62,9 +62,32 @@ namespace Topten.RichTextKit.Editor.UndoUnits
             return true;
         }
 
+        public bool ExtendOvertype(int offset, int length)
+        {
+            // Don't extend across paragraph boundaries
+            if (_offset + offset + length > _textBlock.Length - 1)
+                return false;
+
+            // This can happen when a DeleteText unit is retroactively
+            // constructed when typing in overtype mode at the end of a 
+            // paragraph
+            if (_savedText == null)
+                _savedText = new StyledText();
+
+            // Copy the additional text
+            var temp = _textBlock.Extract(_offset + offset, length);
+            _savedText.InsertText(_length, temp);
+            _textBlock.DeleteText(_offset + offset, length);
+
+            // Update position
+            _length += length;
+
+            return true;
+        }
+
         TextBlock _textBlock;
         int _offset;
         int _length;
-        TextBlock _savedText;
+        StyledText _savedText;
     }
 }

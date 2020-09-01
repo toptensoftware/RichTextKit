@@ -17,10 +17,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Topten.RichTextKit.Utils
 {
@@ -288,6 +285,26 @@ namespace Topten.RichTextKit.Utils
                 }
             }
             yield return SubSlice(start, Length - start);
+        }
+
+        /// <summary>
+        /// Split the utf32 buffer on a codepoint type
+        /// </summary>
+        /// <param name=""></param>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public IEnumerable<(int Offset, int Length)> GetRanges(T delim)
+        {
+            int start = 0;
+            for (int i = 0; i < Length; i++)
+            {
+                if (_data[i].Equals(delim))
+                {
+                    yield return (start, i - start);
+                    start = i + 1;
+                }
+            }
+            yield return (start, Length - start);
         }
 
         /// <summary>

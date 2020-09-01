@@ -30,15 +30,6 @@ namespace Topten.RichTextKit
     public class StyleRun : IRun
     {
         /// <summary>
-        /// Gets the text block that owns this run.
-        /// </summary>
-        public TextBlock TextBlock
-        {
-            get;
-            internal set;
-        }
-
-        /// <summary>
         /// Get the code points of this run.
         /// </summary>
         public Slice<int> CodePoints => CodePointBuffer.SubSlice(Start, Length);
@@ -99,7 +90,6 @@ namespace Topten.RichTextKit
             {
                 r.CodePointBuffer = null;
                 r.Style = null;
-                r.TextBlock = null;
             }
         });
     }

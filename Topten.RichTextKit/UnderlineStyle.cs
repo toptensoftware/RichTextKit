@@ -40,5 +40,25 @@ namespace Topten.RichTextKit
         /// Underline with no gaps over descenders.
         /// </summary>
         Solid,
+
+        /// <summary>
+        /// Underline style for IME input
+        /// </summary>
+        ImeInput,
+
+        /// <summary>
+        /// Underline style for converted IME input
+        /// </summary>
+        ImeConverted,
+
+        /// <summary>
+        /// Underline style for converted IME input (target clause)
+        /// </summary>
+        ImeTargetConverted,
+
+        /// <summary>
+        /// Underline style for unconverted IME input (target clause)
+        /// </summary>
+        ImeTargetNonConverted,
     }
 }

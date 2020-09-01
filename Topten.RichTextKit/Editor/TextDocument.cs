@@ -283,6 +283,24 @@ namespace Topten.RichTextKit.Editor
             return ci;
         }
 
+        /// <summary>
+        /// Get the style of the text at a specified code point index
+        /// </summary>
+        /// <param name="offset">The offset of the code point</param>
+        /// <returns>An IStyle</returns>
+        public IStyle GetStyleAtOffset(int offset)
+        {
+            // Find containing paragraph
+            var paraIndex = GetParagraphForCodePointIndex(new CaretPosition(offset), out var indexInPara);
+            var para = _paragraphs[paraIndex];
+
+            // Only support text blocks for now
+            if (para.TextBlock == null)
+                throw new NotImplementedException();
+
+            // Get style from text block
+            return para.TextBlock.GetStyleAtOffset(offset);
+        }
 
         /// <summary>
         /// Handles keyboard navigation events
@@ -602,143 +620,6 @@ namespace Topten.RichTextKit.Editor
         public UndoManager<TextDocument> UndoManager => _undoManager;
 
         /// <summary>
-        /// Delete a section of the document
-        /// </summary>
-        /// <remarks>
-        /// Returns the index of the first paragraph affected
-        /// </remarks>
-        /// <param name="range">The range to be deleted</param>
-        int DeleteInternal(TextRange range)
-        {
-            // Iterate over the sections to be deleted
-            int joinParagraph = -1;
-            int firstParagraph = -1;
-            foreach (var subRun in _paragraphs.GetIntersectingRunsReverse(range.Start, range.Length))
-            {
-                Debug.Assert(joinParagraph == -1);
-
-                firstParagraph = subRun.Index;
-
-                // Is it a partial paragraph deletion?
-                if (subRun.Partial)
-                {
-                    // Yes...
-
-                    // Get the paragraph
-                    var para = _paragraphs[subRun.Index];
-
-                    // Is it a text paragraph?
-                    var textBlock = para.TextBlock;
-                    if (textBlock != null)
-                    {
-                        // Yes
-
-                        // If we're deleting paragraph separator at the the end 
-                        // of this paragraph then remember this paragraph needs to 
-                        // be joined with the next paragraph after any intervening 
-                        // paragraphs have been deleted
-                        if (subRun.Offset + subRun.Length >= para.Length)
-                        {
-                            Debug.Assert(joinParagraph == -1);
-                            joinParagraph = subRun.Index;
-                        }
-
-                        // Delete the text
-                        _undoManager.Do(new UndoDeleteText(textBlock, subRun.Offset, subRun.Length));
-                    }
-                    else
-                    {
-                        // No, todo...
-                        throw new NotImplementedException();
-                    }
-                }
-                else
-                {
-                    // Remove entire paragraph
-                    _undoManager.Do(new UndoDeleteParagraph(subRun.Index));
-                }
-            }
-
-            // If the deletion started mid paragraph and crossed into
-            // subsequent paragraphs then we need to join the paragraphs
-            if (joinParagraph >= 0 && joinParagraph + 1 < _paragraphs.Count)
-            {
-                // Get both paragraphs
-                var firstPara = _paragraphs[joinParagraph];
-                var secondPara = _paragraphs[joinParagraph + 1];
-
-                // To join them, they must be both text paragraphs
-                if (firstPara.TextBlock != null && secondPara.TextBlock != null)
-                {
-                    _undoManager.Do(new UndoJoinParagraphs(joinParagraph));
-                }
-            }
-
-            // Layout is now invalid
-            InvalidateLayout();
-
-            return firstParagraph;
-        }
-
-        /// <summary>
-        /// Insert text into the document
-        /// </summary>
-        /// <param name="position">The position to insert the text at</param>
-        /// <param name="text">The text to insert</param>
-        /// <returns>The index of the first paragraph affected</returns>
-        int InsertInternal(int position, Slice<int> codePoints)
-        {
-            // Find the position in the document
-            var paraIndex = GetParagraphForCodePointIndex(new CaretPosition(position), out var indexInParagraph);
-            var para = _paragraphs[paraIndex];
-
-            // Is it a text paragraph?
-            if (para.TextBlock == null)
-            {
-                // TODO:
-                throw new NotImplementedException();
-            }
-
-            // Split the passed text into paragraphs
-            var parts = codePoints.Split('\u2029').ToArray();
-            if (parts.Length > 1)
-            {
-                // Split the paragraph at the insertion point into paragraphs A and B
-                var paraA = para;
-                var paraB = new TextParagraph(para as TextParagraph, indexInParagraph, para.Length);
-                if (para.TextBlock.Length - indexInParagraph - 1 != 0)
-                    _undoManager.Do(new UndoDeleteText(paraA.TextBlock, indexInParagraph, para.TextBlock.Length - indexInParagraph - 1));
-
-                // Append the first part of the inserted text to the end of paragraph A
-                if (parts[0].Length != 0)
-                    _undoManager.Do(new UndoInsertText(paraA.TextBlock, indexInParagraph, parts[0]));
-
-                // Prepend the last text part of the inserted text to the start paragraph B
-                if (parts[parts.Length - 1].Length != 0)
-                    _undoManager.Do(new UndoInsertText(paraB.TextBlock, 0, parts[parts.Length - 1]));
-
-                // We could do this above, but by doing it after the above InsertText operations
-                // we prevent subsequent typing from be coalesced into this unit.
-                _undoManager.Do(new UndoInsertParagraph(paraIndex + 1, paraB));
-
-                // Create new paragraphs for parts [1..N-1] of the inserted text and insert them
-                // betweeen paragraphs A and B.
-                for (int i = 1; i < parts.Length - 1; i++)
-                {
-                    var betweenPara = new TextParagraph(para as TextParagraph, para.Length - 1, 1);
-                    betweenPara.TextBlock.InsertText(0, parts[i]);
-                    _undoManager.Do(new UndoInsertParagraph(paraIndex + 1, betweenPara));
-                }
-            }
-            else
-            {
-                _undoManager.Do(new UndoInsertText(para.TextBlock, indexInParagraph, parts[0]));
-            }
-
-            return paraIndex;
-        }
-
-        /// <summary>
         /// Replaces a range of text with the specified text
         /// </summary>
         /// <param name="view">The view initiating the operation</param>
@@ -771,60 +652,71 @@ namespace Topten.RichTextKit.Editor
         /// <param name="semantics">Controls how undo operations are coalesced and view selections updated</param>"
         public void ReplaceText(ITextDocumentView view, TextRange range, Slice<int> codePoints, EditSemantics semantics)
         {
-            // Check range is valid
-            if (range.Minimum < 0 || range.Maximum > this.Length)
-                throw new ArgumentException("Invalid range", nameof(range));
+            if (IsImeComposing)
+                FinishImeComposition(view);
 
-            // Quit if redundant
-            if (!range.IsRange && codePoints.Length == 0)
+            ReplaceTextInternal(view, range, new StyledText(codePoints), semantics, -1);
+        }
+
+        /// <summary>
+        /// Indicates if an IME composition is currently in progress
+        /// </summary>
+        public bool IsImeComposing
+        {
+            get => _imeView != null;
+        }
+
+
+        /// <summary>
+        /// Get the code point offset position of the current IME composition
+        /// </summary>
+        public int ImeCompositionOffset
+        {
+            get => _imeView == null ? -1 : _imeInitialSelection.Minimum;
+        }
+
+        /// <summary>
+        /// Starts and IME composition action
+        /// </summary>
+        /// <param name="view">The initiating view</param>
+        /// <param name="initialSelection">The initial text selection</param>
+        public void StartImeComposition(ITextDocumentView view, TextRange initialSelection)
+        {
+            // Finish last composition
+            if (_imeView != null)
+                FinishImeComposition(view);
+
+            // Store until first call
+            _imeView = view;
+            _imeInitialSelection = initialSelection;
+        }
+
+        /// <summary>
+        /// Update a pending IME composition
+        /// </summary>
+        /// <param name="view">The initiating view</param>
+        /// <param name="text">The composition text</param>
+        /// <param name="caretOffset">The caret offset relative to the composition text</param>
+        public void UpdateImeComposition(ITextDocumentView view, StyledText text, int caretOffset)
+        {
+            if (!IsImeComposing)
                 return;
 
-            // Store the initiating view
-            _initiatingView = view;
+            ReplaceTextInternal(view, _imeInitialSelection, text, EditSemantics.ImeComposition, caretOffset);
+        }
 
-            // Make sure layout is up to date
-            Layout();
-
-            // Normalize the range
-            range = range.Normalized;
-
-            // Try to extend the last undo operation
-            var group = _undoManager.GetUnsealedUnit() as UndoReplaceTextGroup;
-            if (group != null && group.TryExtend(this, range, codePoints, semantics))
+        /// <summary>
+        /// Complete an IME composition
+        /// </summary>
+        /// <param name="view">The initiating view</param>
+        /// <param name="commit">True to commit the composition, false to cancel it</param>
+        public void FinishImeComposition(ITextDocumentView view)
+        {
+            if (_imeView != null)
             {
-                _initiatingView = null;
-                return;
+                Undo(view);
+                _imeView = null;
             }
-
-            // Wrap all edits in an undo group.  Note this is a custom
-            // undo group that also fires the DocumentChanged notification
-            // to views.
-            group = new UndoReplaceTextGroup();
-            using (_undoManager.OpenGroup(group))
-            {
-                // Delete range (if any)
-                if (range.Length != 0)
-                {
-                    DeleteInternal(range);
-                }
-
-                // Insert text (if any)
-                if (codePoints.Length != 0)
-                {
-                    InsertInternal(range.Minimum, codePoints);
-                }
-
-                // Setup document change info on the group
-                group.SetDocumentChangeInfo(new DocumentChangeInfo()
-                {
-                    CodePointIndex = range.Minimum,
-                    OldLength = range.Normalized.Length,
-                    NewLength = codePoints.Length,
-                    Semantics = semantics,
-                });
-            }
-
-            _initiatingView = null;
         }
 
         /// <summary>
@@ -1053,6 +945,237 @@ namespace Topten.RichTextKit.Editor
             }
         }
 
+        public TextRange GetOvertypeRange(TextRange range)
+        {
+            if (range.IsRange)
+                return range;
+
+            float? unused = null;
+            var nextPos = Navigate(range.CaretPosition, NavigationKind.CharacterRight, 0, ref unused);
+
+            var paraThis = GetParagraphForCodePointIndex(range.CaretPosition, out var _);
+            var paraNext = GetParagraphForCodePointIndex(nextPos, out var _);
+
+            if (paraThis == paraNext)
+                range.End = nextPos.CodePointIndex;
+
+            return range;
+        }
+
+        /// <summary>
+        /// Internal helper to replace text creating an undo unit
+        /// </summary>
+        /// <param name="view">The initiating view</param>
+        /// <param name="range">The range of text to be replaced</param>
+        /// <param name="text">The replacement text</param>
+        /// <param name="semantics">The edit semantics of the change</param>
+        /// <param name="imeCaretOffset">The position of the IME caret relative to the start of the range</param>
+        void ReplaceTextInternal(ITextDocumentView view, TextRange range, StyledText text, EditSemantics semantics, int imeCaretOffset)
+        {
+            // Check range is valid
+            if (range.Minimum < 0 || range.Maximum > this.Length)
+                throw new ArgumentException("Invalid range", nameof(range));
+
+            // Quit if redundant
+            if (!range.IsRange && text.Length == 0)
+                return;
+
+            // Store the initiating view
+            _initiatingView = view;
+
+            // Make sure layout is up to date
+            Layout();
+
+            // Normalize the range
+            range = range.Normalized;
+
+            // Update range to include the following character if overtyping
+            // and no current selection
+            if (semantics == EditSemantics.Overtype && !range.IsRange)
+            {
+                range = GetOvertypeRange(range);
+            }
+
+            // Try to extend the last undo operation
+            var group = _undoManager.GetUnsealedUnit() as UndoReplaceTextGroup;
+            if (group != null && group.TryExtend(this, range, text, semantics, imeCaretOffset))
+            {
+                _initiatingView = null;
+                return;
+            }
+
+            // Wrap all edits in an undo group.  Note this is a custom
+            // undo group that also fires the DocumentChanged notification
+            // to views.
+            group = new UndoReplaceTextGroup();
+            using (_undoManager.OpenGroup(group))
+            {
+                // Delete range (if any)
+                if (range.Length != 0)
+                {
+                    DeleteInternal(range);
+                }
+
+                // Insert text (if any)
+                if (text.Length != 0)
+                {
+                    InsertInternal(range.Minimum, text);
+                }
+
+                // Setup document change info on the group
+                group.SetDocumentChangeInfo(new DocumentChangeInfo()
+                {
+                    CodePointIndex = range.Minimum,
+                    OldLength = range.Normalized.Length,
+                    NewLength = text.Length,
+                    Semantics = semantics,
+                    ImeCaretOffset = imeCaretOffset,
+                });
+            }
+
+            _initiatingView = null;
+        }
+
+        /// <summary>
+        /// Delete a section of the document
+        /// </summary>
+        /// <remarks>
+        /// Returns the index of the first paragraph affected
+        /// </remarks>
+        /// <param name="range">The range to be deleted</param>
+        int DeleteInternal(TextRange range)
+        {
+            // Iterate over the sections to be deleted
+            int joinParagraph = -1;
+            int firstParagraph = -1;
+            foreach (var subRun in _paragraphs.GetIntersectingRunsReverse(range.Start, range.Length))
+            {
+                Debug.Assert(joinParagraph == -1);
+
+                firstParagraph = subRun.Index;
+
+                // Is it a partial paragraph deletion?
+                if (subRun.Partial)
+                {
+                    // Yes...
+
+                    // Get the paragraph
+                    var para = _paragraphs[subRun.Index];
+
+                    // Is it a text paragraph?
+                    var textBlock = para.TextBlock;
+                    if (textBlock != null)
+                    {
+                        // Yes
+
+                        // If we're deleting paragraph separator at the the end 
+                        // of this paragraph then remember this paragraph needs to 
+                        // be joined with the next paragraph after any intervening 
+                        // paragraphs have been deleted
+                        if (subRun.Offset + subRun.Length >= para.Length)
+                        {
+                            Debug.Assert(joinParagraph == -1);
+                            joinParagraph = subRun.Index;
+                        }
+
+                        // Delete the text
+                        _undoManager.Do(new UndoDeleteText(textBlock, subRun.Offset, subRun.Length));
+                    }
+                    else
+                    {
+                        // No, todo...
+                        throw new NotImplementedException();
+                    }
+                }
+                else
+                {
+                    // Remove entire paragraph
+                    _undoManager.Do(new UndoDeleteParagraph(subRun.Index));
+                }
+            }
+
+            // If the deletion started mid paragraph and crossed into
+            // subsequent paragraphs then we need to join the paragraphs
+            if (joinParagraph >= 0 && joinParagraph + 1 < _paragraphs.Count)
+            {
+                // Get both paragraphs
+                var firstPara = _paragraphs[joinParagraph];
+                var secondPara = _paragraphs[joinParagraph + 1];
+
+                // To join them, they must be both text paragraphs
+                if (firstPara.TextBlock != null && secondPara.TextBlock != null)
+                {
+                    _undoManager.Do(new UndoJoinParagraphs(joinParagraph));
+                }
+            }
+
+            // Layout is now invalid
+            InvalidateLayout();
+
+            return firstParagraph;
+        }
+
+        /// <summary>
+        /// Insert text into the document
+        /// </summary>
+        /// <param name="position">The position to insert the text at</param>
+        /// <param name="text">The text to insert</param>
+        /// <returns>The index of the first paragraph affected</returns>
+        int InsertInternal(int position, StyledText text)
+        {
+            // Find the position in the document
+            var paraIndex = GetParagraphForCodePointIndex(new CaretPosition(position), out var indexInParagraph);
+            var para = _paragraphs[paraIndex];
+
+            // Is it a text paragraph?
+            if (para.TextBlock == null)
+            {
+                // TODO:
+                throw new NotImplementedException();
+            }
+
+            // Split the passed text into paragraphs
+            var parts = text.CodePoints.GetRanges('\u2029').ToArray();
+            if (parts.Length > 1)
+            {
+                // Split the paragraph at the insertion point into paragraphs A and B
+                var paraA = para;
+                var paraB = new TextParagraph(para as TextParagraph, indexInParagraph, para.Length);
+                if (para.TextBlock.Length - indexInParagraph - 1 != 0)
+                    _undoManager.Do(new UndoDeleteText(paraA.TextBlock, indexInParagraph, para.TextBlock.Length - indexInParagraph - 1));
+
+                // Append the first part of the inserted text to the end of paragraph A
+                var firstPart = parts[0];
+                if (firstPart.Length != 0)
+                    _undoManager.Do(new UndoInsertText(paraA.TextBlock, indexInParagraph, text.Extract(firstPart.Offset, firstPart.Length)));
+
+                // Prepend the last text part of the inserted text to the start paragraph B
+                var lastPart = parts[parts.Length - 1];
+                if (lastPart.Length != 0)
+                    _undoManager.Do(new UndoInsertText(paraB.TextBlock, 0, text.Extract(lastPart.Offset, lastPart.Length)));
+
+                // We could do this above, but by doing it after the above InsertText operations
+                // we prevent subsequent typing from be coalesced into this unit.
+                _undoManager.Do(new UndoInsertParagraph(paraIndex + 1, paraB));
+
+                // Create new paragraphs for parts [1..N-1] of the inserted text and insert them
+                // betweeen paragraphs A and B.
+                for (int i = 1; i < parts.Length - 1; i++)
+                {
+                    var betweenPara = new TextParagraph(para as TextParagraph, para.Length - 1, 1);
+                    var part = parts[i];
+                    betweenPara.TextBlock.InsertText(0, text.Extract(part.Offset, part.Length));
+                    _undoManager.Do(new UndoInsertParagraph(paraIndex + 1, betweenPara));
+                }
+            }
+            else
+            {
+                _undoManager.Do(new UndoInsertText(para.TextBlock, indexInParagraph, text));
+            }
+
+            return paraIndex;
+        }
+
         /// <summary>
         /// Notify all attached views that the document has finished changing
         /// </summary>
@@ -1075,5 +1198,7 @@ namespace Topten.RichTextKit.Editor
         UndoManager<TextDocument> _undoManager;
         List<ITextDocumentView> _views = new List<ITextDocumentView>();
         ITextDocumentView _initiatingView;
+        ITextDocumentView _imeView;
+        TextRange _imeInitialSelection;
     }
 }
