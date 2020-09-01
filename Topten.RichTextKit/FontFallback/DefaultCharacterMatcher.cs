@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Topten.RichTextKit
 {
-    class DefaultCharacterMatcher : ICharacterMatcer
+    class DefaultCharacterMatcher : ICharacterMatcher
     {
         public DefaultCharacterMatcher()
         {

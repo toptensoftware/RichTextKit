@@ -27,7 +27,7 @@ namespace Topten.RichTextKit
     /// </summary>
     public class FontFallback
     {
-        internal struct Run
+        public struct Run
         {
             public int Start;
             public int Length;
@@ -41,9 +41,15 @@ namespace Topten.RichTextKit
         /// This instance is shared by all TextBlock instances and should be thread safe
         /// if used in a multi-threaded environment.
         /// </remarks>
-        public static ICharacterMatcer CharacterMatcher = new DefaultCharacterMatcher();
+        public static ICharacterMatcher CharacterMatcher = new DefaultCharacterMatcher();
 
-        internal static IEnumerable<Run> GetFontRuns(Slice<int> codePoints, SKTypeface typeface)
+        /// <summary>
+        /// Splits a sequence of code points into a series of runs with font fallback applied
+        /// </summary>
+        /// <param name="codePoints">The code points</param>
+        /// <param name="typeface">The preferred typeface</param>
+        /// <returns>A sequence of runs with unsupported code points replaced by a selected font fallback</returns>
+        public static IEnumerable<Run> GetFontRuns(Slice<int> codePoints, SKTypeface typeface)
         {
             // Get glyphs using the top-level typeface
             var glyphs = new ushort[codePoints.Length];
