@@ -890,36 +890,14 @@ namespace Topten.RichTextKit
                     oldSelStart = ctx.textPaintOptions.SelectionStart;
                     oldSelEnd = ctx.textPaintOptions.SelectionEnd;
 
-                    if (oldSelEnd.HasValue && oldSelEnd.Value < this.CodePointOffset)
+                    if (ctx.textPaintOptions.SelectionStart.HasValue)
                     {
-                        // Selection is before this paragraph
-                        ctx.textPaintOptions.SelectionStart = null;
-                        ctx.textPaintOptions.SelectionEnd = null;
+                        ctx.textPaintOptions.SelectionStart -= this.CodePointOffset;
                     }
-                    else if (oldSelStart.HasValue && oldSelStart.Value >= this.CodePointOffset + this.TextBlock.MeasuredLength)
-                    {
-                        // Selection is after this paragraph
-                        ctx.textPaintOptions.SelectionStart = null;
-                        ctx.textPaintOptions.SelectionEnd = null;
-                    }
-                    else
-                    {
-                        // Selection intersects with this paragraph
-                        if (oldSelStart.HasValue)
-                        {
-                            if (oldSelStart.Value < this.CodePointOffset)
-                                ctx.textPaintOptions.SelectionStart = 0;
-                            else
-                                ctx.textPaintOptions.SelectionStart = oldSelStart.Value - this.CodePointOffset;
-                        }
 
-                        if (oldSelEnd.HasValue)
-                        {
-                            if (oldSelEnd.Value < this.CodePointOffset + this.TextBlock.MeasuredLength)
-                                ctx.textPaintOptions.SelectionEnd = oldSelEnd.Value - this.CodePointOffset;
-                            else
-                                ctx.textPaintOptions.SelectionEnd = this.TextBlock.MeasuredLength;
-                        }
+                    if (ctx.textPaintOptions.SelectionEnd.HasValue)
+                    {
+                        ctx.textPaintOptions.SelectionEnd -= this.CodePointOffset;
                     }
                 }
 

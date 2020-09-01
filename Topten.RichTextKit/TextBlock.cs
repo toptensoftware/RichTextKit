@@ -2051,5 +2051,7 @@ public IReadOnlyList<StyleRun> StyleRuns
             Bidi.Instance.Value = new Bidi();
         }
 
+
+
     }
 }
