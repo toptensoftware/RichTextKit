@@ -25,20 +25,46 @@ namespace Topten.RichTextKit
     /// into a series of runs where unsupported code points are mapped to a
     /// fallback font.
     /// </summary>
-    class FontFallback
+    public class FontFallback
     {
+        /// <summary>
+        /// Specified details about a font fallback run
+        /// </summary>
         public struct Run
         {
+            /// <summary>
+            /// The starting code point index of this run
+            /// </summary>
             public int Start;
+
+            /// <summary>
+            /// The length of this run in code points
+            /// </summary>
             public int Length;
+
+            /// <summary>
+            /// The typeface to be used for this run
+            /// </summary>
             public SKTypeface Typeface;
         }
 
+        /// <summary>
+        /// Specifies the instance of the character matcher to be used for font fallback
+        /// </summary>
+        /// <remarks>
+        /// This instance is shared by all TextBlock instances and should be thread safe
+        /// if used in a multi-threaded environment.
+        /// </remarks>
+        public static ICharacterMatcher CharacterMatcher = new DefaultCharacterMatcher();
+
+        /// <summary>
+        /// Splits a sequence of code points into a series of runs with font fallback applied
+        /// </summary>
+        /// <param name="codePoints">The code points</param>
+        /// <param name="typeface">The preferred typeface</param>
+        /// <returns>A sequence of runs with unsupported code points replaced by a selected font fallback</returns>
         public static IEnumerable<Run> GetFontRuns(Slice<int> codePoints, SKTypeface typeface)
         {
-            // Get the font manager - we'll use this to select font fallbacks
-            var fontManager = SKFontManager.Default;
-
             // Get glyphs using the top-level typeface
             var glyphs = new ushort[codePoints.Length];
             var font = new SKFont(typeface);
@@ -52,7 +78,7 @@ namespace Topten.RichTextKit
                 if (glyphs[i] == 0)
                 {
                     // Check if there's a fallback available, if not, might as well continue with the current top-level typeface
-                    var subSpanTypeface = fontManager.MatchCharacter(typeface.FamilyName, typeface.FontWeight, typeface.FontWidth, typeface.FontSlant, null, codePoints[i]);
+                    var subSpanTypeface = CharacterMatcher.MatchCharacter(typeface.FamilyName, typeface.FontWeight, typeface.FontWidth, typeface.FontSlant, null, codePoints[i]);
                     if (subSpanTypeface == null)
                         continue;
 
@@ -87,7 +113,7 @@ namespace Topten.RichTextKit
                     while (unmatchedLength > 0)
                     {
                         // Find the font fallback using the first character
-                        subSpanTypeface = fontManager.MatchCharacter(typeface.FamilyName, typeface.FontWeight, typeface.FontWidth, typeface.FontSlant, null, codePoints[unmatchedStart]);
+                        subSpanTypeface = CharacterMatcher.MatchCharacter(typeface.FamilyName, typeface.FontWeight, typeface.FontWidth, typeface.FontSlant, null, codePoints[unmatchedStart]);
                         if (subSpanTypeface == null)
                         {
                             unmatchedEnd = unmatchedStart;

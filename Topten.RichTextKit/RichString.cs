@@ -883,10 +883,9 @@ namespace Topten.RichTextKit
                 {
                     // Save old selection ranges
                     oldSel = ctx.textPaintOptions.Selection;
-
-                    if (oldSel.HasValue)
+                    if (ctx.textPaintOptions.Selection.HasValue)
                     {
-                        ctx.textPaintOptions.Selection = oldSel.Value.Offset(-this.CodePointOffset);
+                        ctx.textPaintOptions.Selection = ctx.textPaintOptions.Selection.Value.Offset(-this.CodePointOffset);
                     }
                 }
 

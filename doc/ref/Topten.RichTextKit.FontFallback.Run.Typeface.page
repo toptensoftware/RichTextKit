@@ -1,0 +1,38 @@
+---
+title: "FontFallback.Run.Typeface"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 data-nav-secondary-text="Definition" id="definition">FontFallback.Run.Typeface Field</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.FontFallback.Run">FontFallback.Run</a><br />
+                        </small>
+</p>
+
+
+
+
+<p>The typeface to be used for this run</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public SkiaSharp.SKTypeface Typeface;</code></pre>
+
+
+<h2 id="field-type">Field Type</h2>    <table class="name-description">
+        <tr>
+            <td>SkiaSharp.SKTypeface</td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+

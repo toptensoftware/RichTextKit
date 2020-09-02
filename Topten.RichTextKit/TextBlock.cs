@@ -2017,5 +2017,7 @@ namespace Topten.RichTextKit
             Bidi.Instance.Value = new Bidi();
         }
 
+
+
     }
 }

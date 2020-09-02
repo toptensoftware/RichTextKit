@@ -43,6 +43,24 @@ navTree:
           - text: Properties
             subItems:
               - text: IsNone|./ref/Topten.RichTextKit.CaretInfo.IsNone
+      - text: FontFallback
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.FontFallback
+          - text: Constructors|./ref/Topten.RichTextKit.FontFallback..ctor
+          - text: Fields
+            subItems:
+              - text: CharacterMatcher|./ref/Topten.RichTextKit.FontFallback.CharacterMatcher
+          - text: Methods
+            subItems:
+              - text: GetFontRuns|./ref/Topten.RichTextKit.FontFallback.GetFontRuns
+      - text: FontFallback.Run
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.FontFallback.Run
+          - text: Fields
+            subItems:
+              - text: Length|./ref/Topten.RichTextKit.FontFallback.Run.Length
+              - text: Start|./ref/Topten.RichTextKit.FontFallback.Run.Start
+              - text: Typeface|./ref/Topten.RichTextKit.FontFallback.Run.Typeface
       - text: FontMapper
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.FontMapper
@@ -107,6 +125,12 @@ navTree:
           - text: Properties
             subItems:
               - text: IsNone|./ref/Topten.RichTextKit.HitTestResult.IsNone
+      - text: ICharacterMatcher
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.ICharacterMatcher
+          - text: Methods
+            subItems:
+              - text: MatchCharacter|./ref/Topten.RichTextKit.ICharacterMatcher.MatchCharacter
       - text: IStyle
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.IStyle
