@@ -27,10 +27,24 @@ namespace Topten.RichTextKit
     /// </summary>
     public class FontFallback
     {
+        /// <summary>
+        /// Specified details about a font fallback run
+        /// </summary>
         public struct Run
         {
+            /// <summary>
+            /// The starting code point index of this run
+            /// </summary>
             public int Start;
+
+            /// <summary>
+            /// The length of this run in code points
+            /// </summary>
             public int Length;
+
+            /// <summary>
+            /// The typeface to be used for this run
+            /// </summary>
             public SKTypeface Typeface;
         }
 
