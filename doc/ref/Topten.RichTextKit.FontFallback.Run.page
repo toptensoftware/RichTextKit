@@ -1,0 +1,65 @@
+---
+title: "Topten.RichTextKit.FontFallback.Run"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">FontFallback.Run Struct</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.FontFallback">FontFallback</a><br />
+                        </small>
+</p>
+
+
+<p>Specified details about a font fallback run</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public struct FontFallback.Run</code></pre>
+
+    <h2 id="inherits">Inheritance</h2>
+    <p>
+        FontFallback.Run
+ &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.ValueType">ValueType</a> &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.Object">object</a>    </p>
+
+
+
+
+
+
+
+
+    <h2 id="fields">Fields</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontFallback.Run.Length">Length</a></td>
+                <td><p>The length of this run in code points</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontFallback.Run.Start">Start</a></td>
+                <td><p>The starting code point index of this run</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontFallback.Run.Typeface">Typeface</a></td>
+                <td><p>The typeface to be used for this run</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+
+
+

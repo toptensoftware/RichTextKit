@@ -1,0 +1,95 @@
+---
+title: "ICharacterMatcher.MatchCharacter"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">ICharacterMatcher.MatchCharacter Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.ICharacterMatcher">ICharacterMatcher</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Provide a fallback typeface for a specified code point index</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">SkiaSharp.SKTypeface MatchCharacter(string familyName, int weight, int width, SkiaSharp.SKFontStyleSlant slant, string[] bcp47, int character);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.String">string</a> familyName
+                </td>
+                <td><p>The family name to use when searching.</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> weight
+                </td>
+                <td><p>The font weight to use when searching.</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> width
+                </td>
+                <td><p>The font width to use when searching.</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    SkiaSharp.SKFontStyleSlant slant
+                </td>
+                <td><p>The font slant to use when searching.</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.String">string</a>[] bcp47
+                </td>
+                <td><p>The ISO 639, 15924, and 3166-1 code to use when searching, such as &quot;ja&quot; and &quot;zh&quot;.</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> character
+                </td>
+                <td><p>The character to find a typeface for.</p>
+</td>
+            </tr>
+    </table>
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td>SkiaSharp.SKTypeface</td>
+            <td><p>Returns the SkiaSharp.SKTypeface that contains the given character, or null if none was found.</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

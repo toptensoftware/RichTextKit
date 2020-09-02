@@ -1,0 +1,52 @@
+---
+title: "Topten.RichTextKit.ICharacterMatcher"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">ICharacterMatcher Interface</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+            </small>
+</p>
+
+
+<p>Provides a mechanism to override the default font fallback character matching</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public interface ICharacterMatcher</code></pre>
+
+
+
+
+    <h2 id="remarks">Remarks</h2>
+<p>To override font fallback selection, assign an implementation of this interface
+to the <a href="./../ref/Topten.RichTextKit.FontFallback.CharacterMatcher">FontFallback.CharacterMatcher</a> property.</p>
+
+
+
+
+
+
+
+    <h2 id="methods">Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.ICharacterMatcher.MatchCharacter">MatchCharacter(string, int, int, SkiaSharp.SKFontStyleSlant, string[], int)</a></td>
+                <td><p>Provide a fallback typeface for a specified code point index</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+

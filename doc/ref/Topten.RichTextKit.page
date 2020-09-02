@@ -9,6 +9,13 @@ import: "../.common.page"
     <h2 id="classes">Classes</h2>
     <table class="name-description">
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontFallback"> FontFallback</a></td>
+                <td><p>Helper to split a run of code points based on a particular typeface
+into a series of runs where unsupported code points are mapped to a
+fallback font.</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.FontMapper"> FontMapper</a></td>
                 <td><p>The FontMapper class is responsible for mapping style typeface information
 to an SKTypeface.</p>
@@ -69,6 +76,11 @@ style.</p>
     <h2 id="interfaces">Interfaces</h2>
     <table class="name-description">
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.ICharacterMatcher"> ICharacterMatcher</a></td>
+                <td><p>Provides a mechanism to override the default font fallback character matching</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.IStyle"> IStyle</a></td>
                 <td><p>Provides styling information for a run of text.</p>
 </td>
@@ -81,6 +93,11 @@ style.</p>
                 <td><a href="./../ref/Topten.RichTextKit.CaretInfo"> CaretInfo</a></td>
                 <td><p>Used to return caret positioning information from the
 <a href="./../ref/Topten.RichTextKit.TextBlock.GetCaretInfo">TextBlock.GetCaretInfo(int)</a> method.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontFallback.Run"> FontFallback.Run</a></td>
+                <td><p>Specified details about a font fallback run</p>
 </td>
             </tr>
             <tr>

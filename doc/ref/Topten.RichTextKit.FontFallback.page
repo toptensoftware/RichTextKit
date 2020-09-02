@@ -1,0 +1,78 @@
+---
+title: "Topten.RichTextKit.FontFallback"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">FontFallback Class</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+            </small>
+</p>
+
+
+<p>Helper to split a run of code points based on a particular typeface
+into a series of runs where unsupported code points are mapped to a
+fallback font.</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public class FontFallback</code></pre>
+
+    <h2 id="inherits">Inheritance</h2>
+    <p>
+        FontFallback
+ &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.Object">object</a>    </p>
+
+
+
+
+
+    <h2 id="constructors">Constructors</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontFallback..ctor">FontFallback()</a></td>
+                <td></td>
+            </tr>
+    </table>
+
+
+
+    <h2 id="fields">Fields</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontFallback.CharacterMatcher">CharacterMatcher</a></td>
+                <td><p>Specifies the instance of the character matcher to be used for font fallback</p>
+</td>
+            </tr>
+    </table>
+
+
+    <h2 id="methods">Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontFallback.GetFontRuns">GetFontRuns(Utils.Slice&lt;int&gt;, SkiaSharp.SKTypeface)</a></td>
+                <td><p>Splits a sequence of code points into a series of runs with font fallback applied</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+    <h2 id="nested-types">Nested Types</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontFallback.Run">FontFallback.Run</a></td>
+                <td><p>Specified details about a font fallback run</p>
+</td>
+            </tr>
+    </table>
+
+
