@@ -201,6 +201,62 @@ namespace Topten.RichTextKit
         /// </summary>
         const int overScale = 512;
 
+
+
+        /// <summary>
+        /// Shape an array of utf-32 code points replacing each grapheme cluster with a replacement character
+        /// </summary>
+        /// <param name="bufferSet">A re-usable text shaping buffer set that results will be allocated from</param>
+        /// <param name="codePoints">The utf-32 code points to be shaped</param>
+        /// <param name="style">The user style for the text</param>
+        /// <param name="clusterAdjustment">A value to add to all reported cluster numbers</param>
+        /// <returns>A TextShaper.Result representing the shaped text</returns>
+        public Result ShapeReplacement(ResultBufferSet bufferSet, Slice<int> codePoints, IStyle style, int clusterAdjustment)
+        {
+            var clusters = GraphemeClusterAlgorithm.GetBoundaries(codePoints).ToArray();
+            var glyph = _typeface.GetGlyph(style.ReplacementCharacter);
+            var font = new SKFont(_typeface, overScale);
+            float glyphScale = style.FontSize / overScale;
+
+            float[] widths = new float[1];
+            SKRect[] bounds = new SKRect[1];
+            font.GetGlyphWidths((new ushort[] { glyph }).AsSpan(), widths.AsSpan(), bounds.AsSpan());
+
+            var r = new Result();
+            r.GlyphIndicies = bufferSet.GlyphIndicies.Add((int)clusters.Length-1, false);
+            r.GlyphPositions = bufferSet.GlyphPositions.Add((int)clusters.Length-1, false);
+            r.Clusters = bufferSet.Clusters.Add((int)clusters.Length-1, false);
+            r.CodePointXCoords = bufferSet.CodePointXCoords.Add(codePoints.Length, false);
+            r.CodePointXCoords.Fill(0);
+
+            float xCoord = 0;
+            for (int i = 0; i < clusters.Length-1; i++)
+            {
+                r.GlyphPositions[i].X = xCoord * glyphScale;
+                r.GlyphPositions[i].Y = 0;
+                r.GlyphIndicies[i] = codePoints[clusters[i]] == 0x2029 ? (ushort)0 : glyph;
+                r.Clusters[i] = clusters[i] + clusterAdjustment;
+
+                for (int j = clusters[i]; j < clusters[i + 1]; j++)
+                {
+                    r.CodePointXCoords[j] = r.GlyphPositions[i].X;
+                }
+
+                xCoord += widths[0] + style.LetterSpacing / glyphScale; 
+            }
+
+            // Also return the end cursor position
+            r.EndXCoord = new SKPoint(xCoord * glyphScale, 0);
+
+            // And some other useful metrics
+            r.Ascent = _fontMetrics.Ascent * style.FontSize / overScale;
+            r.Descent = _fontMetrics.Descent * style.FontSize / overScale;
+            r.XMin = _fontMetrics.XMin * style.FontSize / overScale;
+
+            return r;
+        }
+
+
         /// <summary>
         /// Shape an array of utf-32 code points
         /// </summary>

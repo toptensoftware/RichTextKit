@@ -371,7 +371,7 @@ namespace Topten.RichTextKit
                 {
                     Color = options.SelectionColor,
                     IsStroke = false,
-                    IsAntialias = options.IsAntialias,
+                    IsAntialias = false,
                 };
             }
             else
@@ -1158,7 +1158,7 @@ namespace Topten.RichTextKit
             var codePointsSlice = _codePoints.SubSlice(start, length);
 
             // Split into font fallback runs
-            foreach (var fontRun in FontFallback.GetFontRuns(codePointsSlice, typeface))
+            foreach (var fontRun in FontFallback.GetFontRuns(codePointsSlice, typeface, style.ReplacementCharacter))
             {
                 // Add this run
                 AddFontRun(styleRun, start + fontRun.Start, fontRun.Length, direction, style, fontRun.Typeface, typeface);
@@ -1278,7 +1278,11 @@ namespace Topten.RichTextKit
         {
             // Shape the text
             var shaper = TextShaper.ForTypeface(typeface);
-            var shaped = shaper.Shape(_textShapingBuffers, codePoints, style, direction, codePoints.Start, asFallbackFor, ResolveTextAlignment());
+            TextShaper.Result shaped;
+            if (style.ReplacementCharacter == '\0')
+                shaped = shaper.Shape(_textShapingBuffers, codePoints, style, direction, codePoints.Start, asFallbackFor, ResolveTextAlignment());
+            else
+                shaped = shaper.ShapeReplacement(_textShapingBuffers, codePoints, style, codePoints.Start);
 
             // Create the run
             var fontRun = FontRun.Pool.Value.Get();
@@ -1306,7 +1310,7 @@ namespace Topten.RichTextKit
         {
             // Work out possible line break positions
             _lineBreaker.Reset(_codePoints.AsSlice());
-            var lineBreakPositions = _lineBreaker.GetBreaks();
+            var lineBreakPositions = _lineBreaker.GetBreaks(!_maxWidth.HasValue);
 
             int frIndexStartOfLine = 0;     // Index of the first font run in the current line
             int frIndex = 0;                // Index of the current font run

@@ -27,13 +27,10 @@ namespace Topten.RichTextKit.Editor
         /// <summary>
         /// Constructs a new TextParagraph
         /// </summary>
-        public TextParagraph(string text)
+        public TextParagraph(IStyle style)
         {
-            // Temporary code for now to setup some content...
             _textBlock = new TextBlock();
-            _textBlock.AddText(text, new Style() { FontFamily = "Open Sans", FontSize = 16 });
-            MarginTop = 10;
-            MarginBottom = 10;
+            _textBlock.AddText("\u2029", style);
         }
 
         // Create a new textblock by copying the content of another

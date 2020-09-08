@@ -140,6 +140,13 @@ namespace Topten.RichTextKit
             set { CheckNotSealed(); _textDirection = value; }
         }
 
+        /// <inheritdoc />
+        public char ReplacementCharacter
+        {
+            get => _replacementCharacter;
+            set { CheckNotSealed(); _replacementCharacter = value; }
+        }
+
 
         bool _sealed;
         string _fontFamily = "Arial";
@@ -153,6 +160,7 @@ namespace Topten.RichTextKit
         float _letterSpacing;
         FontVariant _fontVariant;
         TextDirection _textDirection = TextDirection.Auto;
+        char _replacementCharacter = '\0';
 
         /// <summary>
         /// Modifies this style with one or more attribute changes and returns a new style
@@ -185,7 +193,8 @@ namespace Topten.RichTextKit
                SKColor? textColor = null,
                float? letterSpacing = null,
                FontVariant? fontVariant = null,
-               TextDirection? textDirection = null
+               TextDirection? textDirection = null,
+               char? replacementCharacter = null
             )
         {
             // Resolve new style against current style
@@ -202,6 +211,7 @@ namespace Topten.RichTextKit
                 LetterSpacing = letterSpacing ?? this.LetterSpacing,
                 FontVariant = fontVariant ?? this.FontVariant,
                 TextDirection = textDirection ?? this.TextDirection,
+                ReplacementCharacter = replacementCharacter ?? this.ReplacementCharacter,
             };
         }
     }

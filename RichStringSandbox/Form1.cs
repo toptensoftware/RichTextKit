@@ -124,15 +124,14 @@ namespace RichStringSandbox
 
             if (_htr.OverCodePointIndex >= 0)
             {
-                options.SelectionStart = _htr.OverCodePointIndex;
-                options.SelectionEnd = options.SelectionStart + 1;// _textBlock.CaretIndicies[_textBlock.LookupCaretIndex(htr.Value.OverCodePointIndex) + 1];
+                options.Selection = new TextRange(_htr.OverCodePointIndex, _htr.OverCodePointIndex + 1);
             }
 
             _richString.Paint(canvas, new SKPoint(margin, margin), options);
 
             if (_htr.ClosestCodePointIndex >= 0)
             {
-                var ci = _richString.GetCaretInfo(_htr.ClosestCodePointIndex);
+                var ci = _richString.GetCaretInfo(_htr.ClosestCodePointIndex, false);
                 using (var paint = new SKPaint()
                 {
                     Color = new SKColor(0xFF000000),

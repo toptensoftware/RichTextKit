@@ -63,11 +63,31 @@ namespace Topten.RichTextKit
         /// <param name="codePoints">The code points</param>
         /// <param name="typeface">The preferred typeface</param>
         /// <returns>A sequence of runs with unsupported code points replaced by a selected font fallback</returns>
-        public static IEnumerable<Run> GetFontRuns(Slice<int> codePoints, SKTypeface typeface)
+        public static IEnumerable<Run> GetFontRuns(Slice<int> codePoints, SKTypeface typeface, char replacementCharacter = '\0')
         {
+            var font = new SKFont(typeface);
+
+            if (replacementCharacter != '\0')
+            {
+                var glyph = font.GetGlyph(replacementCharacter);
+                if (glyph == 0)
+                {
+                    var fallbackTypeface = CharacterMatcher.MatchCharacter(typeface.FamilyName, typeface.FontWeight, typeface.FontWidth, typeface.FontSlant, null, replacementCharacter);
+                    if (fallbackTypeface != null)
+                        typeface = fallbackTypeface;
+                }
+
+                yield return new Run()
+                {
+                    Start = 0,
+                    Length = codePoints.Length,
+                    Typeface = typeface,
+                };
+                yield break;
+            }
+
             // Get glyphs using the top-level typeface
             var glyphs = new ushort[codePoints.Length];
-            var font = new SKFont(typeface);
             font.GetGlyphs(codePoints.AsSpan(), glyphs);
 
             // Look for subspans that need font fallback (where glyphs are zero)
@@ -82,8 +102,12 @@ namespace Topten.RichTextKit
                     if (subSpanTypeface == null)
                         continue;
 
+                    // Don't fallback for whitespace characters
+                    if (UnicodeClasses.BoundaryGroup(codePoints[i]) == WordBoundaryClass.Space)
+                        continue;
+
                     // Must be a cluster boundary
-                    if (!GraphemeClusterAlgorithm.IsBoundary(codePoints, i))
+                        if (!GraphemeClusterAlgorithm.IsBoundary(codePoints, i))
                         continue;
 
                     // We can do font fallback...

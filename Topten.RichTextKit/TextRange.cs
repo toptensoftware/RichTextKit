@@ -261,5 +261,10 @@ namespace Topten.RichTextKit
                     Math.Min(a.Minimum, b.Minimum), b.AltPosition);
             }
         }
+
+        public override string ToString()
+        {
+            return $"{Start} → {End} (len: {Length})";
+        }
     }
 }

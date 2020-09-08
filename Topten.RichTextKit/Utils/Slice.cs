@@ -208,7 +208,7 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Check if the slice contains a value
+        /// Find the first index of a specified value
         /// </summary>
         /// <param name="value">The value to search for</param>
         /// <returns>The index of the first occurance, or -1 if not found</returns>
@@ -222,6 +222,36 @@ namespace Topten.RichTextKit.Utils
                 }
             }
             return -1;
+        }
+
+        /// <summary>
+        /// Find the first index of one or more valus
+        /// </summary>
+        /// <param name="values">The value to search for</param>
+        /// <returns>The index of the first occurance, of -1 if not found</returns>
+        public int IndexOfAny(params T[] values)
+        {
+            for (int i = 0; i < Length; i++)
+            {
+                if (values.Contains(this[i]))
+                    return i;
+            }
+
+            return -1;
+        }
+
+        /// <summary>
+        /// Replace all instances of a value with another
+        /// </summary>
+        /// <param name="replace">The value to replace</param>
+        /// <param name="with">The replacement value</param>
+        public void Replace(T replace, T with)
+        {
+            for (int i = 0; i < Length; i++)
+            {
+                if (this[i].Equals(replace))
+                    this[i] = with;
+            }
         }
 
 

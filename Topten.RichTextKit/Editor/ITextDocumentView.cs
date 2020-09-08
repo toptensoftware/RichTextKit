@@ -10,8 +10,23 @@ namespace Topten.RichTextKit.Editor
     public interface ITextDocumentView
     {
         /// <summary>
+        /// Notifies that the view needs to be reset, typically because
+        /// the entire content has been reloaded or updated
+        /// </summary>
+        /// <param name="view">The view initiating the change</param>
+        void OnReset();
+
+        /// <summary>
+        /// Notifies that something other than the content of the document
+        /// has changed (eg: margins) and the view needs to be redrawn but 
+        /// the same selection can be maintained
+        /// </summary>
+        /// <param name="view">The view initiating the change</param>
+        void OnRedraw();
+
+        /// <summary>
         /// Notifies that the document is about to change
-        /// </summary>C:\Users\Brad\Projects\RichTextKit\Topten.RichTextKit\Editor\ITextDocumentView.cs
+        /// </summary>
         /// <param name="view">The view initiating the change</param>
         void OnDocumentWillChange(ITextDocumentView view);
 

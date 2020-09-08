@@ -18,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using Topten.RichTextKit.Editor.UndoUnits;
 using Topten.RichTextKit.Utils;
 
@@ -43,17 +42,104 @@ namespace Topten.RichTextKit.Editor
             _undoManager.EndOperation += FireDocumentDidChange;
 
             // Default margins
-            MarginLeft = 10;
-            MarginRight = 10;
-            MarginTop = 10;
-            MarginBottom = 10;
+            MarginLeft = 3;
+            MarginRight = 3;
+            MarginTop = 3;
+            MarginBottom = 3;
 
             // Temporary... add some text to work with
-            _paragraphs.Add(new TextParagraph("The quick brown fox jumps over the lazy dog.\u2029"));
-            _paragraphs.Add(new TextParagraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pellentesque non ante ut luctus. Donec vitae augue vel augue hendrerit gravida. Fusce imperdiet nunc at.\u2029"));
-            _paragraphs.Add(new TextParagraph("Vestibulum condimentum quam et neque facilisis venenatis. Nunc dictum lobortis.\u2029"));
+            _paragraphs.Add(new TextParagraph(_defaultStyle));
         }
 
+        /// <summary>
+        /// Set the document margins
+        /// </summary>
+        /// <remarks>
+        /// This operation resets the undo manager
+        /// </remarks>
+        /// <param name="left">The left margin</param>
+        /// <param name="top">The top margin</param>
+        /// <param name="right">The right margin</param>
+        /// <param name="bottom">The bottom margin</param>
+        public void SetMargins(float left, float top, float right, float bottom)
+        {
+            MarginLeft = left;
+            MarginTop = top;
+            MarginRight = right;
+            MarginBottom = bottom;
+            InvalidateLayout();
+            FireDocumentRedraw();
+        }
+
+        /// <summary>
+        /// Specifies if the document is in single line mode 
+        /// </summary>
+        public bool SingleLineMode
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Specifies if the document is in plain text mode
+        /// </summary>
+        public bool PlainTextMode
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Specifies the style to be used in plain text mode
+        /// </summary>
+        public IStyle DefaultStyle
+        {
+            get => _defaultStyle;
+            set
+            {
+                _defaultStyle = value;
+                if (PlainTextMode)
+                {
+                    foreach (var p in _paragraphs)
+                    {
+                        p.TextBlock.ApplyStyle(0, p.TextBlock.Length, _defaultStyle);
+                    }
+                    InvalidateLayout();
+                    FireDocumentRedraw();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get/set the entire document text
+        /// </summary>
+        public string Text
+        {
+            get
+            {
+                return this.GetText(new TextRange(0, Length)).ToString();
+            }
+            set
+            {
+                // Suppress normal events
+                _suppressDocumentChangeEvents = true;
+
+                // Update document text
+                _paragraphs.Clear();
+                _paragraphs.Add(new TextParagraph(_defaultStyle));
+                ReplaceText(null, new TextRange(0, 0), value, EditSemantics.None);
+
+                // Disable undo
+                _undoManager.Clear();
+
+                // Will need layout update
+                InvalidateLayout();
+
+                // Restore events and fire a document reset event
+                _suppressDocumentChangeEvents = false;
+                FireDocumentReset();
+            }
+        }
 
         /// <summary>
         /// Registers a new view to receive notifications of changes to the document
@@ -211,7 +297,7 @@ namespace Topten.RichTextKit.Editor
                 }
                 else
                 {
-                    throw new NotImplementedException("MeasuredWidth for non-line-wrap documents not implemented");
+                    return _measuredWidth;
                 }
             }
         }
@@ -402,11 +488,14 @@ namespace Topten.RichTextKit.Editor
                     if (paraIndex + 1 < _paragraphs.Count)
                         return new CaretPosition(_paragraphs[paraIndex + 1].CodePointIndex);
                     else
-                        return new CaretPosition(Length);
+                        return new CaretPosition(Length - 1);
                 }
 
                 // Move to new position in this paragraph
-                return new CaretPosition(para.CodePointIndex + indicies[ii]);
+                var pos = para.CodePointIndex + indicies[ii];
+                if (pos >= Length)
+                    pos = Length - 1;
+                return new CaretPosition(pos);
             }
 
             // Helper for line up/down
@@ -652,8 +741,24 @@ namespace Topten.RichTextKit.Editor
         /// <param name="semantics">Controls how undo operations are coalesced and view selections updated</param>"
         public void ReplaceText(ITextDocumentView view, TextRange range, Slice<int> codePoints, EditSemantics semantics)
         {
+            // Check range is valid
+            if (range.Minimum < 0 || range.Maximum > this.Length)
+                throw new ArgumentException("Invalid range", nameof(range));
+
             if (IsImeComposing)
                 FinishImeComposition(view);
+
+            // Convert new lines to paragraph separators
+            if (PlainTextMode)
+                codePoints.Replace('\n', '\u2029');
+
+            // Break at the first line break
+            if (SingleLineMode)
+            {
+                int breakPos = codePoints.IndexOfAny('\n', '\r', '\u2029');
+                if (breakPos >= 0)
+                    codePoints = codePoints.SubSlice(0, breakPos);
+            }
 
             ReplaceTextInternal(view, range, new StyledText(codePoints), semantics, -1);
         }
@@ -764,8 +869,47 @@ namespace Topten.RichTextKit.Editor
                 buf.Add(para.TextBlock.CodePoints.SubSlice(subrun.Offset, subrun.Length));
             }
 
+            // In plain text mode, replace paragraph separators with new line characters
+            if (PlainTextMode)
+            {
+                buf.Replace('\u2029', '\n');
+            }
+
+            // In single line mode, stop at the first line break (which should be the only one at end)
+            if (SingleLineMode)
+            {
+                int breakPos = Array.IndexOf(buf.Underlying, '\n');
+                if (breakPos >= 0)
+                {
+                    buf.Delete(breakPos, buf.Length - breakPos);
+                }
+            }
+
             // Done!
             return buf;
+        }
+
+        /// <summary>
+        /// Gets the range of text that will be overwritten by overtype mode
+        /// at a particular location in the document
+        /// </summary>
+        /// <param name="range">The current selection range</param>
+        /// <returns>The range that will be replaced by overtyping</returns>
+        public TextRange GetOvertypeRange(TextRange range)
+        {
+            if (range.IsRange)
+                return range;
+
+            float? unused = null;
+            var nextPos = Navigate(range.CaretPosition, NavigationKind.CharacterRight, 0, ref unused);
+
+            var paraThis = GetParagraphForCodePointIndex(range.CaretPosition, out var _);
+            var paraNext = GetParagraphForCodePointIndex(nextPos, out var _);
+
+            if (paraThis == paraNext && nextPos.CodePointIndex < this.Length)
+                range.End = nextPos.CodePointIndex;
+
+            return range;
         }
 
         /// <summary>
@@ -892,6 +1036,8 @@ namespace Topten.RichTextKit.Editor
             float prevYMargin = MarginTop;
             int codePointIndex = 0;
 
+            _measuredWidth = 0;
+
             // Layout paragraphs
             for (int i = 0; i < _paragraphs.Count; i++)
             {
@@ -906,6 +1052,11 @@ namespace Topten.RichTextKit.Editor
                 para.ContentYCoord = yCoord + Math.Max(para.MarginTop, prevYMargin);
                 para.CodePointIndex = codePointIndex;
 
+                // Width
+                var paraWidth = para.ContentWidth + para.MarginLeft + para.MarginTop;
+                if (paraWidth > _measuredWidth)
+                    _measuredWidth = paraWidth;
+
                 // Update positions
                 yCoord = para.ContentYCoord + para.ContentHeight;
                 prevYMargin = para.MarginBottom;
@@ -913,8 +1064,31 @@ namespace Topten.RichTextKit.Editor
             }
 
             // Update the totals
+            _measuredWidth += MarginLeft + MarginRight;
             _measuredHeight = yCoord + Math.Max(prevYMargin, MarginBottom);
             _totalLength = codePointIndex;
+        }
+
+        /// <summary>
+        /// Notify all attached views that the document has been reset
+        /// </summary>
+        internal void FireDocumentReset()
+        {
+            for (int i = _views.Count - 1; i >= 0; i--)
+            {
+                _views[i].OnReset();
+            }
+        }
+
+        /// <summary>
+        /// Notify all attached views that the document has been reset
+        /// </summary>
+        internal void FireDocumentRedraw()
+        {
+            for (int i = _views.Count - 1; i >= 0; i--)
+            {
+                _views[i].OnRedraw();
+            }
         }
 
         /// <summary>
@@ -922,6 +1096,9 @@ namespace Topten.RichTextKit.Editor
         /// </summary>
         internal void FireDocumentWillChange()
         {
+            if (_suppressDocumentChangeEvents)
+                return;
+
             // Notify all views
             for (int i = _views.Count - 1; i >= 0; i--)
             {
@@ -935,6 +1112,9 @@ namespace Topten.RichTextKit.Editor
         /// <param name="info">Info about the changes to the document</param>
         internal void FireDocumentChange(DocumentChangeInfo info)
         {
+            if (_suppressDocumentChangeEvents)
+                return;
+
             // Layout is now invalid
             InvalidateLayout();
 
@@ -945,22 +1125,22 @@ namespace Topten.RichTextKit.Editor
             }
         }
 
-        public TextRange GetOvertypeRange(TextRange range)
+        /// <summary>
+        /// Notify all attached views that the document has finished changing
+        /// </summary>
+        internal void FireDocumentDidChange()
         {
-            if (range.IsRange)
-                return range;
+            if (_suppressDocumentChangeEvents)
+                return;
 
-            float? unused = null;
-            var nextPos = Navigate(range.CaretPosition, NavigationKind.CharacterRight, 0, ref unused);
-
-            var paraThis = GetParagraphForCodePointIndex(range.CaretPosition, out var _);
-            var paraNext = GetParagraphForCodePointIndex(nextPos, out var _);
-
-            if (paraThis == paraNext)
-                range.End = nextPos.CodePointIndex;
-
-            return range;
+            // Notify all views
+            for (int i = _views.Count - 1; i >= 0; i--)
+            {
+                _views[i].OnDocumentDidChange(_initiatingView);
+            }
         }
+
+
 
         /// <summary>
         /// Internal helper to replace text creating an undo unit
@@ -972,10 +1152,6 @@ namespace Topten.RichTextKit.Editor
         /// <param name="imeCaretOffset">The position of the IME caret relative to the start of the range</param>
         void ReplaceTextInternal(ITextDocumentView view, TextRange range, StyledText text, EditSemantics semantics, int imeCaretOffset)
         {
-            // Check range is valid
-            if (range.Minimum < 0 || range.Maximum > this.Length)
-                throw new ArgumentException("Invalid range", nameof(range));
-
             // Quit if redundant
             if (!range.IsRange && text.Length == 0)
                 return;
@@ -1165,7 +1341,7 @@ namespace Topten.RichTextKit.Editor
                     var betweenPara = new TextParagraph(para as TextParagraph, para.Length - 1, 1);
                     var part = parts[i];
                     betweenPara.TextBlock.InsertText(0, text.Extract(part.Offset, part.Length));
-                    _undoManager.Do(new UndoInsertParagraph(paraIndex + 1, betweenPara));
+                    _undoManager.Do(new UndoInsertParagraph(paraIndex + i, betweenPara));
                 }
             }
             else
@@ -1176,21 +1352,10 @@ namespace Topten.RichTextKit.Editor
             return paraIndex;
         }
 
-        /// <summary>
-        /// Notify all attached views that the document has finished changing
-        /// </summary>
-        internal void FireDocumentDidChange()
-        {
-            // Notify all views
-            for (int i = _views.Count - 1; i >= 0; i--)
-            {
-                _views[i].OnDocumentDidChange(_initiatingView);
-            }
-        }
-
         /// Private members
         float _pageWidth = 1000;            // Arbitary default
         float _measuredHeight = 0;
+        float _measuredWidth = 0;
         int _totalLength = 0;
         bool _layoutValid = false;
         bool _lineWrap = true;
@@ -1200,5 +1365,7 @@ namespace Topten.RichTextKit.Editor
         ITextDocumentView _initiatingView;
         ITextDocumentView _imeView;
         TextRange _imeInitialSelection;
+        IStyle _defaultStyle = StyleManager.Default.Value.DefaultStyle;
+        bool _suppressDocumentChangeEvents = false;
     }
 }
