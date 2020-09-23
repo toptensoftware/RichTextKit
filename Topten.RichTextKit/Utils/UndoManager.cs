@@ -23,7 +23,6 @@ namespace Topten.RichTextKit.Utils
         /// <summary>
         /// Execute an undo unit and add it to the manager 
         /// </summary>
-        /// <param name="context">The document context object</param>
         /// <param name="unit">The undo unit to execute</param>
         public void Do(UndoUnit<T> unit)
         {
@@ -93,7 +92,6 @@ namespace Topten.RichTextKit.Utils
         /// <summary>
         /// Redoes previously undone operations
         /// </summary>
-        /// <param name="context">The document context object</param>
         public void Redo()
         {
             // Check if can
@@ -138,7 +136,7 @@ namespace Topten.RichTextKit.Utils
         /// <summary>
         /// Stars a group operation
         /// </summary>
-        /// <param name="description">A user readable description of the operation</param>
+        /// <param name="group">The UndoGroup to be used</param>
         /// <returns>An IDisposable that when disposed will close the group</returns>
         public IDisposable OpenGroup(UndoGroup<T> group)
         {
@@ -570,7 +568,6 @@ namespace Topten.RichTextKit.Utils
         /// Informs the unit that no subsequent coalescing operations
         /// will be appended to this unit
         /// </summary>
-        /// <param name="context">The document context object</param>
         public virtual void Seal() 
         {
             _sealed = true;
@@ -637,9 +634,10 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
-        /// Adds a unit to this group
+        /// Inserts an unit to this group
         /// </summary>
-        /// <param name="unit">The UndoUnit to be added</param>
+        /// <param name="position">The position at which the unit should be inserted</param>
+        /// <param name="unit">The UndoUnit to be inserted</param>
         public void Insert(int position, UndoUnit<T> unit)
         {
             unit.Group = this;

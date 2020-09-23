@@ -164,7 +164,8 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Split this text block at the specified code point index
         /// </summary>
-        /// <param name="codePointIndex">The code point index of the split position</param>
+        /// <param name="from">The code point index to copy from</param>
+        /// <param name="length">The number of code points to copy</param>
         /// <returns>A new text block with the RHS split part of the text</returns>
         public TextBlock Copy(int from, int length)
         {
@@ -186,6 +187,7 @@ namespace Topten.RichTextKit
             return other;
         }
 
+        /// <inheritdoc />
         protected override void OnChanged()
         {
             InvalidateLayout();

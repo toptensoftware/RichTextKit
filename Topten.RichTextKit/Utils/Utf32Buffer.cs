@@ -55,7 +55,7 @@ namespace Topten.RichTextKit.Utils
         /// <summary>
         /// Appends utf32 data to this buffer
         /// </summary>
-        /// <param name="str">The string of text to be appended</param>
+        /// <param name="data">The UTF32 data to be appended</param>
         /// <returns>A slice representing the added UTF-32 data.</returns>
         public new Slice<int> Add(Slice<int> data)
         {
@@ -87,7 +87,7 @@ namespace Topten.RichTextKit.Utils
         /// Appends utf32 data to this buffer
         /// </summary>
         /// <param name="position">Position to insert the string</param>
-        /// <param name="str">The string of text to be appended</param>
+        /// <param name="data">The string of text to be appended</param>
         /// <returns>A slice representing the added UTF-32 data.</returns>
         public new Slice<int> Insert(int position, Slice<int> data)
         {

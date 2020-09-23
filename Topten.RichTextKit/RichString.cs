@@ -650,30 +650,30 @@ namespace Topten.RichTextKit
         }
 
 
-        /// <inheritdoc cref="TextBlock.GetCaretInfo(int, bool)/>
-        public CaretInfo GetCaretInfo(int codePointIndex, bool altPosition)
+        /// <inheritdoc cref="TextBlock.GetCaretInfo(CaretPosition)"/>
+        public CaretInfo GetCaretInfo(CaretPosition position)
         {
             Layout();
 
             // Is it outside the displayed range?
-            if (codePointIndex < 0 || codePointIndex > MeasuredLength)
+            if (position.CodePointIndex < 0 || position.CodePointIndex > MeasuredLength)
                 return CaretInfo.None;
 
             // Find the paragraph containing that code point
             ParagraphInfo p;
-            if (codePointIndex == MeasuredLength)
+            if (position.CodePointIndex == MeasuredLength)
             {
                 // Special case for after the last displayed paragraph
                 p = _paragraphs.LastOrDefault(x => !x.Truncated);
             }
             else
             {
-                p = ParagraphForCodePointIndex(codePointIndex);
+                p = ParagraphForCodePointIndex(position.CodePointIndex);
             }
 
 
             // Get the caret info
-            var ci = p.TextBlock.GetCaretInfo(new CaretPosition(codePointIndex - p.CodePointOffset, altPosition));
+            var ci = p.TextBlock.GetCaretInfo(new CaretPosition(position.CodePointIndex - p.CodePointOffset, position.AltPosition));
 
             // Adjust it
             ci.CodePointIndex += p.CodePointOffset;

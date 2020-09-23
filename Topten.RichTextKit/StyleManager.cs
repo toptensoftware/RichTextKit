@@ -221,6 +221,7 @@ namespace Topten.RichTextKit
         /// <param name="letterSpacing">The new letterSpacing</param>
         /// <param name="fontVariant">The new font variant</param>
         /// <param name="textDirection">The new text direction</param>
+        /// <param name="replacementCharacter">The new replacement character</param>
         /// <returns>An IStyle for the new style</returns>
         public IStyle Update(
                string fontFamily = null,

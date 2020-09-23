@@ -62,6 +62,7 @@ namespace Topten.RichTextKit
         /// </summary>
         /// <param name="codePoints">The code points</param>
         /// <param name="typeface">The preferred typeface</param>
+        /// <param name="replacementCharacter">The replacement character to be used for the run</param>
         /// <returns>A sequence of runs with unsupported code points replaced by a selected font fallback</returns>
         public static IEnumerable<Run> GetFontRuns(Slice<int> codePoints, SKTypeface typeface, char replacementCharacter = '\0')
         {

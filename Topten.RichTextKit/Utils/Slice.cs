@@ -190,9 +190,8 @@ namespace Topten.RichTextKit.Utils
         /// <summary>
         /// Split this slice on a delimiter
         /// </summary>
-        /// <param name=""></param>
-        /// <param name=""></param>
-        /// <returns></returns>
+        /// <param name="delimiter">The delimiter</param>
+        /// <returns>An enumeration of slices</returns>
         public IEnumerable<Slice<T>> Split(T delimiter)
         {
             int start = 0;

@@ -41,6 +41,7 @@ namespace Topten.RichTextKit
         /// Initializes a TextRange with a non-range position
         /// </summary>
         /// <param name="position">The code point index of the position</param>
+        /// <param name="altPosition">Whether the caret should be displayed in its alternative position</param>
         public TextRange(int position, bool altPosition = false)
         {
             Start = position;
@@ -262,6 +263,7 @@ namespace Topten.RichTextKit
             }
         }
 
+        /// <inheritdoc />
         public override string ToString()
         {
             return $"{Start} → {End} (len: {Length})";

@@ -197,6 +197,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Add all the text from another text block to this text block
         /// </summary>
+        /// <param name="offset">The position at which to insert the text</param>
         /// <param name="text">Text to add</param>
         public void InsertText(int offset, StyledText text)
         {
@@ -473,9 +474,10 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// Split this text block at the specified code point index
+        /// Extract text from this styled text block
         /// </summary>
-        /// <param name="codePointIndex">The code point index of the split position</param>
+        /// <param name="from">The code point offset to extract from</param>
+        /// <param name="length">The number of code points to extract</param>
         /// <returns>A new text block with the RHS split part of the text</returns>
         public StyledText Extract(int from, int length)
         {
@@ -692,6 +694,9 @@ namespace Topten.RichTextKit
         }
 
 
+        /// <summary>
+        /// Called whenever the content of this styled text block changes
+        /// </summary>
         protected virtual void OnChanged()
         {
         }

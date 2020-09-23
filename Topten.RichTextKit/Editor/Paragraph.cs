@@ -35,7 +35,7 @@ namespace Topten.RichTextKit.Editor
         /// Layout the content of this paragraph
         /// </summary>
         /// <param name="owner">The TextDocument that owns this paragraph</param>
-        public abstract void Layout(TextDocument doc);
+        public abstract void Layout(TextDocument owner);
 
         /// <summary>
         /// Paint this paragraph

@@ -270,9 +270,8 @@ namespace Topten.RichTextKit.Utils
         /// <summary>
         /// Split the utf32 buffer on a codepoint type
         /// </summary>
-        /// <param name=""></param>
-        /// <param name=""></param>
-        /// <returns></returns>
+        /// <param name="delim">The delimiter</param>
+        /// <returns>An enumeration of slices</returns>
         public IEnumerable<Slice<T>> Split(T delim)
         {
             int start = 0;
@@ -290,9 +289,8 @@ namespace Topten.RichTextKit.Utils
         /// <summary>
         /// Split the utf32 buffer on a codepoint type
         /// </summary>
-        /// <param name=""></param>
-        /// <param name=""></param>
-        /// <returns></returns>
+        /// <param name="delim">The delimiter to split on</param>
+        /// <returns>An enumeration of offset/length for each range</returns>
         public IEnumerable<(int Offset, int Length)> GetRanges(T delim)
         {
             int start = 0;

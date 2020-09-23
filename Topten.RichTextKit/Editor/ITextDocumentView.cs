@@ -13,7 +13,6 @@ namespace Topten.RichTextKit.Editor
         /// Notifies that the view needs to be reset, typically because
         /// the entire content has been reloaded or updated
         /// </summary>
-        /// <param name="view">The view initiating the change</param>
         void OnReset();
 
         /// <summary>
@@ -21,7 +20,6 @@ namespace Topten.RichTextKit.Editor
         /// has changed (eg: margins) and the view needs to be redrawn but 
         /// the same selection can be maintained
         /// </summary>
-        /// <param name="view">The view initiating the change</param>
         void OnRedraw();
 
         /// <summary>

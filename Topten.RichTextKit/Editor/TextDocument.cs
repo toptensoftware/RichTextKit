@@ -344,8 +344,7 @@ namespace Topten.RichTextKit.Editor
         /// <summary>
         /// Calculates useful information for displaying a caret
         /// </summary>
-        /// <param name="codePointIndex">The code point index of the caret</param>
-        /// <param name="altPosition">Returns the alternate caret position for the code point index</param>
+        /// <param name="position">The caret position</param>
         /// <returns>A CaretInfo struct, or CaretInfo.None</returns>
         public CaretInfo GetCaretInfo(CaretPosition position)
         {
@@ -705,7 +704,9 @@ namespace Topten.RichTextKit.Editor
             }
         }
 
-        // Get the undo manager for this document
+        /// <summary>
+        /// Get the undo manager for this document
+        /// </summary>
         public UndoManager<TextDocument> UndoManager => _undoManager;
 
         /// <summary>
@@ -814,7 +815,6 @@ namespace Topten.RichTextKit.Editor
         /// Complete an IME composition
         /// </summary>
         /// <param name="view">The initiating view</param>
-        /// <param name="commit">True to commit the composition, false to cancel it</param>
         public void FinishImeComposition(ITextDocumentView view)
         {
             if (_imeView != null)
@@ -917,14 +917,15 @@ namespace Topten.RichTextKit.Editor
         /// paragraph contains that code point and the offset within the paragraph
         /// </summary>
         /// <param name="position">The caret position to locate the paragraph for</param>
+        /// <param name="indexInParagraph">Out parameter returning the code point index into the paragraph</param>
         /// <returns>The index of the paragraph</returns>
-        int GetParagraphForCodePointIndex(CaretPosition pos, out int indexInParagraph)
+        int GetParagraphForCodePointIndex(CaretPosition position, out int indexInParagraph)
         {
             // Ensure layout is valid
             Layout();
 
             // Search paragraphs
-            int paraIndex = _paragraphs.BinarySearch(pos.CodePointIndex, (para, a) => 
+            int paraIndex = _paragraphs.BinarySearch(position.CodePointIndex, (para, a) => 
             {
                 if (a < para.CodePointIndex)
                     return 1;
@@ -940,9 +941,9 @@ namespace Topten.RichTextKit.Editor
                 paraIndex = _paragraphs.Count - 1;
 
             // Work out offset within paragraph
-            indexInParagraph = pos.CodePointIndex - _paragraphs[paraIndex].CodePointIndex;
+            indexInParagraph = position.CodePointIndex - _paragraphs[paraIndex].CodePointIndex;
 
-            if (indexInParagraph == 0 && pos.AltPosition && paraIndex > 0)
+            if (indexInParagraph == 0 && position.AltPosition && paraIndex > 0)
             {
                 paraIndex--;
                 indexInParagraph = _paragraphs[paraIndex].Length;
