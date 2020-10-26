@@ -23,7 +23,6 @@ namespace RichStringSandbox
                         .Alignment(TextAlignment.Left)
                         .Add("Para2a\nParam2b")
                         ;
-            */
             var rs = new RichString()
                 .Alignment(TextAlignment.Center)
                 .FontFamily("Segoe UI")
@@ -32,6 +31,12 @@ namespace RichStringSandbox
                 .Paragraph().Alignment(TextAlignment.Left)
                 .FontSize(18)
                 .Add("This is a test string");
+            */
+
+            var rs = new RichString()
+                .Add("Big text", fontSize: 40, letterSpacing: 0)
+                .Add("Little text", fontSize: 12, letterSpacing: 0);
+
 
             _richString = rs;
         }

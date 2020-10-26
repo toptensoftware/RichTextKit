@@ -1259,6 +1259,7 @@ namespace Topten.RichTextKit
             public bool CanShapeWith(UnshapedRun next)
             {
                 return typeface == next.typeface &&
+                       style.FontSize == next.style.FontSize &&
                         asFallbackFor == next.asFallbackFor &&
                         direction == next.direction &&
                         start + length == next.start;
