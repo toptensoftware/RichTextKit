@@ -1,3 +1,9 @@
+---
+title: "RichTextKit"
+description: "RichTextKit is a rich-text layout, measurement and rendering library for SkiaSharp"
+banner: ./Artwork/banner@2x.png
+projectTitle: RichTextKit
+---
 <div class="banner" markdown=1>
 ![Banner](./Artwork/banner@2x.png)
 </div>
