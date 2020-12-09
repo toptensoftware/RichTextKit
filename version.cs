@@ -10,6 +10,6 @@ using System.Reflection;
 
 static class BuildInfo
 {
-	public static DateTime Date = new DateTime(2020, 12, 9, 10, 35, 58, DateTimeKind.Utc);
+	public static DateTime Date = new DateTime(2020, 12, 9, 10, 38, 8, DateTimeKind.Utc);
 }
 	
