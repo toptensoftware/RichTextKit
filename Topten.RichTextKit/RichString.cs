@@ -556,7 +556,7 @@ namespace Topten.RichTextKit
             {
                 if (!_revisionValid)
                 {
-                    _revision++;
+                    _revision = (uint)System.Threading.Interlocked.Increment(ref _nextRevision);
                     _revisionValid = true;
                 }
                 return _revision;
@@ -799,6 +799,7 @@ namespace Topten.RichTextKit
             return this;
         }
 
+        static int _nextRevision = 0;
         bool _revisionValid = false;
         uint _revision = 0;
         bool _needsLayout = true;

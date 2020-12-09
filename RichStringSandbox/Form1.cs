@@ -136,7 +136,7 @@ namespace RichStringSandbox
 
             if (_htr.ClosestCodePointIndex >= 0)
             {
-                var ci = _richString.GetCaretInfo(_htr.ClosestCodePointIndex, false);
+                var ci = _richString.GetCaretInfo(new CaretPosition(_htr.ClosestCodePointIndex, false));
                 using (var paint = new SKPaint()
                 {
                     Color = new SKColor(0xFF000000),
