@@ -36,6 +36,12 @@ import: "../.common.page"
     <h2 id="fields">Fields</h2>
     <table class="name-description">
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.HitTestResult.AltCaretPosition">AltCaretPosition</a></td>
+                <td><p>Indicates that the point is closest to the alternate caret position
+of ClosestCodePointIndex.</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.HitTestResult.ClosestCodePointIndex">ClosestCodePointIndex</a></td>
                 <td><p>The code point index of the first code point in the cluster that the
 point is closest to.</p>
@@ -68,6 +74,11 @@ last line.</p>
 
     <h2 id="properties">Properties</h2>
     <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.HitTestResult.CaretPosition">CaretPosition</a></td>
+                <td><p>Helper to get the closest position as a CaretPosition</p>
+</td>
+            </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.HitTestResult.IsNone">IsNone</a></td>
                 <td><p>Check is this is the &quot;none&quot; hit test result</p>

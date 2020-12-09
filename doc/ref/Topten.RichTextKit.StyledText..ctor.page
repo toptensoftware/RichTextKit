@@ -1,0 +1,73 @@
+---
+title: "StyledText..ctor"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">StyledText Constructors</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.StyledText">StyledText</a><br />
+                        </small>
+</p>
+
+
+
+
+
+    <h2 id="overloads">Overloads</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="#Topten.RichTextKit-StyledText--ctor-">StyledText()</a></td>
+                <td><p>Constructor</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="#Topten.RichTextKit-StyledText--ctor-Topten.RichTextKit.Utils-Slice-System-Int32-">StyledText(Utils.Slice&lt;int&gt;)</a></td>
+                <td><p>Constructs a styled text block from unstyled text</p>
+</td>
+            </tr>
+    </table>
+
+
+    <h2 id="Topten.RichTextKit-StyledText--ctor-">StyledText()</h2>
+
+<p>Constructor</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public StyledText();</code></pre>
+
+
+
+
+
+
+    <h2 id="Topten.RichTextKit-StyledText--ctor-Topten.RichTextKit.Utils-Slice-System-Int32-">StyledText(Utils.Slice&lt;int&gt;)</h2>
+
+<p>Constructs a styled text block from unstyled text</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public StyledText(Utils.Slice&lt;int&gt; codePoints);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Utils.Slice&lt;int&gt;</a> codePoints
+                </td>
+                <td></td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

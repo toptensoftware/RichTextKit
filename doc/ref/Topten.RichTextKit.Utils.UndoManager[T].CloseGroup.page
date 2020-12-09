@@ -1,0 +1,38 @@
+---
+title: "UndoManager&lt;T&gt;.CloseGroup"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">UndoManager&lt;T&gt;.CloseGroup Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T]">UndoManager&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Ends the current group operation</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void CloseGroup();</code></pre>
+
+
+
+
+
+
+
+
+

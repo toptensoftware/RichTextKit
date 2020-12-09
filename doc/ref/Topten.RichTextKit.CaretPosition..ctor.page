@@ -1,0 +1,56 @@
+---
+title: "CaretPosition..ctor"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">CaretPosition Constructor</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.CaretPosition">CaretPosition</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Initializes a CaretPosition</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public CaretPosition(int codePointIndex, bool altPosition = false);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> codePointIndex
+                </td>
+                <td><p>The code point index of the caret</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Boolean">bool</a> altPosition
+ = false                </td>
+                <td><p>Whether the caret should be displayed in its alternative position</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

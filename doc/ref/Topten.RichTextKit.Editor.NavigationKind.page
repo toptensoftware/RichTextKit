@@ -1,0 +1,122 @@
+---
+title: "Topten.RichTextKit.Editor.NavigationKind"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">NavigationKind Enum</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Editor">Topten.RichTextKit.Editor</a><br />
+            </small>
+</p>
+
+
+<p>Defines a kind of keyboard navigation</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public enum NavigationKind</code></pre>
+
+
+
+
+
+
+
+    <h2 id="members">Members</h2>
+    <table class="name-value-description">
+            <tr>
+                <td>CharacterLeft</td>
+                <td>1</td>
+                <td><p>Move one character to the left</p>
+</td>
+            </tr>
+            <tr>
+                <td>CharacterRight</td>
+                <td>2</td>
+                <td><p>Move one character to the right</p>
+</td>
+            </tr>
+            <tr>
+                <td>DocumentEnd</td>
+                <td>12</td>
+                <td><p>Move to the end of the document</p>
+</td>
+            </tr>
+            <tr>
+                <td>DocumentHome</td>
+                <td>11</td>
+                <td><p>Move to the top of the document</p>
+</td>
+            </tr>
+            <tr>
+                <td>LineDown</td>
+                <td>4</td>
+                <td><p>Move down one line</p>
+</td>
+            </tr>
+            <tr>
+                <td>LineEnd</td>
+                <td>10</td>
+                <td><p>Move to the end of the line</p>
+</td>
+            </tr>
+            <tr>
+                <td>LineHome</td>
+                <td>9</td>
+                <td><p>Move to the start of the line</p>
+</td>
+            </tr>
+            <tr>
+                <td>LineUp</td>
+                <td>3</td>
+                <td><p>Move up one line</p>
+</td>
+            </tr>
+            <tr>
+                <td>None</td>
+                <td>0</td>
+                <td><p>No movement</p>
+</td>
+            </tr>
+            <tr>
+                <td>PageDown</td>
+                <td>8</td>
+                <td><p>Move down one page</p>
+</td>
+            </tr>
+            <tr>
+                <td>PageUp</td>
+                <td>7</td>
+                <td><p>Move up one page</p>
+</td>
+            </tr>
+            <tr>
+                <td>WordLeft</td>
+                <td>5</td>
+                <td><p>Move left one word</p>
+</td>
+            </tr>
+            <tr>
+                <td>WordRight</td>
+                <td>6</td>
+                <td><p>Move right one word</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+
+

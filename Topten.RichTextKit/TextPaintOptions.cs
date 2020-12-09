@@ -14,11 +14,6 @@
 // under the License.
 
 using SkiaSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Topten.RichTextKit
 {
@@ -45,33 +40,16 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// An optional code point index of the start of a selection range.
+        /// An optional TextRange to painted as selected.
         /// </summary>
-        /// <remarks>
-        /// Both start and end selection need to be set for selection
-        /// painting to occur.  Coordinates are in utf-16 characters
-        /// </remarks>
-        public int? SelectionStart
+        public TextRange? Selection
         {
             get;
             set;
         }
 
         /// <summary>
-        /// An optional code point index of the end of a selection range.
-        /// </summary>
-        /// <remarks>
-        /// Both start and end selection need to be set for selection
-        /// painting to occur.  Coordinates are in utf-16 characters
-        /// </remarks>
-        public int? SelectionEnd
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// The color to draw selection background with.
+        /// The color to be used for the selection background.
         /// </summary>
         public SKColor SelectionColor
         {

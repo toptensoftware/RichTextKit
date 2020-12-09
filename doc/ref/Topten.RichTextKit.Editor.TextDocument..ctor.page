@@ -1,0 +1,38 @@
+---
+title: "TextDocument..ctor"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">TextDocument Constructor</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Editor">Topten.RichTextKit.Editor</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Editor.TextDocument">TextDocument</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Constructs a new TextDocument</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public TextDocument();</code></pre>
+
+
+
+
+
+
+
+
+

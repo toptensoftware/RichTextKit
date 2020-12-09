@@ -46,6 +46,11 @@ information for a run of text.</p>
 </td>
             </tr>
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText"> StyledText</a></td>
+                <td><p>Represents a block of formatted, laid out and measurable text</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.StyleManager"> StyleManager</a></td>
                 <td><p>Helper class for managing RichTextKit styles.</p>
 </td>
@@ -54,6 +59,11 @@ information for a run of text.</p>
                 <td><a href="./../ref/Topten.RichTextKit.StyleRun"> StyleRun</a></td>
                 <td><p>Represets a style run - a logical run of characters all with the same
 style.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.SwapHelper"> SwapHelper</a></td>
+                <td><p>Helper class to swap two values</p>
 </td>
             </tr>
             <tr>
@@ -92,7 +102,12 @@ style.</p>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.CaretInfo"> CaretInfo</a></td>
                 <td><p>Used to return caret positioning information from the
-<a href="./../ref/Topten.RichTextKit.TextBlock.GetCaretInfo">TextBlock.GetCaretInfo(int)</a> method.</p>
+<a href="./../ref/Topten.RichTextKit.TextBlock.GetCaretInfo">TextBlock.GetCaretInfo(CaretPosition)</a> method.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.CaretPosition"> CaretPosition</a></td>
+                <td><p>Stores state information about a caret position</p>
 </td>
             </tr>
             <tr>
@@ -104,6 +119,11 @@ style.</p>
                 <td><a href="./../ref/Topten.RichTextKit.HitTestResult"> HitTestResult</a></td>
                 <td><p>Used to return hit test information from the
 <a href="./../ref/Topten.RichTextKit.TextBlock.HitTest">TextBlock.HitTest(float, float)</a> method.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextRange"> TextRange</a></td>
+                <td><p>Represents a range of code points in a text document</p>
 </td>
             </tr>
     </table>

@@ -36,10 +36,9 @@ namespace Topten.RichTextKit
     public class StyleManager
     {
         /// <summary>
-        /// A per-thread instance that can be re-used as often
-        /// as necessary.
+        /// A per-thread style manager
         /// </summary>
-        internal static ThreadLocal<StyleManager> Default = new ThreadLocal<StyleManager>(() => new StyleManager());
+        public static ThreadLocal<StyleManager> Default = new ThreadLocal<StyleManager>(() => new StyleManager());
 
         /// <summary>
         /// Constructs a new StyleManager
@@ -85,7 +84,7 @@ namespace Topten.RichTextKit
 
             return Update(value.FontFamily, value.FontSize, value.FontWeight, value.FontItalic,
                             value.Underline, value.StrikeThrough, value.LineHeight, value.TextColor,
-                            value.LetterSpacing, value.FontVariant, value.TextDirection);
+                            value.LetterSpacing, value.FontVariant, value.TextDirection, value.ReplacementCharacter);
         }
 
         /// <summary>
@@ -199,6 +198,13 @@ namespace Topten.RichTextKit
         /// <returns>An IStyle for the new style</returns>
         public IStyle TextDirection(TextDirection textDirection) => Update(textDirection: textDirection);
 
+        /// <summary>
+        /// Changes the text direction and returns an updated IStyle
+        /// </summary>
+        /// <param name="character">The new replacement character</param>
+        /// <returns>An IStyle for the new style</returns>
+        public IStyle ReplacementCharacter(char character) => Update(replacementCharacter: character);
+
 
         /// <summary>
         /// Update the current style by applying one or more changes to the current
@@ -215,6 +221,7 @@ namespace Topten.RichTextKit
         /// <param name="letterSpacing">The new letterSpacing</param>
         /// <param name="fontVariant">The new font variant</param>
         /// <param name="textDirection">The new text direction</param>
+        /// <param name="replacementCharacter">The new replacement character</param>
         /// <returns>An IStyle for the new style</returns>
         public IStyle Update(
                string fontFamily = null,
@@ -227,7 +234,8 @@ namespace Topten.RichTextKit
                SKColor? textColor = null,
                float? letterSpacing = null,
                FontVariant? fontVariant = null,
-               TextDirection? textDirection = null
+               TextDirection? textDirection = null,
+               char? replacementCharacter = null
             )
         {
             // Resolve new style against current style
@@ -242,9 +250,10 @@ namespace Topten.RichTextKit
             var rLetterSpacing = letterSpacing ?? _currentStyle.LetterSpacing;
             var rFontVariant = fontVariant ?? _currentStyle.FontVariant;
             var rTextDirection = textDirection ?? _currentStyle.TextDirection;
+            var rReplacementCharacter = replacementCharacter ?? _currentStyle.ReplacementCharacter;
 
             // Format key
-            var key = $"{rFontFamily}.{rFontSize}.{rFontWeight}.{rFontItalic}.{rUnderline}.{rStrikeThrough}.{rLineHeight}.{rTextColor}.{rLetterSpacing}.{rFontVariant}.{rTextDirection}";
+            var key = $"{rFontFamily}.{rFontSize}.{rFontWeight}.{rFontItalic}.{rUnderline}.{rStrikeThrough}.{rLineHeight}.{rTextColor}.{rLetterSpacing}.{rFontVariant}.{rTextDirection}.{rReplacementCharacter}";
 
             // Look up...
             if (!_styleMap.TryGetValue(key, out var style))
@@ -264,6 +273,7 @@ namespace Topten.RichTextKit
                     LetterSpacing = rLetterSpacing,
                     FontVariant = rFontVariant,
                     TextDirection = rTextDirection,
+                    ReplacementCharacter = rReplacementCharacter,
                 };
 
                 // Seal it

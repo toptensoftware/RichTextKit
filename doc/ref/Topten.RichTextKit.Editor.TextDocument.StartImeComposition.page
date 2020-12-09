@@ -1,0 +1,56 @@
+---
+title: "TextDocument.StartImeComposition"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">TextDocument.StartImeComposition Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Editor">Topten.RichTextKit.Editor</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Editor.TextDocument">TextDocument</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Starts and IME composition action</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void StartImeComposition(ITextDocumentView view, Topten.RichTextKit.TextRange initialSelection);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Editor.ITextDocumentView">ITextDocumentView</a> view
+                </td>
+                <td><p>The initiating view</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.TextRange">Topten.RichTextKit.TextRange</a> initialSelection
+                </td>
+                <td><p>The initial text selection</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

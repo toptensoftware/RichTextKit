@@ -67,14 +67,21 @@ namespace Topten.RichTextKit
         int _LB30a = 0;
 
         /// <summary>
-        /// Enumerate all line breaks (optionally in reverse order)
+        /// Enumerate all line breaks
         /// </summary>
         /// <returns>A collection of line break positions</returns>
-        public List<LineBreak> GetBreaks()
+        public List<LineBreak> GetBreaks(bool mandatoryOnly = false)
         {
             var list = new List<LineBreak>();
-            while (NextBreak(out var lb))
-                list.Add(lb);
+            if (mandatoryOnly)
+            {
+                list.AddRange(FindMandatoryBreaks());
+            }
+            else
+            {
+                while (NextBreak(out var lb))
+                    list.Add(lb);
+            }
             return list;
         }
 
@@ -268,6 +275,34 @@ namespace Topten.RichTextKit
             {
                 lineBreak = new LineBreak(0, 0, false);
                 return false;
+            }
+        }
+        public IEnumerable<LineBreak> FindMandatoryBreaks()
+        {
+            for (int i = 0; i < _codePoints.Length; i++)
+            {
+                var cls = UnicodeClasses.LineBreakClass(_codePoints[i]);
+                switch (cls)
+                {
+                    case LineBreakClass.BK:
+                        yield return new LineBreak(i, i + 1, true);
+                        break;
+
+                    case LineBreakClass.CR:
+                        if (i + 1 < _codePoints.Length && UnicodeClasses.LineBreakClass(_codePoints[i + 1]) == LineBreakClass.LF)
+                        {
+                            yield return new LineBreak(i, i + 2, true);
+                        }
+                        else
+                        {
+                            yield return new LineBreak(i, i + 1, true);
+                        }
+                        break;
+
+                    case LineBreakClass.LF:
+                        yield return new LineBreak(i, i + 1, true);
+                        break;
+                }
             }
         }
 

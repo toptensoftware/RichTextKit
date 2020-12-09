@@ -1,0 +1,80 @@
+---
+title: "Topten.RichTextKit.Editor.EditSemantics"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">EditSemantics Enum</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Editor">Topten.RichTextKit.Editor</a><br />
+            </small>
+</p>
+
+
+<p>Defines various semantics for TextDocument edit operations</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public enum EditSemantics</code></pre>
+
+
+
+
+
+
+
+    <h2 id="members">Members</h2>
+    <table class="name-value-description">
+            <tr>
+                <td>Backspace</td>
+                <td>1</td>
+                <td><p>Special behaviour for backspacing over one character</p>
+</td>
+            </tr>
+            <tr>
+                <td>ForwardDelete</td>
+                <td>2</td>
+                <td><p>Special behaviour for forward deleting text one character</p>
+</td>
+            </tr>
+            <tr>
+                <td>ImeComposition</td>
+                <td>5</td>
+                <td><p>Special behaviour for displaying the composition string of an IME</p>
+</td>
+            </tr>
+            <tr>
+                <td>None</td>
+                <td>0</td>
+                <td><p>No special behaviour</p>
+</td>
+            </tr>
+            <tr>
+                <td>Overtype</td>
+                <td>4</td>
+                <td><p>Special behaviour for overtyping existing text</p>
+</td>
+            </tr>
+            <tr>
+                <td>Typing</td>
+                <td>3</td>
+                <td><p>Special behaviour typing text one character at time</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+
+

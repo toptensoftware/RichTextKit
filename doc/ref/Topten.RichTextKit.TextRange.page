@@ -1,0 +1,158 @@
+---
+title: "Topten.RichTextKit.TextRange"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">TextRange Struct</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+            </small>
+</p>
+
+
+<p>Represents a range of code points in a text document</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public struct TextRange</code></pre>
+
+    <h2 id="inherits">Inheritance</h2>
+    <p>
+        TextRange
+ &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.ValueType">ValueType</a> &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.Object">object</a>    </p>
+
+
+
+
+
+    <h2 id="constructors">Constructors</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextRange..ctor#Topten.RichTextKit-TextRange--ctor-Topten.RichTextKit-CaretPosition">TextRange(CaretPosition)</a></td>
+                <td><p>Initializes a TextRange from a caret position</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextRange..ctor#Topten.RichTextKit-TextRange--ctor-System-Int32-System-Boolean">TextRange(int, bool)</a></td>
+                <td><p>Initializes a TextRange with a non-range position</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextRange..ctor#Topten.RichTextKit-TextRange--ctor-System-Int32-System-Int32-System-Boolean">TextRange(int, int, bool)</a></td>
+                <td><p>Initializes a TextRange</p>
+</td>
+            </tr>
+    </table>
+
+
+
+    <h2 id="fields">Fields</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextRange.AltPosition">AltPosition</a></td>
+                <td><p>True if the end of the range should be displayed
+with the caret in the alt position</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextRange.End">End</a></td>
+                <td><p>The code point index of the end of the range</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextRange.Start">Start</a></td>
+                <td><p>The code point index of the start of the range</p>
+</td>
+            </tr>
+    </table>
+
+    <h2 id="properties">Properties</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextRange.CaretPosition">CaretPosition</a></td>
+                <td><p>Gets the end of the range as a caret position</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextRange.IsRange">IsRange</a></td>
+                <td><p>Check if this is actually a range</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextRange.Length">Length</a></td>
+                <td><p>Get the length of this range</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextRange.Maximum">Maximum</a></td>
+                <td><p>Get the end of the range closer to the end of the document</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextRange.Minimum">Minimum</a></td>
+                <td><p>Get the end of the range closer to the start of the document</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextRange.Normalized">Normalized</a></td>
+                <td><p>Returns the normalized version of the text range</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextRange.Reversed">Reversed</a></td>
+                <td><p>Returns the reversed text range</p>
+</td>
+            </tr>
+    </table>
+
+    <h2 id="methods">Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextRange.Clamp">Clamp(int)</a></td>
+                <td><p>Clamp the text range to a document length</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextRange.IsEqual">IsEqual(TextRange)</a></td>
+                <td><p>Compare this text range to another for equality</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextRange.Offset">Offset(int)</a></td>
+                <td><p>Offset this text range by the specified amount</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextRange.Union">Union(TextRange, TextRange)</a></td>
+                <td><p>Create a new range that is the union of two other ranges.  The
+union is the smallest range that contains the other two other
+ranges.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextRange.UpdateForEdit">UpdateForEdit(int, int, int)</a></td>
+                <td><p>Create an updated text range that tries to represent the same
+piece of text from before an edit to after the edit.</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+    <h2 id="nested-types">Overridden &amp Inherited</h2>
+    <table class="name-description">
+        <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextRange.ToString">ToString()</a></td>
+                <td></td>
+        </tr>
+    </table>
+
+
+
+
+

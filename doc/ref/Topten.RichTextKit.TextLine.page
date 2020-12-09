@@ -115,6 +115,15 @@ import: "../.common.page"
             </tr>
     </table>
 
+    <h2 id="methods">Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextLine.HitTest">HitTest(float)</a></td>
+                <td><p>Hit test this line, working out the cluster the x position is over
+and closest to.</p>
+</td>
+            </tr>
+    </table>
 
 
 

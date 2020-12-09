@@ -22,7 +22,7 @@ project:
 # The assemblies for which documentation should be generated, 
 # .xml files are expected in the same location
 assemblies:
-  - ./Build/Release/Topten.RichTextKit/netcoreapp2.0/Topten.RichTextKit.dll
+  - ./Build/Release/Topten.RichTextKit/netcoreapp2.1/Topten.RichTextKit.dll
 
 # Namespaces to be assumed when formatting fully qualified type names
 namespaces:

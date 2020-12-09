@@ -1,0 +1,56 @@
+---
+title: "Paragraph.Paint"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">Paragraph.Paint Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Editor">Topten.RichTextKit.Editor</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Editor.Paragraph">Paragraph</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Paint this paragraph</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public abstract void Paint(SkiaSharp.SKCanvas canvas, Topten.RichTextKit.TextPaintOptions options);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    SkiaSharp.SKCanvas canvas
+                </td>
+                <td><p>The canvas to paint to</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.TextPaintOptions">Topten.RichTextKit.TextPaintOptions</a> options
+                </td>
+                <td><p>Paint options</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

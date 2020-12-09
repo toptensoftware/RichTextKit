@@ -1,0 +1,71 @@
+---
+title: "Topten.RichTextKit.Utils.RunExtensions"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">RunExtensions Class</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+            </small>
+</p>
+
+
+<p>Helpers for iterating over a set of consecutive runs</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public static class RunExtensions</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+    <h2 id="methods">Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.RunExtensions.CheckValid[T]#Topten.RichTextKit.Utils-RunExtensions.CheckValid-T-System.Collections.Generic-IReadOnlyList-T-">CheckValid&lt;T&gt;(this IReadOnlyList&lt;T&gt;)</a></td>
+                <td><p>Check that a list of runs is valid</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.RunExtensions.CheckValid[T]#Topten.RichTextKit.Utils-RunExtensions.CheckValid-T-System.Collections.Generic-IReadOnlyList-T--System-Int32">CheckValid&lt;T&gt;(this IReadOnlyList&lt;T&gt;, int)</a></td>
+                <td><p>Check that a list of runs is valid</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.RunExtensions.GetInterectingRuns[T]">GetInterectingRuns&lt;T&gt;(this IReadOnlyList&lt;T&gt;, int, int)</a></td>
+                <td><p>Given a list of consecutive runs, a start index and a length
+provides a list of sub-runs in the list of runs.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.RunExtensions.GetIntersectingRunsReverse[T]">GetIntersectingRunsReverse&lt;T&gt;(this IReadOnlyList&lt;T&gt;, int, int)</a></td>
+                <td><p>Given a list of consecutive runs, a start index and a length
+provides a list of sub-runs in the list of runs (in reverse order)</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.RunExtensions.TotalLength[T]">TotalLength&lt;T&gt;(this IReadOnlyList&lt;T&gt;)</a></td>
+                <td><p>Get the total length of a list of consecutive runs</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+

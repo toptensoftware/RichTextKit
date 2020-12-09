@@ -1,0 +1,38 @@
+---
+title: "StyledText.OnChanged"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">StyledText.OnChanged Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.StyledText">StyledText</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Called whenever the content of this styled text block changes</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">protected virtual void OnChanged();</code></pre>
+
+
+
+
+
+
+
+
+

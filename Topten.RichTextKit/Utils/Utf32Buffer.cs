@@ -48,27 +48,85 @@ namespace Topten.RichTextKit.Utils
         /// </summary>
         public new void Clear()
         {
-            _surrogatePositions.Clear();
+            _surrogatePositionsValid = false;
             base.Clear();
         }
 
         /// <summary>
-        /// Adds text to this buffer, converting from UTF-16 to UTF-32 and normalizing
-        /// line endings to `\n`.
+        /// Appends utf32 data to this buffer
         /// </summary>
-        /// <param name="str">The string of text to be added to the buffer</param>
+        /// <param name="data">The UTF32 data to be appended</param>
+        /// <returns>A slice representing the added UTF-32 data.</returns>
+        public new Slice<int> Add(Slice<int> data)
+        {
+            _surrogatePositionsValid = false;
+            return base.Add(data);
+        }
+
+        /// <summary>
+        /// Appends text to this buffer, converting from UTF-16 to UTF-32
+        /// </summary>
+        /// <param name="str">The string of text to be inserted</param>
         /// <returns>A slice representing the added UTF-32 data.</returns>
         public Slice<int> Add(string str)
         {
+            return Insert(Length, str);
+        }
+
+        /// <summary>
+        /// Appends text to this buffer, converting from UTF-16 to UTF-32
+        /// </summary>
+        /// <param name="str">The string of text to be inserted</param>
+        /// <returns>A slice representing the added UTF-32 data.</returns>
+        public Slice<int> Add(ReadOnlySpan<char> str)
+        {
+            return Insert(Length, str);
+        }
+
+        /// <summary>
+        /// Appends utf32 data to this buffer
+        /// </summary>
+        /// <param name="position">Position to insert the string</param>
+        /// <param name="data">The string of text to be appended</param>
+        /// <returns>A slice representing the added UTF-32 data.</returns>
+        public new Slice<int> Insert(int position, Slice<int> data)
+        {
+            _surrogatePositionsValid = false;
+            return base.Insert(position, data);
+        }
+
+        /// <summary>
+        /// Inserts text to this buffer, converting from UTF-16 to UTF-32
+        /// </summary>
+        /// <param name="position">The position to insert the string</param>
+        /// <param name="str">The string of text to be inserted</param>
+        /// <returns>A slice representing the added UTF-32 data.</returns>
+        public Slice<int> Insert(int position, string str)
+        {
+            return Insert(position, str.AsSpan());
+        }
+
+        /// <summary>
+        /// Inserts text to this buffer, converting from UTF-16 to UTF-32
+        /// </summary>
+        /// <param name="position">The position to insert the string</param>
+        /// <param name="str">The string of text to be inserted</param>
+        /// <returns>A slice representing the added UTF-32 data.</returns>
+        public Slice<int> Insert(int position, ReadOnlySpan<char> str)
+        {
             // Remember old length
             int oldLength = Length;
+
+            // Invalidate surrogate positions
+            _surrogatePositionsValid = false;
 
             // For performance reasons and to save copying to intermediate arrays if we use 
             // (Encoding.UTF32), we do our own utf16 to utf32 decoding directly to our 
             // internal code point buffer.  Also stores the indicies of any surrogate pairs 
             // for later back conversion.  
             // Also use pointers for performance reasons too (maybe)
-            Slice<int> codePointBuffer = this.Add(str.Length);
+            Slice<int> codePointBuffer = base.Insert(position, str.Length);
+            int convertedLength;
             unsafe
             {
                 fixed (int* pDestBuf = codePointBuffer.Underlying)
@@ -82,21 +140,13 @@ namespace Topten.RichTextKit.Utils
                     {
                         char ch = *pSrc++;
 
-                        // Normalize line endings to '\n'
-                        if (ch == '\r' && pSrc < pSrcEnd && *pSrc == '\n')
-                        {
-                            *pDest++ = '\n';
-                            pSrc++;
-                            _surrogatePositions.Add((int)(pDest - pDestBuf - 1));
-                        }
-                        else if (ch >= 0xD800 && ch <= 0xDFFF)
+                        if (ch >= 0xD800 && ch <= 0xDFFF)
                         {
                             if (ch <= 0xDBFF)
                             {
                                 // High surrogate
                                 var chL = pSrc < pSrcEnd ? (*pSrc++) : 0;
                                 *pDest++ = 0x10000 | ((ch - 0xD800) << 10) | (chL - 0xDC00);
-                                _surrogatePositions.Add((int)(pDest - pDestBuf - 1));
                             }
                             else
                             {
@@ -110,14 +160,33 @@ namespace Topten.RichTextKit.Utils
                         }
                     }
 
-                    // Truncate length of buffer (may be shorter due to surrogates)
-                    this.Length = (int)(pDest - pDestBuf);
+                    // Work out the converted length
+                    convertedLength = (int)(pDest - pDestStart);
                 }
             }
 
+            // If converted length was shorter due to surrogates, then remove
+            // the extra space that was allocated
+            if (convertedLength < str.Length)
+            {
+                base.Delete(position + convertedLength, str.Length - convertedLength);
+            }
+
             // Return the encapsulating slice
-            return SubSlice(oldLength, Length - oldLength);
+            return SubSlice(position, convertedLength);
         }
+
+        /// <summary>
+        /// Delete a section of the buffer
+        /// </summary>
+        /// <param name="from">The position to delete from</param>
+        /// <param name="length">The length to of the deletion</param>
+        public new void Delete(int from, int length)
+        {
+            _surrogatePositionsValid = false;
+            base.Delete(from, length);
+        }
+
 
 
         /// <summary>
@@ -132,6 +201,9 @@ namespace Topten.RichTextKit.Utils
         /// <returns>The converted UTF-16 character offset</returns>
         public int Utf32OffsetToUtf16Offset(int utf32Offset)
         {
+            // Make sure surrorgate positions are valid
+            BuildSurrogatePositions();
+
             // How many surrogate pairs were there before this utf32 offset?
             int pos = _surrogatePositions.BinarySearch(utf32Offset);
             if (pos < 0)
@@ -150,6 +222,9 @@ namespace Topten.RichTextKit.Utils
         /// <returns>The utf-32 code point index</returns>
         public int Utf16OffsetToUtf32Offset(int utf16Offset)
         {
+            // Make sure surrorgate positions are valid
+            BuildSurrogatePositions();
+
             var pos = utf16Offset;
             for (int i = 0; i < _surrogatePositions.Count; i++)
             {
@@ -166,7 +241,7 @@ namespace Topten.RichTextKit.Utils
         /// Gets the enture buffer's content as a string.
         /// </summary>
         /// <returns></returns>
-        public string GetString()
+        public override string ToString()
         {
             return Utf32Utils.FromUtf32(AsSlice());
         }
@@ -187,5 +262,33 @@ namespace Topten.RichTextKit.Utils
         /// that were decoded from a surrogate pair
         /// </summary>
         List<int> _surrogatePositions = new List<int>();
+        bool _surrogatePositionsValid = false;
+
+        /// <summary>
+        /// Build an array indicies to all characters that require surrogates
+        /// when converted to utf16.
+        /// </summary>
+        void BuildSurrogatePositions()
+        {
+            if (_surrogatePositionsValid)
+                return;
+            _surrogatePositionsValid = true;
+
+            _surrogatePositions.Clear();
+            unsafe
+            {
+                fixed (int* pBuf = this.Underlying)
+                {
+                    int* pEnd = pBuf + this.Length;
+                    int* p = pBuf;
+                    while (p < pEnd)
+                    {
+                        if (p[0] >= 0x10000)
+                            _surrogatePositions.Add((int)(p - pBuf));
+                        p++;
+                    }
+                }
+            }
+        }
     }
 }

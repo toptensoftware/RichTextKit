@@ -200,6 +200,24 @@ namespace Topten.RichTextKit
             }
         }
 
+        /// <summary>
+        /// Hit test this line, working out the cluster the x position is over
+        /// and closest to.
+        /// </summary>
+        /// <remarks>
+        /// This method only populates the code point indicies in the returned result
+        /// and the line indicies will be -1
+        /// </remarks>
+        /// <param name="x">The xcoord relative to the text block</param>
+        public HitTestResult HitTest(float x)
+        {
+            var htr = new HitTestResult();
+            htr.OverLine = -1;
+            htr.ClosestLine = -1;
+            HitTest(x, ref htr);
+            return htr;
+        }
+
 
         /// <summary>
         /// Hit test this line, working out the cluster the x position is over
@@ -213,18 +231,22 @@ namespace Topten.RichTextKit
             float closestXPosition = 0;
             int closestCodePointIndex = -1;
 
-            // Special handling for clicking after a soft line break in which case
-            // the caret should be positioned before the new line, not after it (as this
-            // would cause the cursor to appear on the next line).
             if (Runs.Count > 0)
             {
+                // If caret is beyond the end of the line...
                 var lastRun = Runs[Runs.Count - 1];
-                if (lastRun.RunKind == FontRunKind.TrailingWhitespace || lastRun.RunKind == FontRunKind.Ellipsis)
+                if ((lastRun.Direction == TextDirection.LTR && x >= lastRun.XCoord + lastRun.Width) ||
+                    (lastRun.Direction == TextDirection.RTL && x < lastRun.XCoord))
                 {
-                    if ((lastRun.Direction == TextDirection.LTR && x >= lastRun.XCoord + lastRun.Width) ||
-                        (lastRun.Direction == TextDirection.RTL && x < lastRun.XCoord))
+                    // Special handling for clicking after a soft line break ('\n') in which case
+                    // the caret should be positioned before the new line character, not after it 
+                    // as this would cause the cursor to appear on the next line).
+                    if (lastRun.RunKind == FontRunKind.TrailingWhitespace || lastRun.RunKind == FontRunKind.Ellipsis)
                     {
-                        if (lastRun.CodePoints.Length > 0 && lastRun.CodePoints[lastRun.CodePoints.Length - 1] == '\n')
+                        if (lastRun.CodePoints.Length > 0 && 
+                            (lastRun.CodePoints[lastRun.CodePoints.Length - 1] == '\n') ||
+                            (lastRun.CodePoints[lastRun.CodePoints.Length - 1] == 0x2029)
+                            )
                         {
                             htr.ClosestCodePointIndex = lastRun.End - 1;
                             return;
@@ -323,6 +345,10 @@ namespace Topten.RichTextKit
                                     htr.ClosestCodePointIndex = r.Direction == TextDirection.LTR ? codePointIndexOther : codePointIndex;
                                 }
                             }
+                            if (htr.ClosestCodePointIndex == End)
+                            {
+                                htr.AltCaretPosition = true;
+                            }
                             return;
                         }
 
@@ -334,6 +360,11 @@ namespace Topten.RichTextKit
 
             // Store closest character
             htr.ClosestCodePointIndex = closestCodePointIndex;
+
+            if (htr.ClosestCodePointIndex == End)
+            {
+                htr.AltCaretPosition = true;
+            }
 
             // Helper for updating closest caret position
             void updateClosest(float xPosition, int codePointIndex, TextDirection dir)

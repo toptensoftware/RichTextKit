@@ -1,0 +1,132 @@
+---
+title: "TextDocument.ReplaceText"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">TextDocument.ReplaceText Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Editor">Topten.RichTextKit.Editor</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Editor.TextDocument">TextDocument</a><br />
+                        </small>
+</p>
+
+
+
+
+
+    <h2 id="overloads">Overloads</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="#Topten.RichTextKit.Editor-TextDocument.ReplaceText-Topten.RichTextKit.Editor-ITextDocumentView-Topten.RichTextKit-TextRange-System-String-Topten.RichTextKit.Editor-EditSemantics">ReplaceText(ITextDocumentView, Topten.RichTextKit.TextRange, string, EditSemantics)</a></td>
+                <td><p>Replaces a range of text with the specified text</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="#Topten.RichTextKit.Editor-TextDocument.ReplaceText-Topten.RichTextKit.Editor-ITextDocumentView-Topten.RichTextKit-TextRange-Topten.RichTextKit.Utils-Slice-System-Int32--Topten.RichTextKit.Editor-EditSemantics">ReplaceText(ITextDocumentView, Topten.RichTextKit.TextRange, Topten.RichTextKit.Utils.Slice&lt;int&gt;, EditSemantics)</a></td>
+                <td><p>Replaces a range of text with the specified text</p>
+</td>
+            </tr>
+    </table>
+
+
+    <h2 id="Topten.RichTextKit.Editor-TextDocument.ReplaceText-Topten.RichTextKit.Editor-ITextDocumentView-Topten.RichTextKit-TextRange-System-String-Topten.RichTextKit.Editor-EditSemantics">ReplaceText(ITextDocumentView, Topten.RichTextKit.TextRange, string, EditSemantics)</h2>
+
+<p>Replaces a range of text with the specified text</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void ReplaceText(ITextDocumentView view, Topten.RichTextKit.TextRange range, string text, EditSemantics semantics);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Editor.ITextDocumentView">ITextDocumentView</a> view
+                </td>
+                <td><p>The view initiating the operation</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.TextRange">Topten.RichTextKit.TextRange</a> range
+                </td>
+                <td><p>The range to be replaced</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.String">string</a> text
+                </td>
+                <td><p>The text to replace with</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Editor.EditSemantics">EditSemantics</a> semantics
+                </td>
+                <td><p>Controls how undo operations are coalesced and view selections updated</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+    <h2 id="Topten.RichTextKit.Editor-TextDocument.ReplaceText-Topten.RichTextKit.Editor-ITextDocumentView-Topten.RichTextKit-TextRange-Topten.RichTextKit.Utils-Slice-System-Int32--Topten.RichTextKit.Editor-EditSemantics">ReplaceText(ITextDocumentView, Topten.RichTextKit.TextRange, Topten.RichTextKit.Utils.Slice&lt;int&gt;, EditSemantics)</h2>
+
+<p>Replaces a range of text with the specified text</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void ReplaceText(ITextDocumentView view, Topten.RichTextKit.TextRange range, Topten.RichTextKit.Utils.Slice&lt;int&gt; codePoints, EditSemantics semantics);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Editor.ITextDocumentView">ITextDocumentView</a> view
+                </td>
+                <td><p>The view initiating the operation</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.TextRange">Topten.RichTextKit.TextRange</a> range
+                </td>
+                <td><p>The range to be replaced</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Topten.RichTextKit.Utils.Slice&lt;int&gt;</a> codePoints
+                </td>
+                <td><p>The text to replace with</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Editor.EditSemantics">EditSemantics</a> semantics
+                </td>
+                <td><p>Controls how undo operations are coalesced and view selections updated</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

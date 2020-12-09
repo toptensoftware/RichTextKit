@@ -99,13 +99,38 @@ import: "../.common.page"
 </td>
             </tr>
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T].Copy">Copy()</a></td>
+                <td><p>Creates a copy of this slice on a new underlying array</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T].Fill">Fill(T)</a></td>
                 <td><p>Fill the slice with a specified value</p>
 </td>
             </tr>
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T].IndexOf">IndexOf(T)</a></td>
+                <td><p>Find the first index of a specified value</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T].IndexOfAny">IndexOfAny(params T[])</a></td>
+                <td><p>Find the first index of one or more valus</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T].Replace">Replace(T, T)</a></td>
+                <td><p>Replace all instances of a value with another</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T].Set">Set(Slice&lt;T&gt;)</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T].Split">Split(T)</a></td>
+                <td><p>Split this slice on a delimiter</p>
+</td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T].SubSlice#Topten.RichTextKit.Utils-Slice-T.SubSlice-System-Int32">SubSlice(int)</a></td>

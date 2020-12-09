@@ -1,0 +1,48 @@
+---
+title: "UndoUnit&lt;T&gt;.Undo"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">UndoUnit&lt;T&gt;.Undo Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.UndoUnit[T]">UndoUnit&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Instructs the unit to execute the &quot;Undo&quot; operation</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public abstract void Undo(T context);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    T context
+                </td>
+                <td><p>The document context object</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

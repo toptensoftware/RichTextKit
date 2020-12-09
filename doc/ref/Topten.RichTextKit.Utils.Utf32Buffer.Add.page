@@ -23,9 +23,18 @@ import: "../.common.page"
     <h2 id="overloads">Overloads</h2>
     <table class="name-description">
             <tr>
+                <td><a href="#Topten.RichTextKit.Utils-Utf32Buffer.Add-Topten.RichTextKit.Utils-Slice-System-Int32-">Add(Slice&lt;int&gt;)</a></td>
+                <td><p>Appends utf32 data to this buffer</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="#Topten.RichTextKit.Utils-Utf32Buffer.Add-System-String">Add(string)</a></td>
-                <td><p>Adds text to this buffer, converting from UTF-16 to UTF-32 and normalizing
-line endings to <code>\n</code>.</p>
+                <td><p>Appends text to this buffer, converting from UTF-16 to UTF-32</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="#Topten.RichTextKit.Utils-Utf32Buffer.Add-System-ReadOnlySpan-System-Char-">Add(ReadOnlySpan&lt;char&gt;)</a></td>
+                <td><p>Appends text to this buffer, converting from UTF-16 to UTF-32</p>
 </td>
             </tr>
             <tr>
@@ -40,10 +49,38 @@ line endings to <code>\n</code>.</p>
     </table>
 
 
+    <h2 id="Topten.RichTextKit.Utils-Utf32Buffer.Add-Topten.RichTextKit.Utils-Slice-System-Int32-">Add(Slice&lt;int&gt;)</h2>
+
+<p>Appends utf32 data to this buffer</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public Slice&lt;int&gt; Add(Slice&lt;int&gt; data);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;int&gt;</a> data
+                </td>
+                <td><p>The UTF32 data to be appended</p>
+</td>
+            </tr>
+    </table>
+<h3>Returns</h3>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;int&gt;</a></td>
+            <td><p>A slice representing the added UTF-32 data.</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
     <h2 id="Topten.RichTextKit.Utils-Utf32Buffer.Add-System-String">Add(string)</h2>
 
-<p>Adds text to this buffer, converting from UTF-16 to UTF-32 and normalizing
-line endings to <code>\n</code>.</p>
+<p>Appends text to this buffer, converting from UTF-16 to UTF-32</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public Slice&lt;int&gt; Add(string str);</code></pre>
@@ -55,7 +92,36 @@ line endings to <code>\n</code>.</p>
                     
                     <a href="https://docs.microsoft.com/dotnet/api/System.String">string</a> str
                 </td>
-                <td><p>The string of text to be added to the buffer</p>
+                <td><p>The string of text to be inserted</p>
+</td>
+            </tr>
+    </table>
+<h3>Returns</h3>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;int&gt;</a></td>
+            <td><p>A slice representing the added UTF-32 data.</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+    <h2 id="Topten.RichTextKit.Utils-Utf32Buffer.Add-System-ReadOnlySpan-System-Char-">Add(ReadOnlySpan&lt;char&gt;)</h2>
+
+<p>Appends text to this buffer, converting from UTF-16 to UTF-32</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public Slice&lt;int&gt; Add(ReadOnlySpan&lt;char&gt; str);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.ReadOnlySpan-1">ReadOnlySpan&lt;char&gt;</a> str
+                </td>
+                <td><p>The string of text to be inserted</p>
 </td>
             </tr>
     </table>

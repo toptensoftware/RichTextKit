@@ -33,6 +33,11 @@ import: "../.common.page"
     <h2 id="methods">Methods</h2>
     <table class="name-description">
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.BinarySearchExtension.BinarySearch[T]#Topten.RichTextKit.Utils-BinarySearchExtension.BinarySearch-T-System.Collections.Generic-IReadOnlyList-T--T">BinarySearch&lt;T&gt;(this IReadOnlyList&lt;T&gt;, T)</a></td>
+                <td><p>Performs a binary search on the entire contents of an IReadOnlyList</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.BinarySearchExtension.BinarySearch[T,U]#Topten.RichTextKit.Utils-BinarySearchExtension.BinarySearch-T-U-System.Collections.Generic-IReadOnlyList-T--U-System-Func-T-U-System-Int32-">BinarySearch&lt;T,U&gt;(this IReadOnlyList&lt;T&gt;, U, Func&lt;T,U,int&gt;)</a></td>
                 <td><p>Performs a binary search on the entire contents of an IReadOnlyList</p>
 </td>

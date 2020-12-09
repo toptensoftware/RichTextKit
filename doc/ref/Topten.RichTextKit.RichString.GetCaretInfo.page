@@ -26,23 +26,26 @@ import: "../.common.page"
 <p>Calculates useful information for displaying a caret</p>
 
 
-<pre class="language-csharp"><code class="language-csharp">public CaretInfo GetCaretInfo(int codePointIndex);</code></pre>
+<pre class="language-csharp"><code class="language-csharp">public CaretInfo GetCaretInfo(CaretPosition position);</code></pre>
 
+<h2 id="remarks">Remarks</h2><p>When altPosition is true, if the code point index indicates the first
+code point after a line break, the returned caret position will be the
+end of the previous line (instead of the start of the next line)</p>
 
 <h2 id="parameters">Parameters</h2>    <table class="name-description">
             <tr>
                 <td>
                     
-                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> codePointIndex
+                    <a href="./../ref/Topten.RichTextKit.CaretPosition">CaretPosition</a> position
                 </td>
-                <td><p>The code point index of the caret</p>
+                <td><p>The caret position</p>
 </td>
             </tr>
     </table>
 <h2 id="returns">Returns</h2>    <table class="name-description">
         <tr>
             <td><a href="./../ref/Topten.RichTextKit.CaretInfo">CaretInfo</a></td>
-            <td><p>A CaretInfo struct, or CaretInfo.None</p>
+            <td><p>A CaretInfo struct</p>
 </td>
         </tr>
     </table>

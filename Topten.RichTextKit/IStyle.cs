@@ -82,5 +82,10 @@ namespace Topten.RichTextKit
         /// Text direction override for this span
         /// </summary>
         TextDirection TextDirection { get; }
+
+        /// <summary>
+        /// Specifies a replacement character to be displayed (password mode)
+        /// </summary>
+        char ReplacementCharacter { get; }
     }
 }

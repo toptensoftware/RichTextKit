@@ -20,40 +20,8 @@ import: "../.common.page"
 
 
 
-    <h2 id="overloads">Overloads</h2>
-    <table class="name-description">
-            <tr>
-                <td><a href="#Topten.RichTextKit.Utils-Utf32Buffer.GetString-">GetString()</a></td>
-                <td><p>Gets the enture buffer's content as a string.</p>
-</td>
-            </tr>
-            <tr>
-                <td><a href="#Topten.RichTextKit.Utils-Utf32Buffer.GetString-System-Int32-System-Int32">GetString(int, int)</a></td>
-                <td><p>Gets a part of the buffer as a string.</p>
-</td>
-            </tr>
-    </table>
 
 
-    <h2 id="Topten.RichTextKit.Utils-Utf32Buffer.GetString-">GetString()</h2>
-
-<p>Gets the enture buffer's content as a string.</p>
-
-
-<pre class="language-csharp"><code class="language-csharp">public string GetString();</code></pre>
-
-
-<h3>Returns</h3>    <table class="name-description">
-        <tr>
-            <td><a href="https://docs.microsoft.com/dotnet/api/System.String">string</a></td>
-            <td></td>
-        </tr>
-    </table>
-
-
-
-
-    <h2 id="Topten.RichTextKit.Utils-Utf32Buffer.GetString-System-Int32-System-Int32">GetString(int, int)</h2>
 
 <p>Gets a part of the buffer as a string.</p>
 
@@ -61,7 +29,7 @@ import: "../.common.page"
 <pre class="language-csharp"><code class="language-csharp">public string GetString(int start, int length);</code></pre>
 
 
-<h3>Parameters</h3>    <table class="name-description">
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
             <tr>
                 <td>
                     
@@ -79,7 +47,7 @@ import: "../.common.page"
 </td>
             </tr>
     </table>
-<h3>Returns</h3>    <table class="name-description">
+<h2 id="returns">Returns</h2>    <table class="name-description">
         <tr>
             <td><a href="https://docs.microsoft.com/dotnet/api/System.String">string</a></td>
             <td><p>A string equivalent to the specified code point range.</p>

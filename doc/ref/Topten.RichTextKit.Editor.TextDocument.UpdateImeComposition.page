@@ -1,0 +1,64 @@
+---
+title: "TextDocument.UpdateImeComposition"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">TextDocument.UpdateImeComposition Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Editor">Topten.RichTextKit.Editor</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Editor.TextDocument">TextDocument</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Update a pending IME composition</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void UpdateImeComposition(ITextDocumentView view, Topten.RichTextKit.StyledText text, int caretOffset);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Editor.ITextDocumentView">ITextDocumentView</a> view
+                </td>
+                <td><p>The initiating view</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.StyledText">Topten.RichTextKit.StyledText</a> text
+                </td>
+                <td><p>The composition text</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> caretOffset
+                </td>
+                <td><p>The caret offset relative to the composition text</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

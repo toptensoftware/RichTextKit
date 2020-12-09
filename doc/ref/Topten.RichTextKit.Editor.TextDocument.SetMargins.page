@@ -1,0 +1,73 @@
+---
+title: "TextDocument.SetMargins"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">TextDocument.SetMargins Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Editor">Topten.RichTextKit.Editor</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Editor.TextDocument">TextDocument</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Set the document margins</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void SetMargins(float left, float top, float right, float bottom);</code></pre>
+
+<h2 id="remarks">Remarks</h2><p>This operation resets the undo manager</p>
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Single">float</a> left
+                </td>
+                <td><p>The left margin</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Single">float</a> top
+                </td>
+                <td><p>The top margin</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Single">float</a> right
+                </td>
+                <td><p>The right margin</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Single">float</a> bottom
+                </td>
+                <td><p>The bottom margin</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

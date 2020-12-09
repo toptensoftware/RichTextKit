@@ -1,0 +1,55 @@
+---
+title: "TextRange.Offset"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">TextRange.Offset Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.TextRange">TextRange</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Offset this text range by the specified amount</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public TextRange Offset(int delta);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> delta
+                </td>
+                <td><p>The number of code points to offset the range by</p>
+</td>
+            </tr>
+    </table>
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.TextRange">TextRange</a></td>
+            <td><p>A new TextRange</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

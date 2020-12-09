@@ -64,6 +64,11 @@ import: "../.common.page"
                 <td><p>Gets or sets the length of the buffer</p>
 </td>
             </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.Buffer[T].Underlying">Underlying</a></td>
+                <td><p>The data held by this buffer</p>
+</td>
+            </tr>
     </table>
 
     <h2 id="methods">Methods</h2>
@@ -86,6 +91,36 @@ import: "../.common.page"
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Utils.Buffer[T].Clear">Clear()</a></td>
                 <td><p>Clears the buffer, keeping the internally allocated array.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.Buffer[T].Delete">Delete(int, int)</a></td>
+                <td><p>Delete a section of the buffer</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.Buffer[T].GetRanges">GetRanges(T)</a></td>
+                <td><p>Split the utf32 buffer on a codepoint type</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.Buffer[T].Insert#Topten.RichTextKit.Utils-Buffer-T.Insert-System-Int32-Topten.RichTextKit.Utils-Slice-T-">Insert(int, Slice&lt;T&gt;)</a></td>
+                <td><p>Insert a slice of data into this buffer</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.Buffer[T].Insert#Topten.RichTextKit.Utils-Buffer-T.Insert-System-Int32-System-Int32-System-Boolean">Insert(int, int, bool)</a></td>
+                <td><p>Inserts room into the buffer</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.Buffer[T].Replace">Replace(T, T)</a></td>
+                <td><p>Replaces all instances of a value in the buffer with another value</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.Buffer[T].Split">Split(T)</a></td>
+                <td><p>Split the utf32 buffer on a codepoint type</p>
 </td>
             </tr>
             <tr>

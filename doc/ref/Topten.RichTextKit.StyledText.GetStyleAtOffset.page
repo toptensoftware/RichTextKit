@@ -1,0 +1,56 @@
+---
+title: "StyledText.GetStyleAtOffset"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">StyledText.GetStyleAtOffset Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.StyledText">StyledText</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Gets the style of the text at a specified offset</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public IStyle GetStyleAtOffset(int offset);</code></pre>
+
+<h2 id="remarks">Remarks</h2><p>When on a style run boundary, returns the style of the preceeding run</p>
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> offset
+                </td>
+                <td><p>The code point offset in the text</p>
+</td>
+            </tr>
+    </table>
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.IStyle">IStyle</a></td>
+            <td><p>An IStyle</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

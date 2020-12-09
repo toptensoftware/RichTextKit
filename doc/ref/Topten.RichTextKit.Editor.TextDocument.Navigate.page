@@ -1,0 +1,79 @@
+---
+title: "TextDocument.Navigate"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">TextDocument.Navigate Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Editor">Topten.RichTextKit.Editor</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Editor.TextDocument">TextDocument</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Handles keyboard navigation events</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public Topten.RichTextKit.CaretPosition Navigate(Topten.RichTextKit.CaretPosition position, NavigationKind kind, float pageSize, ref Nullable&lt;float&gt; ghostXCoord);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.CaretPosition">Topten.RichTextKit.CaretPosition</a> position
+                </td>
+                <td><p>The current caret position</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Editor.NavigationKind">NavigationKind</a> kind
+                </td>
+                <td><p>The direction and type of caret movement</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Single">float</a> pageSize
+                </td>
+                <td><p>Specifies the page size for page up/down navigation</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    ref 
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;float&gt;</a> ghostXCoord
+                </td>
+                <td><p>Transient storage for XCoord of caret during vertical navigation</p>
+</td>
+            </tr>
+    </table>
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.CaretPosition">Topten.RichTextKit.CaretPosition</a></td>
+            <td><p>The new caret position</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

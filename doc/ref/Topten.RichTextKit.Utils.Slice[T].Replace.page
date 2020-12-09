@@ -1,0 +1,56 @@
+---
+title: "Slice&lt;T&gt;.Replace"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">Slice&lt;T&gt;.Replace Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Replace all instances of a value with another</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void Replace(T replace, T with);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    T replace
+                </td>
+                <td><p>The value to replace</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    T with
+                </td>
+                <td><p>The replacement value</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

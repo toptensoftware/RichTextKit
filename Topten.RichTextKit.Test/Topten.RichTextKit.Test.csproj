@@ -14,15 +14,15 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SkiaSharp" Version="2.80.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Topten.RichTextKit\Topten.RichTextKit.csproj" />
+    <PackageReference Include="SkiaSharp" Version="2.80.2" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="TestData\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Topten.RichTextKit\Topten.RichTextKit.csproj" />
   </ItemGroup>
 
 </Project>

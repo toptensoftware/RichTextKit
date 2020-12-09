@@ -17,10 +17,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Topten.RichTextKit.Utils
 {
@@ -44,6 +41,11 @@ namespace Topten.RichTextKit.Utils
         /// The data held by this buffer
         /// </summary>
         T[] _data;
+
+        /// <summary>
+        /// The data held by this buffer
+        /// </summary>
+        public T[] Underlying => _data;
 
         /// <summary>
         /// The used length of the buffer
@@ -124,6 +126,53 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
+        /// Inserts room into the buffer
+        /// </summary>
+        /// <param name="position">The position to insert at</param>
+        /// <param name="length">The length to insert</param>
+        /// <param name="clear">Whether to clear the inserted part of the buffer</param>
+        /// <returns>The new buffer area as a slice</returns>
+        public Slice<T> Insert(int position, int length, bool clear = true)
+        {
+            // Grow internal buffer?
+            GrowBuffer(_length + length);
+
+            // Shuffle existing to make room for inserted data
+            if (position < _length)
+            {
+                Array.Copy(_data, position, _data, position + length, _length - position);
+            }
+            
+            // Update the length
+            _length += length;
+
+            // Clear it?
+            if (clear)
+                Array.Clear(_data, position, length);
+
+            // Return slice
+            return SubSlice(position, length);
+        }
+
+        /// <summary>
+        /// Insert a slice of data into this buffer
+        /// </summary>
+        /// <param name="position">The position to insert at</param>
+        /// <param name="data">The data to insert</param>
+        /// <returns>The newly inserted data as a slice</returns>
+        public Slice<T> Insert(int position, Slice<T> data)
+        {
+            // Make room
+            var slice = Insert(position, data.Length, false);
+
+            // Copy in the source slice
+            Array.Copy(data.Underlying, data.Start, _data, position, data.Length);
+
+            // Return slice
+            return slice;
+        }
+
+        /// <summary>
         /// Adds to the buffer, returning a slice of requested size
         /// </summary>
         /// <param name="length">Number of elements to add</param>
@@ -131,19 +180,7 @@ namespace Topten.RichTextKit.Utils
         /// <returns>A slice representing the allocated elements.</returns>
         public Slice<T> Add(int length, bool clear = true)
         {
-            // Save position
-            int pos = Length;
-
-            // Grow internal buffer?
-            GrowBuffer(_length + length);
-            _length += length;
-
-            // Clear it?
-            if (clear)
-                Array.Clear(_data, pos, length);
-
-            // Return subslice
-            return SubSlice(pos, length);
+            return Insert(_length, length, clear);
         }
 
         /// <summary>
@@ -164,6 +201,29 @@ namespace Topten.RichTextKit.Utils
 
             // Return position
             return SubSlice(pos, slice.Length);
+        }
+
+        /// <summary>
+        /// Delete a section of the buffer
+        /// </summary>
+        /// <param name="from">The position to delete from</param>
+        /// <param name="length">The length to of the deletion</param>
+        public void Delete(int from, int length)
+        {
+            // Clamp to buffer size
+            if (from >= _length)
+                return;
+            if (from + length >= _length)
+                length = _length - from;
+
+            // Shuffle trailing data
+            if (from + length < _length)
+            {
+                Array.Copy(_data, from + length, _data, from, _length - (from + length));
+            }
+
+            // Update length
+            _length -= length;
         }
 
         /// <summary>
@@ -207,6 +267,64 @@ namespace Topten.RichTextKit.Utils
             return SubSlice(0, _length);
         }
 
+        /// <summary>
+        /// Split the utf32 buffer on a codepoint type
+        /// </summary>
+        /// <param name="delim">The delimiter</param>
+        /// <returns>An enumeration of slices</returns>
+        public IEnumerable<Slice<T>> Split(T delim)
+        {
+            int start = 0;
+            for (int i = 0; i < Length; i++)
+            {
+                if (_data[i].Equals(delim))
+                {
+                    yield return SubSlice(start, i - start);
+                    start = i + 1;
+                }
+            }
+            yield return SubSlice(start, Length - start);
+        }
+
+        /// <summary>
+        /// Split the utf32 buffer on a codepoint type
+        /// </summary>
+        /// <param name="delim">The delimiter to split on</param>
+        /// <returns>An enumeration of offset/length for each range</returns>
+        public IEnumerable<(int Offset, int Length)> GetRanges(T delim)
+        {
+            int start = 0;
+            for (int i = 0; i < Length; i++)
+            {
+                if (_data[i].Equals(delim))
+                {
+                    yield return (start, i - start);
+                    start = i + 1;
+                }
+            }
+            yield return (start, Length - start);
+        }
+
+        /// <summary>
+        /// Replaces all instances of a value in the buffer with another value
+        /// </summary>
+        /// <param name="oldValue">The value to replace</param>
+        /// <param name="newValue">The new value</param>
+        /// <returns>The number of replacements made</returns>
+        public int Replace(T oldValue, T newValue)
+        {
+            int count = 0;
+            for (int i = 0; i < Length; i++)
+            {
+                if (_data[i].Equals(oldValue))
+                {
+                    _data[i] = newValue;
+                    count++;
+                }
+            }
+            return count;
+        }
+
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             return new ArraySliceEnumerator<T>(_data, 0, _length);
@@ -216,27 +334,5 @@ namespace Topten.RichTextKit.Utils
         {
             return new ArraySliceEnumerator<T>(_data, 0, _length);
         }
-
-        /*
-        public T[] SetMapping(Slice<T> data, Slice<int> mapping)
-        {
-            Length = mapping.Length;
-            for (int i = 0; i < Length; i++)
-            {
-                _data[i] = data[mapping[i]];
-            }
-            return _data;
-        }
-
-        public T[] GetMapping(Slice<T> data, Slice<int> mapping)
-        {
-            int len = mapping.Length;
-            for (int i = 0; i < len; i++)
-            {
-                data[mapping[i]] = _data[i];
-            }
-            return _data;
-        }
-        */
     }
 }

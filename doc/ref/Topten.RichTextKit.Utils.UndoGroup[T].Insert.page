@@ -1,0 +1,56 @@
+---
+title: "UndoGroup&lt;T&gt;.Insert"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">UndoGroup&lt;T&gt;.Insert Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.UndoGroup[T]">UndoGroup&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Inserts an unit to this group</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void Insert(int position, UndoUnit&lt;T&gt; unit);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> position
+                </td>
+                <td><p>The position at which the unit should be inserted</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Utils.UndoUnit[T]">UndoUnit&lt;T&gt;</a> unit
+                </td>
+                <td><p>The UndoUnit to be inserted</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

@@ -534,8 +534,24 @@ namespace Topten.RichTextKit
 
                 if (selStartXCoord != selEndXCoord)
                 {
-                    var rect = new SKRect(this.XCoord + selStartXCoord, Line.YCoord, 
-                                            this.XCoord + selEndXCoord, Line.YCoord + Line.Height);
+                    var tl = new SKPoint(selStartXCoord + this.XCoord, Line.YCoord);
+                    var br = new SKPoint(selEndXCoord + this.XCoord, Line.YCoord + Line.Height);
+
+                    // Align coords to pixel boundaries
+                    // Not needed - disabled antialias on SKPaint instead
+                    /*
+                    if (ctx.Canvas.TotalMatrix.TryInvert(out var inverse))
+                    {
+                        tl = ctx.Canvas.TotalMatrix.MapPoint(tl);
+                        br = ctx.Canvas.TotalMatrix.MapPoint(br);
+                        tl = new SKPoint((float)Math.Round(tl.X), (float)Math.Round(tl.Y));
+                        br = new SKPoint((float)Math.Round(br.X), (float)Math.Round(br.Y));
+                        tl = inverse.MapPoint(tl);
+                        br = inverse.MapPoint(br);
+                    }
+                    */
+
+                    var rect = new SKRect(tl.X, tl.Y, br.X, br.Y);
                     ctx.Canvas.DrawRect(rect, ctx.PaintSelectionBackground);
                 }
             }
@@ -596,7 +612,7 @@ namespace Topten.RichTextKit
                         {
                             // Work out underline metrics
                             float underlineYPos = Line.YCoord + Line.BaseLine + (_font.Metrics.UnderlinePosition ?? 0);
-                            paint.StrokeWidth = _font.Metrics.UnderlineThickness ?? 0;
+                            paint.StrokeWidth = _font.Metrics.UnderlineThickness ?? 1;
 
                             if (Style.Underline == UnderlineStyle.Gapped)
                             {
@@ -621,8 +637,26 @@ namespace Topten.RichTextKit
                             }
                             else
                             {
+                                switch (Style.Underline)
+                                {
+                                    case UnderlineStyle.ImeInput:
+                                        paint.PathEffect = SKPathEffect.CreateDash(new float[] { paint.StrokeWidth, paint.StrokeWidth }, paint.StrokeWidth);
+                                        break;
+
+                                    case UnderlineStyle.ImeConverted:
+                                        paint.PathEffect = SKPathEffect.CreateDash(new float[] { paint.StrokeWidth, paint.StrokeWidth }, paint.StrokeWidth);
+                                        break;
+
+                                    case UnderlineStyle.ImeTargetConverted:
+                                        paint.StrokeWidth *= 2;
+                                        break;
+
+                                    case UnderlineStyle.ImeTargetNonConverted:
+                                        break;
+                                }
                                 // Paint solid underline
                                 ctx.Canvas.DrawLine(new SKPoint(XCoord, underlineYPos), new SKPoint(XCoord + Width, underlineYPos), paint);
+                                paint.PathEffect = null;
                             }
                         }
 

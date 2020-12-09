@@ -1,0 +1,57 @@
+---
+title: "TextLine.HitTest"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">TextLine.HitTest Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.TextLine">TextLine</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Hit test this line, working out the cluster the x position is over
+and closest to.</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public HitTestResult HitTest(float x);</code></pre>
+
+<h2 id="remarks">Remarks</h2><p>This method only populates the code point indicies in the returned result
+and the line indicies will be -1</p>
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Single">float</a> x
+                </td>
+                <td><p>The xcoord relative to the text block</p>
+</td>
+            </tr>
+    </table>
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.HitTestResult">HitTestResult</a></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

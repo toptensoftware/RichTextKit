@@ -159,6 +159,15 @@ namespace Topten.RichTextKit.Utils
         }
 
         /// <summary>
+        /// Creates a copy of this slice on a new underlying array
+        /// </summary>
+        /// <returns>A slice representing the copy</returns>
+        public Slice<T> Copy()
+        {
+            return new Slice<T>(ToArray());
+        }
+
+        /// <summary>
         /// Gets the underlying array
         /// </summary>
         public T[] Underlying => _array;
@@ -177,6 +186,73 @@ namespace Topten.RichTextKit.Utils
         {
             return new ArraySliceEnumerator<T>(_array, _start, _length);
         }
+
+        /// <summary>
+        /// Split this slice on a delimiter
+        /// </summary>
+        /// <param name="delimiter">The delimiter</param>
+        /// <returns>An enumeration of slices</returns>
+        public IEnumerable<Slice<T>> Split(T delimiter)
+        {
+            int start = 0;
+            for (int i = 0; i < Length; i++)
+            {
+                if (this[i].Equals(delimiter))
+                {
+                    yield return SubSlice(start, i - start);
+                    start = i + 1;
+                }
+            }
+            yield return SubSlice(start, Length - start);
+        }
+
+        /// <summary>
+        /// Find the first index of a specified value
+        /// </summary>
+        /// <param name="value">The value to search for</param>
+        /// <returns>The index of the first occurance, or -1 if not found</returns>
+        public int IndexOf(T value)
+        {
+            for (int i = 0; i < Length; i++)
+            {
+                if (this[i].Equals(value))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// Find the first index of one or more valus
+        /// </summary>
+        /// <param name="values">The value to search for</param>
+        /// <returns>The index of the first occurance, of -1 if not found</returns>
+        public int IndexOfAny(params T[] values)
+        {
+            for (int i = 0; i < Length; i++)
+            {
+                if (values.Contains(this[i]))
+                    return i;
+            }
+
+            return -1;
+        }
+
+        /// <summary>
+        /// Replace all instances of a value with another
+        /// </summary>
+        /// <param name="replace">The value to replace</param>
+        /// <param name="with">The replacement value</param>
+        public void Replace(T replace, T with)
+        {
+            for (int i = 0; i < Length; i++)
+            {
+                if (this[i].Equals(replace))
+                    this[i] = with;
+            }
+        }
+
 
         /// <summary>
         /// A shared empty slice of type T

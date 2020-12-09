@@ -35,6 +35,30 @@ import: "../.common.page"
 </td>
             </tr>
             <tr>
+                <td>ImeConverted</td>
+                <td>4</td>
+                <td><p>Underline style for converted IME input</p>
+</td>
+            </tr>
+            <tr>
+                <td>ImeInput</td>
+                <td>3</td>
+                <td><p>Underline style for IME input</p>
+</td>
+            </tr>
+            <tr>
+                <td>ImeTargetConverted</td>
+                <td>5</td>
+                <td><p>Underline style for converted IME input (target clause)</p>
+</td>
+            </tr>
+            <tr>
+                <td>ImeTargetNonConverted</td>
+                <td>6</td>
+                <td><p>Underline style for unconverted IME input (target clause)</p>
+</td>
+            </tr>
+            <tr>
                 <td>None</td>
                 <td>0</td>
                 <td><p>No underline.</p>

@@ -83,6 +83,11 @@ font; otherwise False (defaults to false).</p>
 </td>
             </tr>
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Style.ReplacementCharacter">ReplacementCharacter</a></td>
+                <td><p>Specifies a replacement character to be displayed (password mode)</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Style.StrikeThrough">StrikeThrough</a></td>
                 <td><p>The strike through style for the text in this run (defaults to None).</p>
 </td>
@@ -107,7 +112,7 @@ font; otherwise False (defaults to false).</p>
     <h2 id="methods">Methods</h2>
     <table class="name-description">
             <tr>
-                <td><a href="./../ref/Topten.RichTextKit.Style.Modify">Modify(string, Nullable&lt;float&gt;, Nullable&lt;int&gt;, Nullable&lt;bool&gt;, Nullable&lt;UnderlineStyle&gt;, Nullable&lt;StrikeThroughStyle&gt;, Nullable&lt;float&gt;, Nullable&lt;SkiaSharp.SKColor&gt;, Nullable&lt;float&gt;, Nullable&lt;FontVariant&gt;, Nullable&lt;TextDirection&gt;)</a></td>
+                <td><a href="./../ref/Topten.RichTextKit.Style.Modify">Modify(string, Nullable&lt;float&gt;, Nullable&lt;int&gt;, Nullable&lt;bool&gt;, Nullable&lt;UnderlineStyle&gt;, Nullable&lt;StrikeThroughStyle&gt;, Nullable&lt;float&gt;, Nullable&lt;SkiaSharp.SKColor&gt;, Nullable&lt;float&gt;, Nullable&lt;FontVariant&gt;, Nullable&lt;TextDirection&gt;, Nullable&lt;char&gt;)</a></td>
                 <td><p>Modifies this style with one or more attribute changes and returns a new style</p>
 </td>
             </tr>

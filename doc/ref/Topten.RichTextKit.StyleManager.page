@@ -46,6 +46,14 @@ a particular style and then popping back to the previous style.</p>
 
 
 
+    <h2 id="fields">Fields</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.Default">Default</a></td>
+                <td><p>A per-thread style manager</p>
+</td>
+            </tr>
+    </table>
 
     <h2 id="properties">Properties</h2>
     <table class="name-description">
@@ -119,6 +127,11 @@ a particular style and then popping back to the previous style.</p>
 </td>
             </tr>
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.ReplacementCharacter">ReplacementCharacter(char)</a></td>
+                <td><p>Changes the text direction and returns an updated IStyle</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.StyleManager.Reset">Reset()</a></td>
                 <td><p>Resets the current style to the default style and resets the internal
 Push/Pop style stack to empty.</p>
@@ -145,7 +158,7 @@ Push/Pop style stack to empty.</p>
 </td>
             </tr>
             <tr>
-                <td><a href="./../ref/Topten.RichTextKit.StyleManager.Update">Update(string, Nullable&lt;float&gt;, Nullable&lt;int&gt;, Nullable&lt;bool&gt;, Nullable&lt;UnderlineStyle&gt;, Nullable&lt;StrikeThroughStyle&gt;, Nullable&lt;float&gt;, Nullable&lt;SkiaSharp.SKColor&gt;, Nullable&lt;float&gt;, Nullable&lt;FontVariant&gt;, Nullable&lt;TextDirection&gt;)</a></td>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.Update">Update(string, Nullable&lt;float&gt;, Nullable&lt;int&gt;, Nullable&lt;bool&gt;, Nullable&lt;UnderlineStyle&gt;, Nullable&lt;StrikeThroughStyle&gt;, Nullable&lt;float&gt;, Nullable&lt;SkiaSharp.SKColor&gt;, Nullable&lt;float&gt;, Nullable&lt;FontVariant&gt;, Nullable&lt;TextDirection&gt;, Nullable&lt;char&gt;)</a></td>
                 <td><p>Update the current style by applying one or more changes to the current
 style.</p>
 </td>

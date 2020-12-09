@@ -1,0 +1,231 @@
+---
+title: "Topten.RichTextKit.Editor.TextDocument"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">TextDocument Class</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Editor">Topten.RichTextKit.Editor</a><br />
+            </small>
+</p>
+
+
+<p>Represents a the document part of a Document/View editor</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public class TextDocument</code></pre>
+
+    <h2 id="inherits">Inheritance</h2>
+    <p>
+        TextDocument
+ &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.Object">object</a>    </p>
+
+
+
+
+
+    <h2 id="constructors">Constructors</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument..ctor">TextDocument()</a></td>
+                <td><p>Constructs a new TextDocument</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+    <h2 id="properties">Properties</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.DefaultStyle">DefaultStyle</a></td>
+                <td><p>Specifies the style to be used in plain text mode</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.ImeCompositionOffset">ImeCompositionOffset</a></td>
+                <td><p>Get the code point offset position of the current IME composition</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.IsImeComposing">IsImeComposing</a></td>
+                <td><p>Indicates if an IME composition is currently in progress</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.Length">Length</a></td>
+                <td><p>Gets the total length of the document in code points</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.LineWrap">LineWrap</a></td>
+                <td><p>Indicates if text should be wrapped</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.MarginBottom">MarginBottom</a></td>
+                <td><p>The document's bottom margin</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.MarginLeft">MarginLeft</a></td>
+                <td><p>The document's left margin</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.MarginRight">MarginRight</a></td>
+                <td><p>The document's right margin</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.MarginTop">MarginTop</a></td>
+                <td><p>The document's top margin</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.MeasuredHeight">MeasuredHeight</a></td>
+                <td><p>The total height of the document</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.MeasuredWidth">MeasuredWidth</a></td>
+                <td><p>The total width of the document</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.PageWidth">PageWidth</a></td>
+                <td><p>Specifies the page width of the document</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.PlainTextMode">PlainTextMode</a></td>
+                <td><p>Specifies if the document is in plain text mode</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.SingleLineMode">SingleLineMode</a></td>
+                <td><p>Specifies if the document is in single line mode</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.Text">Text</a></td>
+                <td><p>Get/set the entire document text</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.UndoManager">UndoManager</a></td>
+                <td><p>Get the undo manager for this document</p>
+</td>
+            </tr>
+    </table>
+
+    <h2 id="methods">Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.FinishImeComposition">FinishImeComposition(ITextDocumentView)</a></td>
+                <td><p>Complete an IME composition</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.GetCaretInfo">GetCaretInfo(Topten.RichTextKit.CaretPosition)</a></td>
+                <td><p>Calculates useful information for displaying a caret</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.GetOvertypeRange">GetOvertypeRange(Topten.RichTextKit.TextRange)</a></td>
+                <td><p>Gets the range of text that will be overwritten by overtype mode
+at a particular location in the document</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.GetSelectionRange">GetSelectionRange(Topten.RichTextKit.CaretPosition, SelectionKind)</a></td>
+                <td><p>Given a caret position, find an enclosing selection range for the
+current word, line, paragraph or document</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.GetStyleAtOffset">GetStyleAtOffset(int)</a></td>
+                <td><p>Get the style of the text at a specified code point index</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.GetText">GetText(Topten.RichTextKit.TextRange)</a></td>
+                <td><p>Get the text for a part of the document</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.HitTest">HitTest(float, float)</a></td>
+                <td><p>Hit test this string</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.Navigate">Navigate(Topten.RichTextKit.CaretPosition, NavigationKind, float, ref Nullable&lt;float&gt;)</a></td>
+                <td><p>Handles keyboard navigation events</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.Paint">Paint(SkiaSharp.SKCanvas, float, float, Topten.RichTextKit.TextPaintOptions)</a></td>
+                <td><p>Paint this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.Redo">Redo(ITextDocumentView)</a></td>
+                <td><p>Redo the undone edit operations</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.RegisterView">RegisterView(ITextDocumentView)</a></td>
+                <td><p>Registers a new view to receive notifications of changes to the document</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.ReplaceText#Topten.RichTextKit.Editor-TextDocument.ReplaceText-Topten.RichTextKit.Editor-ITextDocumentView-Topten.RichTextKit-TextRange-System-String-Topten.RichTextKit.Editor-EditSemantics">ReplaceText(ITextDocumentView, Topten.RichTextKit.TextRange, string, EditSemantics)</a></td>
+                <td><p>Replaces a range of text with the specified text</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.ReplaceText#Topten.RichTextKit.Editor-TextDocument.ReplaceText-Topten.RichTextKit.Editor-ITextDocumentView-Topten.RichTextKit-TextRange-Topten.RichTextKit.Utils-Slice-System-Int32--Topten.RichTextKit.Editor-EditSemantics">ReplaceText(ITextDocumentView, Topten.RichTextKit.TextRange, Topten.RichTextKit.Utils.Slice&lt;int&gt;, EditSemantics)</a></td>
+                <td><p>Replaces a range of text with the specified text</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.RevokeView">RevokeView(ITextDocumentView)</a></td>
+                <td><p>Revokes a previously registered view</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.SetMargins">SetMargins(float, float, float, float)</a></td>
+                <td><p>Set the document margins</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.StartImeComposition">StartImeComposition(ITextDocumentView, Topten.RichTextKit.TextRange)</a></td>
+                <td><p>Starts and IME composition action</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.Undo">Undo(ITextDocumentView)</a></td>
+                <td><p>Undo the last editor operation</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.UpdateImeComposition">UpdateImeComposition(ITextDocumentView, Topten.RichTextKit.StyledText, int)</a></td>
+                <td><p>Update a pending IME composition</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+

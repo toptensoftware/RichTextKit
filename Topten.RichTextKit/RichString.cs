@@ -556,7 +556,7 @@ namespace Topten.RichTextKit
             {
                 if (!_revisionValid)
                 {
-                    _revision++;
+                    _revision = (uint)System.Threading.Interlocked.Increment(ref _nextRevision);
                     _revisionValid = true;
                 }
                 return _revision;
@@ -650,34 +650,30 @@ namespace Topten.RichTextKit
         }
 
 
-        /// <summary>
-        /// Calculates useful information for displaying a caret
-        /// </summary>
-        /// <param name="codePointIndex">The code point index of the caret</param>
-        /// <returns>A CaretInfo struct, or CaretInfo.None</returns>
-        public CaretInfo GetCaretInfo(int codePointIndex)
+        /// <inheritdoc cref="TextBlock.GetCaretInfo(CaretPosition)"/>
+        public CaretInfo GetCaretInfo(CaretPosition position)
         {
             Layout();
 
             // Is it outside the displayed range?
-            if (codePointIndex < 0 || codePointIndex > MeasuredLength)
+            if (position.CodePointIndex < 0 || position.CodePointIndex > MeasuredLength)
                 return CaretInfo.None;
 
             // Find the paragraph containing that code point
             ParagraphInfo p;
-            if (codePointIndex == MeasuredLength)
+            if (position.CodePointIndex == MeasuredLength)
             {
                 // Special case for after the last displayed paragraph
                 p = _paragraphs.LastOrDefault(x => !x.Truncated);
             }
             else
             {
-                p = ParagraphForCodePointIndex(codePointIndex);
+                p = ParagraphForCodePointIndex(position.CodePointIndex);
             }
 
 
             // Get the caret info
-            var ci = p.TextBlock.GetCaretInfo(codePointIndex - p.CodePointOffset);
+            var ci = p.TextBlock.GetCaretInfo(new CaretPosition(position.CodePointIndex - p.CodePointOffset, position.AltPosition));
 
             // Adjust it
             ci.CodePointIndex += p.CodePointOffset;
@@ -803,6 +799,7 @@ namespace Topten.RichTextKit
             return this;
         }
 
+        static int _nextRevision = 0;
         bool _revisionValid = false;
         uint _revision = 0;
         bool _needsLayout = true;
@@ -882,22 +879,14 @@ namespace Topten.RichTextKit
                 if (Truncated)
                     return;
 
-                int? oldSelStart = null;
-                int? oldSelEnd = null;
+                TextRange? oldSel = null;
                 if (ctx.textPaintOptions != null)
                 {
                     // Save old selection ranges
-                    oldSelStart = ctx.textPaintOptions.SelectionStart;
-                    oldSelEnd = ctx.textPaintOptions.SelectionEnd;
-
-                    if (ctx.textPaintOptions.SelectionStart.HasValue)
+                    oldSel = ctx.textPaintOptions.Selection;
+                    if (ctx.textPaintOptions.Selection.HasValue)
                     {
-                        ctx.textPaintOptions.SelectionStart -= this.CodePointOffset;
-                    }
-
-                    if (ctx.textPaintOptions.SelectionEnd.HasValue)
-                    {
-                        ctx.textPaintOptions.SelectionEnd -= this.CodePointOffset;
+                        ctx.textPaintOptions.Selection = ctx.textPaintOptions.Selection.Value.Offset(-this.CodePointOffset);
                     }
                 }
 
@@ -906,10 +895,9 @@ namespace Topten.RichTextKit
                 TextBlock.Paint(ctx.canvas, ctx.paintPosition + TextBlockPaintPosition(ctx.owner), ctx.textPaintOptions);
 
                 // Restore selection indicies
-                if (ctx.textPaintOptions != null)
+                if (oldSel.HasValue)
                 {
-                    ctx.textPaintOptions.SelectionStart = oldSelStart;
-                    ctx.textPaintOptions.SelectionEnd = oldSelEnd;
+                    ctx.textPaintOptions.Selection = oldSel;
                 }
             }
 

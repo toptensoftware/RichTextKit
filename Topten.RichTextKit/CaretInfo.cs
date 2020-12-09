@@ -22,7 +22,7 @@ namespace Topten.RichTextKit
 {
     /// <summary>
     /// Used to return caret positioning information from the 
-    /// <see cref="TextBlock.GetCaretInfo(int)"/> method.
+    /// <see cref="TextBlock.GetCaretInfo(CaretPosition)"/> method.
     /// </summary>
     public struct CaretInfo
     {
@@ -30,6 +30,11 @@ namespace Topten.RichTextKit
         /// Returns the index of the code point that this caret info refers to.
         /// </summary>
         public int CodePointIndex;
+
+        /// <summary>
+        /// Returns the line number that contains the caret
+        /// </summary>
+        public int LineIndex;
 
         /// <summary>
         /// The X-coordinate where the caret should be displayed for this code point.

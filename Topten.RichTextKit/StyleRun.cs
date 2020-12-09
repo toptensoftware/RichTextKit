@@ -27,21 +27,21 @@ namespace Topten.RichTextKit
     /// Represets a style run - a logical run of characters all with the same
     /// style.
     /// </summary>
-    public class StyleRun
+    public class StyleRun : IRun
     {
-        /// <summary>
-        /// Gets the text block that owns this run.
-        /// </summary>
-        public TextBlock TextBlock
-        {
-            get;
-            internal set;
-        }
-
         /// <summary>
         /// Get the code points of this run.
         /// </summary>
         public Slice<int> CodePoints => CodePointBuffer.SubSlice(Start, Length);
+
+        /// <summary>
+        /// Get the text of this style run
+        /// </summary>
+        /// <returns>A string</returns>
+        public override string ToString()
+        {
+            return Utf32Utils.FromUtf32(CodePoints);
+        }
 
         /// <summary>
         /// The index of the first code point in this run (relative to the text block
@@ -76,6 +76,9 @@ namespace Topten.RichTextKit
             internal set;
         }
 
+        int IRun.Offset => Start;
+        int IRun.Length => Length;
+
         /// <summary>
         /// The global list of code points
         /// </summary>
@@ -87,7 +90,6 @@ namespace Topten.RichTextKit
             {
                 r.CodePointBuffer = null;
                 r.Style = null;
-                r.TextBlock = null;
             }
         });
     }

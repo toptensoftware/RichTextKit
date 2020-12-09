@@ -1,0 +1,45 @@
+---
+title: "Slice&lt;T&gt;.Copy"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">Slice&lt;T&gt;.Copy Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Creates a copy of this slice on a new underlying array</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public Slice&lt;T&gt; Copy();</code></pre>
+
+
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;T&gt;</a></td>
+            <td><p>A slice representing the copy</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

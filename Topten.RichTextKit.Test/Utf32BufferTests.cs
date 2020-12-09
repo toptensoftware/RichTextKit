@@ -9,7 +9,83 @@ namespace Topten.RichTextKit.Test
 {
     public class Utf32BufferTests
     {
-        const string mixedString = "This\r\na\r\nstring\n🌐 🍪 🍕 🚀\n يتكلّم \n हालाँकि प्रचलित रूप पूज 緳 踥踕";
+        [Fact]
+        public void AddText()
+        {
+            // Arrange
+            var buf = new Utf32Buffer();
+            var str = "ab🌐cde";
+
+            // Act
+            buf.Add(str);
+
+            // Assert
+            Assert.Equal(7, str.Length);
+            Assert.Equal(6, buf.Length);
+            Assert.Equal(str, buf.ToString());
+        }
+
+        [Fact]
+        public void InsertText()
+        {
+            // Arrange
+            var buf = new Utf32Buffer();
+            var strA = "abcd";
+            var strB = "xx🌐xx";
+
+            // Act
+            buf.Add(strA);
+            buf.Insert(2, strB);
+
+            // Assert
+            Assert.Equal("abxx🌐xxcd", buf.ToString());
+        }
+
+        [Fact]
+        public void DeleteText()
+        {
+            // Arrange
+            var buf = new Utf32Buffer();
+
+            // Act
+            buf.Add("abxx🌐xxcd");
+            buf.Delete(2, 5);
+
+            // Assert
+            Assert.Equal("abcd", buf.ToString());
+        }
+
+        [Fact]
+        public void DeleteTextStart()
+        {
+            // Arrange
+            var buf = new Utf32Buffer();
+
+            // Act
+            buf.Add("abxx🌐xxcd");
+            buf.Delete(0, 5);
+
+            // Assert
+            Assert.Equal("xxcd", buf.ToString());
+        }
+
+        [Fact]
+        public void DeleteTextEnd()
+        {
+            // Arrange
+            var buf = new Utf32Buffer();
+
+            // Act
+            buf.Add("abxx🌐xxcd");
+            buf.Delete(4, 5);
+
+            // Assert
+            Assert.Equal("abxx", buf.ToString());
+        }
+
+
+        const string mixedString = "This\na\nstring\n🌐 🍪 🍕 🚀\n يتكلّم \n हालाँकि प्रचलित रूप पूज 緳 踥踕";
+
 
         [Fact]
         public void Map32to16Test()

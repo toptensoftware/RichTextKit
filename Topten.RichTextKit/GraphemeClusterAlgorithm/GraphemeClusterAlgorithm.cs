@@ -8,6 +8,20 @@ namespace Topten.RichTextKit
     static class GraphemeClusterAlgorithm
     {
         /// <summary>
+        /// Given a sequence of code points, return its grapheme cluster boundaries
+        /// </summary>
+        /// <param name="codePoints">The code points</param>
+        /// <returns>An enumerable of grapheme cluster boundaries</returns>
+        public static IEnumerable<int> GetBoundaries(Slice<int> codePoints)
+        {
+            for (int i = 0; i <= codePoints.Length; i++)
+            {
+                if (IsBoundary(codePoints, i))
+                    yield return i;
+            }
+        }
+
+        /// <summary>
         /// Check if a position in a code point buffer is a grapheme cluster boundary
         /// </summary>
         /// <param name="codePoints">The code points</param>

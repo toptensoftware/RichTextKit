@@ -180,7 +180,7 @@ constraints</p>
 </td>
             </tr>
             <tr>
-                <td><a href="./../ref/Topten.RichTextKit.RichString.GetCaretInfo">GetCaretInfo(int)</a></td>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.GetCaretInfo">GetCaretInfo(CaretPosition)</a></td>
                 <td><p>Calculates useful information for displaying a caret</p>
 </td>
             </tr>

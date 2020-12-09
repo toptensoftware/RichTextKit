@@ -1,0 +1,206 @@
+---
+title: "StyledText.InsertText"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">StyledText.InsertText Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.StyledText">StyledText</a><br />
+                        </small>
+</p>
+
+
+
+
+
+    <h2 id="overloads">Overloads</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="#Topten.RichTextKit-StyledText.InsertText-System-Int32-Topten.RichTextKit-StyledText">InsertText(int, StyledText)</a></td>
+                <td><p>Add all the text from another text block to this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="#Topten.RichTextKit-StyledText.InsertText-System-Int32-Topten.RichTextKit.Utils-Slice-System-Int32--Topten.RichTextKit-IStyle">InsertText(int, Utils.Slice&lt;int&gt;, IStyle)</a></td>
+                <td><p>Add text to this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="#Topten.RichTextKit-StyledText.InsertText-System-Int32-System-ReadOnlySpan-System-Char--Topten.RichTextKit-IStyle">InsertText(int, ReadOnlySpan&lt;char&gt;, IStyle)</a></td>
+                <td><p>Add text to this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="#Topten.RichTextKit-StyledText.InsertText-System-Int32-System-String-Topten.RichTextKit-IStyle">InsertText(int, string, IStyle)</a></td>
+                <td><p>Add text to this text block</p>
+</td>
+            </tr>
+    </table>
+
+
+    <h2 id="Topten.RichTextKit-StyledText.InsertText-System-Int32-Topten.RichTextKit-StyledText">InsertText(int, StyledText)</h2>
+
+<p>Add all the text from another text block to this text block</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void InsertText(int offset, StyledText text);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> offset
+                </td>
+                <td><p>The position at which to insert the text</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.StyledText">StyledText</a> text
+                </td>
+                <td><p>Text to add</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+    <h2 id="Topten.RichTextKit-StyledText.InsertText-System-Int32-Topten.RichTextKit.Utils-Slice-System-Int32--Topten.RichTextKit-IStyle">InsertText(int, Utils.Slice&lt;int&gt;, IStyle)</h2>
+
+<p>Add text to this text block</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void InsertText(int position, Utils.Slice&lt;int&gt; text, IStyle style = null);</code></pre>
+
+<h3>Remarks</h3><p>If the style is null, the new text will acquire the style of the character
+before the insertion point. If the text block is currently empty the style
+must be supplied.  If inserting at the start of a non-empty text block the
+style will be that of the first existing style run</p>
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> position
+                </td>
+                <td><p>The position to insert the text</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Utils.Slice&lt;int&gt;</a> text
+                </td>
+                <td><p>The text to add</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.IStyle">IStyle</a> style
+ = null                </td>
+                <td><p>The style of the text (optional)</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+    <h2 id="Topten.RichTextKit-StyledText.InsertText-System-Int32-System-ReadOnlySpan-System-Char--Topten.RichTextKit-IStyle">InsertText(int, ReadOnlySpan&lt;char&gt;, IStyle)</h2>
+
+<p>Add text to this text block</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void InsertText(int position, ReadOnlySpan&lt;char&gt; text, IStyle style = null);</code></pre>
+
+<h3>Remarks</h3><p>If the style is null, the new text will acquire the style of the character
+before the insertion point. If the text block is currently empty the style
+must be supplied.  If inserting at the start of a non-empty text block the
+style will be that of the first existing style run</p>
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> position
+                </td>
+                <td><p>The position to insert the text</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.ReadOnlySpan-1">ReadOnlySpan&lt;char&gt;</a> text
+                </td>
+                <td><p>The text to add</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.IStyle">IStyle</a> style
+ = null                </td>
+                <td><p>The style of the text (optional)</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+    <h2 id="Topten.RichTextKit-StyledText.InsertText-System-Int32-System-String-Topten.RichTextKit-IStyle">InsertText(int, string, IStyle)</h2>
+
+<p>Add text to this text block</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void InsertText(int position, string text, IStyle style = null);</code></pre>
+
+<h3>Remarks</h3><p>If the style is null, the new text will acquire the style of the character
+before the insertion point. If the text block is currently empty the style
+must be supplied.  If inserting at the start of a non-empty text block the
+style will be that of the first existing style run</p>
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> position
+                </td>
+                <td><p>The position to insert the text</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.String">string</a> text
+                </td>
+                <td><p>The text to add</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.IStyle">IStyle</a> style
+ = null                </td>
+                <td><p>The style of the text (optional)</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

@@ -71,6 +71,11 @@ font; otherwise False.</p>
 </td>
             </tr>
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.IStyle.ReplacementCharacter">ReplacementCharacter</a></td>
+                <td><p>Specifies a replacement character to be displayed (password mode)</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.IStyle.StrikeThrough">StrikeThrough</a></td>
                 <td><p>The strike through style for the text in this run</p>
 </td>

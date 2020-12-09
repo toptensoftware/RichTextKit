@@ -1,0 +1,39 @@
+---
+title: "Paragraph.TextBlock"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 data-nav-secondary-text="Definition" id="definition">Paragraph.TextBlock Property</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Editor">Topten.RichTextKit.Editor</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Editor.Paragraph">Paragraph</a><br />
+                        </small>
+</p>
+
+
+
+
+<p>Gets the TextBlock associated with this paragraph</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public virtual Topten.RichTextKit.TextBlock TextBlock { get; }</code></pre>
+
+<h2 id="remarks">Remarks</h2><p>Non-text paragraphs should return null</p>
+
+<h2 id="property-type">Property Type</h2>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.TextBlock">Topten.RichTextKit.TextBlock</a></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+

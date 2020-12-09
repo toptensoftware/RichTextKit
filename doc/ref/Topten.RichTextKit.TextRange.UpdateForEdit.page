@@ -1,0 +1,72 @@
+---
+title: "TextRange.UpdateForEdit"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">TextRange.UpdateForEdit Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.TextRange">TextRange</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Create an updated text range that tries to represent the same
+piece of text from before an edit to after the edit.</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public TextRange UpdateForEdit(int codePointIndex, int oldLength, int newLength);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> codePointIndex
+                </td>
+                <td><p>The position of the edit</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> oldLength
+                </td>
+                <td><p>The length of text deleted</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> newLength
+                </td>
+                <td><p>The length of text inserted</p>
+</td>
+            </tr>
+    </table>
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.TextRange">TextRange</a></td>
+            <td><p>An updated text range</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

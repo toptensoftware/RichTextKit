@@ -1,0 +1,49 @@
+---
+title: "Topten.RichTextKit.SwapHelper"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">SwapHelper Class</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+            </small>
+</p>
+
+
+<p>Helper class to swap two values</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public static class SwapHelper</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+    <h2 id="methods">Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.SwapHelper.Swap[T]">Swap&lt;T&gt;(ref T, ref T)</a></td>
+                <td><p>Swaps two values</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+

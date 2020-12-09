@@ -1,0 +1,55 @@
+---
+title: "TextRange.Clamp"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">TextRange.Clamp Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.TextRange">TextRange</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Clamp the text range to a document length</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public TextRange Clamp(int maxCodePointIndex);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> maxCodePointIndex
+                </td>
+                <td><p>The max code point index</p>
+</td>
+            </tr>
+    </table>
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.TextRange">TextRange</a></td>
+            <td><p>A clamped TextRange</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+
