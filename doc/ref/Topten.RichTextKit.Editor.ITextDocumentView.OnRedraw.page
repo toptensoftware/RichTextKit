@@ -1,0 +1,40 @@
+---
+title: "ITextDocumentView.OnRedraw"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">ITextDocumentView.OnRedraw Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Editor">Topten.RichTextKit.Editor</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Editor.ITextDocumentView">ITextDocumentView</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Notifies that something other than the content of the document
+has changed (eg: margins) and the view needs to be redrawn but
+the same selection can be maintained</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">void OnRedraw();</code></pre>
+
+
+
+
+
+
+
+
+

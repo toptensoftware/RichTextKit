@@ -1,0 +1,48 @@
+---
+title: "Paragraph.Layout"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">Paragraph.Layout Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Editor">Topten.RichTextKit.Editor</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Editor.Paragraph">Paragraph</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Layout the content of this paragraph</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public abstract void Layout(TextDocument owner);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Editor.TextDocument">TextDocument</a> owner
+                </td>
+                <td><p>The TextDocument that owns this paragraph</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

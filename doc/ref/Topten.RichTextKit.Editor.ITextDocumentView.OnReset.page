@@ -1,0 +1,39 @@
+---
+title: "ITextDocumentView.OnReset"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">ITextDocumentView.OnReset Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Editor">Topten.RichTextKit.Editor</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Editor.ITextDocumentView">ITextDocumentView</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Notifies that the view needs to be reset, typically because
+the entire content has been reloaded or updated</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">void OnReset();</code></pre>
+
+
+
+
+
+
+
+
+

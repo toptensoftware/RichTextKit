@@ -1,0 +1,38 @@
+---
+title: "UndoManager&lt;T&gt;.OnEndOperation"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">UndoManager&lt;T&gt;.OnEndOperation Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T]">UndoManager&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Notifies that an operation (or group of operations) has finished</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">protected virtual void OnEndOperation();</code></pre>
+
+
+
+
+
+
+
+
+

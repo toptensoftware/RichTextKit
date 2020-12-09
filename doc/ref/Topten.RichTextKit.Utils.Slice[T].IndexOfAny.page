@@ -1,0 +1,55 @@
+---
+title: "Slice&lt;T&gt;.IndexOfAny"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">Slice&lt;T&gt;.IndexOfAny Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Find the first index of one or more valus</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public int IndexOfAny(params T[] values);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    params 
+                    T[] values
+                </td>
+                <td><p>The value to search for</p>
+</td>
+            </tr>
+    </table>
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a></td>
+            <td><p>The index of the first occurance, of -1 if not found</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

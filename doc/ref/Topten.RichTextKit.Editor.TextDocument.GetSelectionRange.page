@@ -1,0 +1,63 @@
+---
+title: "TextDocument.GetSelectionRange"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">TextDocument.GetSelectionRange Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Editor">Topten.RichTextKit.Editor</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Editor.TextDocument">TextDocument</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Given a caret position, find an enclosing selection range for the
+current word, line, paragraph or document</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public Topten.RichTextKit.TextRange GetSelectionRange(Topten.RichTextKit.CaretPosition position, SelectionKind kind);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.CaretPosition">Topten.RichTextKit.CaretPosition</a> position
+                </td>
+                <td><p>The caret position to select from</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Editor.SelectionKind">SelectionKind</a> kind
+                </td>
+                <td><p>The kind of selection to return</p>
+</td>
+            </tr>
+    </table>
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.TextRange">Topten.RichTextKit.TextRange</a></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

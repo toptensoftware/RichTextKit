@@ -1,0 +1,243 @@
+---
+title: "Utf32Buffer.Insert"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">Utf32Buffer.Insert Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.Utf32Buffer">Utf32Buffer</a><br />
+                        </small>
+</p>
+
+
+
+
+
+    <h2 id="overloads">Overloads</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="#Topten.RichTextKit.Utils-Utf32Buffer.Insert-System-Int32-Topten.RichTextKit.Utils-Slice-System-Int32-">Insert(int, Slice&lt;int&gt;)</a></td>
+                <td><p>Appends utf32 data to this buffer</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="#Topten.RichTextKit.Utils-Utf32Buffer.Insert-System-Int32-System-String">Insert(int, string)</a></td>
+                <td><p>Inserts text to this buffer, converting from UTF-16 to UTF-32</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="#Topten.RichTextKit.Utils-Utf32Buffer.Insert-System-Int32-System-ReadOnlySpan-System-Char-">Insert(int, ReadOnlySpan&lt;char&gt;)</a></td>
+                <td><p>Inserts text to this buffer, converting from UTF-16 to UTF-32</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="#Topten.RichTextKit.Utils-Buffer`1.Insert-System-Int32-Topten.RichTextKit.Utils-Slice-System-Int32-">Insert(int, Slice&lt;int&gt;)</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="#Topten.RichTextKit.Utils-Buffer`1.Insert-System-Int32-System-Int32-System-Boolean">Insert(int, int, bool)</a></td>
+                <td><p>Inserts room into the buffer</p>
+</td>
+            </tr>
+    </table>
+
+
+    <h2 id="Topten.RichTextKit.Utils-Utf32Buffer.Insert-System-Int32-Topten.RichTextKit.Utils-Slice-System-Int32-">Insert(int, Slice&lt;int&gt;)</h2>
+
+<p>Appends utf32 data to this buffer</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public Slice&lt;int&gt; Insert(int position, Slice&lt;int&gt; data);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> position
+                </td>
+                <td><p>Position to insert the string</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;int&gt;</a> data
+                </td>
+                <td><p>The string of text to be appended</p>
+</td>
+            </tr>
+    </table>
+<h3>Returns</h3>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;int&gt;</a></td>
+            <td><p>A slice representing the added UTF-32 data.</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+    <h2 id="Topten.RichTextKit.Utils-Utf32Buffer.Insert-System-Int32-System-String">Insert(int, string)</h2>
+
+<p>Inserts text to this buffer, converting from UTF-16 to UTF-32</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public Slice&lt;int&gt; Insert(int position, string str);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> position
+                </td>
+                <td><p>The position to insert the string</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.String">string</a> str
+                </td>
+                <td><p>The string of text to be inserted</p>
+</td>
+            </tr>
+    </table>
+<h3>Returns</h3>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;int&gt;</a></td>
+            <td><p>A slice representing the added UTF-32 data.</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+    <h2 id="Topten.RichTextKit.Utils-Utf32Buffer.Insert-System-Int32-System-ReadOnlySpan-System-Char-">Insert(int, ReadOnlySpan&lt;char&gt;)</h2>
+
+<p>Inserts text to this buffer, converting from UTF-16 to UTF-32</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public Slice&lt;int&gt; Insert(int position, ReadOnlySpan&lt;char&gt; str);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> position
+                </td>
+                <td><p>The position to insert the string</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.ReadOnlySpan-1">ReadOnlySpan&lt;char&gt;</a> str
+                </td>
+                <td><p>The string of text to be inserted</p>
+</td>
+            </tr>
+    </table>
+<h3>Returns</h3>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;int&gt;</a></td>
+            <td><p>A slice representing the added UTF-32 data.</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+    <h2 id="Topten.RichTextKit.Utils-Buffer`1.Insert-System-Int32-Topten.RichTextKit.Utils-Slice-System-Int32-">Insert(int, Slice&lt;int&gt;)</h2>
+
+
+
+<pre class="language-csharp"><code class="language-csharp">public Slice&lt;int&gt; Insert(int position, Slice&lt;int&gt; data);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> position
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;int&gt;</a> data
+                </td>
+                <td></td>
+            </tr>
+    </table>
+<h3>Returns</h3>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;int&gt;</a></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+    <h2 id="Topten.RichTextKit.Utils-Buffer`1.Insert-System-Int32-System-Int32-System-Boolean">Insert(int, int, bool)</h2>
+
+<p>Inserts room into the buffer</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public Slice&lt;int&gt; Insert(int position, int length, bool clear = true);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> position
+                </td>
+                <td><p>The position to insert at</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> length
+                </td>
+                <td><p>The length to insert</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Boolean">bool</a> clear
+ = true                </td>
+                <td><p>Whether to clear the inserted part of the buffer</p>
+</td>
+            </tr>
+    </table>
+<h3>Returns</h3>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;int&gt;</a></td>
+            <td><p>The new buffer area as a slice</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

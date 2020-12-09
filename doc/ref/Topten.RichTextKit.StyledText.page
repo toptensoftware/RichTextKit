@@ -1,0 +1,187 @@
+---
+title: "Topten.RichTextKit.StyledText"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">StyledText Class</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+            </small>
+</p>
+
+
+<p>Represents a block of formatted, laid out and measurable text</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public class StyledText</code></pre>
+
+    <h2 id="inherits">Inheritance</h2>
+    <p>
+        StyledText
+ &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.Object">object</a>    </p>
+
+
+        <h2 id="derived">Derived By</h2>
+    <p>
+        <a href="./../ref/Topten.RichTextKit.TextBlock">TextBlock</a>    </p>
+
+
+
+    <h2 id="constructors">Constructors</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText..ctor#Topten.RichTextKit-StyledText--ctor-">StyledText()</a></td>
+                <td><p>Constructor</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText..ctor#Topten.RichTextKit-StyledText--ctor-Topten.RichTextKit.Utils-Slice-System-Int32-">StyledText(Utils.Slice&lt;int&gt;)</a></td>
+                <td><p>Constructs a styled text block from unstyled text</p>
+</td>
+            </tr>
+    </table>
+
+
+
+    <h2 id="fields">Fields</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText._codePoints">_codePoints</a></td>
+                <td><p>All code points as supplied by user, accumulated into a single buffer</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText._hasTextDirectionOverrides">_hasTextDirectionOverrides</a></td>
+                <td><p>Set to true if any style runs have a directionality override.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText._styleRuns">_styleRuns</a></td>
+                <td><p>A list of style runs, as supplied by user</p>
+</td>
+            </tr>
+    </table>
+
+    <h2 id="properties">Properties</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText.CodePoints">CodePoints</a></td>
+                <td><p>Get the code points of this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText.Length">Length</a></td>
+                <td><p>The length of the added text in code points</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText.StyleRuns">StyleRuns</a></td>
+                <td><p>Get the text runs as added by AddText</p>
+</td>
+            </tr>
+    </table>
+
+    <h2 id="methods">Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText.AddText#Topten.RichTextKit-StyledText.AddText-Topten.RichTextKit-StyledText">AddText(StyledText)</a></td>
+                <td><p>Add all the text from another text block to this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText.AddText#Topten.RichTextKit-StyledText.AddText-System-ReadOnlySpan-System-Char--Topten.RichTextKit-IStyle">AddText(ReadOnlySpan&lt;char&gt;, IStyle)</a></td>
+                <td><p>Add text to this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText.AddText#Topten.RichTextKit-StyledText.AddText-Topten.RichTextKit.Utils-Slice-System-Int32--Topten.RichTextKit-IStyle">AddText(Utils.Slice&lt;int&gt;, IStyle)</a></td>
+                <td><p>Add text to this paragraph</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText.AddText#Topten.RichTextKit-StyledText.AddText-System-String-Topten.RichTextKit-IStyle">AddText(string, IStyle)</a></td>
+                <td><p>Add text to this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText.ApplyStyle">ApplyStyle(int, int, IStyle)</a></td>
+                <td><p>Overwrites the styles of existing text in the text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText.CharacterToCodePointIndex">CharacterToCodePointIndex(int)</a></td>
+                <td><p>Converts a character index to a code point index</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText.Clear">Clear()</a></td>
+                <td><p>Clear the content of this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText.CodePointToCharacterIndex">CodePointToCharacterIndex(int)</a></td>
+                <td><p>Converts a code point index to a character index</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText.DeleteText">DeleteText(int, int)</a></td>
+                <td><p>Deletes text from this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText.Extract">Extract(int, int)</a></td>
+                <td><p>Extract text from this styled text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText.GetStyleAtOffset">GetStyleAtOffset(int)</a></td>
+                <td><p>Gets the style of the text at a specified offset</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText.InsertText#Topten.RichTextKit-StyledText.InsertText-System-Int32-Topten.RichTextKit-StyledText">InsertText(int, StyledText)</a></td>
+                <td><p>Add all the text from another text block to this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText.InsertText#Topten.RichTextKit-StyledText.InsertText-System-Int32-Topten.RichTextKit.Utils-Slice-System-Int32--Topten.RichTextKit-IStyle">InsertText(int, Utils.Slice&lt;int&gt;, IStyle)</a></td>
+                <td><p>Add text to this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText.InsertText#Topten.RichTextKit-StyledText.InsertText-System-Int32-System-ReadOnlySpan-System-Char--Topten.RichTextKit-IStyle">InsertText(int, ReadOnlySpan&lt;char&gt;, IStyle)</a></td>
+                <td><p>Add text to this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText.InsertText#Topten.RichTextKit-StyledText.InsertText-System-Int32-System-String-Topten.RichTextKit-IStyle">InsertText(int, string, IStyle)</a></td>
+                <td><p>Add text to this text block</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText.OnChanged">OnChanged()</a></td>
+                <td><p>Called whenever the content of this styled text block changes</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+    <h2 id="nested-types">Overridden &amp Inherited</h2>
+    <table class="name-description">
+        <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyledText.ToString">ToString()</a></td>
+                <td></td>
+        </tr>
+    </table>
+
+
+
+
+

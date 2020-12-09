@@ -1,0 +1,56 @@
+---
+title: "Paragraph.GetCaretInfo"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">Paragraph.GetCaretInfo Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Editor">Topten.RichTextKit.Editor</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Editor.Paragraph">Paragraph</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Get caret position information</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public abstract Topten.RichTextKit.CaretInfo GetCaretInfo(Topten.RichTextKit.CaretPosition position);</code></pre>
+
+<h2 id="remarks">Remarks</h2><p>The returned caret info should be relative to the paragraph's content</p>
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.CaretPosition">Topten.RichTextKit.CaretPosition</a> position
+                </td>
+                <td><p>The caret position</p>
+</td>
+            </tr>
+    </table>
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.CaretInfo">Topten.RichTextKit.CaretInfo</a></td>
+            <td><p>A CaretInfo struct, or CaretInfo.None</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

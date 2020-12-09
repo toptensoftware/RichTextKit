@@ -1,0 +1,48 @@
+---
+title: "UndoManager&lt;T&gt;.Do"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">UndoManager&lt;T&gt;.Do Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T]">UndoManager&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Execute an undo unit and add it to the manager</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void Do(UndoUnit&lt;T&gt; unit);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Utils.UndoUnit[T]">UndoUnit&lt;T&gt;</a> unit
+                </td>
+                <td><p>The undo unit to execute</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

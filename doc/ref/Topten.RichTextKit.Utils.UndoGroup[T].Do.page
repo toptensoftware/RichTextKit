@@ -1,0 +1,49 @@
+---
+title: "UndoGroup&lt;T&gt;.Do"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">UndoGroup&lt;T&gt;.Do Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.UndoGroup[T]">UndoGroup&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>The method on the UndoGroup class is never called by the
+UndoManager Never. See OnOpen and OnClose instead which
+are called as the group is constructed</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public override void Do(T context);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    T context
+                </td>
+                <td></td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

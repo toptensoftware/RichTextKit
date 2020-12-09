@@ -63,18 +63,13 @@ a selection range.</p>
 </td>
             </tr>
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextPaintOptions.Selection">Selection</a></td>
+                <td><p>An optional TextRange to painted as selected.</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextPaintOptions.SelectionColor">SelectionColor</a></td>
-                <td><p>The color to draw selection background with.</p>
-</td>
-            </tr>
-            <tr>
-                <td><a href="./../ref/Topten.RichTextKit.TextPaintOptions.SelectionEnd">SelectionEnd</a></td>
-                <td><p>An optional code point index of the end of a selection range.</p>
-</td>
-            </tr>
-            <tr>
-                <td><a href="./../ref/Topten.RichTextKit.TextPaintOptions.SelectionStart">SelectionStart</a></td>
-                <td><p>An optional code point index of the start of a selection range.</p>
+                <td><p>The color to be used for the selection background.</p>
 </td>
             </tr>
     </table>

@@ -1,0 +1,185 @@
+---
+title: "Topten.RichTextKit.Utils.UndoManager&lt;T&gt;"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">UndoManager&lt;T&gt; Class</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+            </small>
+</p>
+
+
+<p>Implements an manager for undo operations</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public class UndoManager&lt;T&gt;</code></pre>
+
+    <h2 id="inherits">Inheritance</h2>
+    <p>
+        UndoManager&lt;T&gt;
+ &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.Object">object</a>    </p>
+
+
+
+
+    <h2 id="type-parameters">Type Parameters</h2>
+    <table class="name-description">
+            <tr>
+                <td>T</td>
+                <td><p>A context object type (eg: document type)</p>
+</td>
+            </tr>
+    </table>
+
+    <h2 id="constructors">Constructors</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T]..ctor">UndoManager(T)</a></td>
+                <td><p>Constructs a new undo manager</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+    <h2 id="properties">Properties</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].CanRedo">CanRedo</a></td>
+                <td><p>Check if can redo</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].CanUndo">CanUndo</a></td>
+                <td><p>Check if can undo</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].IsModified">IsModified</a></td>
+                <td><p>Checks if the document is currently modified</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].RedoDescription">RedoDescription</a></td>
+                <td><p>Gets the description of the next redo operation</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].UndoDescription">UndoDescription</a></td>
+                <td><p>Gets the description of the next undo operation</p>
+</td>
+            </tr>
+    </table>
+
+    <h2 id="methods">Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].Clear">Clear()</a></td>
+                <td><p>Clear and reset the undo manager</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].CloseGroup">CloseGroup()</a></td>
+                <td><p>Ends the current group operation</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].Do">Do(UndoUnit&lt;T&gt;)</a></td>
+                <td><p>Execute an undo unit and add it to the manager</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].GetRedoUnit">GetRedoUnit()</a></td>
+                <td><p>Retrieves the unit that would be executed on Redo</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].GetUndoUnit">GetUndoUnit()</a></td>
+                <td><p>Retrieves the unit that would be executed on Undo</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].GetUnsealedUnit">GetUnsealedUnit()</a></td>
+                <td><p>Get the current unsealed unit</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].MarkUnmodified">MarkUnmodified()</a></td>
+                <td><p>Mark the document as currently unmodified</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].OnEndOperation">OnEndOperation()</a></td>
+                <td><p>Notifies that an operation (or group of operations) has finished</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].OnModifiedChanged">OnModifiedChanged()</a></td>
+                <td><p>Notifies when the modified state of the document changes</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].OnStartOperation">OnStartOperation()</a></td>
+                <td><p>Notifies that an operation (or group of operations) is about to start</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].OpenGroup#Topten.RichTextKit.Utils-UndoManager-T.OpenGroup-System-String">OpenGroup(string)</a></td>
+                <td><p>Stars a group operation</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].OpenGroup#Topten.RichTextKit.Utils-UndoManager-T.OpenGroup-Topten.RichTextKit.Utils-UndoGroup-T-">OpenGroup(UndoGroup&lt;T&gt;)</a></td>
+                <td><p>Stars a group operation</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].Redo">Redo()</a></td>
+                <td><p>Redoes previously undone operations</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].Seal">Seal()</a></td>
+                <td><p>Seals the last item to prevent changes</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].Undo">Undo()</a></td>
+                <td><p>Undoes the last performed operation</p>
+</td>
+            </tr>
+    </table>
+
+
+    <h2 id="events">Events</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].EndOperation">EndOperation</a></td>
+                <td><p>Event fired when any operation (or group of operations) ends</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].ModifiedChanged">ModifiedChanged</a></td>
+                <td><p>Fired when the modified state of the document changes</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T].StartOperation">StartOperation</a></td>
+                <td><p>Event fired when any operation (or group of operations) starts</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

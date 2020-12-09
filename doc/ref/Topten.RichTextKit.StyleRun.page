@@ -19,13 +19,16 @@ import: "../.common.page"
 style.</p>
 
 
-<pre class="language-csharp"><code class="language-csharp">public class StyleRun</code></pre>
+<pre class="language-csharp"><code class="language-csharp">public class StyleRun :&#xA;    Utils.IRun</code></pre>
 
     <h2 id="inherits">Inheritance</h2>
     <p>
         StyleRun
  &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.Object">object</a>    </p>
 
+    <h2 id="interfaces">Interfaces</h2>
+    <p>
+        <a href="./../ref/Topten.RichTextKit.Utils.IRun">Utils.IRun</a>    </p>
 
 
 
@@ -69,17 +72,20 @@ as a whole).</p>
                 <td><p>The style attributes to be applied to text in this run.</p>
 </td>
             </tr>
-            <tr>
-                <td><a href="./../ref/Topten.RichTextKit.StyleRun.TextBlock">TextBlock</a></td>
-                <td><p>Gets the text block that owns this run.</p>
-</td>
-            </tr>
     </table>
 
 
 
 
 
+    <h2 id="nested-types">Overridden &amp Inherited</h2>
+    <table class="name-description">
+        <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleRun.ToString">ToString()</a></td>
+                <td><p>Get the text of this style run</p>
+</td>
+        </tr>
+    </table>
 
 
 

@@ -1,0 +1,76 @@
+---
+title: "Topten.RichTextKit.Utils.SubRun"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">SubRun Struct</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+            </small>
+</p>
+
+
+<p>Represents a sub-run in a list of runs</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public struct SubRun</code></pre>
+
+    <h2 id="inherits">Inheritance</h2>
+    <p>
+        SubRun
+ &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.ValueType">ValueType</a> &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.Object">object</a>    </p>
+
+
+
+
+
+    <h2 id="constructors">Constructors</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.SubRun..ctor">SubRun(int, int, int, bool)</a></td>
+                <td><p>Constructs a new sub-run</p>
+</td>
+            </tr>
+    </table>
+
+
+
+    <h2 id="fields">Fields</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.SubRun.Index">Index</a></td>
+                <td><p>The index of the run in the list of runs</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.SubRun.Length">Length</a></td>
+                <td><p>Length of this sub-run in the containing run</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.SubRun.Offset">Offset</a></td>
+                <td><p>Offset of this sub-run in the containing run</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.SubRun.Partial">Partial</a></td>
+                <td><p>Indicates if this sub-run is partial sub-run</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+
+
+

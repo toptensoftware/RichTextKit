@@ -1,0 +1,73 @@
+---
+title: "Topten.RichTextKit.Editor.ITextDocumentView"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">ITextDocumentView Interface</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Editor">Topten.RichTextKit.Editor</a><br />
+            </small>
+</p>
+
+
+<p>Interface implemented by views of a TextDocument</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public interface ITextDocumentView</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+    <h2 id="methods">Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.ITextDocumentView.OnDocumentChange">OnDocumentChange(ITextDocumentView, DocumentChangeInfo)</a></td>
+                <td><p>Notifies a view that the document has changed and provides
+information about which parts of the document were changed.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.ITextDocumentView.OnDocumentDidChange">OnDocumentDidChange(ITextDocumentView)</a></td>
+                <td><p>Notifies that the document has finished changing</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.ITextDocumentView.OnDocumentWillChange">OnDocumentWillChange(ITextDocumentView)</a></td>
+                <td><p>Notifies that the document is about to change</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.ITextDocumentView.OnRedraw">OnRedraw()</a></td>
+                <td><p>Notifies that something other than the content of the document
+has changed (eg: margins) and the view needs to be redrawn but
+the same selection can be maintained</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.ITextDocumentView.OnReset">OnReset()</a></td>
+                <td><p>Notifies that the view needs to be reset, typically because
+the entire content has been reloaded or updated</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+

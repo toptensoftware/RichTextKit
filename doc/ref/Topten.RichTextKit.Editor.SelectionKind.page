@@ -1,0 +1,74 @@
+---
+title: "Topten.RichTextKit.Editor.SelectionKind"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">SelectionKind Enum</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Editor">Topten.RichTextKit.Editor</a><br />
+            </small>
+</p>
+
+
+<p>Defines a kind of selection range</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public enum SelectionKind</code></pre>
+
+
+
+
+
+
+
+    <h2 id="members">Members</h2>
+    <table class="name-value-description">
+            <tr>
+                <td>Document</td>
+                <td>4</td>
+                <td><p>Select the entire document (ie: select all)</p>
+</td>
+            </tr>
+            <tr>
+                <td>Line</td>
+                <td>2</td>
+                <td><p>Select a line</p>
+</td>
+            </tr>
+            <tr>
+                <td>None</td>
+                <td>0</td>
+                <td><p>No range</p>
+</td>
+            </tr>
+            <tr>
+                <td>Paragraph</td>
+                <td>3</td>
+                <td><p>Select a paragraph</p>
+</td>
+            </tr>
+            <tr>
+                <td>Word</td>
+                <td>1</td>
+                <td><p>Select a word</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+
+

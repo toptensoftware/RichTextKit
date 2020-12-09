@@ -1,0 +1,38 @@
+---
+title: "TextBlock.OnChanged"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">TextBlock.OnChanged Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.TextBlock">TextBlock</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Called whenever the content of this styled text block changes</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">protected override void OnChanged();</code></pre>
+
+
+
+
+
+
+
+
+

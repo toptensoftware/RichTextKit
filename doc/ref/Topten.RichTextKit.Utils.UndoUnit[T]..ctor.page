@@ -1,0 +1,74 @@
+---
+title: "UndoUnit&lt;T&gt;..ctor"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">UndoUnit&lt;T&gt; Constructors</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.UndoUnit[T]">UndoUnit&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+
+    <h2 id="overloads">Overloads</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="#Topten.RichTextKit.Utils-UndoUnit-T--ctor-">UndoUnit()</a></td>
+                <td><p>Constructs a new UndoUnit</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="#Topten.RichTextKit.Utils-UndoUnit-T--ctor-System-String">UndoUnit(string)</a></td>
+                <td><p>Constructs a new UndoUnit with a description</p>
+</td>
+            </tr>
+    </table>
+
+
+    <h2 id="Topten.RichTextKit.Utils-UndoUnit-T--ctor-">UndoUnit()</h2>
+
+<p>Constructs a new UndoUnit</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public UndoUnit();</code></pre>
+
+
+
+
+
+
+    <h2 id="Topten.RichTextKit.Utils-UndoUnit-T--ctor-System-String">UndoUnit(string)</h2>
+
+<p>Constructs a new UndoUnit with a description</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public UndoUnit(string description);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.String">string</a> description
+                </td>
+                <td><p>The description of this unit</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

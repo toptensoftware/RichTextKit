@@ -16,7 +16,7 @@ import: "../.common.page"
 
 
 <p>Used to return caret positioning information from the
-<a href="./../ref/Topten.RichTextKit.TextBlock.GetCaretInfo">TextBlock.GetCaretInfo(int)</a> method.</p>
+<a href="./../ref/Topten.RichTextKit.TextBlock.GetCaretInfo">TextBlock.GetCaretInfo(CaretPosition)</a> method.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public struct CaretInfo</code></pre>
@@ -50,6 +50,11 @@ top-right to bottom-left.</p>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.CaretInfo.CodePointIndex">CodePointIndex</a></td>
                 <td><p>Returns the index of the code point that this caret info refers to.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.CaretInfo.LineIndex">LineIndex</a></td>
+                <td><p>Returns the line number that contains the caret</p>
 </td>
             </tr>
             <tr>

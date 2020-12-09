@@ -19,7 +19,7 @@ import: "../.common.page"
 
 
 
-<p>The color to draw selection background with.</p>
+<p>The color to be used for the selection background.</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public SkiaSharp.SKColor SelectionColor { get; set; }</code></pre>

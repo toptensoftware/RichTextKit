@@ -1,0 +1,100 @@
+---
+title: "Utf32Buffer.Delete"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">Utf32Buffer.Delete Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.Utf32Buffer">Utf32Buffer</a><br />
+                        </small>
+</p>
+
+
+
+
+
+    <h2 id="overloads">Overloads</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="#Topten.RichTextKit.Utils-Utf32Buffer.Delete-System-Int32-System-Int32">Delete(int, int)</a></td>
+                <td><p>Delete a section of the buffer</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="#Topten.RichTextKit.Utils-Buffer`1.Delete-System-Int32-System-Int32">Delete(int, int)</a></td>
+                <td><p>Delete a section of the buffer</p>
+</td>
+            </tr>
+    </table>
+
+
+    <h2 id="Topten.RichTextKit.Utils-Utf32Buffer.Delete-System-Int32-System-Int32">Delete(int, int)</h2>
+
+<p>Delete a section of the buffer</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void Delete(int from, int length);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> from
+                </td>
+                <td><p>The position to delete from</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> length
+                </td>
+                <td><p>The length to of the deletion</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+    <h2 id="Topten.RichTextKit.Utils-Buffer`1.Delete-System-Int32-System-Int32">Delete(int, int)</h2>
+
+<p>Delete a section of the buffer</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void Delete(int from, int length);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> from
+                </td>
+                <td><p>The position to delete from</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> length
+                </td>
+                <td><p>The length to of the deletion</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

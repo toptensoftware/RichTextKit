@@ -1,0 +1,64 @@
+---
+title: "StyledText.ApplyStyle"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">StyledText.ApplyStyle Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.StyledText">StyledText</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Overwrites the styles of existing text in the text block</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void ApplyStyle(int position, int length, IStyle style);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> position
+                </td>
+                <td><p>The code point index of the start of the text</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> length
+                </td>
+                <td><p>The length of the text</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.IStyle">IStyle</a> style
+                </td>
+                <td><p>The new style to be applied</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

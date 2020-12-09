@@ -1,0 +1,39 @@
+---
+title: "UndoUnit&lt;T&gt;.Group"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 data-nav-secondary-text="Definition" id="definition">UndoUnit&lt;T&gt;.Group Property</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.UndoUnit[T]">UndoUnit&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+<p>Gets or sets the group that owns this undo unit</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public UndoGroup&lt;T&gt; Group { get; set; }</code></pre>
+
+<h2 id="remarks">Remarks</h2><p>Will be null if the undo unit isn't within a group operation</p>
+
+<h2 id="property-type">Property Type</h2>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.Utils.UndoGroup[T]">UndoGroup&lt;T&gt;</a></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+

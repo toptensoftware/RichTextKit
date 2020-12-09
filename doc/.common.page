@@ -1,6 +1,6 @@
 ---
 projectTitle: RichTextKit
-projectSubTitle: v0.3
+projectSubTitle: v0.4
 projectUrlPrefix: /richtextkit/
 prismLanguages:
   - csharp
@@ -39,10 +39,19 @@ navTree:
               - text: CaretRectangle|./ref/Topten.RichTextKit.CaretInfo.CaretRectangle
               - text: CaretXCoord|./ref/Topten.RichTextKit.CaretInfo.CaretXCoord
               - text: CodePointIndex|./ref/Topten.RichTextKit.CaretInfo.CodePointIndex
+              - text: LineIndex|./ref/Topten.RichTextKit.CaretInfo.LineIndex
               - text: None|./ref/Topten.RichTextKit.CaretInfo.None
           - text: Properties
             subItems:
               - text: IsNone|./ref/Topten.RichTextKit.CaretInfo.IsNone
+      - text: CaretPosition
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.CaretPosition
+          - text: Constructors|./ref/Topten.RichTextKit.CaretPosition..ctor
+          - text: Fields
+            subItems:
+              - text: AltPosition|./ref/Topten.RichTextKit.CaretPosition.AltPosition
+              - text: CodePointIndex|./ref/Topten.RichTextKit.CaretPosition.CodePointIndex
       - text: FontFallback
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.FontFallback
@@ -117,6 +126,7 @@ navTree:
           - text: Overview|./ref/Topten.RichTextKit.HitTestResult
           - text: Fields
             subItems:
+              - text: AltCaretPosition|./ref/Topten.RichTextKit.HitTestResult.AltCaretPosition
               - text: ClosestCodePointIndex|./ref/Topten.RichTextKit.HitTestResult.ClosestCodePointIndex
               - text: ClosestLine|./ref/Topten.RichTextKit.HitTestResult.ClosestLine
               - text: None|./ref/Topten.RichTextKit.HitTestResult.None
@@ -124,6 +134,7 @@ navTree:
               - text: OverLine|./ref/Topten.RichTextKit.HitTestResult.OverLine
           - text: Properties
             subItems:
+              - text: CaretPosition|./ref/Topten.RichTextKit.HitTestResult.CaretPosition
               - text: IsNone|./ref/Topten.RichTextKit.HitTestResult.IsNone
       - text: ICharacterMatcher
         subItems:
@@ -143,6 +154,7 @@ navTree:
               - text: FontWeight|./ref/Topten.RichTextKit.IStyle.FontWeight
               - text: LetterSpacing|./ref/Topten.RichTextKit.IStyle.LetterSpacing
               - text: LineHeight|./ref/Topten.RichTextKit.IStyle.LineHeight
+              - text: ReplacementCharacter|./ref/Topten.RichTextKit.IStyle.ReplacementCharacter
               - text: StrikeThrough|./ref/Topten.RichTextKit.IStyle.StrikeThrough
               - text: TextColor|./ref/Topten.RichTextKit.IStyle.TextColor
               - text: TextDirection|./ref/Topten.RichTextKit.IStyle.TextDirection
@@ -219,6 +231,7 @@ navTree:
               - text: FontWeight|./ref/Topten.RichTextKit.Style.FontWeight
               - text: LetterSpacing|./ref/Topten.RichTextKit.Style.LetterSpacing
               - text: LineHeight|./ref/Topten.RichTextKit.Style.LineHeight
+              - text: ReplacementCharacter|./ref/Topten.RichTextKit.Style.ReplacementCharacter
               - text: StrikeThrough|./ref/Topten.RichTextKit.Style.StrikeThrough
               - text: TextColor|./ref/Topten.RichTextKit.Style.TextColor
               - text: TextDirection|./ref/Topten.RichTextKit.Style.TextDirection
@@ -227,10 +240,39 @@ navTree:
             subItems:
               - text: Modify|./ref/Topten.RichTextKit.Style.Modify
               - text: Seal|./ref/Topten.RichTextKit.Style.Seal
+      - text: StyledText
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.StyledText
+          - text: Constructors|./ref/Topten.RichTextKit.StyledText..ctor
+          - text: Fields
+            subItems:
+              - text: _codePoints|./ref/Topten.RichTextKit.StyledText._codePoints
+              - text: _hasTextDirectionOverrides|./ref/Topten.RichTextKit.StyledText._hasTextDirectionOverrides
+              - text: _styleRuns|./ref/Topten.RichTextKit.StyledText._styleRuns
+          - text: Properties
+            subItems:
+              - text: CodePoints|./ref/Topten.RichTextKit.StyledText.CodePoints
+              - text: Length|./ref/Topten.RichTextKit.StyledText.Length
+              - text: StyleRuns|./ref/Topten.RichTextKit.StyledText.StyleRuns
+          - text: Methods
+            subItems:
+              - text: AddText|./ref/Topten.RichTextKit.StyledText.AddText
+              - text: ApplyStyle|./ref/Topten.RichTextKit.StyledText.ApplyStyle
+              - text: CharacterToCodePointIndex|./ref/Topten.RichTextKit.StyledText.CharacterToCodePointIndex
+              - text: Clear|./ref/Topten.RichTextKit.StyledText.Clear
+              - text: CodePointToCharacterIndex|./ref/Topten.RichTextKit.StyledText.CodePointToCharacterIndex
+              - text: DeleteText|./ref/Topten.RichTextKit.StyledText.DeleteText
+              - text: Extract|./ref/Topten.RichTextKit.StyledText.Extract
+              - text: GetStyleAtOffset|./ref/Topten.RichTextKit.StyledText.GetStyleAtOffset
+              - text: InsertText|./ref/Topten.RichTextKit.StyledText.InsertText
+              - text: OnChanged|./ref/Topten.RichTextKit.StyledText.OnChanged
       - text: StyleManager
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.StyleManager
           - text: Constructors|./ref/Topten.RichTextKit.StyleManager..ctor
+          - text: Fields
+            subItems:
+              - text: Default|./ref/Topten.RichTextKit.StyleManager.Default
           - text: Properties
             subItems:
               - text: CurrentStyle|./ref/Topten.RichTextKit.StyleManager.CurrentStyle
@@ -248,6 +290,7 @@ navTree:
               - text: LineHeight|./ref/Topten.RichTextKit.StyleManager.LineHeight
               - text: Pop|./ref/Topten.RichTextKit.StyleManager.Pop
               - text: Push|./ref/Topten.RichTextKit.StyleManager.Push
+              - text: ReplacementCharacter|./ref/Topten.RichTextKit.StyleManager.ReplacementCharacter
               - text: Reset|./ref/Topten.RichTextKit.StyleManager.Reset
               - text: StrikeThrough|./ref/Topten.RichTextKit.StyleManager.StrikeThrough
               - text: TextColor|./ref/Topten.RichTextKit.StyleManager.TextColor
@@ -265,7 +308,12 @@ navTree:
               - text: Length|./ref/Topten.RichTextKit.StyleRun.Length
               - text: Start|./ref/Topten.RichTextKit.StyleRun.Start
               - text: Style|./ref/Topten.RichTextKit.StyleRun.Style
-              - text: TextBlock|./ref/Topten.RichTextKit.StyleRun.TextBlock
+      - text: SwapHelper
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.SwapHelper
+          - text: Methods
+            subItems:
+              - text: Swap<T>|./ref/Topten.RichTextKit.SwapHelper.Swap[T]
       - text: TextAlignment
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.TextAlignment
@@ -280,8 +328,8 @@ navTree:
               - text: CaretIndicies|./ref/Topten.RichTextKit.TextBlock.CaretIndicies
               - text: FontMapper|./ref/Topten.RichTextKit.TextBlock.FontMapper
               - text: FontRuns|./ref/Topten.RichTextKit.TextBlock.FontRuns
-              - text: Length|./ref/Topten.RichTextKit.TextBlock.Length
               - text: LineCount|./ref/Topten.RichTextKit.TextBlock.LineCount
+              - text: LineIndicies|./ref/Topten.RichTextKit.TextBlock.LineIndicies
               - text: Lines|./ref/Topten.RichTextKit.TextBlock.Lines
               - text: MaxHeight|./ref/Topten.RichTextKit.TextBlock.MaxHeight
               - text: MaxLines|./ref/Topten.RichTextKit.TextBlock.MaxLines
@@ -291,18 +339,16 @@ navTree:
               - text: MeasuredOverhang|./ref/Topten.RichTextKit.TextBlock.MeasuredOverhang
               - text: MeasuredPadding|./ref/Topten.RichTextKit.TextBlock.MeasuredPadding
               - text: MeasuredWidth|./ref/Topten.RichTextKit.TextBlock.MeasuredWidth
-              - text: StyleRuns|./ref/Topten.RichTextKit.TextBlock.StyleRuns
               - text: Truncated|./ref/Topten.RichTextKit.TextBlock.Truncated
+              - text: WordBoundaryIndicies|./ref/Topten.RichTextKit.TextBlock.WordBoundaryIndicies
           - text: Methods
             subItems:
               - text: AddEllipsis|./ref/Topten.RichTextKit.TextBlock.AddEllipsis
-              - text: AddText|./ref/Topten.RichTextKit.TextBlock.AddText
-              - text: CharacterToCodePointIndex|./ref/Topten.RichTextKit.TextBlock.CharacterToCodePointIndex
-              - text: Clear|./ref/Topten.RichTextKit.TextBlock.Clear
-              - text: CodePointToCharacterIndex|./ref/Topten.RichTextKit.TextBlock.CodePointToCharacterIndex
+              - text: Copy|./ref/Topten.RichTextKit.TextBlock.Copy
               - text: FindFontRunForCodePointIndex|./ref/Topten.RichTextKit.TextBlock.FindFontRunForCodePointIndex
               - text: GetCaretInfo|./ref/Topten.RichTextKit.TextBlock.GetCaretInfo
               - text: HitTest|./ref/Topten.RichTextKit.TextBlock.HitTest
+              - text: HitTestLine|./ref/Topten.RichTextKit.TextBlock.HitTestLine
               - text: Layout|./ref/Topten.RichTextKit.TextBlock.Layout
               - text: LookupCaretIndex|./ref/Topten.RichTextKit.TextBlock.LookupCaretIndex
               - text: Paint|./ref/Topten.RichTextKit.TextBlock.Paint
@@ -330,6 +376,9 @@ navTree:
               - text: TextHeight|./ref/Topten.RichTextKit.TextLine.TextHeight
               - text: Width|./ref/Topten.RichTextKit.TextLine.Width
               - text: YCoord|./ref/Topten.RichTextKit.TextLine.YCoord
+          - text: Methods
+            subItems:
+              - text: HitTest|./ref/Topten.RichTextKit.TextLine.HitTest
       - text: TextPaintOptions
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.TextPaintOptions
@@ -341,15 +390,141 @@ navTree:
             subItems:
               - text: IsAntialias|./ref/Topten.RichTextKit.TextPaintOptions.IsAntialias
               - text: LcdRenderText|./ref/Topten.RichTextKit.TextPaintOptions.LcdRenderText
+              - text: Selection|./ref/Topten.RichTextKit.TextPaintOptions.Selection
               - text: SelectionColor|./ref/Topten.RichTextKit.TextPaintOptions.SelectionColor
-              - text: SelectionEnd|./ref/Topten.RichTextKit.TextPaintOptions.SelectionEnd
-              - text: SelectionStart|./ref/Topten.RichTextKit.TextPaintOptions.SelectionStart
           - text: Methods
             subItems:
               - text: Clone|./ref/Topten.RichTextKit.TextPaintOptions.Clone
+      - text: TextRange
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.TextRange
+          - text: Constructors|./ref/Topten.RichTextKit.TextRange..ctor
+          - text: Fields
+            subItems:
+              - text: AltPosition|./ref/Topten.RichTextKit.TextRange.AltPosition
+              - text: End|./ref/Topten.RichTextKit.TextRange.End
+              - text: Start|./ref/Topten.RichTextKit.TextRange.Start
+          - text: Properties
+            subItems:
+              - text: CaretPosition|./ref/Topten.RichTextKit.TextRange.CaretPosition
+              - text: IsRange|./ref/Topten.RichTextKit.TextRange.IsRange
+              - text: Length|./ref/Topten.RichTextKit.TextRange.Length
+              - text: Maximum|./ref/Topten.RichTextKit.TextRange.Maximum
+              - text: Minimum|./ref/Topten.RichTextKit.TextRange.Minimum
+              - text: Normalized|./ref/Topten.RichTextKit.TextRange.Normalized
+              - text: Reversed|./ref/Topten.RichTextKit.TextRange.Reversed
+          - text: Methods
+            subItems:
+              - text: Clamp|./ref/Topten.RichTextKit.TextRange.Clamp
+              - text: IsEqual|./ref/Topten.RichTextKit.TextRange.IsEqual
+              - text: Offset|./ref/Topten.RichTextKit.TextRange.Offset
+              - text: Union|./ref/Topten.RichTextKit.TextRange.Union
+              - text: UpdateForEdit|./ref/Topten.RichTextKit.TextRange.UpdateForEdit
       - text: UnderlineStyle
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.UnderlineStyle
+  - text: Topten.RichTextKit.Editor
+    href: ./ref/Topten.RichTextKit.Editor
+    subItems:
+      - text: DocumentChangeInfo
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.Editor.DocumentChangeInfo
+          - text: Fields
+            subItems:
+              - text: CodePointIndex|./ref/Topten.RichTextKit.Editor.DocumentChangeInfo.CodePointIndex
+              - text: ImeCaretOffset|./ref/Topten.RichTextKit.Editor.DocumentChangeInfo.ImeCaretOffset
+              - text: IsUndoing|./ref/Topten.RichTextKit.Editor.DocumentChangeInfo.IsUndoing
+              - text: NewLength|./ref/Topten.RichTextKit.Editor.DocumentChangeInfo.NewLength
+              - text: OldLength|./ref/Topten.RichTextKit.Editor.DocumentChangeInfo.OldLength
+              - text: Semantics|./ref/Topten.RichTextKit.Editor.DocumentChangeInfo.Semantics
+      - text: EditSemantics
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.Editor.EditSemantics
+      - text: ITextDocumentView
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.Editor.ITextDocumentView
+          - text: Methods
+            subItems:
+              - text: OnDocumentChange|./ref/Topten.RichTextKit.Editor.ITextDocumentView.OnDocumentChange
+              - text: OnDocumentDidChange|./ref/Topten.RichTextKit.Editor.ITextDocumentView.OnDocumentDidChange
+              - text: OnDocumentWillChange|./ref/Topten.RichTextKit.Editor.ITextDocumentView.OnDocumentWillChange
+              - text: OnRedraw|./ref/Topten.RichTextKit.Editor.ITextDocumentView.OnRedraw
+              - text: OnReset|./ref/Topten.RichTextKit.Editor.ITextDocumentView.OnReset
+      - text: NavigationKind
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.Editor.NavigationKind
+      - text: Paragraph
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.Editor.Paragraph
+          - text: Constructors|./ref/Topten.RichTextKit.Editor.Paragraph..ctor
+          - text: Properties
+            subItems:
+              - text: CaretIndicies|./ref/Topten.RichTextKit.Editor.Paragraph.CaretIndicies
+              - text: CodePointIndex|./ref/Topten.RichTextKit.Editor.Paragraph.CodePointIndex
+              - text: ContentHeight|./ref/Topten.RichTextKit.Editor.Paragraph.ContentHeight
+              - text: ContentWidth|./ref/Topten.RichTextKit.Editor.Paragraph.ContentWidth
+              - text: ContentXCoord|./ref/Topten.RichTextKit.Editor.Paragraph.ContentXCoord
+              - text: ContentYCoord|./ref/Topten.RichTextKit.Editor.Paragraph.ContentYCoord
+              - text: Length|./ref/Topten.RichTextKit.Editor.Paragraph.Length
+              - text: LineIndicies|./ref/Topten.RichTextKit.Editor.Paragraph.LineIndicies
+              - text: MarginBottom|./ref/Topten.RichTextKit.Editor.Paragraph.MarginBottom
+              - text: MarginLeft|./ref/Topten.RichTextKit.Editor.Paragraph.MarginLeft
+              - text: MarginRight|./ref/Topten.RichTextKit.Editor.Paragraph.MarginRight
+              - text: MarginTop|./ref/Topten.RichTextKit.Editor.Paragraph.MarginTop
+              - text: TextBlock|./ref/Topten.RichTextKit.Editor.Paragraph.TextBlock
+              - text: WordBoundaryIndicies|./ref/Topten.RichTextKit.Editor.Paragraph.WordBoundaryIndicies
+          - text: Methods
+            subItems:
+              - text: CopyStyleFrom|./ref/Topten.RichTextKit.Editor.Paragraph.CopyStyleFrom
+              - text: GetCaretInfo|./ref/Topten.RichTextKit.Editor.Paragraph.GetCaretInfo
+              - text: HitTest|./ref/Topten.RichTextKit.Editor.Paragraph.HitTest
+              - text: HitTestLine|./ref/Topten.RichTextKit.Editor.Paragraph.HitTestLine
+              - text: Layout|./ref/Topten.RichTextKit.Editor.Paragraph.Layout
+              - text: Paint|./ref/Topten.RichTextKit.Editor.Paragraph.Paint
+      - text: SelectionKind
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.Editor.SelectionKind
+      - text: TextDocument
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.Editor.TextDocument
+          - text: Constructors|./ref/Topten.RichTextKit.Editor.TextDocument..ctor
+          - text: Properties
+            subItems:
+              - text: DefaultStyle|./ref/Topten.RichTextKit.Editor.TextDocument.DefaultStyle
+              - text: ImeCompositionOffset|./ref/Topten.RichTextKit.Editor.TextDocument.ImeCompositionOffset
+              - text: IsImeComposing|./ref/Topten.RichTextKit.Editor.TextDocument.IsImeComposing
+              - text: Length|./ref/Topten.RichTextKit.Editor.TextDocument.Length
+              - text: LineWrap|./ref/Topten.RichTextKit.Editor.TextDocument.LineWrap
+              - text: MarginBottom|./ref/Topten.RichTextKit.Editor.TextDocument.MarginBottom
+              - text: MarginLeft|./ref/Topten.RichTextKit.Editor.TextDocument.MarginLeft
+              - text: MarginRight|./ref/Topten.RichTextKit.Editor.TextDocument.MarginRight
+              - text: MarginTop|./ref/Topten.RichTextKit.Editor.TextDocument.MarginTop
+              - text: MeasuredHeight|./ref/Topten.RichTextKit.Editor.TextDocument.MeasuredHeight
+              - text: MeasuredWidth|./ref/Topten.RichTextKit.Editor.TextDocument.MeasuredWidth
+              - text: PageWidth|./ref/Topten.RichTextKit.Editor.TextDocument.PageWidth
+              - text: PlainTextMode|./ref/Topten.RichTextKit.Editor.TextDocument.PlainTextMode
+              - text: SingleLineMode|./ref/Topten.RichTextKit.Editor.TextDocument.SingleLineMode
+              - text: Text|./ref/Topten.RichTextKit.Editor.TextDocument.Text
+              - text: UndoManager|./ref/Topten.RichTextKit.Editor.TextDocument.UndoManager
+          - text: Methods
+            subItems:
+              - text: FinishImeComposition|./ref/Topten.RichTextKit.Editor.TextDocument.FinishImeComposition
+              - text: GetCaretInfo|./ref/Topten.RichTextKit.Editor.TextDocument.GetCaretInfo
+              - text: GetOvertypeRange|./ref/Topten.RichTextKit.Editor.TextDocument.GetOvertypeRange
+              - text: GetSelectionRange|./ref/Topten.RichTextKit.Editor.TextDocument.GetSelectionRange
+              - text: GetStyleAtOffset|./ref/Topten.RichTextKit.Editor.TextDocument.GetStyleAtOffset
+              - text: GetText|./ref/Topten.RichTextKit.Editor.TextDocument.GetText
+              - text: HitTest|./ref/Topten.RichTextKit.Editor.TextDocument.HitTest
+              - text: Navigate|./ref/Topten.RichTextKit.Editor.TextDocument.Navigate
+              - text: Paint|./ref/Topten.RichTextKit.Editor.TextDocument.Paint
+              - text: Redo|./ref/Topten.RichTextKit.Editor.TextDocument.Redo
+              - text: RegisterView|./ref/Topten.RichTextKit.Editor.TextDocument.RegisterView
+              - text: ReplaceText|./ref/Topten.RichTextKit.Editor.TextDocument.ReplaceText
+              - text: RevokeView|./ref/Topten.RichTextKit.Editor.TextDocument.RevokeView
+              - text: SetMargins|./ref/Topten.RichTextKit.Editor.TextDocument.SetMargins
+              - text: StartImeComposition|./ref/Topten.RichTextKit.Editor.TextDocument.StartImeComposition
+              - text: Undo|./ref/Topten.RichTextKit.Editor.TextDocument.Undo
+              - text: UpdateImeComposition|./ref/Topten.RichTextKit.Editor.TextDocument.UpdateImeComposition
   - text: Topten.RichTextKit.Utils
     href: ./ref/Topten.RichTextKit.Utils
     subItems:
@@ -358,7 +533,7 @@ navTree:
           - text: Overview|./ref/Topten.RichTextKit.Utils.BinarySearchExtension
           - text: Methods
             subItems:
-              - text: BinarySearch<T,U>|./ref/Topten.RichTextKit.Utils.BinarySearchExtension.BinarySearch[T,U]
+              - text: BinarySearch<T>|./ref/Topten.RichTextKit.Utils.BinarySearchExtension.BinarySearch[T]
       - text: Buffer<T>
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.Utils.Buffer[T]
@@ -367,12 +542,25 @@ navTree:
             subItems:
               - text: Item|./ref/Topten.RichTextKit.Utils.Buffer[T].Item
               - text: Length|./ref/Topten.RichTextKit.Utils.Buffer[T].Length
+              - text: Underlying|./ref/Topten.RichTextKit.Utils.Buffer[T].Underlying
           - text: Methods
             subItems:
               - text: Add|./ref/Topten.RichTextKit.Utils.Buffer[T].Add
               - text: AsSlice|./ref/Topten.RichTextKit.Utils.Buffer[T].AsSlice
               - text: Clear|./ref/Topten.RichTextKit.Utils.Buffer[T].Clear
+              - text: Delete|./ref/Topten.RichTextKit.Utils.Buffer[T].Delete
+              - text: GetRanges|./ref/Topten.RichTextKit.Utils.Buffer[T].GetRanges
+              - text: Insert|./ref/Topten.RichTextKit.Utils.Buffer[T].Insert
+              - text: Replace|./ref/Topten.RichTextKit.Utils.Buffer[T].Replace
+              - text: Split|./ref/Topten.RichTextKit.Utils.Buffer[T].Split
               - text: SubSlice|./ref/Topten.RichTextKit.Utils.Buffer[T].SubSlice
+      - text: IRun
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.Utils.IRun
+          - text: Properties
+            subItems:
+              - text: Length|./ref/Topten.RichTextKit.Utils.IRun.Length
+              - text: Offset|./ref/Topten.RichTextKit.Utils.IRun.Offset
       - text: MappedSlice<T>
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.Utils.MappedSlice[T]
@@ -386,6 +574,15 @@ navTree:
           - text: Methods
             subItems:
               - text: ToArray|./ref/Topten.RichTextKit.Utils.MappedSlice[T].ToArray
+      - text: RunExtensions
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.Utils.RunExtensions
+          - text: Methods
+            subItems:
+              - text: CheckValid<T>|./ref/Topten.RichTextKit.Utils.RunExtensions.CheckValid[T]
+              - text: GetInterectingRuns<T>|./ref/Topten.RichTextKit.Utils.RunExtensions.GetInterectingRuns[T]
+              - text: GetIntersectingRunsReverse<T>|./ref/Topten.RichTextKit.Utils.RunExtensions.GetIntersectingRunsReverse[T]
+              - text: TotalLength<T>|./ref/Topten.RichTextKit.Utils.RunExtensions.TotalLength[T]
       - text: Slice<T>
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.Utils.Slice[T]
@@ -401,10 +598,86 @@ navTree:
             subItems:
               - text: AsSpan|./ref/Topten.RichTextKit.Utils.Slice[T].AsSpan
               - text: Clear|./ref/Topten.RichTextKit.Utils.Slice[T].Clear
+              - text: Copy|./ref/Topten.RichTextKit.Utils.Slice[T].Copy
               - text: Fill|./ref/Topten.RichTextKit.Utils.Slice[T].Fill
+              - text: IndexOf|./ref/Topten.RichTextKit.Utils.Slice[T].IndexOf
+              - text: IndexOfAny|./ref/Topten.RichTextKit.Utils.Slice[T].IndexOfAny
+              - text: Replace|./ref/Topten.RichTextKit.Utils.Slice[T].Replace
               - text: Set|./ref/Topten.RichTextKit.Utils.Slice[T].Set
+              - text: Split|./ref/Topten.RichTextKit.Utils.Slice[T].Split
               - text: SubSlice|./ref/Topten.RichTextKit.Utils.Slice[T].SubSlice
               - text: ToArray|./ref/Topten.RichTextKit.Utils.Slice[T].ToArray
+      - text: SubRun
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.Utils.SubRun
+          - text: Constructors|./ref/Topten.RichTextKit.Utils.SubRun..ctor
+          - text: Fields
+            subItems:
+              - text: Index|./ref/Topten.RichTextKit.Utils.SubRun.Index
+              - text: Length|./ref/Topten.RichTextKit.Utils.SubRun.Length
+              - text: Offset|./ref/Topten.RichTextKit.Utils.SubRun.Offset
+              - text: Partial|./ref/Topten.RichTextKit.Utils.SubRun.Partial
+      - text: UndoGroup<T>
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.Utils.UndoGroup[T]
+          - text: Constructors|./ref/Topten.RichTextKit.Utils.UndoGroup[T]..ctor
+          - text: Properties
+            subItems:
+              - text: LastUnit|./ref/Topten.RichTextKit.Utils.UndoGroup[T].LastUnit
+              - text: Units|./ref/Topten.RichTextKit.Utils.UndoGroup[T].Units
+          - text: Methods
+            subItems:
+              - text: Add|./ref/Topten.RichTextKit.Utils.UndoGroup[T].Add
+              - text: Insert|./ref/Topten.RichTextKit.Utils.UndoGroup[T].Insert
+              - text: OnClose|./ref/Topten.RichTextKit.Utils.UndoGroup[T].OnClose
+              - text: OnOpen|./ref/Topten.RichTextKit.Utils.UndoGroup[T].OnOpen
+      - text: UndoManager<T>
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.Utils.UndoManager[T]
+          - text: Constructors|./ref/Topten.RichTextKit.Utils.UndoManager[T]..ctor
+          - text: Properties
+            subItems:
+              - text: CanRedo|./ref/Topten.RichTextKit.Utils.UndoManager[T].CanRedo
+              - text: CanUndo|./ref/Topten.RichTextKit.Utils.UndoManager[T].CanUndo
+              - text: IsModified|./ref/Topten.RichTextKit.Utils.UndoManager[T].IsModified
+              - text: RedoDescription|./ref/Topten.RichTextKit.Utils.UndoManager[T].RedoDescription
+              - text: UndoDescription|./ref/Topten.RichTextKit.Utils.UndoManager[T].UndoDescription
+          - text: Methods
+            subItems:
+              - text: Clear|./ref/Topten.RichTextKit.Utils.UndoManager[T].Clear
+              - text: CloseGroup|./ref/Topten.RichTextKit.Utils.UndoManager[T].CloseGroup
+              - text: Do|./ref/Topten.RichTextKit.Utils.UndoManager[T].Do
+              - text: GetRedoUnit|./ref/Topten.RichTextKit.Utils.UndoManager[T].GetRedoUnit
+              - text: GetUndoUnit|./ref/Topten.RichTextKit.Utils.UndoManager[T].GetUndoUnit
+              - text: GetUnsealedUnit|./ref/Topten.RichTextKit.Utils.UndoManager[T].GetUnsealedUnit
+              - text: MarkUnmodified|./ref/Topten.RichTextKit.Utils.UndoManager[T].MarkUnmodified
+              - text: OnEndOperation|./ref/Topten.RichTextKit.Utils.UndoManager[T].OnEndOperation
+              - text: OnModifiedChanged|./ref/Topten.RichTextKit.Utils.UndoManager[T].OnModifiedChanged
+              - text: OnStartOperation|./ref/Topten.RichTextKit.Utils.UndoManager[T].OnStartOperation
+              - text: OpenGroup|./ref/Topten.RichTextKit.Utils.UndoManager[T].OpenGroup
+              - text: Redo|./ref/Topten.RichTextKit.Utils.UndoManager[T].Redo
+              - text: Seal|./ref/Topten.RichTextKit.Utils.UndoManager[T].Seal
+              - text: Undo|./ref/Topten.RichTextKit.Utils.UndoManager[T].Undo
+          - text: Events
+            subItems:
+              - text: EndOperation|./ref/Topten.RichTextKit.Utils.UndoManager[T].EndOperation
+              - text: ModifiedChanged|./ref/Topten.RichTextKit.Utils.UndoManager[T].ModifiedChanged
+              - text: StartOperation|./ref/Topten.RichTextKit.Utils.UndoManager[T].StartOperation
+      - text: UndoUnit<T>
+        subItems:
+          - text: Overview|./ref/Topten.RichTextKit.Utils.UndoUnit[T]
+          - text: Constructors|./ref/Topten.RichTextKit.Utils.UndoUnit[T]..ctor
+          - text: Properties
+            subItems:
+              - text: Description|./ref/Topten.RichTextKit.Utils.UndoUnit[T].Description
+              - text: Group|./ref/Topten.RichTextKit.Utils.UndoUnit[T].Group
+              - text: Sealed|./ref/Topten.RichTextKit.Utils.UndoUnit[T].Sealed
+          - text: Methods
+            subItems:
+              - text: Do|./ref/Topten.RichTextKit.Utils.UndoUnit[T].Do
+              - text: Redo|./ref/Topten.RichTextKit.Utils.UndoUnit[T].Redo
+              - text: Seal|./ref/Topten.RichTextKit.Utils.UndoUnit[T].Seal
+              - text: Undo|./ref/Topten.RichTextKit.Utils.UndoUnit[T].Undo
       - text: Utf32Buffer
         subItems:
           - text: Overview|./ref/Topten.RichTextKit.Utils.Utf32Buffer
@@ -413,7 +686,9 @@ navTree:
             subItems:
               - text: Add|./ref/Topten.RichTextKit.Utils.Utf32Buffer.Add
               - text: Clear|./ref/Topten.RichTextKit.Utils.Utf32Buffer.Clear
+              - text: Delete|./ref/Topten.RichTextKit.Utils.Utf32Buffer.Delete
               - text: GetString|./ref/Topten.RichTextKit.Utils.Utf32Buffer.GetString
+              - text: Insert|./ref/Topten.RichTextKit.Utils.Utf32Buffer.Insert
               - text: Utf16OffsetToUtf32Offset|./ref/Topten.RichTextKit.Utils.Utf32Buffer.Utf16OffsetToUtf32Offset
               - text: Utf32OffsetToUtf16Offset|./ref/Topten.RichTextKit.Utils.Utf32Buffer.Utf32OffsetToUtf16Offset
       - text: Utf32Utils

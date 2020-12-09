@@ -26,7 +26,7 @@ import: "../.common.page"
 <p>Modifies this style with one or more attribute changes and returns a new style</p>
 
 
-<pre class="language-csharp"><code class="language-csharp">public Style Modify(string fontFamily = null, Nullable&lt;float&gt; fontSize = null, Nullable&lt;int&gt; fontWeight = null, Nullable&lt;bool&gt; fontItalic = null, Nullable&lt;UnderlineStyle&gt; underline = null, Nullable&lt;StrikeThroughStyle&gt; strikeThrough = null, Nullable&lt;float&gt; lineHeight = null, Nullable&lt;SkiaSharp.SKColor&gt; textColor = null, Nullable&lt;float&gt; letterSpacing = null, Nullable&lt;FontVariant&gt; fontVariant = null, Nullable&lt;TextDirection&gt; textDirection = null);</code></pre>
+<pre class="language-csharp"><code class="language-csharp">public Style Modify(string fontFamily = null, Nullable&lt;float&gt; fontSize = null, Nullable&lt;int&gt; fontWeight = null, Nullable&lt;bool&gt; fontItalic = null, Nullable&lt;UnderlineStyle&gt; underline = null, Nullable&lt;StrikeThroughStyle&gt; strikeThrough = null, Nullable&lt;float&gt; lineHeight = null, Nullable&lt;SkiaSharp.SKColor&gt; textColor = null, Nullable&lt;float&gt; letterSpacing = null, Nullable&lt;FontVariant&gt; fontVariant = null, Nullable&lt;TextDirection&gt; textDirection = null, Nullable&lt;char&gt; replacementCharacter = null);</code></pre>
 
 <h2 id="remarks">Remarks</h2><p>Note this method always creates a new style instance.To avoid creating excessive
 style instances, consider using the StyleManager which caches instances of styles
@@ -119,6 +119,14 @@ with the same attributes</p>
                     <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;TextDirection&gt;</a> textDirection
  = null                </td>
                 <td><p>The new text direction</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;char&gt;</a> replacementCharacter
+ = null                </td>
+                <td><p>The new replacement character</p>
 </td>
             </tr>
     </table>

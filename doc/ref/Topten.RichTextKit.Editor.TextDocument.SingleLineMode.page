@@ -1,0 +1,38 @@
+---
+title: "TextDocument.SingleLineMode"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 data-nav-secondary-text="Definition" id="definition">TextDocument.SingleLineMode Property</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Editor">Topten.RichTextKit.Editor</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Editor.TextDocument">TextDocument</a><br />
+                        </small>
+</p>
+
+
+
+
+<p>Specifies if the document is in single line mode</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public bool SingleLineMode { get; set; }</code></pre>
+
+
+<h2 id="property-type">Property Type</h2>    <table class="name-description">
+        <tr>
+            <td><a href="https://docs.microsoft.com/dotnet/api/System.Boolean">bool</a></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+

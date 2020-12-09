@@ -1,0 +1,55 @@
+---
+title: "TextRange.IsEqual"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">TextRange.IsEqual Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.TextRange">TextRange</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Compare this text range to another for equality</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public bool IsEqual(TextRange other);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.TextRange">TextRange</a> other
+                </td>
+                <td><p>The text range to compare to</p>
+</td>
+            </tr>
+    </table>
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="https://docs.microsoft.com/dotnet/api/System.Boolean">bool</a></td>
+            <td><p>True if the text ranges are equal</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

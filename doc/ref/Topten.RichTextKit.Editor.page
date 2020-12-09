@@ -1,0 +1,61 @@
+---
+title: "Topten.RichTextKit.Editor"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1>Topten.RichTextKit.Editor Namespace</h1>
+
+    <h2 id="classes">Classes</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph"> Paragraph</a></td>
+                <td><p>Abstract base class for all TextDocument paragraphs</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument"> TextDocument</a></td>
+                <td><p>Represents a the document part of a Document/View editor</p>
+</td>
+            </tr>
+    </table>
+
+    <h2 id="interfaces">Interfaces</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.ITextDocumentView"> ITextDocumentView</a></td>
+                <td><p>Interface implemented by views of a TextDocument</p>
+</td>
+            </tr>
+    </table>
+
+    <h2 id="structs">Structs</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.DocumentChangeInfo"> DocumentChangeInfo</a></td>
+                <td><p>Provides information about the range of changes to a document</p>
+</td>
+            </tr>
+    </table>
+
+
+    <h2 id="enums">Enums</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.EditSemantics"> EditSemantics</a></td>
+                <td><p>Defines various semantics for TextDocument edit operations</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.NavigationKind"> NavigationKind</a></td>
+                <td><p>Defines a kind of keyboard navigation</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.SelectionKind"> SelectionKind</a></td>
+                <td><p>Defines a kind of selection range</p>
+</td>
+            </tr>
+    </table>
+
+

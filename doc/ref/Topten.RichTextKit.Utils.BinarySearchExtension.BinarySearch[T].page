@@ -1,0 +1,219 @@
+---
+title: "BinarySearchExtension.BinarySearch&lt;T&gt;"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">BinarySearchExtension.BinarySearch&lt;T&gt; Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.BinarySearchExtension">BinarySearchExtension</a><br />
+                        </small>
+</p>
+
+
+
+
+
+    <h2 id="overloads">Overloads</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="#Topten.RichTextKit.Utils-BinarySearchExtension.BinarySearch-T-System.Collections.Generic-IReadOnlyList-T--T">BinarySearch&lt;T&gt;(this IReadOnlyList&lt;T&gt;, T)</a></td>
+                <td><p>Performs a binary search on the entire contents of an IReadOnlyList</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="#Topten.RichTextKit.Utils-BinarySearchExtension.BinarySearch-T-U-System.Collections.Generic-IReadOnlyList-T--U-System-Func-T-U-System-Int32-">BinarySearch&lt;T,U&gt;(this IReadOnlyList&lt;T&gt;, U, Func&lt;T,U,int&gt;)</a></td>
+                <td><p>Performs a binary search on the entire contents of an IReadOnlyList</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="#Topten.RichTextKit.Utils-BinarySearchExtension.BinarySearch-T-U-System.Collections.Generic-IReadOnlyList-T--System-Int32-System-Int32-U-System-Func-T-U-System-Int32-">BinarySearch&lt;T,U&gt;(this IReadOnlyList&lt;T&gt;, int, int, U, Func&lt;T,U,int&gt;)</a></td>
+                <td><p>Performs a binary search on a a subset of an IReadOnlyList</p>
+</td>
+            </tr>
+    </table>
+
+
+    <h2 id="Topten.RichTextKit.Utils-BinarySearchExtension.BinarySearch-T-System.Collections.Generic-IReadOnlyList-T--T">BinarySearch&lt;T&gt;(this IReadOnlyList&lt;T&gt;, T)</h2>
+
+<p>Performs a binary search on the entire contents of an IReadOnlyList</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public static int BinarySearch&lt;T&gt;(this IReadOnlyList&lt;T&gt; list, T value);</code></pre>
+
+
+<h3>Type Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>T</td>
+                <td><p>The list element type</p>
+</td>
+            </tr>
+    </table>
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    this 
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Collections.Generic.IReadOnlyList-1">IReadOnlyList&lt;T&gt;</a> list
+                </td>
+                <td><p>The list to be searched</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    T value
+                </td>
+                <td><p>The value to search for</p>
+</td>
+            </tr>
+    </table>
+<h3>Returns</h3>    <table class="name-description">
+        <tr>
+            <td><a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a></td>
+            <td><p>The index of the found item; otherwise the bitwise complement of the index of the next larger item</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+    <h2 id="Topten.RichTextKit.Utils-BinarySearchExtension.BinarySearch-T-U-System.Collections.Generic-IReadOnlyList-T--U-System-Func-T-U-System-Int32-">BinarySearch&lt;T,U&gt;(this IReadOnlyList&lt;T&gt;, U, Func&lt;T,U,int&gt;)</h2>
+
+<p>Performs a binary search on the entire contents of an IReadOnlyList</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public static int BinarySearch&lt;T,U&gt;(this IReadOnlyList&lt;T&gt; list, U value, Func&lt;T,U,int&gt; compare);</code></pre>
+
+
+<h3>Type Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>T</td>
+                <td><p>The list element type</p>
+</td>
+            </tr>
+            <tr>
+                <td>U</td>
+                <td><p>The value type being searched for</p>
+</td>
+            </tr>
+    </table>
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    this 
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Collections.Generic.IReadOnlyList-1">IReadOnlyList&lt;T&gt;</a> list
+                </td>
+                <td><p>The list to be searched</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    U value
+                </td>
+                <td><p>The value to search for</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Func-3">Func&lt;T,U,int&gt;</a> compare
+                </td>
+                <td><p>A comparison function</p>
+</td>
+            </tr>
+    </table>
+<h3>Returns</h3>    <table class="name-description">
+        <tr>
+            <td><a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a></td>
+            <td><p>The index of the found item; otherwise the bitwise complement of the index of the next larger item</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+    <h2 id="Topten.RichTextKit.Utils-BinarySearchExtension.BinarySearch-T-U-System.Collections.Generic-IReadOnlyList-T--System-Int32-System-Int32-U-System-Func-T-U-System-Int32-">BinarySearch&lt;T,U&gt;(this IReadOnlyList&lt;T&gt;, int, int, U, Func&lt;T,U,int&gt;)</h2>
+
+<p>Performs a binary search on a a subset of an IReadOnlyList</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public static int BinarySearch&lt;T,U&gt;(this IReadOnlyList&lt;T&gt; list, int index, int length, U value, Func&lt;T,U,int&gt; compare);</code></pre>
+
+
+<h3>Type Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>T</td>
+                <td><p>The list element type</p>
+</td>
+            </tr>
+            <tr>
+                <td>U</td>
+                <td><p>The value type being searched for</p>
+</td>
+            </tr>
+    </table>
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    this 
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Collections.Generic.IReadOnlyList-1">IReadOnlyList&lt;T&gt;</a> list
+                </td>
+                <td><p>The list to be searched</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> index
+                </td>
+                <td><p>The start of the range to be searched</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> length
+                </td>
+                <td><p>The length of the range to be searched</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    U value
+                </td>
+                <td><p>The value to search for</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Func-3">Func&lt;T,U,int&gt;</a> compare
+                </td>
+                <td><p>A comparison function</p>
+</td>
+            </tr>
+    </table>
+<h3>Returns</h3>    <table class="name-description">
+        <tr>
+            <td><a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a></td>
+            <td><p>The index of the found item; otherwise the bitwise complement of the index of the next larger item</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

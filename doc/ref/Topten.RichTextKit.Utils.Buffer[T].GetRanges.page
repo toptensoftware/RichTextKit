@@ -1,0 +1,55 @@
+---
+title: "Buffer&lt;T&gt;.GetRanges"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">Buffer&lt;T&gt;.GetRanges Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.Buffer[T]">Buffer&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Split the utf32 buffer on a codepoint type</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">[Runtime.CompilerServices.IteratorStateMachine(Topten.RichTextKit.Utils.Buffer`1&#x2B;&lt;GetRanges&gt;d__20[T])]&#xD;&#xA;public IEnumerable&lt;(int Offset, int Length)&gt; GetRanges(T delim);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    T delim
+                </td>
+                <td><p>The delimiter to split on</p>
+</td>
+            </tr>
+    </table>
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="https://docs.microsoft.com/dotnet/api/System.Collections.Generic.IEnumerable-1">IEnumerable&lt;(int Offset, int Length)&gt;</a></td>
+            <td><p>An enumeration of offset/length for each range</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

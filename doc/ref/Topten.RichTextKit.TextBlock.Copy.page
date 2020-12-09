@@ -1,0 +1,63 @@
+---
+title: "TextBlock.Copy"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">TextBlock.Copy Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.TextBlock">TextBlock</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Split this text block at the specified code point index</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public TextBlock Copy(int from, int length);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> from
+                </td>
+                <td><p>The code point index to copy from</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> length
+                </td>
+                <td><p>The number of code points to copy</p>
+</td>
+            </tr>
+    </table>
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.TextBlock">TextBlock</a></td>
+            <td><p>A new text block with the RHS split part of the text</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

@@ -1,0 +1,39 @@
+---
+title: "UndoUnit&lt;T&gt;.Seal"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">UndoUnit&lt;T&gt;.Seal Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.UndoUnit[T]">UndoUnit&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Informs the unit that no subsequent coalescing operations
+will be appended to this unit</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public virtual void Seal();</code></pre>
+
+
+
+
+
+
+
+
+

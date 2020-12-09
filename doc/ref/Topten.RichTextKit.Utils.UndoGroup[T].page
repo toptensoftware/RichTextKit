@@ -1,0 +1,137 @@
+---
+title: "Topten.RichTextKit.Utils.UndoGroup&lt;T&gt;"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">UndoGroup&lt;T&gt; Class</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+            </small>
+</p>
+
+
+<p>Implements an Undo unit that groups other units
+into a single operation</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public class UndoGroup&lt;T&gt; : UndoUnit&lt;T&gt;</code></pre>
+
+    <h2 id="inherits">Inheritance</h2>
+    <p>
+        UndoGroup&lt;T&gt;
+ &rarr; <a href="./../ref/Topten.RichTextKit.Utils.UndoUnit[T]">UndoUnit&lt;T&gt;</a> &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.Object">object</a>    </p>
+
+
+
+
+    <h2 id="type-parameters">Type Parameters</h2>
+    <table class="name-description">
+            <tr>
+                <td>T</td>
+                <td><p>The document context type</p>
+</td>
+            </tr>
+    </table>
+
+    <h2 id="constructors">Constructors</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoGroup[T]..ctor">UndoGroup(string)</a></td>
+                <td><p>Constructs a new UndoGroup with a description</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+    <h2 id="properties">Properties</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoGroup[T].LastUnit">LastUnit</a></td>
+                <td><p>Gets the last UndoUnit in this group</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoGroup[T].Units">Units</a></td>
+                <td><p>Get the list of units in this group</p>
+</td>
+            </tr>
+    </table>
+
+    <h2 id="methods">Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoGroup[T].Add">Add(UndoUnit&lt;T&gt;)</a></td>
+                <td><p>Adds a unit to this group</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoGroup[T].Insert">Insert(int, UndoUnit&lt;T&gt;)</a></td>
+                <td><p>Inserts an unit to this group</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoGroup[T].OnClose">OnClose(T)</a></td>
+                <td><p>Notifies this group that it's been closed</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoGroup[T].OnOpen">OnOpen(T)</a></td>
+                <td><p>Notifies this group that it's been opened</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+    <h2 id="nested-types">Overridden &amp Inherited</h2>
+    <table class="name-description">
+        <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoUnit`1.Description">Description</a></td>
+                <td><p>Gets the description of this undo unit</p>
+</td>
+        </tr>
+        <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoGroup[T].Do">Do(T)</a></td>
+                <td><p>The method on the UndoGroup class is never called by the
+UndoManager Never. See OnOpen and OnClose instead which
+are called as the group is constructed</p>
+</td>
+        </tr>
+        <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoUnit`1.Group">Group</a></td>
+                <td><p>Gets or sets the group that owns this undo unit</p>
+</td>
+        </tr>
+        <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoGroup[T].Redo">Redo(T)</a></td>
+                <td></td>
+        </tr>
+        <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoUnit`1.Seal">Seal()</a></td>
+                <td><p>Informs the unit that no subsequent coalescing operations
+will be appended to this unit</p>
+</td>
+        </tr>
+        <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoUnit`1.Sealed">Sealed</a></td>
+                <td><p>Checks is this item is sealed</p>
+</td>
+        </tr>
+        <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.UndoGroup[T].Undo">Undo(T)</a></td>
+                <td></td>
+        </tr>
+    </table>
+
+
+
+
+

@@ -1,0 +1,122 @@
+---
+title: "Buffer&lt;T&gt;.Insert"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">Buffer&lt;T&gt;.Insert Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.Buffer[T]">Buffer&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+
+    <h2 id="overloads">Overloads</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="#Topten.RichTextKit.Utils-Buffer-T.Insert-System-Int32-Topten.RichTextKit.Utils-Slice-T-">Insert(int, Slice&lt;T&gt;)</a></td>
+                <td><p>Insert a slice of data into this buffer</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="#Topten.RichTextKit.Utils-Buffer-T.Insert-System-Int32-System-Int32-System-Boolean">Insert(int, int, bool)</a></td>
+                <td><p>Inserts room into the buffer</p>
+</td>
+            </tr>
+    </table>
+
+
+    <h2 id="Topten.RichTextKit.Utils-Buffer-T.Insert-System-Int32-Topten.RichTextKit.Utils-Slice-T-">Insert(int, Slice&lt;T&gt;)</h2>
+
+<p>Insert a slice of data into this buffer</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public Slice&lt;T&gt; Insert(int position, Slice&lt;T&gt; data);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> position
+                </td>
+                <td><p>The position to insert at</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;T&gt;</a> data
+                </td>
+                <td><p>The data to insert</p>
+</td>
+            </tr>
+    </table>
+<h3>Returns</h3>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;T&gt;</a></td>
+            <td><p>The newly inserted data as a slice</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+    <h2 id="Topten.RichTextKit.Utils-Buffer-T.Insert-System-Int32-System-Int32-System-Boolean">Insert(int, int, bool)</h2>
+
+<p>Inserts room into the buffer</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public Slice&lt;T&gt; Insert(int position, int length, bool clear = true);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> position
+                </td>
+                <td><p>The position to insert at</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> length
+                </td>
+                <td><p>The length to insert</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Boolean">bool</a> clear
+ = true                </td>
+                <td><p>Whether to clear the inserted part of the buffer</p>
+</td>
+            </tr>
+    </table>
+<h3>Returns</h3>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.Utils.Slice[T]">Slice&lt;T&gt;</a></td>
+            <td><p>The new buffer area as a slice</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

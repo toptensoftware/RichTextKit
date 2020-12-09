@@ -1,0 +1,57 @@
+---
+title: "Topten.RichTextKit.Utils.IRun"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">IRun Interface</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+            </small>
+</p>
+
+
+<p>Interface to a run object with a start offset and a length</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public interface IRun</code></pre>
+
+
+
+        <h2 id="derived">Implemented By</h2>
+    <p>
+        <a href="./../ref/Topten.RichTextKit.StyleRun">Topten.RichTextKit.StyleRun</a>, <a href="./../ref/Topten.RichTextKit.Editor.Paragraph">Topten.RichTextKit.Editor.Paragraph</a>    </p>
+
+
+
+
+
+
+
+    <h2 id="properties">Properties</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.IRun.Length">Length</a></td>
+                <td><p>Length of this run</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Utils.IRun.Offset">Offset</a></td>
+                <td><p>Offset of the start of this run</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,38 @@
+---
+title: "Paragraph..ctor"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">Paragraph Constructor</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Editor">Topten.RichTextKit.Editor</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Editor.Paragraph">Paragraph</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Constructs a new Paragraph</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">protected Paragraph();</code></pre>
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,56 @@
+---
+title: "Buffer&lt;T&gt;.Delete"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">Buffer&lt;T&gt;.Delete Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.Buffer[T]">Buffer&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Delete a section of the buffer</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void Delete(int from, int length);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> from
+                </td>
+                <td><p>The position to delete from</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a> length
+                </td>
+                <td><p>The length to of the deletion</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

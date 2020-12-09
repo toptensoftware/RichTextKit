@@ -1,0 +1,63 @@
+---
+title: "Buffer&lt;T&gt;.Replace"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">Buffer&lt;T&gt;.Replace Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.Buffer[T]">Buffer&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Replaces all instances of a value in the buffer with another value</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public int Replace(T oldValue, T newValue);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    T oldValue
+                </td>
+                <td><p>The value to replace</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    T newValue
+                </td>
+                <td><p>The new value</p>
+</td>
+            </tr>
+    </table>
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a></td>
+            <td><p>The number of replacements made</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

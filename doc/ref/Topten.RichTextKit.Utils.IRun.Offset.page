@@ -1,0 +1,38 @@
+---
+title: "IRun.Offset"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 data-nav-secondary-text="Definition" id="definition">IRun.Offset Property</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.IRun">IRun</a><br />
+                        </small>
+</p>
+
+
+
+
+<p>Offset of the start of this run</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public int Offset { get; }</code></pre>
+
+
+<h2 id="property-type">Property Type</h2>    <table class="name-description">
+        <tr>
+            <td><a href="https://docs.microsoft.com/dotnet/api/System.Int32">int</a></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+

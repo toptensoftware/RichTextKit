@@ -1,0 +1,48 @@
+---
+title: "UndoGroup&lt;T&gt;.Add"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">UndoGroup&lt;T&gt;.Add Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.UndoGroup[T]">UndoGroup&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Adds a unit to this group</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public void Add(UndoUnit&lt;T&gt; unit);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Utils.UndoUnit[T]">UndoUnit&lt;T&gt;</a> unit
+                </td>
+                <td><p>The UndoUnit to be added</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+

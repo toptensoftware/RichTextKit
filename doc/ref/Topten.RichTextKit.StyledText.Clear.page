@@ -1,0 +1,38 @@
+---
+title: "StyledText.Clear"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">StyledText.Clear Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.StyledText">StyledText</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Clear the content of this text block</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public virtual void Clear();</code></pre>
+
+
+
+
+
+
+
+
+

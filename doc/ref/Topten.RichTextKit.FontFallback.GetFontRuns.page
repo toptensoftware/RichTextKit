@@ -26,7 +26,7 @@ import: "../.common.page"
 <p>Splits a sequence of code points into a series of runs with font fallback applied</p>
 
 
-<pre class="language-csharp"><code class="language-csharp">[Runtime.CompilerServices.IteratorStateMachine(Topten.RichTextKit.FontFallback&#x2B;&lt;GetFontRuns&gt;d__2)]&#xD;&#xA;public static IEnumerable&lt;Run&gt; GetFontRuns(Utils.Slice&lt;int&gt; codePoints, SkiaSharp.SKTypeface typeface);</code></pre>
+<pre class="language-csharp"><code class="language-csharp">[Runtime.CompilerServices.IteratorStateMachine(Topten.RichTextKit.FontFallback&#x2B;&lt;GetFontRuns&gt;d__2)]&#xD;&#xA;public static IEnumerable&lt;Run&gt; GetFontRuns(Utils.Slice&lt;int&gt; codePoints, SkiaSharp.SKTypeface typeface, char replacementCharacter = &#x0;);</code></pre>
 
 
 <h2 id="parameters">Parameters</h2>    <table class="name-description">
@@ -44,6 +44,14 @@ import: "../.common.page"
                     SkiaSharp.SKTypeface typeface
                 </td>
                 <td><p>The preferred typeface</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Char">char</a> replacementCharacter
+ = &#x0;                </td>
+                <td><p>The replacement character to be used for the run</p>
 </td>
             </tr>
     </table>

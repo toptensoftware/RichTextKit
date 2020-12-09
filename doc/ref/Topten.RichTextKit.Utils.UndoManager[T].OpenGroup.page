@@ -1,0 +1,98 @@
+---
+title: "UndoManager&lt;T&gt;.OpenGroup"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">UndoManager&lt;T&gt;.OpenGroup Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Utils">Topten.RichTextKit.Utils</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.Utils.UndoManager[T]">UndoManager&lt;T&gt;</a><br />
+                        </small>
+</p>
+
+
+
+
+
+    <h2 id="overloads">Overloads</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="#Topten.RichTextKit.Utils-UndoManager-T.OpenGroup-System-String">OpenGroup(string)</a></td>
+                <td><p>Stars a group operation</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="#Topten.RichTextKit.Utils-UndoManager-T.OpenGroup-Topten.RichTextKit.Utils-UndoGroup-T-">OpenGroup(UndoGroup&lt;T&gt;)</a></td>
+                <td><p>Stars a group operation</p>
+</td>
+            </tr>
+    </table>
+
+
+    <h2 id="Topten.RichTextKit.Utils-UndoManager-T.OpenGroup-System-String">OpenGroup(string)</h2>
+
+<p>Stars a group operation</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public IDisposable OpenGroup(string description);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.String">string</a> description
+                </td>
+                <td><p>A user readable description of the operation</p>
+</td>
+            </tr>
+    </table>
+<h3>Returns</h3>    <table class="name-description">
+        <tr>
+            <td><a href="https://docs.microsoft.com/dotnet/api/System.IDisposable">IDisposable</a></td>
+            <td><p>An IDisposable that when disposed will close the group</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+    <h2 id="Topten.RichTextKit.Utils-UndoManager-T.OpenGroup-Topten.RichTextKit.Utils-UndoGroup-T-">OpenGroup(UndoGroup&lt;T&gt;)</h2>
+
+<p>Stars a group operation</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public IDisposable OpenGroup(UndoGroup&lt;T&gt; group);</code></pre>
+
+
+<h3>Parameters</h3>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    <a href="./../ref/Topten.RichTextKit.Utils.UndoGroup[T]">UndoGroup&lt;T&gt;</a> group
+                </td>
+                <td><p>The UndoGroup to be used</p>
+</td>
+            </tr>
+    </table>
+<h3>Returns</h3>    <table class="name-description">
+        <tr>
+            <td><a href="https://docs.microsoft.com/dotnet/api/System.IDisposable">IDisposable</a></td>
+            <td><p>An IDisposable that when disposed will close the group</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

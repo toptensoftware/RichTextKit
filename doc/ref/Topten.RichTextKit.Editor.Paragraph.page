@@ -1,0 +1,163 @@
+---
+title: "Topten.RichTextKit.Editor.Paragraph"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 id="definition" data-nav-secondary-text="Definition">Paragraph Class</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit.Editor">Topten.RichTextKit.Editor</a><br />
+            </small>
+</p>
+
+
+<p>Abstract base class for all TextDocument paragraphs</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public abstract class Paragraph :&#xA;    Topten.RichTextKit.Utils.IRun</code></pre>
+
+    <h2 id="inherits">Inheritance</h2>
+    <p>
+        Paragraph
+ &rarr; <a href="https://docs.microsoft.com/dotnet/api/System.Object">object</a>    </p>
+
+    <h2 id="interfaces">Interfaces</h2>
+    <p>
+        <a href="./../ref/Topten.RichTextKit.Utils.IRun">Topten.RichTextKit.Utils.IRun</a>    </p>
+
+
+
+
+    <h2 id="constructors">Constructors</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph..ctor">Paragraph()</a></td>
+                <td><p>Constructs a new Paragraph</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+    <h2 id="properties">Properties</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph.CaretIndicies">CaretIndicies</a></td>
+                <td><p>Retrieves a list of all valid caret positions</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph.CodePointIndex">CodePointIndex</a></td>
+                <td><p>This code point index of this paragraph relative to the start
+of the document.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph.ContentHeight">ContentHeight</a></td>
+                <td><p>Qureries the height of this paragraph, excluding margins</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph.ContentWidth">ContentWidth</a></td>
+                <td><p>Queries the width of this paragraph, excluding margins</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph.ContentXCoord">ContentXCoord</a></td>
+                <td><p>The X-coordinate of this paragraph's content (ie: after applying margin)</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph.ContentYCoord">ContentYCoord</a></td>
+                <td><p>The Y-coordinate of this paragraph's content (ie: after applying margin)</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph.Length">Length</a></td>
+                <td><p>Gets the length of this paragraph in code points</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph.LineIndicies">LineIndicies</a></td>
+                <td><p>Retrieves a list of code point indicies of the start of each line</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph.MarginBottom">MarginBottom</a></td>
+                <td><p>The bottom margin</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph.MarginLeft">MarginLeft</a></td>
+                <td><p>The left margin</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph.MarginRight">MarginRight</a></td>
+                <td><p>The right margin</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph.MarginTop">MarginTop</a></td>
+                <td><p>The top margin</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph.TextBlock">TextBlock</a></td>
+                <td><p>Gets the TextBlock associated with this paragraph</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph.WordBoundaryIndicies">WordBoundaryIndicies</a></td>
+                <td><p>Retrieves a list of all valid word boundary caret positions</p>
+</td>
+            </tr>
+    </table>
+
+    <h2 id="methods">Methods</h2>
+    <table class="name-description">
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph.CopyStyleFrom">CopyStyleFrom(Paragraph)</a></td>
+                <td><p>Copy all style attributes from this paragraph to another</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph.GetCaretInfo">GetCaretInfo(Topten.RichTextKit.CaretPosition)</a></td>
+                <td><p>Get caret position information</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph.HitTest">HitTest(float, float)</a></td>
+                <td><p>Hit test this paragraph</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph.HitTestLine">HitTestLine(int, float)</a></td>
+                <td><p>Hit test a line in this paragraph</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph.Layout">Layout(TextDocument)</a></td>
+                <td><p>Layout the content of this paragraph</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.Editor.Paragraph.Paint">Paint(SkiaSharp.SKCanvas, Topten.RichTextKit.TextPaintOptions)</a></td>
+                <td><p>Paint this paragraph</p>
+</td>
+            </tr>
+    </table>
+
+
+
+
+
+
+
+
+
