@@ -669,7 +669,7 @@ namespace Topten.RichTextKit
                 if (Style.StrikeThrough != StrikeThroughStyle.None && RunKind == FontRunKind.Normal)
                 {
                     paint.StrokeWidth = _font.Metrics.StrikeoutThickness ?? 0;
-                    float strikeYPos = Line.YCoord + Line.BaseLine + (paint.FontMetrics.StrikeoutPosition ?? 0) + glyphVOffset;
+                    float strikeYPos = Line.YCoord + Line.BaseLine + (_font.Metrics.StrikeoutPosition ?? 0) + glyphVOffset;
                     ctx.Canvas.DrawLine(new SKPoint(XCoord, strikeYPos), new SKPoint(XCoord + Width, strikeYPos), paint);
                 }
             }
