@@ -83,7 +83,7 @@ namespace Topten.RichTextKit
                 return value;
 
             return Update(value.FontFamily, value.FontSize, value.FontWeight, value.FontItalic,
-                            value.Underline, value.StrikeThrough, value.LineHeight, value.TextColor,
+                            value.Underline, value.StrikeThrough, value.LineHeight, value.TextColor, value.BackgroundColor,
                             value.LetterSpacing, value.FontVariant, value.TextDirection, value.ReplacementCharacter);
         }
 
@@ -218,6 +218,7 @@ namespace Topten.RichTextKit
         /// <param name="strikeThrough">The new strike-through style</param>
         /// <param name="lineHeight">The new line height</param>
         /// <param name="textColor">The new text color</param>
+        /// <param name="backgroundColor">The new text color</param>
         /// <param name="letterSpacing">The new letterSpacing</param>
         /// <param name="fontVariant">The new font variant</param>
         /// <param name="textDirection">The new text direction</param>
@@ -232,6 +233,7 @@ namespace Topten.RichTextKit
                StrikeThroughStyle? strikeThrough = null,
                float? lineHeight = null,
                SKColor? textColor = null,
+               SKColor? backgroundColor = null,
                float? letterSpacing = null,
                FontVariant? fontVariant = null,
                TextDirection? textDirection = null,
@@ -247,13 +249,14 @@ namespace Topten.RichTextKit
             var rStrikeThrough = strikeThrough ?? _currentStyle.StrikeThrough;
             var rLineHeight = lineHeight ?? _currentStyle.LineHeight;
             var rTextColor = textColor ?? _currentStyle.TextColor;
+            var rBackgroundColor = backgroundColor ?? _currentStyle.BackgroundColor;
             var rLetterSpacing = letterSpacing ?? _currentStyle.LetterSpacing;
             var rFontVariant = fontVariant ?? _currentStyle.FontVariant;
             var rTextDirection = textDirection ?? _currentStyle.TextDirection;
             var rReplacementCharacter = replacementCharacter ?? _currentStyle.ReplacementCharacter;
 
             // Format key
-            var key = $"{rFontFamily}.{rFontSize}.{rFontWeight}.{rFontItalic}.{rUnderline}.{rStrikeThrough}.{rLineHeight}.{rTextColor}.{rLetterSpacing}.{rFontVariant}.{rTextDirection}.{rReplacementCharacter}";
+            var key = $"{rFontFamily}.{rFontSize}.{rFontWeight}.{rFontItalic}.{rUnderline}.{rStrikeThrough}.{rLineHeight}.{rTextColor}.{rBackgroundColor}.{rLetterSpacing}.{rFontVariant}.{rTextDirection}.{rReplacementCharacter}";
 
             // Look up...
             if (!_styleMap.TryGetValue(key, out var style))
@@ -270,6 +273,7 @@ namespace Topten.RichTextKit
                     StrikeThrough = rStrikeThrough,
                     LineHeight = rLineHeight,
                     TextColor = rTextColor,
+                    BackgroundColor = rBackgroundColor,
                     LetterSpacing = rLetterSpacing,
                     FontVariant = rFontVariant,
                     TextDirection = rTextDirection,
