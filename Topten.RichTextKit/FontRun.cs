@@ -674,6 +674,23 @@ namespace Topten.RichTextKit
                 }
             }
         }
+        
+        /// <summary>
+        /// Paint background of this font run
+        /// </summary>
+        /// <param name="ctx"></param>
+        internal void PaintBackground(PaintTextContext ctx)
+        {
+            if (Style.BackgroundColor != SKColor.Empty && RunKind == FontRunKind.Normal)
+            {
+                var rect = new SKRect(XCoord , Line.YCoord, 
+                    XCoord + Width, Line.YCoord + Line.Height);
+                using (var skPaint = new SKPaint {Style = SKPaintStyle.Fill, Color = Style.BackgroundColor})
+                {
+                    ctx.Canvas.DrawRect(rect, skPaint);
+                }
+            }            
+        }
 
         SKTextBlob _textBlob;
         SKFont _font;

@@ -112,6 +112,19 @@ namespace Topten.RichTextKit
             get => _textColor;
             set { CheckNotSealed(); _textColor = value; }
         }
+        
+        /// <summary>
+        /// The background color of this run (no background is painted by default).
+        /// </summary>
+        public SKColor BackgroundColor
+        {
+            get => _backgroundColor;
+            set
+            {
+                CheckNotSealed();
+                _backgroundColor = value;
+            }
+        }
 
         /// <summary>
         /// The character spacing for text in this run (defaults to 0).
@@ -157,6 +170,7 @@ namespace Topten.RichTextKit
         StrikeThroughStyle _strikeThrough;
         float _lineHeight = 1.0f;
         SKColor _textColor = new SKColor(0xFF000000);
+        SKColor _backgroundColor = SKColor.Empty;
         float _letterSpacing;
         FontVariant _fontVariant;
         TextDirection _textDirection = TextDirection.Auto;

@@ -164,6 +164,11 @@ namespace Topten.RichTextKit
         {
             foreach (var r in Runs)
             {
+                r.PaintBackground(ctx);
+            }
+            
+            foreach (var r in Runs)
+            {
                 r.Paint(ctx);
             }
         }
