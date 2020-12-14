@@ -130,13 +130,18 @@ constraints</p>
 </td>
             </tr>
             <tr>
-                <td><a href="./../ref/Topten.RichTextKit.RichString.Add#Topten.RichTextKit-RichString.Add-System-String-System-String-System-Nullable-System-Single--System-Nullable-System-Int32--System-Nullable-System-Boolean--System-Nullable-Topten.RichTextKit-UnderlineStyle--System-Nullable-Topten.RichTextKit-StrikeThroughStyle--System-Nullable-System-Single--System-Nullable-SkiaSharp-SKColor--System-Nullable-System-Single--System-Nullable-Topten.RichTextKit-FontVariant--System-Nullable-Topten.RichTextKit-TextDirection-">Add(string, string, Nullable&lt;float&gt;, Nullable&lt;int&gt;, Nullable&lt;bool&gt;, Nullable&lt;UnderlineStyle&gt;, Nullable&lt;StrikeThroughStyle&gt;, Nullable&lt;float&gt;, Nullable&lt;SkiaSharp.SKColor&gt;, Nullable&lt;float&gt;, Nullable&lt;FontVariant&gt;, Nullable&lt;TextDirection&gt;)</a></td>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.Add#Topten.RichTextKit-RichString.Add-System-String-System-String-System-Nullable-System-Single--System-Nullable-System-Int32--System-Nullable-System-Boolean--System-Nullable-Topten.RichTextKit-UnderlineStyle--System-Nullable-Topten.RichTextKit-StrikeThroughStyle--System-Nullable-System-Single--System-Nullable-SkiaSharp-SKColor--System-Nullable-SkiaSharp-SKColor--System-Nullable-System-Single--System-Nullable-Topten.RichTextKit-FontVariant--System-Nullable-Topten.RichTextKit-TextDirection-">Add(string, string, Nullable&lt;float&gt;, Nullable&lt;int&gt;, Nullable&lt;bool&gt;, Nullable&lt;UnderlineStyle&gt;, Nullable&lt;StrikeThroughStyle&gt;, Nullable&lt;float&gt;, Nullable&lt;SkiaSharp.SKColor&gt;, Nullable&lt;SkiaSharp.SKColor&gt;, Nullable&lt;float&gt;, Nullable&lt;FontVariant&gt;, Nullable&lt;TextDirection&gt;)</a></td>
                 <td><p>Adds text with various style attributes changed</p>
 </td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.RichString.Alignment">Alignment(TextAlignment)</a></td>
                 <td><p>Sets the text alignment of the current paragraph</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.BackgroundColor">BackgroundColor(SkiaSharp.SKColor)</a></td>
+                <td><p>Changes the background color</p>
 </td>
             </tr>
             <tr>

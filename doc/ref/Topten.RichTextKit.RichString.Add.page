@@ -28,7 +28,7 @@ import: "../.common.page"
 </td>
             </tr>
             <tr>
-                <td><a href="#Topten.RichTextKit-RichString.Add-System-String-System-String-System-Nullable-System-Single--System-Nullable-System-Int32--System-Nullable-System-Boolean--System-Nullable-Topten.RichTextKit-UnderlineStyle--System-Nullable-Topten.RichTextKit-StrikeThroughStyle--System-Nullable-System-Single--System-Nullable-SkiaSharp-SKColor--System-Nullable-System-Single--System-Nullable-Topten.RichTextKit-FontVariant--System-Nullable-Topten.RichTextKit-TextDirection-">Add(string, string, Nullable&lt;float&gt;, Nullable&lt;int&gt;, Nullable&lt;bool&gt;, Nullable&lt;UnderlineStyle&gt;, Nullable&lt;StrikeThroughStyle&gt;, Nullable&lt;float&gt;, Nullable&lt;SkiaSharp.SKColor&gt;, Nullable&lt;float&gt;, Nullable&lt;FontVariant&gt;, Nullable&lt;TextDirection&gt;)</a></td>
+                <td><a href="#Topten.RichTextKit-RichString.Add-System-String-System-String-System-Nullable-System-Single--System-Nullable-System-Int32--System-Nullable-System-Boolean--System-Nullable-Topten.RichTextKit-UnderlineStyle--System-Nullable-Topten.RichTextKit-StrikeThroughStyle--System-Nullable-System-Single--System-Nullable-SkiaSharp-SKColor--System-Nullable-SkiaSharp-SKColor--System-Nullable-System-Single--System-Nullable-Topten.RichTextKit-FontVariant--System-Nullable-Topten.RichTextKit-TextDirection-">Add(string, string, Nullable&lt;float&gt;, Nullable&lt;int&gt;, Nullable&lt;bool&gt;, Nullable&lt;UnderlineStyle&gt;, Nullable&lt;StrikeThroughStyle&gt;, Nullable&lt;float&gt;, Nullable&lt;SkiaSharp.SKColor&gt;, Nullable&lt;SkiaSharp.SKColor&gt;, Nullable&lt;float&gt;, Nullable&lt;FontVariant&gt;, Nullable&lt;TextDirection&gt;)</a></td>
                 <td><p>Adds text with various style attributes changed</p>
 </td>
             </tr>
@@ -63,12 +63,12 @@ import: "../.common.page"
 
 
 
-    <h2 id="Topten.RichTextKit-RichString.Add-System-String-System-String-System-Nullable-System-Single--System-Nullable-System-Int32--System-Nullable-System-Boolean--System-Nullable-Topten.RichTextKit-UnderlineStyle--System-Nullable-Topten.RichTextKit-StrikeThroughStyle--System-Nullable-System-Single--System-Nullable-SkiaSharp-SKColor--System-Nullable-System-Single--System-Nullable-Topten.RichTextKit-FontVariant--System-Nullable-Topten.RichTextKit-TextDirection-">Add(string, string, Nullable&lt;float&gt;, Nullable&lt;int&gt;, Nullable&lt;bool&gt;, Nullable&lt;UnderlineStyle&gt;, Nullable&lt;StrikeThroughStyle&gt;, Nullable&lt;float&gt;, Nullable&lt;SkiaSharp.SKColor&gt;, Nullable&lt;float&gt;, Nullable&lt;FontVariant&gt;, Nullable&lt;TextDirection&gt;)</h2>
+    <h2 id="Topten.RichTextKit-RichString.Add-System-String-System-String-System-Nullable-System-Single--System-Nullable-System-Int32--System-Nullable-System-Boolean--System-Nullable-Topten.RichTextKit-UnderlineStyle--System-Nullable-Topten.RichTextKit-StrikeThroughStyle--System-Nullable-System-Single--System-Nullable-SkiaSharp-SKColor--System-Nullable-SkiaSharp-SKColor--System-Nullable-System-Single--System-Nullable-Topten.RichTextKit-FontVariant--System-Nullable-Topten.RichTextKit-TextDirection-">Add(string, string, Nullable&lt;float&gt;, Nullable&lt;int&gt;, Nullable&lt;bool&gt;, Nullable&lt;UnderlineStyle&gt;, Nullable&lt;StrikeThroughStyle&gt;, Nullable&lt;float&gt;, Nullable&lt;SkiaSharp.SKColor&gt;, Nullable&lt;SkiaSharp.SKColor&gt;, Nullable&lt;float&gt;, Nullable&lt;FontVariant&gt;, Nullable&lt;TextDirection&gt;)</h2>
 
 <p>Adds text with various style attributes changed</p>
 
 
-<pre class="language-csharp"><code class="language-csharp">public RichString Add(string text, string fontFamily = null, Nullable&lt;float&gt; fontSize = null, Nullable&lt;int&gt; fontWeight = null, Nullable&lt;bool&gt; fontItalic = null, Nullable&lt;UnderlineStyle&gt; underline = null, Nullable&lt;StrikeThroughStyle&gt; strikeThrough = null, Nullable&lt;float&gt; lineHeight = null, Nullable&lt;SkiaSharp.SKColor&gt; textColor = null, Nullable&lt;float&gt; letterSpacing = null, Nullable&lt;FontVariant&gt; fontVariant = null, Nullable&lt;TextDirection&gt; textDirection = null);</code></pre>
+<pre class="language-csharp"><code class="language-csharp">public RichString Add(string text, string fontFamily = null, Nullable&lt;float&gt; fontSize = null, Nullable&lt;int&gt; fontWeight = null, Nullable&lt;bool&gt; fontItalic = null, Nullable&lt;UnderlineStyle&gt; underline = null, Nullable&lt;StrikeThroughStyle&gt; strikeThrough = null, Nullable&lt;float&gt; lineHeight = null, Nullable&lt;SkiaSharp.SKColor&gt; textColor = null, Nullable&lt;SkiaSharp.SKColor&gt; backgroundColor = null, Nullable&lt;float&gt; letterSpacing = null, Nullable&lt;FontVariant&gt; fontVariant = null, Nullable&lt;TextDirection&gt; textDirection = null);</code></pre>
 
 
 <h3>Parameters</h3>    <table class="name-description">
@@ -142,6 +142,14 @@ import: "../.common.page"
                     <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;SkiaSharp.SKColor&gt;</a> textColor
  = null                </td>
                 <td><p>The new text color</p>
+</td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;SkiaSharp.SKColor&gt;</a> backgroundColor
+ = null                </td>
+                <td><p>The new background color</p>
 </td>
             </tr>
             <tr>

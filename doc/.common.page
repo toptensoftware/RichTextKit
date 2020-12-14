@@ -147,6 +147,7 @@ navTree:
           - text: Overview|./ref/Topten.RichTextKit.IStyle
           - text: Properties
             subItems:
+              - text: BackgroundColor|./ref/Topten.RichTextKit.IStyle.BackgroundColor
               - text: FontFamily|./ref/Topten.RichTextKit.IStyle.FontFamily
               - text: FontItalic|./ref/Topten.RichTextKit.IStyle.FontItalic
               - text: FontSize|./ref/Topten.RichTextKit.IStyle.FontSize
@@ -190,6 +191,7 @@ navTree:
             subItems:
               - text: Add|./ref/Topten.RichTextKit.RichString.Add
               - text: Alignment|./ref/Topten.RichTextKit.RichString.Alignment
+              - text: BackgroundColor|./ref/Topten.RichTextKit.RichString.BackgroundColor
               - text: BaseDirection|./ref/Topten.RichTextKit.RichString.BaseDirection
               - text: Bold|./ref/Topten.RichTextKit.RichString.Bold
               - text: DiscardLayout|./ref/Topten.RichTextKit.RichString.DiscardLayout
@@ -224,6 +226,7 @@ navTree:
           - text: Constructors|./ref/Topten.RichTextKit.Style..ctor
           - text: Properties
             subItems:
+              - text: BackgroundColor|./ref/Topten.RichTextKit.Style.BackgroundColor
               - text: FontFamily|./ref/Topten.RichTextKit.Style.FontFamily
               - text: FontItalic|./ref/Topten.RichTextKit.Style.FontItalic
               - text: FontSize|./ref/Topten.RichTextKit.Style.FontSize
@@ -279,6 +282,7 @@ navTree:
               - text: DefaultStyle|./ref/Topten.RichTextKit.StyleManager.DefaultStyle
           - text: Methods
             subItems:
+              - text: BackgroundColor|./ref/Topten.RichTextKit.StyleManager.BackgroundColor
               - text: Bold|./ref/Topten.RichTextKit.StyleManager.Bold
               - text: FontFamily|./ref/Topten.RichTextKit.StyleManager.FontFamily
               - text: FontItalic|./ref/Topten.RichTextKit.StyleManager.FontItalic

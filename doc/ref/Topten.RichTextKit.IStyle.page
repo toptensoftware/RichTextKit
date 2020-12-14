@@ -35,6 +35,11 @@ import: "../.common.page"
     <h2 id="properties">Properties</h2>
     <table class="name-description">
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.IStyle.BackgroundColor">BackgroundColor</a></td>
+                <td><p>The background color of this run.</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.IStyle.FontFamily">FontFamily</a></td>
                 <td><p>The font family for text this text run.</p>
 </td>

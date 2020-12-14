@@ -72,6 +72,11 @@ a particular style and then popping back to the previous style.</p>
     <h2 id="methods">Methods</h2>
     <table class="name-description">
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.BackgroundColor">BackgroundColor(SkiaSharp.SKColor)</a></td>
+                <td><p>Changes the background color and returns an updated IStyle</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.StyleManager.Bold">Bold(bool)</a></td>
                 <td><p>Changes the font weight and returns an update IStyle (short cut to FontWeight)</p>
 </td>
@@ -158,7 +163,7 @@ Push/Pop style stack to empty.</p>
 </td>
             </tr>
             <tr>
-                <td><a href="./../ref/Topten.RichTextKit.StyleManager.Update">Update(string, Nullable&lt;float&gt;, Nullable&lt;int&gt;, Nullable&lt;bool&gt;, Nullable&lt;UnderlineStyle&gt;, Nullable&lt;StrikeThroughStyle&gt;, Nullable&lt;float&gt;, Nullable&lt;SkiaSharp.SKColor&gt;, Nullable&lt;float&gt;, Nullable&lt;FontVariant&gt;, Nullable&lt;TextDirection&gt;, Nullable&lt;char&gt;)</a></td>
+                <td><a href="./../ref/Topten.RichTextKit.StyleManager.Update">Update(string, Nullable&lt;float&gt;, Nullable&lt;int&gt;, Nullable&lt;bool&gt;, Nullable&lt;UnderlineStyle&gt;, Nullable&lt;StrikeThroughStyle&gt;, Nullable&lt;float&gt;, Nullable&lt;SkiaSharp.SKColor&gt;, Nullable&lt;SkiaSharp.SKColor&gt;, Nullable&lt;float&gt;, Nullable&lt;FontVariant&gt;, Nullable&lt;TextDirection&gt;, Nullable&lt;char&gt;)</a></td>
                 <td><p>Update the current style by applying one or more changes to the current
 style.</p>
 </td>
