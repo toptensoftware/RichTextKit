@@ -67,6 +67,11 @@ namespace Topten.RichTextKit
         /// The text color for text in this run.
         /// </summary>
         SKColor TextColor { get; }
+        
+        /// <summary>
+        /// The background color of this run.
+        /// </summary>
+        SKColor BackgroundColor { get; }
 
         /// <summary>
         /// Extra spacing between each character
