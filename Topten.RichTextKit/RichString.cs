@@ -58,6 +58,7 @@ namespace Topten.RichTextKit
         /// <param name="strikeThrough">The new strike-through style</param>
         /// <param name="lineHeight">The new line height</param>
         /// <param name="textColor">The new text color</param>
+        /// <param name="backgroundColor">The new background color</param>
         /// <param name="letterSpacing">The new character spacing</param>
         /// <param name="fontVariant">The new font variant</param>
         /// <param name="textDirection">The new text direction</param>
@@ -71,6 +72,7 @@ namespace Topten.RichTextKit
            StrikeThroughStyle? strikeThrough = null,
            float? lineHeight = null,
            SKColor? textColor = null,
+           SKColor? backgroundColor = null,
            float? letterSpacing = null,
            FontVariant? fontVariant = null,
            TextDirection? textDirection = null
@@ -88,6 +90,7 @@ namespace Topten.RichTextKit
             if (strikeThrough.HasValue) StrikeThrough(strikeThrough.Value);
             if (lineHeight.HasValue) LineHeight(lineHeight.Value);
             if (textColor.HasValue) TextColor(textColor.Value);
+            if (backgroundColor.HasValue) BackgroundColor(backgroundColor.Value);
             if (fontVariant.HasValue) FontVariant(fontVariant.Value);
             if (letterSpacing.HasValue) LetterSpacing(letterSpacing.Value);
             if (textDirection.HasValue) TextDirection(textDirection.Value);
@@ -160,6 +163,13 @@ namespace Topten.RichTextKit
         /// <param name="value">The new text color</param>
         /// <returns>A reference to the same RichString instance</returns>
         public RichString TextColor(SKColor value) => Append(new TextColorItem(value));
+
+        /// <summary>
+        /// Changes the background color
+        /// </summary>
+        /// <param name="value">The new background color</param>
+        /// <returns>A reference to the same RichString instance</returns>
+        public RichString BackgroundColor(SKColor value) => Append(new BackgroundColorItem(value));
 
         /// <summary>
         /// Changes the character spacing
@@ -1162,6 +1172,21 @@ namespace Topten.RichTextKit
             public override void Build(BuildContext ctx)
             {
                 ctx.StyleManager.TextColor(_value);
+            }
+        }
+
+        class BackgroundColorItem : Item
+        {
+            public BackgroundColorItem(SKColor value)
+            {
+                _value = value;
+            }
+
+            SKColor _value;
+
+            public override void Build(BuildContext ctx)
+            {
+                ctx.StyleManager.BackgroundColor(_value);
             }
         }
 

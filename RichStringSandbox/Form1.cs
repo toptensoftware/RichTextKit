@@ -34,7 +34,7 @@ namespace RichStringSandbox
             */
 
             var rs = new RichString()
-                .Add("Big text", fontSize: 40, letterSpacing: 0)
+                .Add("Big text", fontSize: 40, letterSpacing: 0, backgroundColor: new SKColor(0xFFFF0000))
                 .Add("Little text", fontSize: 12, letterSpacing: 0);
 
 

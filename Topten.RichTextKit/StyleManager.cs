@@ -178,6 +178,13 @@ namespace Topten.RichTextKit
         public IStyle TextColor(SKColor textColor) => Update(textColor: textColor);
 
         /// <summary>
+        /// Changes the background color and returns an updated IStyle
+        /// </summary>
+        /// <param name="backgroundColor">The new background color</param>
+        /// <returns>An IStyle for the new style</returns>
+        public IStyle BackgroundColor(SKColor backgroundColor) => Update(backgroundColor: backgroundColor);
+
+        /// <summary>
         /// Changes the character spacing and returns an updated IStyle
         /// </summary>
         /// <param name="letterSpacing">The new character spacing</param>
