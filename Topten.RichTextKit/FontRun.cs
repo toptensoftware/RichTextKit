@@ -177,9 +177,9 @@ namespace Topten.RichTextKit
             {
                 var allRuns = Line.TextBlock.FontRuns as List<FontRun>; 
                 int index = allRuns.IndexOf(this);
-                if (index <= 0)
+                if (index - 1 < 0)
                     return null;
-                return Line.Runs[index + 1];
+                return Line.Runs[index - 1];
             }
         }
 
