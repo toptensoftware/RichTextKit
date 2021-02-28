@@ -295,6 +295,7 @@ namespace Topten.RichTextKit
             _maxLinesResolved = _maxLines ?? int.MaxValue;
 
             // Reset layout state
+            _textShapingBuffers.Clear();
             _fontRuns.Clear();
             _lines.Clear();
             _caretIndicies.Clear();
