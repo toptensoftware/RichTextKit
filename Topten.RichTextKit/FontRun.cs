@@ -129,6 +129,12 @@ namespace Topten.RichTextKit
 
 
         /// <summary>
+        /// The leading of the font used in this run
+        /// </summary>
+        public float Leading;
+
+
+        /// <summary>
         /// The height of text in this run (ascent + descent)
         /// </summary>
         public float TextHeight => -Ascent + Descent;
@@ -136,7 +142,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Calculate the half leading height for text in this run
         /// </summary>
-        public float HalfLeading => (TextHeight * Style.LineHeight - TextHeight) / 2;
+        public float HalfLeading => (TextHeight * (Style.LineHeight - 1) + Leading) / 2;
 
         /// <summary>
         /// Width of this typeface run
@@ -337,6 +343,7 @@ namespace Topten.RichTextKit
             newRun.Direction = this.Direction;
             newRun.Ascent = this.Ascent;
             newRun.Descent = this.Descent;
+            newRun.Leading = this.Leading;
             newRun.Style = this.Style;
             newRun.Typeface = this.Typeface;
             newRun.Start = splitAtCodePoint;
@@ -408,6 +415,7 @@ namespace Topten.RichTextKit
             newRun.Direction = this.Direction;
             newRun.Ascent = this.Ascent;
             newRun.Descent = this.Descent;
+            newRun.Leading = this.Leading;
             newRun.Style = this.Style;
             newRun.Typeface = this.Typeface;
             newRun.Start = splitAtCodePoint;

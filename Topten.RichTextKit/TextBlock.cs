@@ -1303,6 +1303,7 @@ namespace Topten.RichTextKit
             fontRun.Clusters = shaped.Clusters;
             fontRun.Ascent = shaped.Ascent;
             fontRun.Descent = shaped.Descent;
+            fontRun.Leading = shaped.Leading;
             fontRun.Width = shaped.EndXCoord.X;
             return fontRun;
         }

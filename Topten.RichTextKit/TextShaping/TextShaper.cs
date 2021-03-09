@@ -191,6 +191,11 @@ namespace Topten.RichTextKit
             public float Descent;
 
             /// <summary>
+            /// The leading of the font
+            /// </summary>
+            public float Leading;
+
+            /// <summary>
             /// The XMin for the font
             /// </summary>
             public float XMin;
@@ -247,11 +252,8 @@ namespace Topten.RichTextKit
 
             // Also return the end cursor position
             r.EndXCoord = new SKPoint(xCoord * glyphScale, 0);
-
-            // And some other useful metrics
-            r.Ascent = _fontMetrics.Ascent * style.FontSize / overScale;
-            r.Descent = _fontMetrics.Descent * style.FontSize / overScale;
-            r.XMin = _fontMetrics.XMin * style.FontSize / overScale;
+            
+            ApplyFontMetrics(ref r, style.FontSize);
 
             return r;
         }
@@ -467,13 +469,20 @@ namespace Topten.RichTextKit
                 r.EndXCoord = new SKPoint(cursorX, cursorY);
 
                 // And some other useful metrics
-                r.Ascent = _fontMetrics.Ascent * style.FontSize / overScale;
-                r.Descent = _fontMetrics.Descent * style.FontSize / overScale;
-                r.XMin = _fontMetrics.XMin * style.FontSize / overScale;
+                ApplyFontMetrics(ref r, style.FontSize);
 
                 // Done
                 return r;
             }
+        }
+
+        private void ApplyFontMetrics(ref Result result, float fontSize)
+        {
+            // And some other useful metrics
+            result.Ascent = _fontMetrics.Ascent * fontSize / overScale;
+            result.Descent = _fontMetrics.Descent * fontSize / overScale;
+            result.Leading = _fontMetrics.Leading * fontSize / overScale;
+            result.XMin = _fontMetrics.XMin * fontSize / overScale;
         }
 
         private static Blob GetHarfBuzzBlob(SKStreamAsset asset)
