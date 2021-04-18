@@ -47,10 +47,8 @@ namespace Topten.RichTextKit.Utils
         /// <param name="length"></param>
         public Slice(T[] array, int start, int length)
         {
-            if (start < 0)
-                throw new ArgumentOutOfRangeException(nameof(start));
-            if (start + length > array.Length)
-                throw new ArgumentOutOfRangeException(nameof(length));
+            if (start < 0 || start + length > array.Length)
+                throw new ArgumentOutOfRangeException($"Invalid sub-slice range ({start},{length}) with array length of {array.Length}");
 
             _array = array;
             _start = start;

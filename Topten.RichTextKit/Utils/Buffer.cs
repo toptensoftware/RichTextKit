@@ -250,10 +250,10 @@ namespace Topten.RichTextKit.Utils
         /// <returns>A slice for the specified sub-range</returns>
         public Slice<T> SubSlice(int start, int length)
         {
-            if (start < 0)
-                throw new ArgumentOutOfRangeException(nameof(start));
-            if (start + length > _length)
-                throw new ArgumentOutOfRangeException(nameof(length));
+            if (start < 0 || start + length > _length)
+            {
+                throw new ArgumentOutOfRangeException($"Invalid buffer slice range ({start},{length}) with buffer length of {_length}");
+            }
 
             return new Slice<T>(_data, start, length);
         }
