@@ -73,6 +73,11 @@ the same font and style attributes.</p>
 </td>
             </tr>
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.FontRun.Leading">Leading</a></td>
+                <td><p>The leading of the font used in this run</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.FontRun.Length">Length</a></td>
                 <td><p>The length of this run in codepoints</p>
 </td>

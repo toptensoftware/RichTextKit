@@ -92,6 +92,7 @@ navTree:
               - text: Direction|./ref/Topten.RichTextKit.FontRun.Direction
               - text: GlyphPositions|./ref/Topten.RichTextKit.FontRun.GlyphPositions
               - text: Glyphs|./ref/Topten.RichTextKit.FontRun.Glyphs
+              - text: Leading|./ref/Topten.RichTextKit.FontRun.Leading
               - text: Length|./ref/Topten.RichTextKit.FontRun.Length
               - text: RelativeCodePointXCoords|./ref/Topten.RichTextKit.FontRun.RelativeCodePointXCoords
               - text: RunKind|./ref/Topten.RichTextKit.FontRun.RunKind
