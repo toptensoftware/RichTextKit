@@ -12,7 +12,7 @@ namespace SandboxDriver
         }
 
         public int ContentModeCount = 14;
-        public int ContentMode = 13;
+        public int ContentMode = 0;
         public TextDirection BaseDirection = TextDirection.LTR;
         public TextAlignment TextAlignment = TextAlignment.Auto;
         public float Scale = 1.0f;
@@ -20,7 +20,10 @@ namespace SandboxDriver
         public bool UseMaxHeight = false;
         public bool ShowMeasuredSize = false;
 
-        TextBlock _textBlock = new TextBlock();
+        TextBlock _textBlock = new TextBlock()
+        {
+            //MaxLines = 2
+        };
 
         public void Render(SKCanvas canvas, float canvasWidth, float canvasHeight)
         {

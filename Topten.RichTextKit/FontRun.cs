@@ -105,6 +105,9 @@ namespace Topten.RichTextKit
         /// <returns>The x-coord relative to the entire text block</returns>
         public float GetXCoordOfCodePointIndex(int codePointIndex)
         {
+            if (this.RunKind == FontRunKind.Ellipsis)
+                codePointIndex = 0;
+
             // Check in range
             if (codePointIndex < Start || codePointIndex > End)
                 throw new ArgumentOutOfRangeException(nameof(codePointIndex));

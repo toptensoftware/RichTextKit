@@ -1390,8 +1390,8 @@ namespace Topten.RichTextKit
                 }
 
                 // If there wasn't a line break anywhere in the line, then we need to force one
-                // on a character boundary
-                if (frSplitIndex < 0)
+                // on a character boundary.  Also do this is we know we're on the last available line.
+                if (frSplitIndex < 0 || (_maxLines.HasValue && _lines.Count == _maxLines.Value - 1))
                 {
                     // Get the last run that partially fitted
                     frIndex = frIndexStartOfLine;
@@ -1930,7 +1930,7 @@ namespace Topten.RichTextKit
                         if (!postLayout)
                         {
                             _fontRuns.Insert(_fontRuns.IndexOf(fr) + 1, remaining);
-                            _fontRuns.Remove(fr);
+//                            _fontRuns.Remove(fr);
                         }
                     }
 
