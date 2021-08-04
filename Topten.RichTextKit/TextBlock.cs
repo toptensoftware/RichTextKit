@@ -1446,15 +1446,6 @@ namespace Topten.RichTextKit
                 // Build the final line
                 BuildLine(frIndexStartOfLine, frSplitIndex, frTrailingWhiteSpaceIndex);
 
-                // Special case for the first line not fitting
-                if (_lines.Count == 1 && _measuredHeight > _maxHeightResolved)
-                {
-                    _truncated = true;
-                    _measuredWidth = 0;
-                    _lines.RemoveAt(0);
-                    return;
-                }
-
                 // Reset for the next line
                 frSplitIndex = -1;
                 frIndex = frTrailingWhiteSpaceIndex;
@@ -1976,6 +1967,15 @@ namespace Topten.RichTextKit
         /// <returns>True if can continue adding lines; otherwise false</returns>
         bool CheckHeightConstraints()
         {
+            // Special case for the first line not fitting
+            if (_lines.Count == 1 && _measuredHeight > _maxHeightResolved)
+            {
+                _truncated = true;
+                _measuredWidth = 0;
+                _lines.RemoveAt(0);
+                return false;
+            }
+
             // Have we exceeded the height limit
             if (_measuredHeight > _maxHeightResolved || _maxHeightResolved <= 0)
             {
