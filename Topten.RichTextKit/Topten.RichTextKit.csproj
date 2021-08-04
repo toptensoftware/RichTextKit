@@ -3,7 +3,7 @@
   <Import Project="../buildtools/Topten.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp2.1;net462</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netcoreapp2.1;net462;net5.0</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
@@ -15,9 +15,14 @@
     <PackageIcon>nuget-icon.png</PackageIcon>
     <PackageTags>rich text, rich, text, Skia, SkiaSharp, Font</PackageTags>
     <Description>Easy to use rich text rendering for SkiaSharp, including font-fallback, bi-directional text support and more...</Description>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="SkiaSharp" Version="2.80.2" />
     <PackageReference Include="SkiaSharp.HarfBuzz" Version="2.80.2" />
   </ItemGroup>
