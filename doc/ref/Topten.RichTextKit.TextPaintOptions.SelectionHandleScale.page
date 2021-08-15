@@ -1,0 +1,41 @@
+---
+title: "TextPaintOptions.SelectionHandleScale"
+isMarkdown: false
+import: "../.common.page"
+---
+
+<h1 data-nav-secondary-text="Definition" id="definition">TextPaintOptions.SelectionHandleScale Property</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.TextPaintOptions">TextPaintOptions</a><br />
+                        </small>
+</p>
+
+
+
+
+<p>Scaling of the touch screen selection handles</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public float SelectionHandleScale { get; set; }</code></pre>
+
+<h2 id="remarks">Remarks</h2><p>Sets the scaling of the selection handles.  This can be used
+to keep the selection handle size consistent even if zooming in
+on rendered text.  Set to zero to disable selection handles</p>
+
+<h2 id="property-type">Property Type</h2>    <table class="name-description">
+        <tr>
+            <td><a href="https://docs.microsoft.com/dotnet/api/System.Single">float</a></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+

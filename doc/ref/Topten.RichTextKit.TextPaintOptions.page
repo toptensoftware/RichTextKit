@@ -72,6 +72,16 @@ a selection range.</p>
                 <td><p>The color to be used for the selection background.</p>
 </td>
             </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextPaintOptions.SelectionHandleColor">SelectionHandleColor</a></td>
+                <td><p>The color to be used for touch screen selection handles</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextPaintOptions.SelectionHandleScale">SelectionHandleScale</a></td>
+                <td><p>Scaling of the touch screen selection handles</p>
+</td>
+            </tr>
     </table>
 
     <h2 id="methods">Methods</h2>

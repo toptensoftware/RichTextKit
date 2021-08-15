@@ -397,6 +397,8 @@ navTree:
               - text: LcdRenderText|./ref/Topten.RichTextKit.TextPaintOptions.LcdRenderText
               - text: Selection|./ref/Topten.RichTextKit.TextPaintOptions.Selection
               - text: SelectionColor|./ref/Topten.RichTextKit.TextPaintOptions.SelectionColor
+              - text: SelectionHandleColor|./ref/Topten.RichTextKit.TextPaintOptions.SelectionHandleColor
+              - text: SelectionHandleScale|./ref/Topten.RichTextKit.TextPaintOptions.SelectionHandleScale
           - text: Methods
             subItems:
               - text: Clone|./ref/Topten.RichTextKit.TextPaintOptions.Clone
