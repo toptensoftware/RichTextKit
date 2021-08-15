@@ -527,21 +527,33 @@ namespace Topten.RichTextKit
             // Paint selection?
             if (ctx.PaintSelectionBackground != null && RunKind != FontRunKind.Ellipsis)
             {
+                bool paintStartHandle = false;
+                bool paintEndHandle = false;
+
                 float selStartXCoord;
                 if (ctx.SelectionStart < Start)
                     selStartXCoord = Direction == TextDirection.LTR ? 0 : Width;
                 else if (ctx.SelectionStart >= End)
                     selStartXCoord = Direction == TextDirection.LTR ? Width : 0;
                 else
+                {
+                    paintStartHandle = true;
                     selStartXCoord = RelativeCodePointXCoords[ctx.SelectionStart - this.Start];
+                }
 
                 float selEndXCoord;
                 if (ctx.SelectionEnd < Start)
                     selEndXCoord = Direction == TextDirection.LTR ? 0 : Width;
                 else if (ctx.SelectionEnd >= End)
+                {
                     selEndXCoord = Direction == TextDirection.LTR ? Width : 0;
+                    paintEndHandle = true;
+                }
                 else
+                {
                     selEndXCoord = RelativeCodePointXCoords[ctx.SelectionEnd - this.Start];
+                    paintEndHandle = true;
+                }
 
                 if (selStartXCoord != selEndXCoord)
                 {
@@ -564,6 +576,23 @@ namespace Topten.RichTextKit
 
                     var rect = new SKRect(tl.X, tl.Y, br.X, br.Y);
                     ctx.Canvas.DrawRect(rect, ctx.PaintSelectionBackground);
+
+                    // Paint selection handles?
+                    if (ctx.PaintSelectionHandle != null)
+                    {
+                        if (paintStartHandle)
+                        {
+                            rect = new SKRect(tl.X - 1 * ctx.SelectionHandleScale, tl.Y, tl.X + 1 * ctx.SelectionHandleScale, br.Y);
+                            ctx.Canvas.DrawRect(rect, ctx.PaintSelectionHandle);
+                            ctx.Canvas.DrawCircle(new SKPoint(tl.X, tl.Y), 5 * ctx.SelectionHandleScale, ctx.PaintSelectionHandle);
+                        }
+                        if (paintEndHandle)
+                        {
+                            rect = new SKRect(br.X - 1 * ctx.SelectionHandleScale, tl.Y, br.X + 1 * ctx.SelectionHandleScale, br.Y);
+                            ctx.Canvas.DrawRect(rect, ctx.PaintSelectionHandle);
+                            ctx.Canvas.DrawCircle(new SKPoint(br.X, br.Y), 5 * ctx.SelectionHandleScale, ctx.PaintSelectionHandle);
+                        }
+                    }
                 }
             }
 

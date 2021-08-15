@@ -376,6 +376,16 @@ namespace Topten.RichTextKit
                     IsStroke = false,
                     IsAntialias = false,
                 };
+                if (options.SelectionHandleScale != 0 && options.SelectionHandleColor.Alpha > 0)
+                {
+                    ctx.SelectionHandleScale = options.SelectionHandleScale;
+                    ctx.PaintSelectionHandle = new SKPaint()
+                    {
+                        Color = new SKColor(255, 0, 0),
+                        IsStroke = false,
+                        IsAntialias = true,
+                    };
+                }
             }
             else
             {

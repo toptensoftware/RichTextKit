@@ -46,6 +46,8 @@ namespace Topten.RichTextKit
         public int SelectionStart;
         public int SelectionEnd;
         public SKPaint PaintSelectionBackground;
+        public SKPaint PaintSelectionHandle;
+        public float SelectionHandleScale = 1.0f;
         public TextPaintOptions Options;
     }
 }

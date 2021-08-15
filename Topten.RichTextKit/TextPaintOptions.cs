@@ -58,6 +58,29 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
+        /// The color to be used for touch screen selection handles
+        /// </summary>
+        public SKColor SelectionHandleColor
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Scaling of the touch screen selection handles
+        /// </summary>
+        /// <remarks>
+        /// Sets the scaling of the selection handles.  This can be used
+        /// to keep the selection handle size consistent even if zooming in
+        /// on rendered text.  Set to zero to disable selection handles
+        /// </remarks>
+        public float SelectionHandleScale
+        {
+            get;
+            set;
+        } = 0;
+
+        /// <summary>
         /// Controls whether text is rendered with anti-aliasing.
         /// </summary>
         public bool IsAntialias
