@@ -547,7 +547,7 @@ namespace Topten.RichTextKit
                 else if (ctx.SelectionEnd >= End)
                 {
                     selEndXCoord = Direction == TextDirection.LTR ? Width : 0;
-                    paintEndHandle = true;
+                    paintEndHandle = ctx.SelectionEnd == End;
                 }
                 else
                 {

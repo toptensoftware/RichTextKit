@@ -381,7 +381,7 @@ namespace Topten.RichTextKit
                     ctx.SelectionHandleScale = options.SelectionHandleScale;
                     ctx.PaintSelectionHandle = new SKPaint()
                     {
-                        Color = new SKColor(255, 0, 0),
+                        Color = options.SelectionHandleColor,
                         IsStroke = false,
                         IsAntialias = true,
                     };

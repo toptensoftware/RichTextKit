@@ -34,7 +34,7 @@ namespace RichStringSandbox
             */
 
             var rs = new RichString()
-                .Add("Big text", fontSize: 40, letterSpacing: 0, backgroundColor: new SKColor(0xFFFF0000))
+                .Add("Big text\nMore Big Text\nSomething Else", fontSize: 40, letterSpacing: 0)
                 .Add("Little text", fontSize: 12, letterSpacing: 0);
 
 
@@ -127,10 +127,10 @@ namespace RichStringSandbox
                 SelectionColor = new SKColor(0x60FF0000),
             };
 
-            if (_htr.OverCodePointIndex >= 0)
-            {
-                options.Selection = new TextRange(_htr.OverCodePointIndex, _htr.OverCodePointIndex + 1);
-            }
+            options.Selection = new TextRange(0, 10);
+            options.SelectionColor = new SKColor(255, 192, 192);
+            options.SelectionHandleColor = new SKColor(0, 0, 255);
+            options.SelectionHandleScale = 1;
 
             _richString.Paint(canvas, new SKPoint(margin, margin), options);
 
