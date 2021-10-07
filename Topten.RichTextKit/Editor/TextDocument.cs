@@ -187,7 +187,14 @@ namespace Topten.RichTextKit.Editor
             // that will be painted
             if (options?.Selection != null)
             {
-                options.Selection = options.Selection.Value.Offset(-_paragraphs[startParaIndex].CodePointIndex);
+                if (startParaIndex == _paragraphs.Count)
+                {
+                    options.Selection = options.Selection.Value.Offset(-_totalLength);
+                }
+                else
+                {
+                    options.Selection = options.Selection.Value.Offset(-_paragraphs[startParaIndex].CodePointIndex);
+                }
             }
 
             // Paint...  
