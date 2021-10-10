@@ -393,6 +393,7 @@ navTree:
               - text: Default|./ref/Topten.RichTextKit.TextPaintOptions.Default
           - text: Properties
             subItems:
+              - text: HintingLevel|./ref/Topten.RichTextKit.TextPaintOptions.HintingLevel
               - text: IsAntialias|./ref/Topten.RichTextKit.TextPaintOptions.IsAntialias
               - text: LcdRenderText|./ref/Topten.RichTextKit.TextPaintOptions.LcdRenderText
               - text: Selection|./ref/Topten.RichTextKit.TextPaintOptions.Selection
