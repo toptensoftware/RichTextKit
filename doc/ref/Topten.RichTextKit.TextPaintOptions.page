@@ -53,7 +53,12 @@ a selection range.</p>
     <h2 id="properties">Properties</h2>
     <table class="name-description">
             <tr>
-                <td><a href="./../ref/Topten.RichTextKit.TextPaintOptions.HintingLevel">HintingLevel</a></td>
+                <td><a href="./../ref/Topten.RichTextKit.TextPaintOptions.Edging">Edging</a></td>
+                <td><p>Controls how font edges are drawn</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextPaintOptions.Hinting">Hinting</a></td>
                 <td><p>Controls the font hint used when rendering text</p>
 </td>
             </tr>
@@ -85,6 +90,11 @@ a selection range.</p>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextPaintOptions.SelectionHandleScale">SelectionHandleScale</a></td>
                 <td><p>Scaling of the touch screen selection handles</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextPaintOptions.SubpixelPositioning">SubpixelPositioning</a></td>
+                <td><p>Requests text be drawn at sub-pixel offsets</p>
 </td>
             </tr>
     </table>

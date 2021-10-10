@@ -22,7 +22,7 @@ import: "../.common.page"
 <p>Controls whether text is rendered with anti-aliasing.</p>
 
 
-<pre class="language-csharp"><code class="language-csharp">public bool IsAntialias { get; set; }</code></pre>
+<pre class="language-csharp"><code class="language-csharp">[Obsolete(&quot;Use Edging property instead of IsAntialias&quot;)]&#xD;&#xA;public bool IsAntialias { get; set; }</code></pre>
 
 
 <h2 id="property-type">Property Type</h2>    <table class="name-description">

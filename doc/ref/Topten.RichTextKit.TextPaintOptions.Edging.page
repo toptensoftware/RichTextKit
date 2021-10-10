@@ -1,10 +1,10 @@
 ---
-title: "TextPaintOptions.LcdRenderText"
+title: "TextPaintOptions.Edging"
 isMarkdown: false
 import: "../.common.page"
 ---
 
-<h1 data-nav-secondary-text="Definition" id="definition">TextPaintOptions.LcdRenderText Property</h1>
+<h1 data-nav-secondary-text="Definition" id="definition">TextPaintOptions.Edging Property</h1>
 
 
 <p>
@@ -19,15 +19,15 @@ import: "../.common.page"
 
 
 
-<p>Controls whether text is rendered using LCD sub-pixel rendering.</p>
+<p>Controls how font edges are drawn</p>
 
 
-<pre class="language-csharp"><code class="language-csharp">[Obsolete(&quot;Use Edging property instead of LcdRenderText&quot;)]&#xD;&#xA;public bool LcdRenderText { get; set; }</code></pre>
+<pre class="language-csharp"><code class="language-csharp">public SkiaSharp.SKFontEdging Edging { get; set; }</code></pre>
 
 
 <h2 id="property-type">Property Type</h2>    <table class="name-description">
         <tr>
-            <td><a href="https://docs.microsoft.com/dotnet/api/System.Boolean">bool</a></td>
+            <td>SkiaSharp.SKFontEdging</td>
             <td></td>
         </tr>
     </table>

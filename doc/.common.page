@@ -393,13 +393,15 @@ navTree:
               - text: Default|./ref/Topten.RichTextKit.TextPaintOptions.Default
           - text: Properties
             subItems:
-              - text: HintingLevel|./ref/Topten.RichTextKit.TextPaintOptions.HintingLevel
+              - text: Edging|./ref/Topten.RichTextKit.TextPaintOptions.Edging
+              - text: Hinting|./ref/Topten.RichTextKit.TextPaintOptions.Hinting
               - text: IsAntialias|./ref/Topten.RichTextKit.TextPaintOptions.IsAntialias
               - text: LcdRenderText|./ref/Topten.RichTextKit.TextPaintOptions.LcdRenderText
               - text: Selection|./ref/Topten.RichTextKit.TextPaintOptions.Selection
               - text: SelectionColor|./ref/Topten.RichTextKit.TextPaintOptions.SelectionColor
               - text: SelectionHandleColor|./ref/Topten.RichTextKit.TextPaintOptions.SelectionHandleColor
               - text: SelectionHandleScale|./ref/Topten.RichTextKit.TextPaintOptions.SelectionHandleScale
+              - text: SubpixelPositioning|./ref/Topten.RichTextKit.TextPaintOptions.SubpixelPositioning
           - text: Methods
             subItems:
               - text: Clone|./ref/Topten.RichTextKit.TextPaintOptions.Clone
