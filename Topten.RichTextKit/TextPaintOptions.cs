@@ -98,6 +98,16 @@ namespace Topten.RichTextKit
             set;
         } = false;
 
+
+        /// <summary>
+        /// Controls the font hint used when rendering text
+        /// </summary>
+        public SKPaintHinting HintingLevel
+        {
+            get;
+            set;
+        } = SKPaintHinting.Normal;
+
         /// <summary>
         /// A default set of paint options that renders text blocks without 
         /// a selection range.

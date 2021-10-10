@@ -621,6 +621,7 @@ namespace Topten.RichTextKit
                 paint.Color = Style.TextColor;
                 paint.IsAntialias = ctx.Options.IsAntialias;
                 paint.LcdRenderText = ctx.Options.LcdRenderText;
+                paint.HintingLevel = ctx.Options.HintingLevel;
 
                 unsafe
                 {
