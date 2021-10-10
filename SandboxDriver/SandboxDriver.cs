@@ -238,6 +238,9 @@ namespace SandboxDriver
             var options = new TextPaintOptions()
             {
                 SelectionColor = new SKColor(0x60FF0000),
+                Hinting = Hinting,
+                Edging = Edging,
+                SubpixelPositioning = SubpixelPositioning,
             };
 
             HitTestResult? htr = null;
@@ -313,7 +316,7 @@ namespace SandboxDriver
                 }
             }
 
-            var state = $"Size: {width} x {height} Base Direction: {BaseDirection} Alignment: {TextAlignment} Content: {ContentMode} scale: {Scale} time: {elapsed}";
+            var state = $"Size: {width} x {height} Base Direction: {BaseDirection} Alignment: {TextAlignment} Content: {ContentMode} scale: {Scale} time: {elapsed} subpixel: {SubpixelPositioning} hinting: {Hinting} edging: {Edging}";
             canvas.DrawText(state, margin, 20, new SKPaint()
             {
                 Typeface = SKTypeface.FromFamilyName("Arial"),
@@ -344,6 +347,10 @@ namespace SandboxDriver
         float _hitTestX;
         float _hitTestY;
         bool _showHitTest;
+
+        public SKFontEdging Edging = SKFontEdging.Antialias;
+        public SKFontHinting Hinting = SKFontHinting.Normal;
+        public bool SubpixelPositioning = true;
 
         public void HitTest(float x, float y)
         {

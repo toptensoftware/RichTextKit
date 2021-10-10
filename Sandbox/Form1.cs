@@ -122,6 +122,21 @@ namespace Sandbox
                     Invalidate();
                     break;
 
+                case Keys.F1:
+                    _driver.SubpixelPositioning = !_driver.SubpixelPositioning;
+                    Invalidate();
+                    break;
+
+                case Keys.F2:
+                    _driver.Hinting = (SKFontHinting)(((int)_driver.Hinting + 1) % 4);
+                    Invalidate();
+                    break;
+
+                case Keys.F3:
+                    _driver.Edging = (SKFontEdging)(((int)_driver.Edging + 1) % 3);
+                    Invalidate();
+                    break;
+
             }
         }
 

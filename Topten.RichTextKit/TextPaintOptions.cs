@@ -14,6 +14,7 @@
 // under the License.
 
 using SkiaSharp;
+using System;
 
 namespace Topten.RichTextKit
 {
@@ -26,7 +27,7 @@ namespace Topten.RichTextKit
         /// Constructs a new text paint options
         /// </summary>
         public TextPaintOptions()
-        { 
+        {
         }
 
 
@@ -81,32 +82,53 @@ namespace Topten.RichTextKit
         } = 0;
 
         /// <summary>
-        /// Controls whether text is rendered with anti-aliasing.
+        /// Controls how font edges are drawn
         /// </summary>
-        public bool IsAntialias
+        public SKFontEdging Edging
+        {
+            get;
+            set;
+        } = SKFontEdging.Antialias;
+
+
+        /// <summary>
+        /// Requests text be drawn at sub-pixel offsets
+        /// </summary>
+        public bool SubpixelPositioning
         {
             get;
             set;
         } = true;
 
         /// <summary>
+        /// Controls whether text is rendered with anti-aliasing.
+        /// </summary>
+        [Obsolete("Use Edging property instead of IsAntialias")]
+        public bool IsAntialias
+        {
+            get => Edging != SKFontEdging.Alias;
+            set => Edging = value ? SKFontEdging.Antialias : SKFontEdging.Alias;
+        }
+
+        /// <summary>
         /// Controls whether text is rendered using LCD sub-pixel rendering.
         /// </summary>
+        [Obsolete("Use Edging property instead of LcdRenderText")]
         public bool LcdRenderText
         {
-            get;
-            set;
-        } = false;
+            get => Edging == SKFontEdging.SubpixelAntialias;
+            set => Edging = value ? SKFontEdging.SubpixelAntialias : SKFontEdging.Antialias;
+        }
 
 
         /// <summary>
         /// Controls the font hint used when rendering text
         /// </summary>
-        public SKPaintHinting HintingLevel
+        public SKFontHinting Hinting
         {
             get;
             set;
-        } = SKPaintHinting.Normal;
+        } = SKFontHinting.Normal;
 
         /// <summary>
         /// A default set of paint options that renders text blocks without 

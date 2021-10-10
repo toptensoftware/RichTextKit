@@ -619,9 +619,6 @@ namespace Topten.RichTextKit
 
                 // Setup SKPaint
                 paint.Color = Style.TextColor;
-                paint.IsAntialias = ctx.Options.IsAntialias;
-                paint.LcdRenderText = ctx.Options.LcdRenderText;
-                paint.HintingLevel = ctx.Options.HintingLevel;
 
                 unsafe
                 {
@@ -634,8 +631,10 @@ namespace Topten.RichTextKit
                         if (_font == null)
                         {
                             _font = new SKFont(this.Typeface, this.Style.FontSize * glyphScale);
-                            _font.Subpixel = true;
                         }
+                        _font.Hinting = ctx.Options.Hinting;
+                        _font.Edging = ctx.Options.Edging;
+                        _font.Subpixel = ctx.Options.SubpixelPositioning;
 
                         // Create the SKTextBlob (if necessary)
                         if (_textBlob == null)
