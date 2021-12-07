@@ -1,5 +1,5 @@
 [submodule "buildtools"]
 	path = buildtools
 	url = https://github.com/toptensoftware/buildtools.git
-	branch = master
+	branch = main
 	
