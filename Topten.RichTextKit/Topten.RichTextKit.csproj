@@ -16,6 +16,7 @@
     <PackageTags>rich text, rich, text, Skia, SkiaSharp, Font</PackageTags>
     <Description>Easy to use rich text rendering for SkiaSharp, including font-fallback, bi-directional text support and more...</Description>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <RepositoryUrl>https://github.com/toptensoftware/richtextkit</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
