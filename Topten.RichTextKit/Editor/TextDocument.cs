@@ -89,6 +89,24 @@ namespace Topten.RichTextKit.Editor
             set;
         }
 
+        public TextAlignment DefaultAlignment
+        {
+            get => _defaultAlignment;
+            set
+            {
+                _defaultAlignment = value;
+                if (PlainTextMode)
+                {
+                    foreach (var p in _paragraphs)
+                    {
+                        p.TextBlock.Alignment = value;
+                    }
+                    InvalidateLayout();
+                    FireDocumentRedraw();
+                }
+            }
+        }
+
         /// <summary>
         /// Specifies the style to be used in plain text mode
         /// </summary>
@@ -128,6 +146,9 @@ namespace Topten.RichTextKit.Editor
                 _paragraphs.Clear();
                 _paragraphs.Add(new TextParagraph(_defaultStyle));
                 ReplaceText(null, new TextRange(0, 0), value, EditSemantics.None);
+
+                // Re-apply alignment
+                DefaultAlignment = DefaultAlignment;
 
                 // Disable undo
                 _undoManager.Clear();
@@ -646,6 +667,16 @@ namespace Topten.RichTextKit.Editor
                     ii = (~ii - 1);
                 if (ii >= indicies.Count)
                     ii = indicies.Count - 1;
+
+                if (ii + 1 >= indicies.Count)
+                {
+                    // Point is past end of paragraph
+                    return new TextRange(
+                        para.CodePointIndex + indicies[ii],
+                        para.CodePointIndex + indicies[ii],
+                        true
+                    );
+                }
 
                 // Create text range covering the entire word
                 return new TextRange(
@@ -1374,6 +1405,7 @@ namespace Topten.RichTextKit.Editor
         ITextDocumentView _imeView;
         TextRange _imeInitialSelection;
         IStyle _defaultStyle = StyleManager.Default.Value.DefaultStyle;
+        TextAlignment _defaultAlignment = TextAlignment.Left;
         bool _suppressDocumentChangeEvents = false;
     }
 }

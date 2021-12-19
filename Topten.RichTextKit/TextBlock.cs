@@ -58,6 +58,27 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
+        /// This property is only used for text alignment when word wrapping
+        /// is disabled (MaxWidth == null).  When set it will be used for text
+        /// alignment.
+        /// </summary>
+        public float? RenderWidth
+        {
+            get => _renderWidth;
+            set
+            {
+                if (value.HasValue && value.Value < 0)
+                    value = 0;
+                if (_renderWidth != value)
+                {
+                    _renderWidth = value;
+                    if (!_maxWidth.HasValue)
+                        InvalidateLayout();
+                }
+            }
+        }
+
+        /// <summary>
         /// The maximum height of the TextBlock after which lines will be 
         /// truncated and the final line will be appended with an 
         /// ellipsis (`...`) character.
@@ -899,6 +920,11 @@ namespace Topten.RichTextKit
         /// Maximum width (wrap point, or null for no wrapping)
         /// </summary>
         float? _maxWidth;
+
+        /// <summary>
+        /// Render width (used for alignment with maxwidth is null)
+        /// </summary>
+        float? _renderWidth;
 
         /// <summary>
         /// Width at which to wrap content
@@ -1767,11 +1793,11 @@ namespace Topten.RichTextKit
                 switch (ta)
                 {
                     case TextAlignment.Right:
-                        xAdjust = (_maxWidth ?? _measuredWidth) - line.Width;
+                        xAdjust = (_maxWidth ?? _renderWidth ??_measuredWidth) - line.Width;
                         break;
 
                     case TextAlignment.Center:
-                        xAdjust = ((_maxWidth ?? _measuredWidth) - line.Width) / 2;
+                        xAdjust = ((_maxWidth ?? _renderWidth ?? _measuredWidth) - line.Width) / 2;
                         break;
                 }
 

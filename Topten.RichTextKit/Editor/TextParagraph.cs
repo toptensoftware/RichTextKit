@@ -46,13 +46,15 @@ namespace Topten.RichTextKit.Editor
         /// <inheritdoc />
         public override void Layout(TextDocument owner)
         {
+            _textBlock.RenderWidth =
+                    owner.PageWidth
+                    - owner.MarginLeft - owner.MarginRight
+                    - this.MarginLeft - this.MarginRight;
+
             // For layout just need to set the appropriate layout width on the text block
             if (owner.LineWrap)
             {
-                _textBlock.MaxWidth =
-                        owner.PageWidth
-                        - owner.MarginLeft - owner.MarginRight
-                        - this.MarginLeft - this.MarginRight;
+                _textBlock.MaxWidth = _textBlock.RenderWidth;
             }
             else
                 _textBlock.MaxWidth = null;
