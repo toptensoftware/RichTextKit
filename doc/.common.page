@@ -344,6 +344,7 @@ navTree:
               - text: MeasuredOverhang|./ref/Topten.RichTextKit.TextBlock.MeasuredOverhang
               - text: MeasuredPadding|./ref/Topten.RichTextKit.TextBlock.MeasuredPadding
               - text: MeasuredWidth|./ref/Topten.RichTextKit.TextBlock.MeasuredWidth
+              - text: RenderWidth|./ref/Topten.RichTextKit.TextBlock.RenderWidth
               - text: Truncated|./ref/Topten.RichTextKit.TextBlock.Truncated
               - text: WordBoundaryIndicies|./ref/Topten.RichTextKit.TextBlock.WordBoundaryIndicies
           - text: Methods
@@ -500,6 +501,7 @@ navTree:
           - text: Constructors|./ref/Topten.RichTextKit.Editor.TextDocument..ctor
           - text: Properties
             subItems:
+              - text: DefaultAlignment|./ref/Topten.RichTextKit.Editor.TextDocument.DefaultAlignment
               - text: DefaultStyle|./ref/Topten.RichTextKit.Editor.TextDocument.DefaultStyle
               - text: ImeCompositionOffset|./ref/Topten.RichTextKit.Editor.TextDocument.ImeCompositionOffset
               - text: IsImeComposing|./ref/Topten.RichTextKit.Editor.TextDocument.IsImeComposing

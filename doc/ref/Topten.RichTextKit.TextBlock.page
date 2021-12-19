@@ -131,6 +131,13 @@ fonts used, and the supplied text.</p>
 </td>
             </tr>
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.RenderWidth">RenderWidth</a></td>
+                <td><p>This property is only used for text alignment when word wrapping
+is disabled (MaxWidth == null).  When set it will be used for text
+alignment.</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextBlock.Truncated">Truncated</a></td>
                 <td><p>Indicates if the text was truncated due to max height or max lines
 constraints</p>
