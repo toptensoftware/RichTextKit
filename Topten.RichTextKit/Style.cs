@@ -127,6 +127,45 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
+        /// Color of the halo
+        /// </summary>
+        public SKColor HaloColor
+        {
+            get => _haloColor;
+            set
+            {
+                CheckNotSealed();
+                _haloColor = value;
+            }
+        }
+
+        /// <summary>
+        /// Width of halo
+        /// </summary>
+        public float HaloWidth
+        {
+            get => _haloWidth;
+            set
+            {
+                CheckNotSealed();
+                _haloWidth = value;
+            }
+        }
+
+        /// <summary>
+        /// Blur of halo
+        /// </summary>
+        public float HaloBlur
+        {
+            get => _haloBlur;
+            set
+            {
+                CheckNotSealed();
+                _haloBlur = value;
+            }
+        }
+
+        /// <summary>
         /// The character spacing for text in this run (defaults to 0).
         /// </summary>
         public float LetterSpacing
@@ -171,6 +210,9 @@ namespace Topten.RichTextKit
         float _lineHeight = 1.0f;
         SKColor _textColor = new SKColor(0xFF000000);
         SKColor _backgroundColor = SKColor.Empty;
+        SKColor _haloColor = SKColor.Empty;
+        float _haloWidth = 0f;
+        float _haloBlur = 0f;
         float _letterSpacing;
         FontVariant _fontVariant;
         TextDirection _textDirection = TextDirection.Auto;
@@ -208,6 +250,9 @@ namespace Topten.RichTextKit
                float? lineHeight = null,
                SKColor? textColor = null,
                SKColor? backgroundColor = null,
+               SKColor? haloColor = null,
+               float? haloWidth = null,
+               float? haloBlur = null,
                float? letterSpacing = null,
                FontVariant? fontVariant = null,
                TextDirection? textDirection = null,
@@ -226,6 +271,9 @@ namespace Topten.RichTextKit
                 LineHeight = lineHeight ?? this.LineHeight,
                 TextColor = textColor ?? this.TextColor,
                 BackgroundColor = backgroundColor ?? this.BackgroundColor,
+                HaloColor = haloColor ?? this.HaloColor,
+                HaloWidth = haloWidth ?? this.HaloWidth,
+                HaloBlur = haloBlur ?? this.HaloBlur,
                 LetterSpacing = letterSpacing ?? this.LetterSpacing,
                 FontVariant = fontVariant ?? this.FontVariant,
                 TextDirection = textDirection ?? this.TextDirection,
