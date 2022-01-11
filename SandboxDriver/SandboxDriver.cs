@@ -52,7 +52,8 @@ namespace SandboxDriver
             }
 
             //string typefaceName = "Times New Roman";
-            string typefaceName = "Segoe UI";
+            string typefaceName = "Arial";
+            //string typefaceName = "Segoe UI";
             //string typefaceName = "Segoe Script";
 
             var styleNormal = new Style() { FontFamily = typefaceName, FontSize = 18 * Scale };
@@ -67,6 +68,8 @@ namespace SandboxDriver
             var styleStrike = styleNormal.Modify(strikeThrough: StrikeThroughStyle.Solid);
             var styleSubScript = styleNormal.Modify(fontVariant: FontVariant.SubScript);
             var styleSuperScript = styleNormal.Modify(fontVariant: FontVariant.SuperScript);
+            var styleCondensed = styleNormal.Modify(fontWidth: FontWidthStyle.Condensed);
+            var styleExpanded = styleNormal.Modify(fontWidth: FontWidthStyle.Expanded);
             var styleItalic = styleNormal.Modify(fontItalic: true);
             var styleBoldLarge = styleNormal.Modify(fontSize: 28 * Scale, fontWeight: 700);
             var styleRed = styleNormal.Modify(textColor: new SKColor(0xFFFF0000));
@@ -101,7 +104,10 @@ namespace SandboxDriver
                     _textBlock.AddText("2", styleSubScript);
                     _textBlock.AddText("O), ", styleNormal);
                     _textBlock.AddText("colored ", styleRed);
-                    _textBlock.AddText("text", styleBlue);
+                    _textBlock.AddText("text, ", styleBlue);
+                    _textBlock.AddText("condensed", styleCondensed);
+                    _textBlock.AddText(" and ", styleNormal);
+                    _textBlock.AddText("expanded", styleExpanded);
                     _textBlock.AddText(" and ", styleNormal);
                     _textBlock.AddText("mixed ", styleNormal);
                     _textBlock.AddText("sizes", styleSmall);
