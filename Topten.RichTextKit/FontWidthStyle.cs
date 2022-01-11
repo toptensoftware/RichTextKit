@@ -16,7 +16,7 @@
 namespace Topten.RichTextKit
 {
     /// <summary>
-    /// Describes the underline style for a run of text
+    /// Describes the font width style for a run of text
     /// </summary>
     public enum FontWidthStyle
 
