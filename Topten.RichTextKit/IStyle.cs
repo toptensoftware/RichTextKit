@@ -45,7 +45,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// The font weight for text in this run.
         /// </summary>
-        FontWidthStyle FontWidth { get; }
+        SKFontStyleWidth FontWidth { get; }
 
         /// <summary>
         /// True if the text in this run should be displayed in an italic

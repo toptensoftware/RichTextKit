@@ -70,7 +70,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// The font width for text in this run (defaults to WidthStyle.Normal).
         /// </summary>
-        public FontWidthStyle FontWidth
+        public SKFontStyleWidth FontWidth
         {
             get => _fontWidth;
             set { CheckNotSealed(); _fontWidth = value; }
@@ -174,7 +174,7 @@ namespace Topten.RichTextKit
         string _fontFamily = "Arial";
         float _fontSize = 16;
         int _fontWeight = 400;
-        FontWidthStyle _fontWidth = FontWidthStyle.Normal;
+        SKFontStyleWidth _fontWidth = SKFontStyleWidth.Normal;
         bool _fontItalic;
         UnderlineStyle _underlineStyle;
         StrikeThroughStyle _strikeThrough;
@@ -213,7 +213,7 @@ namespace Topten.RichTextKit
                string fontFamily = null,
                float? fontSize = null,
                int? fontWeight = null,
-               FontWidthStyle? fontWidth = null,
+               SKFontStyleWidth? fontWidth = null,
                bool? fontItalic = null,
                UnderlineStyle? underline = null,
                StrikeThroughStyle? strikeThrough = null,

@@ -68,7 +68,7 @@ namespace Topten.RichTextKit
            string fontFamily = null,
            float? fontSize = null,
            int? fontWeight = null,
-           FontWidthStyle? fontWidth = null,
+           SKFontStyleWidth? fontWidth = null,
            bool? fontItalic = null,
            UnderlineStyle? underline = null,
            StrikeThroughStyle? strikeThrough = null,
@@ -135,9 +135,9 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Changes the font width
         /// </summary>
-        /// <param name="value">The new font weight</param>
+        /// <param name="value">The new font width</param>
         /// <returns>A reference to the same RichString instance</returns>
-        public RichString FontWidth(FontWidthStyle value) => Append(new FontWidthItem(value));
+        public RichString FontWidth(SKFontStyleWidth value) => Append(new FontWidthItem(value));
 
         /// <summary>
         /// Changes the font italic setting 
@@ -1112,12 +1112,12 @@ namespace Topten.RichTextKit
 
         class FontWidthItem : Item
         {
-            public FontWidthItem(FontWidthStyle value)
+            public FontWidthItem(SKFontStyleWidth value)
             {
                 _value = value;
             }
 
-            FontWidthStyle _value;
+            SKFontStyleWidth _value;
 
             public override void Build(BuildContext ctx)
             {

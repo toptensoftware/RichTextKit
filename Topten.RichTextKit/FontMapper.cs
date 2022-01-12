@@ -52,7 +52,7 @@ namespace Topten.RichTextKit
             return SKTypeface.FromFamilyName(
                 style.FontFamily, 
                 (SKFontStyleWeight)(style.FontWeight + extraWeight), 
-                (SKFontStyleWidth)style.FontWidth, 
+                style.FontWidth, 
                 style.FontItalic ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright
                 ) ?? SKTypeface.CreateDefault();
         }

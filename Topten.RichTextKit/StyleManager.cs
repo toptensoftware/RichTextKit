@@ -146,7 +146,7 @@ namespace Topten.RichTextKit
         /// </summary>
         /// <param name="fontWidth">The new font width</param>
         /// <returns>An IStyle for the new style</returns>
-        public IStyle FontWidth(FontWidthStyle fontWidth) => Update(fontWidth: fontWidth);
+        public IStyle FontWidth(SKFontStyleWidth fontWidth) => Update(fontWidth: fontWidth);
 
         /// <summary>
         /// Changes the font italic setting and returns an updated IStyle
@@ -242,7 +242,7 @@ namespace Topten.RichTextKit
                string fontFamily = null,
                float? fontSize = null,
                int? fontWeight = null,
-               FontWidthStyle? fontWidth = 0,
+               SKFontStyleWidth? fontWidth = 0,
                bool? fontItalic = null,
                UnderlineStyle? underline = null,
                StrikeThroughStyle? strikeThrough = null,

@@ -68,8 +68,8 @@ namespace SandboxDriver
             var styleStrike = styleNormal.Modify(strikeThrough: StrikeThroughStyle.Solid);
             var styleSubScript = styleNormal.Modify(fontVariant: FontVariant.SubScript);
             var styleSuperScript = styleNormal.Modify(fontVariant: FontVariant.SuperScript);
-            var styleCondensed = styleNormal.Modify(fontWidth: FontWidthStyle.Condensed);
-            var styleExpanded = styleNormal.Modify(fontWidth: FontWidthStyle.Expanded);
+            var styleCondensed = styleNormal.Modify(fontWidth: SKFontStyleWidth.Condensed);
+            var styleExpanded = styleNormal.Modify(fontWidth: SKFontStyleWidth.Expanded);
             var styleItalic = styleNormal.Modify(fontItalic: true);
             var styleBoldLarge = styleNormal.Modify(fontSize: 28 * Scale, fontWeight: 700);
             var styleRed = styleNormal.Modify(textColor: new SKColor(0xFFFF0000));
