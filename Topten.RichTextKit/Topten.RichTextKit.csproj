@@ -24,8 +24,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SkiaSharp" Version="2.88.0-preview.171" />
-    <PackageReference Include="SkiaSharp.HarfBuzz" Version="2.88.0-preview.171" />
+    <PackageReference Include="SkiaSharp" Version="2.88.0-preview.179" />
+    <PackageReference Include="SkiaSharp.HarfBuzz" Version="2.88.0-preview.179" />
   </ItemGroup>
 
 </Project>
