@@ -53,6 +53,7 @@ namespace Topten.RichTextKit
         /// <param name="fontFamily">The new font family</param>
         /// <param name="fontSize">The new font size</param>
         /// <param name="fontWeight">The new font weight</param>
+        /// <param name="fontWidth">The new font width</param>
         /// <param name="fontItalic">The new font italic</param>
         /// <param name="underline">The new underline style</param>
         /// <param name="strikeThrough">The new strike-through style</param>
@@ -70,6 +71,7 @@ namespace Topten.RichTextKit
            string fontFamily = null,
            float? fontSize = null,
            int? fontWeight = null,
+           SKFontStyleWidth? fontWidth = null,
            bool? fontItalic = null,
            UnderlineStyle? underline = null,
            StrikeThroughStyle? strikeThrough = null,
@@ -91,6 +93,7 @@ namespace Topten.RichTextKit
             if (fontFamily != null) FontFamily(fontFamily);
             if (fontSize.HasValue) FontSize(fontSize.Value);
             if (fontWeight.HasValue) FontWeight(fontWeight.Value);
+            if (fontWidth.HasValue) FontWidth(fontWidth.Value);
             if (fontItalic.HasValue) FontItalic(fontItalic.Value);
             if (underline.HasValue) Underline(underline.Value);
             if (strikeThrough.HasValue) StrikeThrough(strikeThrough.Value);
@@ -137,6 +140,13 @@ namespace Topten.RichTextKit
         /// <param name="value">The new font bold setting</param>
         /// <returns>A reference to the same RichString instance</returns>
         public RichString Bold(bool value = true) => Append(new FontWeightItem(value ? 700 : 400));
+
+        /// <summary>
+        /// Changes the font width
+        /// </summary>
+        /// <param name="value">The new font width</param>
+        /// <returns>A reference to the same RichString instance</returns>
+        public RichString FontWidth(SKFontStyleWidth value) => Append(new FontWidthItem(value));
 
         /// <summary>
         /// Changes the font italic setting 
@@ -1127,6 +1137,21 @@ namespace Topten.RichTextKit
             public override void Build(BuildContext ctx)
             {
                 ctx.StyleManager.FontWeight(_value);
+            }
+        }
+
+        class FontWidthItem : Item
+        {
+            public FontWidthItem(SKFontStyleWidth value)
+            {
+                _value = value;
+            }
+
+            SKFontStyleWidth _value;
+
+            public override void Build(BuildContext ctx)
+            {
+                ctx.StyleManager.FontWidth(_value);
             }
         }
 

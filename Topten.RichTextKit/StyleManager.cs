@@ -80,7 +80,7 @@ namespace Topten.RichTextKit
             if (IsOwned(value))
                 return value;
 
-            return Update(value.FontFamily, value.FontSize, value.FontWeight, value.FontItalic,
+            return Update(value.FontFamily, value.FontSize, value.FontWeight, value.FontWidth, value.FontItalic,
                             value.Underline, value.StrikeThrough, value.LineHeight, value.TextColor, value.BackgroundColor,
                             value.HaloColor, value.HaloWidth, value.HaloBlur,
                             value.LetterSpacing, value.FontVariant, value.TextDirection, value.ReplacementCharacter);
@@ -133,13 +133,19 @@ namespace Topten.RichTextKit
         /// <returns>An IStyle for the new style</returns>
         public IStyle FontWeight(int fontWeight) => Update(fontWeight: fontWeight);
 
-
         /// <summary>
         /// Changes the font weight and returns an update IStyle (short cut to FontWeight)
         /// </summary>
         /// <param name="bold">The new font weight</param>
         /// <returns>An IStyle for the new style</returns>
         public IStyle Bold(bool bold) => Update(fontWeight: bold ? 700 : 400);
+
+        /// <summary>
+        /// Changes the font width and returns an updated IStyle
+        /// </summary>
+        /// <param name="fontWidth">The new font width</param>
+        /// <returns>An IStyle for the new style</returns>
+        public IStyle FontWidth(SKFontStyleWidth fontWidth) => Update(fontWidth: fontWidth);
 
         /// <summary>
         /// Changes the font italic setting and returns an updated IStyle
@@ -240,6 +246,7 @@ namespace Topten.RichTextKit
         /// <param name="fontFamily">The new font family</param>
         /// <param name="fontSize">The new font size</param>
         /// <param name="fontWeight">The new font weight</param>
+        /// <param name="fontWidth">The new font width</param>
         /// <param name="fontItalic">The new font italic</param>
         /// <param name="underline">The new underline style</param>
         /// <param name="strikeThrough">The new strike-through style</param>
@@ -258,6 +265,7 @@ namespace Topten.RichTextKit
                string fontFamily = null,
                float? fontSize = null,
                int? fontWeight = null,
+               SKFontStyleWidth? fontWidth = 0,
                bool? fontItalic = null,
                UnderlineStyle? underline = null,
                StrikeThroughStyle? strikeThrough = null,
@@ -277,6 +285,7 @@ namespace Topten.RichTextKit
             var rFontFamily = fontFamily ?? _currentStyle.FontFamily;
             var rFontSize = fontSize ?? _currentStyle.FontSize;
             var rFontWeight = fontWeight ?? _currentStyle.FontWeight;
+            var rFontWidth = fontWidth ?? _currentStyle.FontWidth;
             var rFontItalic = fontItalic ?? _currentStyle.FontItalic;
             var rUnderline = underline ?? _currentStyle.Underline;
             var rStrikeThrough = strikeThrough ?? _currentStyle.StrikeThrough;
@@ -292,7 +301,7 @@ namespace Topten.RichTextKit
             var rReplacementCharacter = replacementCharacter ?? _currentStyle.ReplacementCharacter;
 
             // Format key
-            var key = $"{rFontFamily}.{rFontSize}.{rFontWeight}.{rFontItalic}.{rUnderline}.{rStrikeThrough}.{rLineHeight}.{rTextColor}.{rBackgroundColor}.{rHaloColor}.{rHaloWidth}.{rHaloBlur}.{rLetterSpacing}.{rFontVariant}.{rTextDirection}.{rReplacementCharacter}";
+            var key = $"{rFontFamily}.{rFontSize}.{rFontWeight}.{fontWidth}.{rFontItalic}.{rUnderline}.{rStrikeThrough}.{rLineHeight}.{rTextColor}.{rBackgroundColor}.{rHaloColor}.{rHaloWidth}.{rHaloBlur}.{rLetterSpacing}.{rFontVariant}.{rTextDirection}.{rReplacementCharacter}";
 
             // Look up...
             if (!_styleMap.TryGetValue(key, out var style))
@@ -304,6 +313,7 @@ namespace Topten.RichTextKit
                     FontFamily = rFontFamily,
                     FontSize = rFontSize,
                     FontWeight = rFontWeight,
+                    FontWidth = rFontWidth,
                     FontItalic = rFontItalic,
                     Underline = rUnderline,
                     StrikeThrough = rStrikeThrough,

@@ -68,6 +68,15 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
+        /// The font width for text in this run (defaults to WidthStyle.Normal).
+        /// </summary>
+        public SKFontStyleWidth FontWidth
+        {
+            get => _fontWidth;
+            set { CheckNotSealed(); _fontWidth = value; }
+        }
+
+        /// <summary>
         /// True if the text in this run should be displayed in an italic
         /// font; otherwise False (defaults to false).
         /// </summary>
@@ -204,6 +213,7 @@ namespace Topten.RichTextKit
         string _fontFamily = "Arial";
         float _fontSize = 16;
         int _fontWeight = 400;
+        SKFontStyleWidth _fontWidth = SKFontStyleWidth.Normal;
         bool _fontItalic;
         UnderlineStyle _underlineStyle;
         StrikeThroughStyle _strikeThrough;
@@ -229,6 +239,7 @@ namespace Topten.RichTextKit
         /// <param name="fontFamily">The new font family</param>
         /// <param name="fontSize">The new font size</param>
         /// <param name="fontWeight">The new font weight</param>
+        /// <param name="fontWidth">The new font width</param>
         /// <param name="fontItalic">The new font italic</param>
         /// <param name="underline">The new underline style</param>
         /// <param name="strikeThrough">The new strike-through style</param>
@@ -244,6 +255,7 @@ namespace Topten.RichTextKit
                string fontFamily = null,
                float? fontSize = null,
                int? fontWeight = null,
+               SKFontStyleWidth? fontWidth = null,
                bool? fontItalic = null,
                UnderlineStyle? underline = null,
                StrikeThroughStyle? strikeThrough = null,
@@ -265,6 +277,7 @@ namespace Topten.RichTextKit
                 FontFamily = fontFamily ?? this.FontFamily,
                 FontSize = fontSize ?? this.FontSize,
                 FontWeight = fontWeight ?? this.FontWeight,
+                FontWidth = fontWidth ?? this.FontWidth,
                 FontItalic = fontItalic ?? this.FontItalic,
                 Underline = underline ?? this.Underline,
                 StrikeThrough = strikeThrough ?? this.StrikeThrough,
