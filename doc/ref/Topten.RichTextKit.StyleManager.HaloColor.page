@@ -1,0 +1,55 @@
+---
+title: "StyleManager.HaloColor"
+isMarkdown: false
+import: "../.common.page"
+---
+
+    <h1 data-nav-secondary-text="Definition" id="definition">StyleManager.HaloColor Method</h1>
+
+
+<p>
+    <small>
+        Assembly: Topten.RichTextKit.dll<br />
+        Namespace: <a href="./../ref/Topten.RichTextKit">Topten.RichTextKit</a><br />
+
+                Declaring Type: <a href="./../ref/Topten.RichTextKit.StyleManager">StyleManager</a><br />
+                        </small>
+</p>
+
+
+
+
+
+
+
+
+<p>Changes the halo color and returns an updated IStyle</p>
+
+
+<pre class="language-csharp"><code class="language-csharp">public IStyle HaloColor(SkiaSharp.SKColor haloColor);</code></pre>
+
+
+<h2 id="parameters">Parameters</h2>    <table class="name-description">
+            <tr>
+                <td>
+                    
+                    SkiaSharp.SKColor haloColor
+                </td>
+                <td><p>The new halo color</p>
+</td>
+            </tr>
+    </table>
+<h2 id="returns">Returns</h2>    <table class="name-description">
+        <tr>
+            <td><a href="./../ref/Topten.RichTextKit.IStyle">IStyle</a></td>
+            <td><p>An IStyle for the new style</p>
+</td>
+        </tr>
+    </table>
+
+
+
+
+
+
+

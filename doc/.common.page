@@ -154,6 +154,10 @@ navTree:
               - text: FontSize|./ref/Topten.RichTextKit.IStyle.FontSize
               - text: FontVariant|./ref/Topten.RichTextKit.IStyle.FontVariant
               - text: FontWeight|./ref/Topten.RichTextKit.IStyle.FontWeight
+              - text: FontWidth|./ref/Topten.RichTextKit.IStyle.FontWidth
+              - text: HaloBlur|./ref/Topten.RichTextKit.IStyle.HaloBlur
+              - text: HaloColor|./ref/Topten.RichTextKit.IStyle.HaloColor
+              - text: HaloWidth|./ref/Topten.RichTextKit.IStyle.HaloWidth
               - text: LetterSpacing|./ref/Topten.RichTextKit.IStyle.LetterSpacing
               - text: LineHeight|./ref/Topten.RichTextKit.IStyle.LineHeight
               - text: ReplacementCharacter|./ref/Topten.RichTextKit.IStyle.ReplacementCharacter
@@ -201,7 +205,11 @@ navTree:
               - text: FontSize|./ref/Topten.RichTextKit.RichString.FontSize
               - text: FontVariant|./ref/Topten.RichTextKit.RichString.FontVariant
               - text: FontWeight|./ref/Topten.RichTextKit.RichString.FontWeight
+              - text: FontWidth|./ref/Topten.RichTextKit.RichString.FontWidth
               - text: GetCaretInfo|./ref/Topten.RichTextKit.RichString.GetCaretInfo
+              - text: HaloBlur|./ref/Topten.RichTextKit.RichString.HaloBlur
+              - text: HaloColor|./ref/Topten.RichTextKit.RichString.HaloColor
+              - text: HaloWidth|./ref/Topten.RichTextKit.RichString.HaloWidth
               - text: HitTest|./ref/Topten.RichTextKit.RichString.HitTest
               - text: LetterSpacing|./ref/Topten.RichTextKit.RichString.LetterSpacing
               - text: LineHeight|./ref/Topten.RichTextKit.RichString.LineHeight
@@ -233,6 +241,10 @@ navTree:
               - text: FontSize|./ref/Topten.RichTextKit.Style.FontSize
               - text: FontVariant|./ref/Topten.RichTextKit.Style.FontVariant
               - text: FontWeight|./ref/Topten.RichTextKit.Style.FontWeight
+              - text: FontWidth|./ref/Topten.RichTextKit.Style.FontWidth
+              - text: HaloBlur|./ref/Topten.RichTextKit.Style.HaloBlur
+              - text: HaloColor|./ref/Topten.RichTextKit.Style.HaloColor
+              - text: HaloWidth|./ref/Topten.RichTextKit.Style.HaloWidth
               - text: LetterSpacing|./ref/Topten.RichTextKit.Style.LetterSpacing
               - text: LineHeight|./ref/Topten.RichTextKit.Style.LineHeight
               - text: ReplacementCharacter|./ref/Topten.RichTextKit.Style.ReplacementCharacter
@@ -290,7 +302,11 @@ navTree:
               - text: FontSize|./ref/Topten.RichTextKit.StyleManager.FontSize
               - text: FontVariant|./ref/Topten.RichTextKit.StyleManager.FontVariant
               - text: FontWeight|./ref/Topten.RichTextKit.StyleManager.FontWeight
+              - text: FontWidth|./ref/Topten.RichTextKit.StyleManager.FontWidth
               - text: FromStyle|./ref/Topten.RichTextKit.StyleManager.FromStyle
+              - text: HaloBlur|./ref/Topten.RichTextKit.StyleManager.HaloBlur
+              - text: HaloColor|./ref/Topten.RichTextKit.StyleManager.HaloColor
+              - text: HaloWidth|./ref/Topten.RichTextKit.StyleManager.HaloWidth
               - text: LetterSpacing|./ref/Topten.RichTextKit.StyleManager.LetterSpacing
               - text: LineHeight|./ref/Topten.RichTextKit.StyleManager.LineHeight
               - text: Pop|./ref/Topten.RichTextKit.StyleManager.Pop
