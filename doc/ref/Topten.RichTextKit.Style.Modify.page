@@ -118,21 +118,24 @@ with the same attributes</p>
                     
                     <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;SkiaSharp.SKColor&gt;</a> haloColor
  = null                </td>
-                <td></td>
+                <td><p>Color of the halo background</p>
+</td>
             </tr>
             <tr>
                 <td>
                     
                     <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;float&gt;</a> haloWidth
  = null                </td>
-                <td></td>
+                <td><p>Width of the halo background</p>
+</td>
             </tr>
             <tr>
                 <td>
                     
                     <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;float&gt;</a> haloBlur
  = null                </td>
-                <td></td>
+                <td><p>Blur amount for the halo background</p>
+</td>
             </tr>
             <tr>
                 <td>
