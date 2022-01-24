@@ -68,6 +68,15 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
+        /// The font width for text in this run (defaults to WidthStyle.Normal).
+        /// </summary>
+        public SKFontStyleWidth FontWidth
+        {
+            get => _fontWidth;
+            set { CheckNotSealed(); _fontWidth = value; }
+        }
+
+        /// <summary>
         /// True if the text in this run should be displayed in an italic
         /// font; otherwise False (defaults to false).
         /// </summary>
@@ -127,6 +136,45 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
+        /// Color of the halo
+        /// </summary>
+        public SKColor HaloColor
+        {
+            get => _haloColor;
+            set
+            {
+                CheckNotSealed();
+                _haloColor = value;
+            }
+        }
+
+        /// <summary>
+        /// Width of halo
+        /// </summary>
+        public float HaloWidth
+        {
+            get => _haloWidth;
+            set
+            {
+                CheckNotSealed();
+                _haloWidth = value;
+            }
+        }
+
+        /// <summary>
+        /// Blur of halo
+        /// </summary>
+        public float HaloBlur
+        {
+            get => _haloBlur;
+            set
+            {
+                CheckNotSealed();
+                _haloBlur = value;
+            }
+        }
+
+        /// <summary>
         /// The character spacing for text in this run (defaults to 0).
         /// </summary>
         public float LetterSpacing
@@ -165,12 +213,16 @@ namespace Topten.RichTextKit
         string _fontFamily = "Arial";
         float _fontSize = 16;
         int _fontWeight = 400;
+        SKFontStyleWidth _fontWidth = SKFontStyleWidth.Normal;
         bool _fontItalic;
         UnderlineStyle _underlineStyle;
         StrikeThroughStyle _strikeThrough;
         float _lineHeight = 1.0f;
         SKColor _textColor = new SKColor(0xFF000000);
         SKColor _backgroundColor = SKColor.Empty;
+        SKColor _haloColor = SKColor.Empty;
+        float _haloWidth = 0f;
+        float _haloBlur = 0f;
         float _letterSpacing;
         FontVariant _fontVariant;
         TextDirection _textDirection = TextDirection.Auto;
@@ -187,12 +239,16 @@ namespace Topten.RichTextKit
         /// <param name="fontFamily">The new font family</param>
         /// <param name="fontSize">The new font size</param>
         /// <param name="fontWeight">The new font weight</param>
+        /// <param name="fontWidth">The new font width</param>
         /// <param name="fontItalic">The new font italic</param>
         /// <param name="underline">The new underline style</param>
         /// <param name="strikeThrough">The new strike-through style</param>
         /// <param name="lineHeight">The new line height</param>
         /// <param name="textColor">The new text color</param>
         /// <param name="backgroundColor">The new background color</param>
+        /// <param name="haloColor">Color of the halo background</param>
+        /// <param name="haloBlur">Blur amount for the halo background</param>
+        /// <param name="haloWidth">Width of the halo background</param>
         /// <param name="letterSpacing">The new letterSpacing</param>
         /// <param name="fontVariant">The new font variant</param>
         /// <param name="textDirection">The new text direction</param>
@@ -202,12 +258,16 @@ namespace Topten.RichTextKit
                string fontFamily = null,
                float? fontSize = null,
                int? fontWeight = null,
+               SKFontStyleWidth? fontWidth = null,
                bool? fontItalic = null,
                UnderlineStyle? underline = null,
                StrikeThroughStyle? strikeThrough = null,
                float? lineHeight = null,
                SKColor? textColor = null,
                SKColor? backgroundColor = null,
+               SKColor? haloColor = null,
+               float? haloWidth = null,
+               float? haloBlur = null,
                float? letterSpacing = null,
                FontVariant? fontVariant = null,
                TextDirection? textDirection = null,
@@ -220,12 +280,16 @@ namespace Topten.RichTextKit
                 FontFamily = fontFamily ?? this.FontFamily,
                 FontSize = fontSize ?? this.FontSize,
                 FontWeight = fontWeight ?? this.FontWeight,
+                FontWidth = fontWidth ?? this.FontWidth,
                 FontItalic = fontItalic ?? this.FontItalic,
                 Underline = underline ?? this.Underline,
                 StrikeThrough = strikeThrough ?? this.StrikeThrough,
                 LineHeight = lineHeight ?? this.LineHeight,
                 TextColor = textColor ?? this.TextColor,
                 BackgroundColor = backgroundColor ?? this.BackgroundColor,
+                HaloColor = haloColor ?? this.HaloColor,
+                HaloWidth = haloWidth ?? this.HaloWidth,
+                HaloBlur = haloBlur ?? this.HaloBlur,
                 LetterSpacing = letterSpacing ?? this.LetterSpacing,
                 FontVariant = fontVariant ?? this.FontVariant,
                 TextDirection = textDirection ?? this.TextDirection,

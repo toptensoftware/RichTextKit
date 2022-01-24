@@ -66,6 +66,26 @@ font; otherwise False.</p>
 </td>
             </tr>
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.IStyle.FontWidth">FontWidth</a></td>
+                <td><p>The font weight for text in this run.</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.IStyle.HaloBlur">HaloBlur</a></td>
+                <td><p>Blur of halo</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.IStyle.HaloColor">HaloColor</a></td>
+                <td><p>Color of the halo</p>
+</td>
+            </tr>
+            <tr>
+                <td><a href="./../ref/Topten.RichTextKit.IStyle.HaloWidth">HaloWidth</a></td>
+                <td><p>Width of halo</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.IStyle.LetterSpacing">LetterSpacing</a></td>
                 <td><p>Extra spacing between each character</p>
 </td>

@@ -53,12 +53,16 @@ namespace Topten.RichTextKit
         /// <param name="fontFamily">The new font family</param>
         /// <param name="fontSize">The new font size</param>
         /// <param name="fontWeight">The new font weight</param>
+        /// <param name="fontWidth">The new font width</param>
         /// <param name="fontItalic">The new font italic</param>
         /// <param name="underline">The new underline style</param>
         /// <param name="strikeThrough">The new strike-through style</param>
         /// <param name="lineHeight">The new line height</param>
         /// <param name="textColor">The new text color</param>
         /// <param name="backgroundColor">The new background color</param>
+        /// <param name="haloColor">The new halo color</param>
+        /// <param name="haloWidth">The new halo width</param>
+        /// <param name="haloBlur">The new halo blur width</param>
         /// <param name="letterSpacing">The new character spacing</param>
         /// <param name="fontVariant">The new font variant</param>
         /// <param name="textDirection">The new text direction</param>
@@ -67,12 +71,16 @@ namespace Topten.RichTextKit
            string fontFamily = null,
            float? fontSize = null,
            int? fontWeight = null,
+           SKFontStyleWidth? fontWidth = null,
            bool? fontItalic = null,
            UnderlineStyle? underline = null,
            StrikeThroughStyle? strikeThrough = null,
            float? lineHeight = null,
            SKColor? textColor = null,
            SKColor? backgroundColor = null,
+           SKColor? haloColor = null,
+           float? haloWidth = null,
+           float? haloBlur = null,
            float? letterSpacing = null,
            FontVariant? fontVariant = null,
            TextDirection? textDirection = null
@@ -85,12 +93,16 @@ namespace Topten.RichTextKit
             if (fontFamily != null) FontFamily(fontFamily);
             if (fontSize.HasValue) FontSize(fontSize.Value);
             if (fontWeight.HasValue) FontWeight(fontWeight.Value);
+            if (fontWidth.HasValue) FontWidth(fontWidth.Value);
             if (fontItalic.HasValue) FontItalic(fontItalic.Value);
             if (underline.HasValue) Underline(underline.Value);
             if (strikeThrough.HasValue) StrikeThrough(strikeThrough.Value);
             if (lineHeight.HasValue) LineHeight(lineHeight.Value);
             if (textColor.HasValue) TextColor(textColor.Value);
             if (backgroundColor.HasValue) BackgroundColor(backgroundColor.Value);
+            if (haloColor.HasValue) HaloColor(haloColor.Value);
+            if (haloWidth.HasValue) HaloWidth(haloWidth.Value);
+            if (haloBlur.HasValue) HaloBlur(haloBlur.Value);
             if (fontVariant.HasValue) FontVariant(fontVariant.Value);
             if (letterSpacing.HasValue) LetterSpacing(letterSpacing.Value);
             if (textDirection.HasValue) TextDirection(textDirection.Value);
@@ -128,6 +140,13 @@ namespace Topten.RichTextKit
         /// <param name="value">The new font bold setting</param>
         /// <returns>A reference to the same RichString instance</returns>
         public RichString Bold(bool value = true) => Append(new FontWeightItem(value ? 700 : 400));
+
+        /// <summary>
+        /// Changes the font width
+        /// </summary>
+        /// <param name="value">The new font width</param>
+        /// <returns>A reference to the same RichString instance</returns>
+        public RichString FontWidth(SKFontStyleWidth value) => Append(new FontWidthItem(value));
 
         /// <summary>
         /// Changes the font italic setting 
@@ -170,6 +189,27 @@ namespace Topten.RichTextKit
         /// <param name="value">The new background color</param>
         /// <returns>A reference to the same RichString instance</returns>
         public RichString BackgroundColor(SKColor value) => Append(new BackgroundColorItem(value));
+
+        /// <summary>
+        /// Changes the halo color
+        /// </summary>
+        /// <param name="value">The new halo color</param>
+        /// <returns>A reference to the same RichString instance</returns>
+        public RichString HaloColor(SKColor value) => Append(new HaloColorItem(value));
+
+        /// <summary>
+        /// Changes the halo width
+        /// </summary>
+        /// <param name="value">The new halo width</param>
+        /// <returns>A reference to the same RichString instance</returns>
+        public RichString HaloWidth(float value) => Append(new HaloWidthItem(value));
+
+        /// <summary>
+        /// Changes the halo blur width
+        /// </summary>
+        /// <param name="value">The new halo blur width</param>
+        /// <returns>A reference to the same RichString instance</returns>
+        public RichString HaloBlur(float value) => Append(new HaloBlurItem(value));
 
         /// <summary>
         /// Changes the character spacing
@@ -1100,6 +1140,21 @@ namespace Topten.RichTextKit
             }
         }
 
+        class FontWidthItem : Item
+        {
+            public FontWidthItem(SKFontStyleWidth value)
+            {
+                _value = value;
+            }
+
+            SKFontStyleWidth _value;
+
+            public override void Build(BuildContext ctx)
+            {
+                ctx.StyleManager.FontWidth(_value);
+            }
+        }
+
         class FontItalicItem : Item
         {
             public FontItalicItem(bool value)
@@ -1187,6 +1242,51 @@ namespace Topten.RichTextKit
             public override void Build(BuildContext ctx)
             {
                 ctx.StyleManager.BackgroundColor(_value);
+            }
+        }
+
+        class HaloColorItem : Item
+        {
+            public HaloColorItem(SKColor value)
+            {
+                _value = value;
+            }
+
+            SKColor _value;
+
+            public override void Build(BuildContext ctx)
+            {
+                ctx.StyleManager.HaloColor(_value);
+            }
+        }
+
+        class HaloWidthItem : Item
+        {
+            public HaloWidthItem(float value)
+            {
+                _value = value;
+            }
+
+            float _value;
+
+            public override void Build(BuildContext ctx)
+            {
+                ctx.StyleManager.HaloWidth(_value);
+            }
+        }
+
+        class HaloBlurItem : Item
+        {
+            public HaloBlurItem(float value)
+            {
+                _value = value;
+            }
+
+            float _value;
+
+            public override void Build(BuildContext ctx)
+            {
+                ctx.StyleManager.HaloBlur(_value);
             }
         }
 
