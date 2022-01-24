@@ -79,6 +79,21 @@ namespace Topten.RichTextKit
         SKColor BackgroundColor { get; }
 
         /// <summary>
+        /// Color of the halo
+        /// </summary>
+        SKColor HaloColor { get; }
+
+        /// <summary>
+        /// Width of halo
+        /// </summary>
+        float HaloWidth { get; }
+
+        /// <summary>
+        /// Blur of halo
+        /// </summary>
+        float HaloBlur { get; }
+
+        /// <summary>
         /// Extra spacing between each character
         /// </summary>
         float LetterSpacing { get; }

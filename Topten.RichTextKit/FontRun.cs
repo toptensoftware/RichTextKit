@@ -602,6 +602,7 @@ namespace Topten.RichTextKit
 
             // Text 
             using (var paint = new SKPaint())
+            using (var paintHalo = new SKPaint())
             {
                 // Work out font variant adjustments
                 float glyphScale = 1;
@@ -619,6 +620,16 @@ namespace Topten.RichTextKit
 
                 // Setup SKPaint
                 paint.Color = Style.TextColor;
+
+                if (Style.HaloColor != SKColor.Empty)
+                {
+                    paintHalo.Color = Style.HaloColor;
+                    paintHalo.Style = SKPaintStyle.Stroke;
+                    paintHalo.StrokeWidth = Style.HaloWidth;
+                    paintHalo.StrokeCap = SKStrokeCap.Square;
+                    if (Style.HaloBlur > 0)
+                        paintHalo.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, Style.HaloBlur);
+                }
 
                 unsafe
                 {
@@ -653,6 +664,7 @@ namespace Topten.RichTextKit
                             // Work out underline metrics
                             float underlineYPos = Line.YCoord + Line.BaseLine + (_font.Metrics.UnderlinePosition ?? 0);
                             paint.StrokeWidth = _font.Metrics.UnderlineThickness ?? 1;
+                            paintHalo.StrokeWidth = paint.StrokeWidth + Style.HaloWidth;
 
                             if (Style.Underline == UnderlineStyle.Gapped)
                             {
@@ -666,12 +678,16 @@ namespace Topten.RichTextKit
                                     float b = interceptPositions[i] - paint.StrokeWidth;
                                     if (x < b)
                                     {
+                                        if (Style.HaloColor != SKColor.Empty)
+                                            ctx.Canvas.DrawLine(new SKPoint(x, underlineYPos), new SKPoint(b, underlineYPos), paintHalo);
                                         ctx.Canvas.DrawLine(new SKPoint(x, underlineYPos), new SKPoint(b, underlineYPos), paint);
                                     }
                                     x = interceptPositions[i + 1] + paint.StrokeWidth;
                                 }
                                 if (x < XCoord + Width)
                                 {
+                                    if (Style.HaloColor != SKColor.Empty)
+                                        ctx.Canvas.DrawLine(new SKPoint(x, underlineYPos), new SKPoint(XCoord + Width, underlineYPos), paintHalo);
                                     ctx.Canvas.DrawLine(new SKPoint(x, underlineYPos), new SKPoint(XCoord + Width, underlineYPos), paint);
                                 }
                             }
@@ -681,25 +697,42 @@ namespace Topten.RichTextKit
                                 {
                                     case UnderlineStyle.ImeInput:
                                         paint.PathEffect = SKPathEffect.CreateDash(new float[] { paint.StrokeWidth, paint.StrokeWidth }, paint.StrokeWidth);
+                                        paintHalo.PathEffect = SKPathEffect.CreateDash(new float[] { paintHalo.StrokeWidth, paintHalo.StrokeWidth }, paintHalo.StrokeWidth);
                                         break;
 
                                     case UnderlineStyle.ImeConverted:
                                         paint.PathEffect = SKPathEffect.CreateDash(new float[] { paint.StrokeWidth, paint.StrokeWidth }, paint.StrokeWidth);
+                                        paintHalo.PathEffect = SKPathEffect.CreateDash(new float[] { paintHalo.StrokeWidth, paintHalo.StrokeWidth }, paintHalo.StrokeWidth);
                                         break;
 
                                     case UnderlineStyle.ImeTargetConverted:
                                         paint.StrokeWidth *= 2;
+                                        paintHalo.StrokeWidth *= 2;
                                         break;
 
                                     case UnderlineStyle.ImeTargetNonConverted:
                                         break;
                                 }
                                 // Paint solid underline
+                                if (Style.HaloColor != SKColor.Empty)
+                                    ctx.Canvas.DrawLine(new SKPoint(XCoord, underlineYPos), new SKPoint(XCoord + Width, underlineYPos), paintHalo);
                                 ctx.Canvas.DrawLine(new SKPoint(XCoord, underlineYPos), new SKPoint(XCoord + Width, underlineYPos), paint);
                                 paint.PathEffect = null;
+                                paintHalo.PathEffect = null;
                             }
                         }
 
+                        if (Style.HaloColor != SKColor.Empty)
+                        {
+                            // Paint strikethrough
+                            if (Style.StrikeThrough != StrikeThroughStyle.None && RunKind == FontRunKind.Normal)
+                            {
+                                paint.StrokeWidth = _font.Metrics.StrikeoutThickness ?? 0;
+                                float strikeYPos = Line.YCoord + Line.BaseLine + (_font.Metrics.StrikeoutPosition ?? 0) + glyphVOffset;
+                                ctx.Canvas.DrawLine(new SKPoint(XCoord, strikeYPos), new SKPoint(XCoord + Width, strikeYPos), paintHalo);
+                            }
+                            ctx.Canvas.DrawText(_textBlob, 0, 0, paintHalo);
+                        }
 
                         ctx.Canvas.DrawText(_textBlob, 0, 0, paint);
                     }

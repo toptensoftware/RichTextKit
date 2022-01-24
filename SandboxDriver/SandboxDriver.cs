@@ -74,7 +74,8 @@ namespace SandboxDriver
             var styleBoldLarge = styleNormal.Modify(fontSize: 28 * Scale, fontWeight: 700);
             var styleRed = styleNormal.Modify(textColor: new SKColor(0xFFFF0000));
             var styleBlue = styleNormal.Modify(textColor: new SKColor(0xFF0000FF));
-            var styleFontAwesome = new Style() { FontFamily = "FontAwesome", FontSize = 24 * Scale};
+            var styleFontAwesome = new Style() { FontFamily = "FontAwesome", FontSize = 24 * Scale };
+            var styleHalo = styleNormal.Modify(haloColor: SKColors.Gray, haloWidth: 5, haloBlur: 0);
 
 
             _textBlock.Clear();
@@ -117,6 +118,14 @@ namespace SandboxDriver
                     _textBlock.AddText("Font fallback means emojis work: 🙍‍♀️ 🌐 🍪 🍕 🚀 and ", styleNormal);
                     _textBlock.AddText("text shaping and bi-directional text support means complex scripts and languages like Arabic: مرحبا بالعالم, Japanese: ハローワールド, Chinese: 世界您好 and Hindi: हैलो वर्ल्ड are rendered correctly!\n\n", styleNormal);
                     _textBlock.AddText("RichTextKit also supports left/center/right text alignment, word wrapping, truncation with ellipsis place-holder, text measurement, hit testing, painting a selection range, caret position & shape helpers.", styleNormal);
+                    _textBlock.AddText(".\n\n", styleNormal);
+                    _textBlock.AddText("RichTextKit ", styleHalo);
+                    styleHalo = styleHalo.Modify(haloColor: SKColors.Red, haloWidth: 2, haloBlur: 0);
+                    _textBlock.AddText("also", styleHalo);
+                    styleHalo = styleHalo.Modify(haloColor: SKColors.Green, haloWidth: 2, haloBlur: 1);
+                    _textBlock.AddText(" supports ", styleHalo);
+                    styleHalo = styleHalo.Modify(fontWeight: 700, haloColor: SKColors.Blue, haloWidth: 5, haloBlur: 5);
+                    _textBlock.AddText("halo.", styleHalo);
                     break;
 
                 case 1:
