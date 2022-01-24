@@ -246,6 +246,9 @@ namespace Topten.RichTextKit
         /// <param name="lineHeight">The new line height</param>
         /// <param name="textColor">The new text color</param>
         /// <param name="backgroundColor">The new background color</param>
+        /// <param name="haloColor">Color of the halo background</param>
+        /// <param name="haloBlur">Blur amount for the halo background</param>
+        /// <param name="haloWidth">Width of the halo background</param>
         /// <param name="letterSpacing">The new letterSpacing</param>
         /// <param name="fontVariant">The new font variant</param>
         /// <param name="textDirection">The new text direction</param>
