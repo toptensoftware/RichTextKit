@@ -663,7 +663,11 @@ namespace Topten.RichTextKit
                         {
                             // Work out underline metrics
                             float underlineYPos = Line.YCoord + Line.BaseLine + (_font.Metrics.UnderlinePosition ?? 0);
+                            if (underlineYPos < Line.YCoord + Line.BaseLine + 1)
+                                underlineYPos = Line.YCoord + Line.BaseLine + 1;
                             paint.StrokeWidth = _font.Metrics.UnderlineThickness ?? 1;
+                            if (paint.StrokeWidth < 1)
+                                paint.StrokeWidth = 1;
                             paintHalo.StrokeWidth = paint.StrokeWidth + Style.HaloWidth;
 
                             if (Style.Underline == UnderlineStyle.Gapped)
