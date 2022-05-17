@@ -32,8 +32,8 @@ if (bt.options.official)
     bt.git_tag();
 
     // Push nuget package
-//    var pushTo = bt.options.version.suffix ? "\"Topten GitHub\"" : "\"nuget.org\"";
-    var pushTo = "\"nuget.org\"";
+    var pushTo = bt.options.version.suffix ? "\"Topten GitHub\"" : "\"nuget.org\"";
+    //var pushTo = "\"nuget.org\"";
     bt.run(`dotnet nuget push`,
            `.\\Build\\Release\\*.${bt.options.version.build}${bt.options.version.suffix}.nupkg`,
            `--source ${pushTo}`);
