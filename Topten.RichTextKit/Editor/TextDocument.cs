@@ -89,6 +89,9 @@ namespace Topten.RichTextKit.Editor
             set;
         }
 
+        /// <summary>
+        /// Gets the default alignment for paragraphs in this document
+        /// </summary>
         public TextAlignment DefaultAlignment
         {
             get => _defaultAlignment;
