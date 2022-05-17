@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SkiaSharp" Version="2.88.0-preview.266" />
+    <PackageReference Include="SkiaSharp" Version="2.88.0-preview.209" />
   </ItemGroup>
   
   <ItemGroup>
