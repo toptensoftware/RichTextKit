@@ -19,6 +19,7 @@ import: "../.common.page"
 
 
 
+<p>Gets the default alignment for paragraphs in this document</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public Topten.RichTextKit.TextAlignment DefaultAlignment { get; set; }</code></pre>

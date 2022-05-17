@@ -45,7 +45,8 @@ import: "../.common.page"
     <table class="name-description">
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.DefaultAlignment">DefaultAlignment</a></td>
-                <td></td>
+                <td><p>Gets the default alignment for paragraphs in this document</p>
+</td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.Editor.TextDocument.DefaultStyle">DefaultStyle</a></td>
