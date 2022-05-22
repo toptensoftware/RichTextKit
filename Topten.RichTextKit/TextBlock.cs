@@ -1038,14 +1038,15 @@ namespace Topten.RichTextKit
                 return _textAlignment;
         }
 
-        // Use the shared Bidi algo instance
-        Bidi _bidi = Bidi.Instance.Value;
 
         /// <summary>
         /// Split into runs based on directionality and style switch points
         /// </summary>
         void BuildFontRuns()
         {
+            // Use the shared Bidi algo instance
+            Bidi bidi = Bidi.Instance.Value;
+
             var originalLength = _codePoints.Length;
             try
             {
@@ -1078,12 +1079,12 @@ namespace Topten.RichTextKit
                 }
 
                 // Process bidi
-                _bidi.Process(_bidiData);
+                bidi.Process(_bidiData);
 
-                var resolvedLevels = _bidi.ResolvedLevels;
+                var resolvedLevels = bidi.ResolvedLevels;
 
                 // Get resolved direction
-                _resolvedBaseDirection = (TextDirection)_bidi.ResolvedParagraphEmbeddingLevel;
+                _resolvedBaseDirection = (TextDirection)bidi.ResolvedParagraphEmbeddingLevel;
 
                 // Now process the embedded runs
                 if (_hasTextDirectionOverrides)
@@ -1111,7 +1112,7 @@ namespace Topten.RichTextKit
                         var levels = _bidiData.GetTempLevelBuffer(sr.Length);
 
                         // Process this style run
-                        _bidi.Process(types, pbts, pbvs, (sbyte)sr.Style.TextDirection, _bidiData.HasBrackets, _bidiData.HasEmbeddings, _bidiData.HasIsolates, levels);
+                        bidi.Process(types, pbts, pbvs, (sbyte)sr.Style.TextDirection, _bidiData.HasBrackets, _bidiData.HasEmbeddings, _bidiData.HasIsolates, levels);
 
                         // Copy result levels back to the full level set
                         resolvedLevels.SubSlice(sr.Start, sr.Length).Set(levels);
