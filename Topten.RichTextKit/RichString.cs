@@ -412,6 +412,26 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
+        /// Controls the rendering of an ellipsis (`...`) character,
+        /// when the line has been truncated because of MaxWidth/MaxHeight/MaxLines.
+        /// </summary>
+        /// <remarks>
+        /// The default value is true, an ellipsis will be rendered.
+        /// </remarks>
+        public bool EllipsisEnabled
+        {
+            get => _ellipsisEnabled;
+            set
+            {
+                if (value != _ellipsisEnabled)
+                {
+                    _ellipsisEnabled = value;
+                    Invalidate();
+                }
+            }
+        }
+
+        /// <summary>
         /// Sets the default text alignment for cases where
         /// the rich text doesn't specify an alignment
         /// </summary>
@@ -738,7 +758,7 @@ namespace Topten.RichTextKit
 
         ParagraphInfo ParagraphForCodePointIndex(int index)
         {
-            for (int i=1; i<_paragraphs.Count; i++)
+            for (int i = 1; i < _paragraphs.Count; i++)
             {
                 if (index < _paragraphs[i].CodePointOffset)
                     return _paragraphs[i - 1];
@@ -775,6 +795,7 @@ namespace Topten.RichTextKit
                 maxWidth = _maxWidth,
                 maxHeight = _maxHeight,
                 maxLines = _maxLines,
+                ellipsisEnabled = _ellipsisEnabled,
                 textAlignment = _textAlignment,
                 baseDirection = _baseDirection,
                 styleManager = StyleManager.Default.Value,
@@ -830,6 +851,7 @@ namespace Topten.RichTextKit
             public float? maxWidth;
             public float? maxHeight;
             public int? maxLines;
+            public bool ellipsisEnabled;
             public TextAlignment? textAlignment;
             public TextDirection? baseDirection;
             public StyleManager styleManager;
@@ -857,6 +879,7 @@ namespace Topten.RichTextKit
         float? _maxWidth;
         float? _maxHeight;
         int? _maxLines;
+        bool _ellipsisEnabled = true;
         TextAlignment _textAlignment;
         TextDirection _baseDirection;
         IStyle _baseStyle;
@@ -974,7 +997,7 @@ namespace Topten.RichTextKit
                         i.Build(buildContext);
                     }
                 }
-                
+
                 // Store code point offset of this paragraph
                 CodePointOffset = ctx.TotalLength;
                 LineOffset = ctx.lineCount;
@@ -1039,7 +1062,7 @@ namespace Topten.RichTextKit
                 }
                 else
                 {
-                    if (TextBlock.Lines.Count == 0 && ctx.previousParagraph != null)
+                    if (ctx.ellipsisEnabled && TextBlock.Lines.Count == 0 && ctx.previousParagraph != null)
                     {
                         ctx.previousParagraph.TextBlock.AddEllipsis();
                     }
