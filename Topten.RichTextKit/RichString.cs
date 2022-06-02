@@ -1042,6 +1042,9 @@ namespace Topten.RichTextKit
                     TextBlock.MaxLines = null;
                 }
 
+                // Set ellipsis option
+                TextBlock.EllipsisEnabled = ctx.ellipsisEnabled;
+
                 // Truncated?
                 if (TextBlock.MaxLines == 0 || TextBlock.MaxHeight == 0)
                 {
@@ -1062,7 +1065,7 @@ namespace Topten.RichTextKit
                 }
                 else
                 {
-                    if (ctx.ellipsisEnabled && TextBlock.Lines.Count == 0 && ctx.previousParagraph != null)
+                    if (TextBlock.Lines.Count == 0 && ctx.previousParagraph != null)
                     {
                         ctx.previousParagraph.TextBlock.AddEllipsis();
                     }
