@@ -108,6 +108,26 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
+        /// Controls the rendering of an ellipsis (`...`) character,
+        /// when the line has been truncated because of MaxWidth/MaxHeight/MaxLines.
+        /// </summary>
+        /// <remarks>
+        /// The default value is true, an ellipsis will be rendered.
+        /// </remarks>
+        public bool EllipsisEnabled
+        {
+            get => _ellipsisEnabled;
+            set
+            {
+                if (value != _ellipsisEnabled)
+                {
+                    _ellipsisEnabled = value;
+                    InvalidateLayout();
+                }
+            }
+        }
+
+        /// <summary>
         /// Sets the left, right or center alignment of the text block.
         /// </summary>
         /// <remarks>
@@ -213,6 +233,9 @@ namespace Topten.RichTextKit
         /// </remarks>
         public void AddEllipsis()
         {
+            if (!_ellipsisEnabled)
+                return;
+
             // Make sure laid out
             Layout();
 
@@ -924,6 +947,11 @@ namespace Topten.RichTextKit
         /// Maximum number of lines
         /// </summary>
         int _maxLinesResolved = int.MaxValue;
+
+        /// <summary>
+        /// Option to control ellipsis
+        /// </summary>
+        bool _ellipsisEnabled = true;
 
         /// <summary>
         /// Text alignment
@@ -1861,6 +1889,9 @@ namespace Topten.RichTextKit
         /// <param name="postLayout">True if the ellipsis is being added post layout via a user call to AddEllipsis()</param>
         void AdornLineWithEllipsis(TextLine line, bool postLayout = false)
         {
+            if (!_ellipsisEnabled)
+                return;
+
             var lastRun = line.Runs[line.Runs.Count - 1];
 
             // Don't add ellipsis if the last run actually
