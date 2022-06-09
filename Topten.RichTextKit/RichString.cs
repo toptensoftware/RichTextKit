@@ -1048,6 +1048,7 @@ namespace Topten.RichTextKit
                 // Truncated?
                 if (TextBlock.MaxLines == 0 || TextBlock.MaxHeight == 0)
                 {
+                    ctx.previousParagraph?.TextBlock.AddEllipsis();
                     TextBlock = null;
                     Truncated = true;
                     ctx.Truncated = true;
