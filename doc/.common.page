@@ -182,6 +182,7 @@ navTree:
               - text: DefaultAlignment|./ref/Topten.RichTextKit.RichString.DefaultAlignment
               - text: DefaultDirection|./ref/Topten.RichTextKit.RichString.DefaultDirection
               - text: DefaultStyle|./ref/Topten.RichTextKit.RichString.DefaultStyle
+              - text: EllipsisEnabled|./ref/Topten.RichTextKit.RichString.EllipsisEnabled
               - text: Length|./ref/Topten.RichTextKit.RichString.Length
               - text: LineCount|./ref/Topten.RichTextKit.RichString.LineCount
               - text: MaxHeight|./ref/Topten.RichTextKit.RichString.MaxHeight
@@ -347,6 +348,7 @@ navTree:
               - text: Alignment|./ref/Topten.RichTextKit.TextBlock.Alignment
               - text: BaseDirection|./ref/Topten.RichTextKit.TextBlock.BaseDirection
               - text: CaretIndicies|./ref/Topten.RichTextKit.TextBlock.CaretIndicies
+              - text: EllipsisEnabled|./ref/Topten.RichTextKit.TextBlock.EllipsisEnabled
               - text: FontMapper|./ref/Topten.RichTextKit.TextBlock.FontMapper
               - text: FontRuns|./ref/Topten.RichTextKit.TextBlock.FontRuns
               - text: LineCount|./ref/Topten.RichTextKit.TextBlock.LineCount

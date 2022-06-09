@@ -60,6 +60,12 @@ left to right, or right to left)</p>
 </td>
             </tr>
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.TextBlock.EllipsisEnabled">EllipsisEnabled</a></td>
+                <td><p>Controls the rendering of an ellipsis (<code>...</code>) character,
+when the line has been truncated because of MaxWidth/MaxHeight/MaxLines.</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.TextBlock.FontMapper">FontMapper</a></td>
                 <td><p>Gets or sets the font mapper to be used by this TextBlock instance</p>
 </td>

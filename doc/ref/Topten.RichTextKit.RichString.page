@@ -64,6 +64,12 @@ Subsequent formatting operations will be applied over this base style.</p>
 </td>
             </tr>
             <tr>
+                <td><a href="./../ref/Topten.RichTextKit.RichString.EllipsisEnabled">EllipsisEnabled</a></td>
+                <td><p>Controls the rendering of an ellipsis (<code>...</code>) character,
+when the line has been truncated because of MaxWidth/MaxHeight/MaxLines.</p>
+</td>
+            </tr>
+            <tr>
                 <td><a href="./../ref/Topten.RichTextKit.RichString.Length">Length</a></td>
                 <td><p>Gets the total length of the string in code points</p>
 </td>
