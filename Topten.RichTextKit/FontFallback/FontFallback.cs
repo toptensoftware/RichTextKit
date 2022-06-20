@@ -108,7 +108,7 @@ namespace Topten.RichTextKit
                         continue;
 
                     // Must be a cluster boundary
-                        if (!GraphemeClusterAlgorithm.IsBoundary(codePoints, i))
+                    if (!GraphemeClusterAlgorithm.IsBoundary(codePoints, i))
                         continue;
 
                     // We can do font fallback...
@@ -141,6 +141,14 @@ namespace Topten.RichTextKit
                         subSpanTypeface = CharacterMatcher.MatchCharacter(typeface.FamilyName, typeface.FontWeight, typeface.FontWidth, typeface.FontSlant, null, codePoints[unmatchedStart]);
                         if (subSpanTypeface == null)
                         {
+                            // Reset the glyphs in the rest of the range back to unknown
+                            // Fix for this text block string like this:
+                            // "再起動に問題がある場合は次のオプションを使用して、通常の起動機能を無効にし\n制御を回復することをお勧めします。"
+                            // not reverting to fallback font after the embedded carriage return:
+                            for (int j = unmatchedStart; j < unmatchedEnd; j++)
+                            {
+                                glyphs[j] = 0;
+                            }
                             unmatchedEnd = unmatchedStart;
                             break;
                         }

@@ -11,8 +11,8 @@ namespace SandboxDriver
             FontMapper.Default = new SandboxFontMapper();
         }
 
-        public int ContentModeCount = 14;
-        public int ContentMode = 0;
+        public int ContentModeCount = 15;
+        public int ContentMode = 13;
         public TextDirection BaseDirection = TextDirection.LTR;
         public TextAlignment TextAlignment = TextAlignment.Auto;
         public float Scale = 1.0f;
@@ -240,6 +240,10 @@ namespace SandboxDriver
                     break;
 
                 case 13:
+                    _textBlock.AddText("再起動に問題がある場合は次のオプションを使用して、通常の起動機能を無効にし\n制御を回復することをお勧めします。", styleNormal);
+                    break;
+
+                case 14:
                     //_textBlock.AddText("Password \nAnother \n", stylePassword);
                     _textBlock.AddText("Hello World\u2029", styleNormal);
                     break;

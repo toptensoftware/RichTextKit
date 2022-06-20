@@ -656,6 +656,9 @@ namespace Topten.RichTextKit
                                 SKTextEncoding.GlyphId,
                                 _font,
                                 GlyphPositions.AsSpan());
+
+                            if (_textBlob == null)
+                                return;
                         }
 
                         // Paint underline
