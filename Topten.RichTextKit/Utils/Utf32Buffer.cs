@@ -140,6 +140,12 @@ namespace Topten.RichTextKit.Utils
                     {
                         char ch = *pSrc++;
 
+                        // Normalize \r\n to \n
+                        if (ch == '\r' && pSrc < pSrcEnd && *pSrc == '\n')
+                        {
+                            continue;
+                        }
+
                         if (ch >= 0xD800 && ch <= 0xDFFF)
                         {
                             if (ch <= 0xDBFF)
