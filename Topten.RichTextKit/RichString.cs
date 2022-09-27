@@ -817,8 +817,9 @@ namespace Topten.RichTextKit
                 // If this paragraph wasn't completely truncated, then update the measured width
                 if (!p.Truncated)
                 {
-                    if (p.TextBlock.MeasuredWidth > _measuredWidth)
-                        _measuredWidth = p.TextBlock.MeasuredWidth;
+                    var paraWidth = p.TextBlock.MeasuredWidth + p.MarginLeft + p.MarginRight;
+                    if (paraWidth > _measuredWidth)
+                        _measuredWidth = paraWidth;
                 }
 
                 // Store the this paragraph as the previous so a fully truncated subsequent
