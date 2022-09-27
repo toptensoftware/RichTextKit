@@ -34,6 +34,7 @@ namespace RichStringSandbox
             */
 
             var rs = new RichString()
+                .MarginLeft(20).MarginRight(20)
                 .Add("Big text\nMore Big Text\nSomething Else", fontSize: 40, letterSpacing: 0)
                 .Add("Little text", fontSize: 12, letterSpacing: 0);
 
