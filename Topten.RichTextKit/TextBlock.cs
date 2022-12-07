@@ -1463,11 +1463,15 @@ namespace Topten.RichTextKit
                 }
 
                 // If there wasn't a line break anywhere in the line, then we need to force one
-                // on a character boundary.  Also do this is we know we're on the last available line.
+                // on a character boundary.  Also do this if we know we're on the last available line.
                 if (frSplitIndex < 0 || (_maxLines.HasValue && _lines.Count == _maxLines.Value - 1))
                 {
                     // Get the last run that partially fitted
-                    frIndex = frIndexStartOfLine;
+                    while (frIndex > frIndexStartOfLine && _fontRuns[frIndex].XCoord > _maxWidthResolved)
+                    {
+                        frIndex--;
+                    }
+//                    frIndex = frIndexStartOfLine;
                     fr = _fontRuns[frIndex];
                     var room = _maxWidthResolved - fr.XCoord;
                     frSplitIndex = frIndex;
