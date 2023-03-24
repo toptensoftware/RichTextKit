@@ -757,7 +757,8 @@ namespace Topten.RichTextKit.Editor
         /// <param name="range">The range to be replaced</param>
         /// <param name="text">The text to replace with</param>
         /// <param name="semantics">Controls how undo operations are coalesced and view selections updated</param>"
-        public void ReplaceText(ITextDocumentView view, TextRange range, string text, EditSemantics semantics)
+        /// <param name="styleToUse">The style to use for the added text (optional)</param>
+        public void ReplaceText(ITextDocumentView view, TextRange range, string text, EditSemantics semantics, IStyle styleToUse = null)
         {
             // Convert text to utf32
             Slice<int> codePoints;
@@ -771,7 +772,7 @@ namespace Topten.RichTextKit.Editor
             }
 
             // Do the work
-            ReplaceText(view, range, codePoints, semantics);
+            ReplaceText(view, range, codePoints, semantics, styleToUse);
         }
 
         /// <summary>
@@ -781,7 +782,8 @@ namespace Topten.RichTextKit.Editor
         /// <param name="range">The range to be replaced</param>
         /// <param name="codePoints">The text to replace with</param>
         /// <param name="semantics">Controls how undo operations are coalesced and view selections updated</param>"
-        public void ReplaceText(ITextDocumentView view, TextRange range, Slice<int> codePoints, EditSemantics semantics)
+        /// <param name="styleToUse">The style to use for the added text (optional)</param>
+        public void ReplaceText(ITextDocumentView view, TextRange range, Slice<int> codePoints, EditSemantics semantics, IStyle styleToUse = null)
         {
             // Check range is valid
             if (range.Minimum < 0 || range.Maximum > this.Length)
@@ -802,7 +804,12 @@ namespace Topten.RichTextKit.Editor
                     codePoints = codePoints.SubSlice(0, breakPos);
             }
 
-            ReplaceTextInternal(view, range, new StyledText(codePoints), semantics, -1);
+            var styledText = new StyledText(codePoints);
+            if (styledText != null)
+            {
+                styledText.ApplyStyle(0, styledText.Length, styleToUse);
+            }
+            ReplaceTextInternal(view, range, styledText, semantics, -1);
         }
 
         /// <summary>
