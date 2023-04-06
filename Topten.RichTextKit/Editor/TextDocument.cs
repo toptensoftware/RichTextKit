@@ -805,7 +805,7 @@ namespace Topten.RichTextKit.Editor
             }
 
             var styledText = new StyledText(codePoints);
-            if (styledText != null)
+            if (styleToUse != null)
             {
                 styledText.ApplyStyle(0, styledText.Length, styleToUse);
             }
