@@ -669,8 +669,6 @@ namespace Topten.RichTextKit
                             if (underlineYPos < Line.YCoord + Line.BaseLine + 1)
                                 underlineYPos = Line.YCoord + Line.BaseLine + 1;
                             paint.StrokeWidth = _font.Metrics.UnderlineThickness ?? 1;
-                            if (paint.StrokeWidth < 1)
-                                paint.StrokeWidth = 1;
                             paintHalo.StrokeWidth = paint.StrokeWidth + Style.HaloWidth;
 
                             if (Style.Underline == UnderlineStyle.Gapped)
@@ -735,8 +733,6 @@ namespace Topten.RichTextKit
                             if (Style.StrikeThrough != StrikeThroughStyle.None && RunKind == FontRunKind.Normal)
                             {
                                 paintHalo.StrokeWidth = _font.Metrics.StrikeoutThickness ?? 1;
-                                if (paintHalo.StrokeWidth < 1)
-                                    paintHalo.StrokeWidth = 1;
                                 paintHalo.StrokeWidth += Style.HaloWidth;
                                 float strikeYPos = Line.YCoord + Line.BaseLine + (_font.Metrics.StrikeoutPosition ?? 0) + glyphVOffset;
                                 ctx.Canvas.DrawLine(new SKPoint(XCoord, strikeYPos), new SKPoint(XCoord + Width, strikeYPos), paintHalo);
@@ -752,8 +748,6 @@ namespace Topten.RichTextKit
                 if (Style.StrikeThrough != StrikeThroughStyle.None && RunKind == FontRunKind.Normal)
                 {
                     paint.StrokeWidth = _font.Metrics.StrikeoutThickness ?? 1;
-                    if (paint.StrokeWidth < 1)
-                        paint.StrokeWidth = 1;
                     float strikeYPos = Line.YCoord + Line.BaseLine + (_font.Metrics.StrikeoutPosition ?? 0) + glyphVOffset;
                     ctx.Canvas.DrawLine(new SKPoint(XCoord, strikeYPos), new SKPoint(XCoord + Width, strikeYPos), paint);
                 }
