@@ -6,6 +6,11 @@
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageId>Ranplan.$(AssemblyName)</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Ranplan Wireless &amp; Topten Software</Authors>
+    <Company>Ranplan Wireless</Company>
+    <Title>Ranplan.RichTextKit</Title>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
