@@ -112,5 +112,10 @@ namespace Topten.RichTextKit
         /// Specifies a replacement character to be displayed (password mode)
         /// </summary>
         char ReplacementCharacter { get; }
+
+        /// <summary>
+        /// Specifies the min thickness of strikeout and underline
+        /// </summary>
+        float MinThickness {get; }
     }
 }
