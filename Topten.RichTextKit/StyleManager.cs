@@ -265,7 +265,7 @@ namespace Topten.RichTextKit
                string fontFamily = null,
                float? fontSize = null,
                int? fontWeight = null,
-               SKFontStyleWidth? fontWidth = 0,
+               SKFontStyleWidth? fontWidth = null,
                bool? fontItalic = null,
                UnderlineStyle? underline = null,
                StrikeThroughStyle? strikeThrough = null,
