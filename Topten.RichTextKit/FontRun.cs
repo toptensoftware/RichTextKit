@@ -741,10 +741,10 @@ namespace Topten.RichTextKit
                                 float strikeYPos = Line.YCoord + Line.BaseLine + (_font.Metrics.StrikeoutPosition ?? 0) + glyphVOffset;
                                 ctx.Canvas.DrawLine(new SKPoint(XCoord, strikeYPos), new SKPoint(XCoord + Width, strikeYPos), paintHalo);
                             }
-                            ctx.Canvas.DrawText(_textBlob, 0, 0, paintHalo);
+                            ctx.Canvas.DrawText(_textBlob, 0, glyphVOffset, paintHalo);
                         }
 
-                        ctx.Canvas.DrawText(_textBlob, 0, 0, paint);
+                        ctx.Canvas.DrawText(_textBlob, 0, glyphVOffset, paint);
                     }
                 }
 
