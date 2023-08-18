@@ -464,15 +464,36 @@ namespace Topten.RichTextKit
         /// Calculate any overhang for this text line
         /// </summary>
         /// <param name="right"></param>
+        /// <param name="updateTop">True to update topOverhang.</param>
+        /// <param name="updateBottom">True to update bottomOverhang.</param>
         /// <param name="leftOverhang"></param>
         /// <param name="rightOverhang"></param>
-        internal void UpdateOverhang(float right, ref float leftOverhang, ref float rightOverhang)
+        /// <param name="topOverhang"></param>
+        /// <param name="bottomOverhang"></param>
+        internal void UpdateOverhang(float right, bool updateTop, bool updateBottom, ref float leftOverhang, ref float rightOverhang, ref float topOverhang, ref float bottomOverhang)
         {
             if (RunKind == FontRunKind.TrailingWhitespace)
                 return;
 
             if (Glyphs.Length == 0)
                 return;
+ 
+            if (Style.LineHeight < 1)
+            {
+                // If LineHeight is less than 100%, the line can have top and bottom overhang
+                if (updateTop)
+                {
+                    var toh = -(TextHeight * (Style.LineHeight - 1) / 2);
+                    if (toh > topOverhang)
+                        topOverhang = toh;
+                }
+                if (updateBottom)
+                {
+                    var boh = -(TextHeight * (Style.LineHeight - 1) / 2);
+                    if (boh > bottomOverhang)
+                        bottomOverhang = boh;
+                }
+            }
 
             using (var paint = new SKPaint())
             {
@@ -509,7 +530,7 @@ namespace Topten.RichTextKit
                                     leftOverhang = loh;
 
                                 var roh = (gx + bounds[i].Right + 1) - right;
-                                if (roh > rightOverhang) 
+                                if (roh > rightOverhang)
                                     rightOverhang = roh;
                             }
                         }

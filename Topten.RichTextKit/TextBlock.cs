@@ -348,6 +348,8 @@ namespace Topten.RichTextKit
             _measuredWidth = 0;
             _leftOverhang = null;
             _rightOverhang = null;
+            _topOverhang = null;
+            _bottomOverhang = null;
             _truncated = false;
 
             // Only layout if actually have some text
@@ -610,14 +612,20 @@ namespace Topten.RichTextKit
                     var right = _maxWidth ?? MeasuredWidth;
                     float leftOverhang = 0;
                     float rightOverhang = 0;
-                    foreach (var l in _lines)
+                    float topOverhang = 0;
+                    float bottomOverhang = 0;
+                    for (int l = 0; l < _lines.Count; l++)
                     {
-                        l.UpdateOverhang(right, ref leftOverhang, ref rightOverhang);
+                        bool updateTop = l == 0;
+                        bool updateBottom = l == (_lines.Count - 1);
+                        _lines[l].UpdateOverhang(right, updateTop, updateBottom, ref leftOverhang, ref rightOverhang, ref topOverhang, ref bottomOverhang);
                     }
                     _leftOverhang = leftOverhang;
                     _rightOverhang = rightOverhang;
+                    _topOverhang = topOverhang;
+                    _bottomOverhang = bottomOverhang;
                 }
-                return new SKRect(_leftOverhang.Value, 0, _rightOverhang.Value, 0);
+                return new SKRect(_leftOverhang.Value, _topOverhang.Value, _rightOverhang.Value, _bottomOverhang.Value);
             }
         }
 
@@ -1033,6 +1041,16 @@ namespace Topten.RichTextKit
         /// The required left overhang
         /// </summary>
         float? _rightOverhang = null;
+
+        /// <summary>
+        /// The required top overhang
+        /// </summary>
+        float? _topOverhang = null;
+
+        /// <summary>
+        /// The required bottom overhang
+        /// </summary>
+        float? _bottomOverhang = null;
 
         /// <summary>
         /// Indicates if the text was truncated by max height/max lines limitations

@@ -334,6 +334,54 @@ namespace Topten.RichTextKit.Editor
         }
 
         /// <summary>
+        /// The total width of the content of the document
+        /// </summary>
+        /// <remarks>
+        /// For line-wrap or non-line-wrap documents this is
+        /// the width of the widest paragraph.
+        /// </remarks>
+        public float MeasuredContentWidth
+        {
+            get
+            {
+                Layout();
+                return _measuredWidth;
+            }
+        }
+
+        /// <summary>
+        /// Gets the actual measured overhang in each direction based on the 
+        /// fonts used, and the supplied text.
+        /// </summary>
+        /// <remarks>
+        /// The return rectangle describes overhang amounts for each edge - not 
+        /// rectangle co-ordinates.
+        /// </remarks>
+        public SKRect MeasuredOverhang
+        {
+            get
+            {
+                Layout();
+                if (_paragraphs.Count == 0)
+                    return new SKRect();
+
+                var overhang = _paragraphs[0].TextBlock.MeasuredOverhang;
+                float topOverhang = overhang.Top;
+                float bottomOverhang = _paragraphs[_paragraphs.Count - 1].TextBlock.MeasuredOverhang.Bottom;
+                float leftOverhang = overhang.Left;
+                float rightOverhang = overhang.Right;
+                for (int i = 1; i < _paragraphs.Count; i++)
+                {
+                    overhang = _paragraphs[i].TextBlock.MeasuredOverhang;
+                    leftOverhang = Math.Max(leftOverhang, overhang.Left);
+                    rightOverhang = Math.Max(rightOverhang, overhang.Right);
+                }
+
+                return new SKRect(leftOverhang, topOverhang, rightOverhang, bottomOverhang);
+            }
+        }
+
+        /// <summary>
         /// Gets the total length of the document in code points
         /// </summary>
         public int Length
