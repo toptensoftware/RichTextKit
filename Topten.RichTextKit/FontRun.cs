@@ -638,11 +638,18 @@ namespace Topten.RichTextKit
                         // Get glyph positions
                         var glyphPositions = GlyphPositions.ToArray();
 
+                        var scaledFontSize = this.Style.FontSize * glyphScale;
+
                         // Create the font
                         if (_font == null)
                         {
-                            _font = new SKFont(this.Typeface, this.Style.FontSize * glyphScale);
+                            _font = new SKFont(this.Typeface, scaledFontSize);
                         }
+                        else if (_font.Size != scaledFontSize)
+                        {
+                            _font.Size = scaledFontSize;
+                        }
+
                         _font.Hinting = ctx.Options.Hinting;
                         _font.Edging = ctx.Options.Edging;
                         _font.Subpixel = ctx.Options.SubpixelPositioning;

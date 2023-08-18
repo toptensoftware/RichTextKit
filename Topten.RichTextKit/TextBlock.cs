@@ -1334,6 +1334,9 @@ namespace Topten.RichTextKit
             {
                 return typeface == next.typeface &&
                        style.FontSize == next.style.FontSize &&
+                       style.LetterSpacing == next.style.LetterSpacing &&
+                       style.FontVariant == next.style.FontVariant &&
+                       style.LineHeight == next.style.LineHeight &&
                         asFallbackFor == next.asFallbackFor &&
                         direction == next.direction &&
                         start + length == next.start;
