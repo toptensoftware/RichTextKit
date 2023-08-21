@@ -27,7 +27,7 @@ import: "../.common.page"
 style.</p>
 
 
-<pre class="language-csharp"><code class="language-csharp">public IStyle Update(string fontFamily = null, Nullable&lt;float&gt; fontSize = null, Nullable&lt;int&gt; fontWeight = null, Nullable&lt;SkiaSharp.SKFontStyleWidth&gt; fontWidth = 0, Nullable&lt;bool&gt; fontItalic = null, Nullable&lt;UnderlineStyle&gt; underline = null, Nullable&lt;StrikeThroughStyle&gt; strikeThrough = null, Nullable&lt;float&gt; lineHeight = null, Nullable&lt;SkiaSharp.SKColor&gt; textColor = null, Nullable&lt;SkiaSharp.SKColor&gt; backgroundColor = null, Nullable&lt;SkiaSharp.SKColor&gt; haloColor = null, Nullable&lt;float&gt; haloWidth = null, Nullable&lt;float&gt; haloBlur = null, Nullable&lt;float&gt; letterSpacing = null, Nullable&lt;FontVariant&gt; fontVariant = null, Nullable&lt;TextDirection&gt; textDirection = null, Nullable&lt;char&gt; replacementCharacter = null);</code></pre>
+<pre class="language-csharp"><code class="language-csharp">public IStyle Update(string fontFamily = null, Nullable&lt;float&gt; fontSize = null, Nullable&lt;int&gt; fontWeight = null, Nullable&lt;SkiaSharp.SKFontStyleWidth&gt; fontWidth = null, Nullable&lt;bool&gt; fontItalic = null, Nullable&lt;UnderlineStyle&gt; underline = null, Nullable&lt;StrikeThroughStyle&gt; strikeThrough = null, Nullable&lt;float&gt; lineHeight = null, Nullable&lt;SkiaSharp.SKColor&gt; textColor = null, Nullable&lt;SkiaSharp.SKColor&gt; backgroundColor = null, Nullable&lt;SkiaSharp.SKColor&gt; haloColor = null, Nullable&lt;float&gt; haloWidth = null, Nullable&lt;float&gt; haloBlur = null, Nullable&lt;float&gt; letterSpacing = null, Nullable&lt;FontVariant&gt; fontVariant = null, Nullable&lt;TextDirection&gt; textDirection = null, Nullable&lt;char&gt; replacementCharacter = null);</code></pre>
 
 
 <h2 id="parameters">Parameters</h2>    <table class="name-description">
@@ -59,7 +59,7 @@ style.</p>
                 <td>
                     
                     <a href="https://docs.microsoft.com/dotnet/api/System.Nullable-1">Nullable&lt;SkiaSharp.SKFontStyleWidth&gt;</a> fontWidth
- = 0                </td>
+ = null                </td>
                 <td><p>The new font width</p>
 </td>
             </tr>
