@@ -334,6 +334,54 @@ namespace Topten.RichTextKit.Editor
         }
 
         /// <summary>
+        /// The total width of the content of the document
+        /// </summary>
+        /// <remarks>
+        /// For line-wrap or non-line-wrap documents this is
+        /// the width of the widest paragraph.
+        /// </remarks>
+        public float MeasuredContentWidth
+        {
+            get
+            {
+                Layout();
+                return _measuredWidth;
+            }
+        }
+
+        /// <summary>
+        /// Gets the actual measured overhang in each direction based on the 
+        /// fonts used, and the supplied text.
+        /// </summary>
+        /// <remarks>
+        /// The return rectangle describes overhang amounts for each edge - not 
+        /// rectangle co-ordinates.
+        /// </remarks>
+        public SKRect MeasuredOverhang
+        {
+            get
+            {
+                Layout();
+                if (_paragraphs.Count == 0)
+                    return new SKRect();
+
+                var overhang = _paragraphs[0].TextBlock.MeasuredOverhang;
+                float topOverhang = overhang.Top;
+                float bottomOverhang = _paragraphs[_paragraphs.Count - 1].TextBlock.MeasuredOverhang.Bottom;
+                float leftOverhang = overhang.Left;
+                float rightOverhang = overhang.Right;
+                for (int i = 1; i < _paragraphs.Count; i++)
+                {
+                    overhang = _paragraphs[i].TextBlock.MeasuredOverhang;
+                    leftOverhang = Math.Max(leftOverhang, overhang.Left);
+                    rightOverhang = Math.Max(rightOverhang, overhang.Right);
+                }
+
+                return new SKRect(leftOverhang, topOverhang, rightOverhang, bottomOverhang);
+            }
+        }
+
+        /// <summary>
         /// Gets the total length of the document in code points
         /// </summary>
         public int Length
@@ -416,6 +464,39 @@ namespace Topten.RichTextKit.Editor
 
             // Get style from text block
             return para.TextBlock.GetStyleAtOffset(offset);
+        }
+
+        /// <summary>
+        /// Get the text for a part of the document
+        /// </summary>
+        /// <param name="range">The text to retrieve</param>
+        /// <returns>The styled text</returns>
+        public StyledText Extract(TextRange range)
+        {
+            var other = new StyledText();
+
+            // Normalize and clamp range
+            range = range.Normalized.Clamp(Length - 1);
+
+            // Get all subruns
+            foreach (var subrun in _paragraphs.GetInterectingRuns(range.Start, range.Length))
+            {
+                // Get the paragraph
+                var para = _paragraphs[subrun.Index];
+                if (para.TextBlock == null)
+                    throw new NotImplementedException();
+
+                var styledText = para.TextBlock.Extract(subrun.Offset, subrun.Length);
+                foreach (var sr in styledText.StyleRuns)
+                {
+                    other.AddText(sr.CodePoints, sr.Style);
+                }
+            }
+
+            // Convert paragraph separators to new lines
+            other.CodePoints.Replace('\u2029', '\n');
+
+            return other;
         }
 
         /// <summary>
@@ -813,6 +894,37 @@ namespace Topten.RichTextKit.Editor
         }
 
         /// <summary>
+        /// Replaces a range of text with the specified text
+        /// </summary>
+        /// <param name="view">The view initiating the operation</param>
+        /// <param name="range">The range to be replaced</param>
+        /// <param name="styledText">The text to replace with</param>
+        /// <param name="semantics">Controls how undo operations are coalesced and view selections updated</param>"
+        public void ReplaceText(ITextDocumentView view, TextRange range, StyledText styledText, EditSemantics semantics)
+        {
+            // Check range is valid
+            if (range.Minimum < 0 || range.Maximum > this.Length)
+                throw new ArgumentException("Invalid range", nameof(range));
+
+            if (IsImeComposing)
+                FinishImeComposition(view);
+
+            // Convert new lines to paragraph separators
+            if (PlainTextMode)
+                styledText.CodePoints.Replace('\n', '\u2029');
+
+            // Break at the first line break
+            if (SingleLineMode)
+            {
+                int breakPos = styledText.CodePoints.SubSlice(0, styledText.Length).IndexOfAny('\n', '\r', '\u2029');
+                if (breakPos >= 0)
+                    styledText.DeleteText(breakPos, styledText.Length - breakPos);
+            }
+
+            ReplaceTextInternal(view, range, styledText, semantics, -1);
+        }
+
+        /// <summary>
         /// Indicates if an IME composition is currently in progress
         /// </summary>
         public bool IsImeComposing
@@ -973,7 +1085,7 @@ namespace Topten.RichTextKit.Editor
             Layout();
 
             // Search paragraphs
-            int paraIndex = _paragraphs.BinarySearch(position.CodePointIndex, (para, a) => 
+            int paraIndex = _paragraphs.BinarySearch(position.CodePointIndex, (para, a) =>
             {
                 if (a < para.CodePointIndex)
                     return 1;
@@ -1409,6 +1521,7 @@ namespace Topten.RichTextKit.Editor
         bool _layoutValid = false;
         bool _lineWrap = true;
         internal List<Paragraph> _paragraphs;
+
         UndoManager<TextDocument> _undoManager;
         List<ITextDocumentView> _views = new List<ITextDocumentView>();
         ITextDocumentView _initiatingView;
