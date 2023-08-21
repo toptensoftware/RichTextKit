@@ -1434,6 +1434,7 @@ namespace Topten.RichTextKit
 
                 // Skip line breaks
                 bool breakLine = false;
+                bool isRequired = false;
                 while (lbrIndex < lineBreakPositions.Count)
                 {
                     // Past this run?
@@ -1468,6 +1469,7 @@ namespace Topten.RichTextKit
                     if (lbr.Required)
                     {
                         breakLine = true;
+                        isRequired = true;
                         break;
                     }
                 }
@@ -1496,10 +1498,24 @@ namespace Topten.RichTextKit
                     fr = _fontRuns[frIndex];
                     var room = _maxWidthResolved - fr.XCoord;
                     frSplitIndex = frIndex;
-                    codePointIndexSplit = fr.FindBreakPosition(room, frSplitIndex == frIndexStartOfLine);
-                    codePointIndexWrap = codePointIndexSplit;
-                    while (codePointIndexWrap < _codePoints.Length && UnicodeClasses.LineBreakClass(_codePoints[codePointIndexWrap]) == LineBreakClass.SP)
-                        codePointIndexWrap++;
+
+                    var hasValidLinebreak = codePointIndexSplit >= fr.Start && codePointIndexSplit <= fr.End;
+
+                    // Only break at character if there is no required line break we can use.
+                    if (!(isRequired && hasValidLinebreak))
+                    {
+                        var breakPosition = fr.FindBreakPosition(room, frSplitIndex == frIndexStartOfLine);
+
+                        // Prefer breaking at a character rather than a line break position.
+                        if (!hasValidLinebreak || breakPosition > codePointIndexSplit)
+                        {
+                            codePointIndexSplit = breakPosition;
+                            codePointIndexWrap = codePointIndexSplit;
+                            while (codePointIndexWrap < _codePoints.Length &&
+                                   UnicodeClasses.LineBreakClass(_codePoints[codePointIndexWrap]) == LineBreakClass.SP)
+                                codePointIndexWrap++;
+                        }
+                    }
                 }
 
                 // Split it
