@@ -6,20 +6,6 @@
     <TargetFrameworks>netstandard2.0;netcoreapp2.1;net462;net5.0</TargetFrameworks>
   </PropertyGroup>
    
-	<!-- Set the LangVersion = 8 -->
-	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
-		<LangVersion>8.0</LangVersion>
-	</PropertyGroup>
-
-	<!-- Only enable nullable feature for the supported frameworks -->
-	<PropertyGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
-		<Nullable>enable</Nullable>
-	</PropertyGroup>
-	<PropertyGroup Condition=" $(Nullable) != 'enable' ">
-		<NoWarn>$(NoWarn);CS8632</NoWarn>
-	</PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <TtsCodeSign>True</TtsCodeSign>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
