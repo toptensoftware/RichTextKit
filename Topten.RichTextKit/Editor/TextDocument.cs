@@ -415,7 +415,7 @@ namespace Topten.RichTextKit.Editor
                 throw new NotImplementedException();
 
             // Get style from text block
-            return para.TextBlock.GetStyleAtOffset(offset);
+            return para.TextBlock.GetStyleAtOffset(indexInPara);
         }
 
         /// <summary>
