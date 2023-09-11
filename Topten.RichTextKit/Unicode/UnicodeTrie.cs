@@ -13,8 +13,6 @@
 // License for the specific language governing permissions and limitations 
 // under the License.
 
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
@@ -40,10 +38,10 @@ namespace Topten.RichTextKit
             using (var bw = new BinaryReader(infl2, Encoding.UTF8, true))
             {
                 _data = new int[dataLength];
-
-                // Read the entire stream, then convert to int[]
-                var byteData = bw.ReadBytes(_data.Length * sizeof(int));
-                Buffer.BlockCopy(byteData, 0, _data, 0, byteData.Length);
+                for (int i = 0; i < _data.Length; i++)
+                {
+                    _data[i] = bw.ReadInt32();
+                }
             }
         }
 

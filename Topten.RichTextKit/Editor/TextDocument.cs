@@ -20,6 +20,7 @@ using System.Diagnostics;
 using System.Linq;
 using Topten.RichTextKit.Editor.UndoUnits;
 using Topten.RichTextKit.Utils;
+using System.Reflection;
 
 namespace Topten.RichTextKit.Editor
 {
@@ -29,46 +30,118 @@ namespace Topten.RichTextKit.Editor
     public partial class TextDocument
     {
         /// <summary>
-        /// Constructs a new TextDocument
+        /// The indent value for the first line of text in a paragraph
         /// </summary>
-        public TextDocument()
+        public float FirstLineIndent
         {
-            // Create paragraph list
-            _paragraphs = new List<Paragraph>();
-
-            // Create our undo manager
-            _undoManager = new UndoManager<TextDocument>(this);
-            _undoManager.StartOperation += FireDocumentWillChange;
-            _undoManager.EndOperation += FireDocumentDidChange;
-
-            // Default margins
-            MarginLeft = 3;
-            MarginRight = 3;
-            MarginTop = 3;
-            MarginBottom = 3;
-
-            // Temporary... add some text to work with
-            _paragraphs.Add(new TextParagraph(_defaultStyle));
+            get => _firstLineIndent;
+            set
+            {
+                _firstLineIndent = value;
+                InvalidateLayout();
+            }
         }
 
         /// <summary>
-        /// Set the document margins
+        /// Indicates if text should be wrapped
+        /// </summary>
+        public bool LineWrap
+        {
+            get => _lineWrap;
+            set
+            {
+                if (_lineWrap != value)
+                {
+                    _lineWrap = value;
+                    InvalidateLayout();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Specifies the page width of the document
         /// </summary>
         /// <remarks>
-        /// This operation resets the undo manager
+        /// This value is ignored for single line editor
         /// </remarks>
-        /// <param name="left">The left margin</param>
-        /// <param name="top">The top margin</param>
-        /// <param name="right">The right margin</param>
-        /// <param name="bottom">The bottom margin</param>
-        public void SetMargins(float left, float top, float right, float bottom)
+        public float PageWidth
         {
-            MarginLeft = left;
-            MarginTop = top;
-            MarginRight = right;
-            MarginBottom = bottom;
-            InvalidateLayout();
-            FireDocumentRedraw();
+            get => _pageWidth;
+            set
+            {
+                if (_pageWidth != value)
+                {
+                    _pageWidth = value;
+                    InvalidateLayout();
+                }
+            }
+        }
+
+        /// <summary>
+        /// The document's left margin
+        /// </summary>
+        public float MarginLeft { get; private set; }
+
+        /// <summary>
+        /// The document's right margin
+        /// </summary>
+        public float MarginRight { get; private set; }
+
+        /// <summary>
+        /// The document's top margin
+        /// </summary>
+        public float MarginTop { get; private set; }
+
+        /// <summary>
+        /// The document's bottom margin
+        /// </summary>
+        public float MarginBottom { get; private set; }
+
+        /// <summary>
+        /// The total height of the document
+        /// </summary>
+        public float MeasuredHeight
+        {
+            get
+            {
+                Layout();
+                return _measuredHeight;
+            }
+        }
+
+        /// <summary>
+        /// The total width of the document
+        /// </summary>
+        /// <remarks>
+        /// For line-wrap documents this is the page width.
+        /// For non-line-wrap documents this is the width of the widest paragraph.
+        /// </remarks>
+        public float MeasuredWidth
+        {
+            get
+            {
+                Layout();
+                if (LineWrap)
+                {
+                    return _pageWidth;
+                }
+                else
+                {
+                    return _measuredWidth;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the total length of the document in code points
+        /// </summary>
+        public int Length
+        {
+            get
+            {
+                Layout();
+                return _totalLength;
+            }
         }
 
         /// <summary>
@@ -166,6 +239,72 @@ namespace Topten.RichTextKit.Editor
         }
 
         /// <summary>
+        /// Indicates if an IME composition is currently in progress
+        /// </summary>
+        public bool IsImeComposing
+        {
+            get => _imeView != null;
+        }
+
+        /// <summary>
+        /// Get the code point offset position of the current IME composition
+        /// </summary>
+        public int ImeCompositionOffset
+        {
+            get => _imeView == null ? -1 : _imeInitialSelection.Minimum;
+        }
+
+        /// <summary>
+        /// Get the undo manager for this document
+        /// </summary>
+        public UndoManager<TextDocument> UndoManager => _undoManager;
+
+        /// <summary>
+        /// Constructs a new TextDocument
+        /// </summary>
+        public TextDocument()
+        {
+            // Create paragraph list
+            _paragraphs = new List<Paragraph>();
+
+            // Create our undo manager
+            _undoManager = new UndoManager<TextDocument>(this);
+            _undoManager.StartOperation += FireDocumentWillChange;
+            _undoManager.EndOperation += FireDocumentDidChange;
+
+            // Default margins
+            MarginLeft = 3;
+            MarginRight = 3;
+            MarginTop = 3;
+            MarginBottom = 3;
+
+            _defaultStyle = StyleManager.Default.Value.CurrentStyle;
+
+            // Temporary... add some text to work with
+            _paragraphs.Add(new TextParagraph(_defaultStyle));
+        }
+
+        /// <summary>
+        /// Set the document margins
+        /// </summary>
+        /// <remarks>
+        /// This operation resets the undo manager
+        /// </remarks>
+        /// <param name="left">The left margin</param>
+        /// <param name="top">The top margin</param>
+        /// <param name="right">The right margin</param>
+        /// <param name="bottom">The bottom margin</param>
+        public void SetMargins(float left, float top, float right, float bottom)
+        {
+            MarginLeft = left;
+            MarginTop = top;
+            MarginRight = right;
+            MarginBottom = bottom;
+            InvalidateLayout();
+            FireDocumentRedraw();
+        }
+
+        /// <summary>
         /// Registers a new view to receive notifications of changes to the document
         /// </summary>
         /// <param name="view">The view to be registered</param>
@@ -242,157 +381,6 @@ namespace Topten.RichTextKit.Editor
             }
         }
 
-
-        /// <summary>
-        /// Indicates if text should be wrapped
-        /// </summary>
-        public bool LineWrap
-        {
-            get => _lineWrap;
-            set
-            {
-                if (_lineWrap != value)
-                {
-                    _lineWrap = value;
-                    InvalidateLayout();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Specifies the page width of the document
-        /// </summary>
-        /// <remarks>
-        /// This value is ignored for single line editor
-        /// </remarks>
-        public float PageWidth
-        {
-            get => _pageWidth;
-            set
-            {
-                if (_pageWidth != value)
-                {
-                    _pageWidth = value;
-                    InvalidateLayout();
-                }
-            }
-        }
-
-        /// <summary>
-        /// The document's left margin
-        /// </summary>
-        public float MarginLeft { get; private set; }
-
-        /// <summary>
-        /// The document's right margin
-        /// </summary>
-        public float MarginRight { get; private set; }
-
-        /// <summary>
-        /// The document's top margin
-        /// </summary>
-        public float MarginTop { get; private set; }
-
-        /// <summary>
-        /// The document's bottom margin
-        /// </summary>
-        public float MarginBottom { get; private set; }
-
-        /// <summary>
-        /// The total height of the document
-        /// </summary>
-        public float MeasuredHeight
-        {
-            get
-            {
-                Layout();
-                return _measuredHeight;
-            }
-        }
-
-        /// <summary>
-        /// The total width of the document
-        /// </summary>
-        /// <remarks>
-        /// For line-wrap documents this is the page width.
-        /// For non-line-wrap documents this is the width of the widest paragraph.
-        /// </remarks>
-        public float MeasuredWidth
-        {
-            get
-            {
-                Layout();
-                if (LineWrap)
-                {
-                    return _pageWidth;
-                }
-                else
-                {
-                    return _measuredWidth;
-                }
-            }
-        }
-
-        /// <summary>
-        /// The total width of the content of the document
-        /// </summary>
-        /// <remarks>
-        /// For line-wrap or non-line-wrap documents this is
-        /// the width of the widest paragraph.
-        /// </remarks>
-        public float MeasuredContentWidth
-        {
-            get
-            {
-                Layout();
-                return _measuredWidth;
-            }
-        }
-
-        /// <summary>
-        /// Gets the actual measured overhang in each direction based on the 
-        /// fonts used, and the supplied text.
-        /// </summary>
-        /// <remarks>
-        /// The return rectangle describes overhang amounts for each edge - not 
-        /// rectangle co-ordinates.
-        /// </remarks>
-        public SKRect MeasuredOverhang
-        {
-            get
-            {
-                Layout();
-                if (_paragraphs.Count == 0)
-                    return new SKRect();
-
-                var overhang = _paragraphs[0].TextBlock.MeasuredOverhang;
-                float topOverhang = overhang.Top;
-                float bottomOverhang = _paragraphs[_paragraphs.Count - 1].TextBlock.MeasuredOverhang.Bottom;
-                float leftOverhang = overhang.Left;
-                float rightOverhang = overhang.Right;
-                for (int i = 1; i < _paragraphs.Count; i++)
-                {
-                    overhang = _paragraphs[i].TextBlock.MeasuredOverhang;
-                    leftOverhang = Math.Max(leftOverhang, overhang.Left);
-                    rightOverhang = Math.Max(rightOverhang, overhang.Right);
-                }
-
-                return new SKRect(leftOverhang, topOverhang, rightOverhang, bottomOverhang);
-            }
-        }
-
-        /// <summary>
-        /// Gets the total length of the document in code points
-        /// </summary>
-        public int Length
-        {
-            get
-            {
-                Layout();
-                return _totalLength;
-            }
-        }
-
         /// <summary>
         /// Hit test this string
         /// </summary>
@@ -462,41 +450,99 @@ namespace Topten.RichTextKit.Editor
             if (para.TextBlock == null)
                 throw new NotImplementedException();
 
+            //normalize the offset
+            offset -= para.CodePointIndex;
+
             // Get style from text block
-            return para.TextBlock.GetStyleAtOffset(indexInPara);
+            return para.TextBlock.GetStyleAtOffset(offset);
         }
 
-        /// <summary>
-        /// Get the text for a part of the document
-        /// </summary>
-        /// <param name="range">The text to retrieve</param>
-        /// <returns>The styled text</returns>
-        public StyledText Extract(TextRange range)
+        struct StyleChange
         {
-            var other = new StyledText();
+            public int Offset;
+            public int Length;
+            public IStyle Style;
+        }
 
-            // Normalize and clamp range
-            range = range.Normalized.Clamp(Length - 1);
-
-            // Get all subruns
-            foreach (var subrun in _paragraphs.GetInterectingRuns(range.Start, range.Length))
+        public void MergeStyles(ITextDocumentView view, TextRange selection, IStyle style)
+        {
+            if (selection.IsRange)
             {
-                // Get the paragraph
-                var para = _paragraphs[subrun.Index];
-                if (para.TextBlock == null)
-                    throw new NotImplementedException();
+                var paragraphRange = GetParagraphsForSelection(selection);
 
-                var styledText = para.TextBlock.Extract(subrun.Offset, subrun.Length);
-                foreach (var sr in styledText.StyleRuns)
+                //TODO:  Add Undo
+                if (paragraphRange.Start < 0)
+                    return;
+
+                var cpi = _paragraphs[paragraphRange.Start].CodePointIndex;
+
+                //Enumerate paragraphs
+                for (var i = paragraphRange.Start; i <= paragraphRange.End; i++)
                 {
-                    other.AddText(sr.CodePoints, sr.Style);
+                    var nextOffset = 0;
+
+                    //The offset of the current run - will be zero for the first run
+                    var para = _paragraphs[i];
+
+                    //Because changes may cause styleruns to be split or merged, we need to apply
+                    //the changes after building the list of changes.
+                    var changeList = new List<StyleChange>(para.TextBlock.StyleRuns.Count);
+
+                    //Flip the style runs so we don't process twice
+                    var runs = para.TextBlock.StyleRuns;
+                    var normalizedStart = selection.Minimum - cpi;
+                    var normalizedEnd = selection.Maximum - cpi;
+
+                    for (var j = 0; j < runs.Count; j++)
+                    {
+                        var run = runs[j];
+
+                        //If we've reached a run outside of the selection, we're done.
+                        if (normalizedEnd < run.Start)
+                            break;
+
+                        //Set the next offset to the end of this run
+                        nextOffset = run.End;
+
+                        //See if the start is in this block, if not, skip it
+                        if (normalizedStart >= nextOffset)
+                            continue;
+
+                        var newStyle = run.Style.Apply(style);
+
+                        if (run.Style.IsSame(newStyle))
+                            continue;
+
+                        var offset = normalizedStart > run.Start
+                            ? normalizedStart
+                            : run.Start;
+
+                        var length = normalizedEnd > run.End
+                            ? run.End - offset
+                            : normalizedEnd - offset;
+
+                        if (length > 0)
+                        {
+                            changeList.Add(new StyleChange
+                            {
+                                Offset = offset,
+                                Length = length,
+                                Style = newStyle
+                            });
+                        }
+                    }
+
+                    cpi = cpi + para.Length;
+
+                    for (var k = 0; k < changeList.Count; k++)
+                    {
+                        var change = changeList[k];
+                        para.TextBlock.ApplyStyle(change.Offset, change.Length, change.Style);
+                    }
                 }
+
+                InvalidateLayout();
             }
-
-            // Convert paragraph separators to new lines
-            other.CodePoints.Replace('\u2029', '\n');
-
-            return other;
         }
 
         /// <summary>
@@ -827,11 +873,6 @@ namespace Topten.RichTextKit.Editor
         }
 
         /// <summary>
-        /// Get the undo manager for this document
-        /// </summary>
-        public UndoManager<TextDocument> UndoManager => _undoManager;
-
-        /// <summary>
         /// Replaces a range of text with the specified text
         /// </summary>
         /// <param name="view">The view initiating the operation</param>
@@ -864,7 +905,7 @@ namespace Topten.RichTextKit.Editor
         /// <param name="codePoints">The text to replace with</param>
         /// <param name="semantics">Controls how undo operations are coalesced and view selections updated</param>"
         /// <param name="styleToUse">The style to use for the added text (optional)</param>
-        public void ReplaceText(ITextDocumentView view, TextRange range, Slice<int> codePoints, EditSemantics semantics, IStyle styleToUse = null)
+        public void ReplaceText(ITextDocumentView view, TextRange range, Slice<int> codePoints, EditSemantics semantics, IStyle styleToUse)
         {
             // Check range is valid
             if (range.Minimum < 0 || range.Maximum > this.Length)
@@ -886,59 +927,15 @@ namespace Topten.RichTextKit.Editor
             }
 
             var styledText = new StyledText(codePoints);
+
             if (styleToUse != null)
             {
+                //Ensure all style props are populated based on the default style
+                styleToUse = DefaultStyle.Apply(styleToUse);
+
                 styledText.ApplyStyle(0, styledText.Length, styleToUse);
             }
             ReplaceTextInternal(view, range, styledText, semantics, -1);
-        }
-
-        /// <summary>
-        /// Replaces a range of text with the specified text
-        /// </summary>
-        /// <param name="view">The view initiating the operation</param>
-        /// <param name="range">The range to be replaced</param>
-        /// <param name="styledText">The text to replace with</param>
-        /// <param name="semantics">Controls how undo operations are coalesced and view selections updated</param>"
-        public void ReplaceText(ITextDocumentView view, TextRange range, StyledText styledText, EditSemantics semantics)
-        {
-            // Check range is valid
-            if (range.Minimum < 0 || range.Maximum > this.Length)
-                throw new ArgumentException("Invalid range", nameof(range));
-
-            if (IsImeComposing)
-                FinishImeComposition(view);
-
-            // Convert new lines to paragraph separators
-            if (PlainTextMode)
-                styledText.CodePoints.Replace('\n', '\u2029');
-
-            // Break at the first line break
-            if (SingleLineMode)
-            {
-                int breakPos = styledText.CodePoints.SubSlice(0, styledText.Length).IndexOfAny('\n', '\r', '\u2029');
-                if (breakPos >= 0)
-                    styledText.DeleteText(breakPos, styledText.Length - breakPos);
-            }
-
-            ReplaceTextInternal(view, range, styledText, semantics, -1);
-        }
-
-        /// <summary>
-        /// Indicates if an IME composition is currently in progress
-        /// </summary>
-        public bool IsImeComposing
-        {
-            get => _imeView != null;
-        }
-
-
-        /// <summary>
-        /// Get the code point offset position of the current IME composition
-        /// </summary>
-        public int ImeCompositionOffset
-        {
-            get => _imeView == null ? -1 : _imeInitialSelection.Minimum;
         }
 
         /// <summary>
@@ -1073,6 +1070,173 @@ namespace Topten.RichTextKit.Editor
         }
 
         /// <summary>
+        /// Toggles the alignment of the paragraph at the given caret position to the supplied alignment
+        /// </summary>
+        /// <param name="position">The caret position used to location the target paragraph</param>
+        /// <param name="alignment">The alignment value to toggle</param>
+        public void ToggleParagraphAlignment(TextRange selection, TextAlignment alignment)
+        {
+            if (selection.IsRange)
+            {
+                //We could have multiple paragraphs selected.
+                var range = GetParagraphsForSelection(selection);
+
+                for (var i = range.Start; i <= range.End; i++)
+                {
+                    _paragraphs[i].TextBlock.Alignment = alignment;
+                }
+            }
+            else
+            {
+                var index = GetParagraphForCodePointIndex(selection.CaretPosition, out int _);
+                _paragraphs[index].TextBlock.Alignment = alignment;
+            }
+
+            InvalidateLayout();
+            FireDocumentRedraw();
+        }
+
+        /// <summary>
+        /// Sets the indent of the paragraph at the given caret position to the supplied amount
+        /// </summary>
+        /// <param name="position">The caret position used to location the target paragraph</param>
+        /// <param name="amount">The amount to adjust the indent</param>
+        public void AdjustParagraphIndent(TextRange selection, float amount)
+        {          
+            if (selection.IsRange)
+            {
+                //We could have multiple paragraphs selected.
+                var range = GetParagraphsForSelection(selection);
+
+                for (var i = range.Start; i <= range.End; i++)
+                {
+                    var para = _paragraphs[i];
+
+                    para.BlockIndent = Math.Clamp(para.BlockIndent + amount, 0, para.ContentWidth);
+                }
+            }
+            else
+            {
+                var index = GetParagraphForCodePointIndex(selection.CaretPosition, out int _);
+
+                var para = _paragraphs[index];
+
+                para.BlockIndent = Math.Clamp(para.BlockIndent + amount, 0, para.ContentWidth);
+            }
+
+            InvalidateLayout();
+
+            FireDocumentRedraw();
+        }
+
+        public void SetLineSpacing(TextRange selection, float multiplier)
+        {
+            if (selection.IsRange)
+            {
+                //We could have multiple paragraphs selected.
+                var range = GetParagraphsForSelection(selection);
+                for (var i = range.Start; i <= range.End; i++)
+                {
+                    _paragraphs[i].TextBlock.LineSpacing = multiplier;
+                }
+            }
+            else
+            {
+                var index = GetParagraphForCodePointIndex(selection.CaretPosition, out int _);
+                _paragraphs[index].TextBlock.LineSpacing = multiplier;
+            }
+
+            InvalidateLayout();
+            FireDocumentRedraw();
+        }
+
+        /// <summary>
+        /// Gets the composite style for the given selection.  Fields with multiple values will be set to null.
+        /// </summary>
+        /// <param name="selection">Desired selection</param>
+        /// <returns><c ref="SelectionInfo"></c></returns>
+        public SelectionInfo GetSelectionInfo(TextRange selection)
+        {
+            StyleInfo? style = null;
+            TextAlignment? alignment = null;
+
+            if (!selection.IsRange)
+            {
+                style = new StyleInfo(GetStyleAtOffset(selection.CaretPosition.CodePointIndex));
+                var p = GetParagraphForCodePointIndex(selection.CaretPosition, out int _);
+                var para = _paragraphs[p];
+
+                alignment = para.TextBlock?.Alignment == TextAlignment.Auto ? DefaultAlignment : para.TextBlock?.Alignment;
+
+                return new SelectionInfo(style.Value, alignment, para.TextBlock.LineSpacing);
+            }
+
+
+            var range = GetParagraphsForSelection(selection);
+
+            float? lineSpacing = null;
+
+            for (var i = range.Start; i <= range.End; i++)
+            {
+                var paragraph = _paragraphs[i];
+                var block = paragraph.TextBlock;
+                var normalizedStart = selection.Minimum - _paragraphs[i].CodePointIndex;
+                var normalizedEnd = selection.Maximum - _paragraphs[i].CodePointIndex;
+
+                if (range.End == range.Start || i == range.Start)
+                {
+                    lineSpacing = block.LineSpacing;
+                }
+                else
+                {
+                    if (lineSpacing != null && block.LineSpacing != lineSpacing)
+                    {
+                        lineSpacing = null;
+                    }
+                }
+
+                if (i == range.Start)
+                {
+                    alignment = block.Alignment == TextAlignment.Auto ? DefaultAlignment : block.Alignment;
+                }
+                else if (alignment.HasValue)
+                {
+                    if (alignment != block.Alignment)
+                        alignment = null;
+                }
+
+                for (var j = 0; j < block.StyleRuns.Count; j++)
+                {
+                    var run = block.StyleRuns[j];
+
+                    if (run.End <= normalizedStart)
+                        continue;
+
+                    if (run.Start >= normalizedEnd)
+                        break;
+
+                    if (style == null)
+                        style = new StyleInfo(run.Style);
+                    else
+                        style = style.Value.Union(run.Style);
+                }
+            }
+
+            return new SelectionInfo(style.Value, alignment, lineSpacing);
+        }
+
+        IntRange GetParagraphsForSelection(TextRange selection)
+        {
+            var startPosition = new CaretPosition(selection.Minimum, selection.CaretPosition.AltPosition);
+            var endPostion = new CaretPosition(selection.Maximum, selection.CaretPosition.AltPosition);
+
+            var minIndex = GetParagraphForCodePointIndex(startPosition, out int _);
+            var maxIndex = GetParagraphForCodePointIndex(endPostion, out int _);
+
+            return new IntRange(minIndex, maxIndex);
+        }
+
+        /// <summary>
         /// Given a code point index relative to the document, return which
         /// paragraph contains that code point and the offset within the paragraph
         /// </summary>
@@ -1173,6 +1337,13 @@ namespace Topten.RichTextKit.Editor
             return _paragraphs[paraIndex];
         }
 
+        public IEnumerable<Paragraph> GetPragraphs()
+        {
+            foreach (var para in _paragraphs)
+            {
+                yield return para;
+            }
+        }
 
         /// <summary>
         /// Mark the document as needing layout update
@@ -1208,13 +1379,28 @@ namespace Topten.RichTextKit.Editor
                 // Layout
                 para.Layout(this);
 
+                var positionOffset = 0f;
+
                 // Position
-                para.ContentXCoord = MarginLeft + para.MarginLeft;
+                if(para.BlockIndent != 0)
+                {
+                    //TODO:  This should be updated to account for RTL text in which Auto would be TextAlignment.Right
+                    if(para.TextBlock?.Alignment == TextAlignment.Left || para.TextBlock?.Alignment == TextAlignment.Auto)
+                    {
+                        positionOffset = para.BlockIndent;
+                    }
+                }
+
+                para.ContentXCoord = MarginLeft + para.MarginLeft + positionOffset;
                 para.ContentYCoord = yCoord + Math.Max(para.MarginTop, prevYMargin);
                 para.CodePointIndex = codePointIndex;
 
                 // Width
-                var paraWidth = para.ContentWidth + para.MarginLeft + para.MarginTop;
+                var paraWidth = para.ContentWidth + para.MarginLeft + para.MarginRight;
+
+                if (para.TextBlock.Alignment != TextAlignment.Center)
+                    paraWidth += positionOffset;
+
                 if (paraWidth > _measuredWidth)
                     _measuredWidth = paraWidth;
 
@@ -1300,8 +1486,6 @@ namespace Topten.RichTextKit.Editor
                 _views[i].OnDocumentDidChange(_initiatingView);
             }
         }
-
-
 
         /// <summary>
         /// Internal helper to replace text creating an undo unit
@@ -1517,17 +1701,17 @@ namespace Topten.RichTextKit.Editor
         float _pageWidth = 1000;            // Arbitary default
         float _measuredHeight = 0;
         float _measuredWidth = 0;
+        float _firstLineIndent = 0;
         int _totalLength = 0;
         bool _layoutValid = false;
         bool _lineWrap = true;
         internal List<Paragraph> _paragraphs;
-
         UndoManager<TextDocument> _undoManager;
         List<ITextDocumentView> _views = new List<ITextDocumentView>();
         ITextDocumentView _initiatingView;
         ITextDocumentView _imeView;
         TextRange _imeInitialSelection;
-        IStyle _defaultStyle = StyleManager.Default.Value.DefaultStyle;
+        IStyle _defaultStyle = StyleManager.Default.Value.CurrentStyle;
         TextAlignment _defaultAlignment = TextAlignment.Left;
         bool _suppressDocumentChangeEvents = false;
     }

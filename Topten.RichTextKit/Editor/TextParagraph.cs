@@ -15,14 +15,13 @@
 
 using SkiaSharp;
 using System.Collections.Generic;
-using Topten.RichTextKit.Utils;
 
 namespace Topten.RichTextKit.Editor
 {
     /// <summary>
     /// Implements a text paragraph
     /// </summary>
-    class TextParagraph : Paragraph
+    public class TextParagraph : Paragraph
     {
         /// <summary>
         /// Constructs a new TextParagraph
@@ -50,6 +49,13 @@ namespace Topten.RichTextKit.Editor
                     owner.PageWidth
                     - owner.MarginLeft - owner.MarginRight
                     - this.MarginLeft - this.MarginRight;
+
+            if(TextBlock.Alignment != TextAlignment.Center )
+            {
+                _textBlock.RenderWidth -= BlockIndent;
+            }
+
+            _textBlock.FirstLineIndent = owner.FirstLineIndent;
 
             // For layout just need to set the appropriate layout width on the text block
             if (owner.LineWrap)

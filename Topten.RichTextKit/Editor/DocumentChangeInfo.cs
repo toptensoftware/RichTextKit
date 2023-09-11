@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Topten.RichTextKit.Editor
+﻿namespace Topten.RichTextKit.Editor
 {
     /// <summary>
     /// Provides information about the range of changes to a document

@@ -1,11 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <Import Project="../buildtools/Topten.props" />
-
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp2.1;net462;net5.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;netcoreapp3.1;net6.0;net7.0</TargetFrameworks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
-   
+
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <TtsCodeSign>True</TtsCodeSign>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -20,14 +18,28 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="2.8.2.3" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
+    <None Remove="Resources\BidiClasses.trie" />
+    <None Remove="Resources\GraphemeClusterClasses.trie" />
+    <None Remove="Resources\LineBreakClasses.trie" />
+    <None Remove="Resources\WordBoundaryClasses.trie" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="2.8.2.5" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SkiaSharp" Version="2.88.3" />
-    <PackageReference Include="SkiaSharp.HarfBuzz" Version="2.88.3" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.3" />
+    <PackageReference Include="SkiaSharp" Version="2.88.5" />
+    <PackageReference Include="SkiaSharp.HarfBuzz" Version="2.88.5" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\BidiClasses.trie" />
+    <EmbeddedResource Include="Resources\GraphemeClusterClasses.trie" />
+    <EmbeddedResource Include="Resources\LineBreakClasses.trie" />
+    <EmbeddedResource Include="Resources\WordBoundaryClasses.trie" />
   </ItemGroup>
 
 </Project>

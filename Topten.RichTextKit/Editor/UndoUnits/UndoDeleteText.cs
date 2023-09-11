@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using Topten.RichTextKit.Utils;
+﻿using Topten.RichTextKit.Utils;
 
 namespace Topten.RichTextKit.Editor.UndoUnits
 {

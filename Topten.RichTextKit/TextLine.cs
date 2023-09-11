@@ -13,13 +13,10 @@
 // License for the specific language governing permissions and limitations 
 // under the License.
 
-using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Topten.RichTextKit.Utils;
 
 namespace Topten.RichTextKit
@@ -382,11 +379,11 @@ namespace Topten.RichTextKit
             }
         }
 
-        internal void UpdateOverhang(float right, bool updateTop, bool updateBottom, ref float leftOverhang, ref float rightOverhang, ref float topOverhang, ref float bottomOverhang)
+        internal void UpdateOverhang(float right, ref float leftOverhang, ref float rightOverhang)
         {
             foreach (var r in Runs)
             {
-                r.UpdateOverhang(right, updateTop, updateBottom, ref leftOverhang, ref rightOverhang, ref topOverhang, ref bottomOverhang);
+                r.UpdateOverhang(right, ref leftOverhang, ref rightOverhang);
             }
         }
 

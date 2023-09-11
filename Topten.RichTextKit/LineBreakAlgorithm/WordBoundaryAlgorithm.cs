@@ -15,9 +15,7 @@
 //
 // Ported from: https://github.com/foliojs/linebreak
 
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Topten.RichTextKit.Utils;
 
 namespace Topten.RichTextKit

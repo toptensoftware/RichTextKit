@@ -14,8 +14,6 @@
 // under the License.
 
 using System;
-using System.IO;
-using System.Xml.Schema;
 
 namespace Topten.RichTextKit
 {

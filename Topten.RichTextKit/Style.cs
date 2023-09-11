@@ -15,8 +15,6 @@
 
 using SkiaSharp;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Topten.RichTextKit
 {
@@ -26,7 +24,7 @@ namespace Topten.RichTextKit
     /// </summary>
     public class Style : IStyle
     {
-        void CheckNotSealed()
+        protected void CheckNotSealed()
         {
             if (_sealed)
                 throw new InvalidOperationException("Style has been sealed and can't be modified");
@@ -52,7 +50,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// The font size for text in this run (defaults to 16).
         /// </summary>
-        public float FontSize
+        public float? FontSize
         {
             get => _fontSize;
             set { CheckNotSealed(); _fontSize = value; }
@@ -61,7 +59,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// The font weight for text in this run (defaults to 400).
         /// </summary>
-        public int FontWeight
+        public int? FontWeight
         {
             get => _fontWeight;
             set { CheckNotSealed(); _fontWeight = value; }
@@ -70,7 +68,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// The font width for text in this run (defaults to WidthStyle.Normal).
         /// </summary>
-        public SKFontStyleWidth FontWidth
+        public SKFontStyleWidth? FontWidth
         {
             get => _fontWidth;
             set { CheckNotSealed(); _fontWidth = value; }
@@ -80,7 +78,7 @@ namespace Topten.RichTextKit
         /// True if the text in this run should be displayed in an italic
         /// font; otherwise False (defaults to false).
         /// </summary>
-        public bool FontItalic
+        public bool? FontItalic
         {
             get => _fontItalic;
             set { CheckNotSealed(); _fontItalic = value; }
@@ -89,7 +87,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// The underline style for text in this run (defaults to None).
         /// </summary>
-        public UnderlineStyle Underline
+        public UnderlineStyle? Underline
         {
             get => _underlineStyle;
             set { CheckNotSealed(); _underlineStyle = value; }
@@ -98,7 +96,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// The strike through style for the text in this run (defaults to None).
         /// </summary>
-        public StrikeThroughStyle StrikeThrough
+        public StrikeThroughStyle? StrikeThrough
         {
             get => _strikeThrough;
             set { CheckNotSealed(); _strikeThrough = value; }
@@ -107,7 +105,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// The line height for text in this run as a multiplier (defaults to 1.0).
         /// </summary>
-        public float LineHeight
+        public float? LineHeight
         {
             get => _lineHeight;
             set { CheckNotSealed(); _lineHeight = value; }
@@ -116,16 +114,16 @@ namespace Topten.RichTextKit
         /// <summary>
         /// The text color for text in this run (defaults to black).
         /// </summary>
-        public SKColor TextColor
+        public SKColor? TextColor
         {
             get => _textColor;
             set { CheckNotSealed(); _textColor = value; }
         }
-        
+
         /// <summary>
         /// The background color of this run (no background is painted by default).
         /// </summary>
-        public SKColor BackgroundColor
+        public SKColor? BackgroundColor
         {
             get => _backgroundColor;
             set
@@ -138,7 +136,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Color of the halo
         /// </summary>
-        public SKColor HaloColor
+        public SKColor? HaloColor
         {
             get => _haloColor;
             set
@@ -151,7 +149,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Width of halo
         /// </summary>
-        public float HaloWidth
+        public float? HaloWidth
         {
             get => _haloWidth;
             set
@@ -164,7 +162,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Blur of halo
         /// </summary>
-        public float HaloBlur
+        public float? HaloBlur
         {
             get => _haloBlur;
             set
@@ -177,7 +175,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// The character spacing for text in this run (defaults to 0).
         /// </summary>
-        public float LetterSpacing
+        public float? LetterSpacing
         {
             get => _letterSpacing;
             set { CheckNotSealed(); _letterSpacing = value; }
@@ -186,7 +184,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// The font variant (ie: super/sub-script) for text in this run.
         /// </summary>
-        public FontVariant FontVariant
+        public FontVariant? FontVariant
         {
             get => _fontVariant;
             set { CheckNotSealed(); _fontVariant = value; }
@@ -195,38 +193,38 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Text direction override for this span
         /// </summary>
-        public TextDirection TextDirection
+        public TextDirection? TextDirection
         {
             get => _textDirection;
             set { CheckNotSealed(); _textDirection = value; }
         }
 
         /// <inheritdoc />
-        public char ReplacementCharacter
+        public char? ReplacementCharacter
         {
             get => _replacementCharacter;
             set { CheckNotSealed(); _replacementCharacter = value; }
         }
 
 
-        bool _sealed;
-        string _fontFamily = "Arial";
-        float _fontSize = 16;
-        int _fontWeight = 400;
-        SKFontStyleWidth _fontWidth = SKFontStyleWidth.Normal;
-        bool _fontItalic;
-        UnderlineStyle _underlineStyle;
-        StrikeThroughStyle _strikeThrough;
-        float _lineHeight = 1.0f;
-        SKColor _textColor = new SKColor(0xFF000000);
-        SKColor _backgroundColor = SKColor.Empty;
-        SKColor _haloColor = SKColor.Empty;
-        float _haloWidth = 0f;
-        float _haloBlur = 0f;
-        float _letterSpacing;
-        FontVariant _fontVariant;
-        TextDirection _textDirection = TextDirection.Auto;
-        char _replacementCharacter = '\0';
+        protected bool _sealed;
+        protected string _fontFamily;
+        protected float? _fontSize;
+        protected int? _fontWeight;
+        protected SKFontStyleWidth? _fontWidth;
+        protected bool? _fontItalic;
+        protected UnderlineStyle? _underlineStyle;
+        protected StrikeThroughStyle? _strikeThrough;
+        protected float? _lineHeight;
+        protected SKColor? _textColor;
+        protected SKColor? _backgroundColor;
+        protected SKColor? _haloColor;
+        protected float? _haloWidth;
+        protected float? _haloBlur;
+        protected float? _letterSpacing;
+        protected FontVariant? _fontVariant;
+        protected TextDirection? _textDirection;
+        protected char? _replacementCharacter;
 
         /// <summary>
         /// Modifies this style with one or more attribute changes and returns a new style

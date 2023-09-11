@@ -14,11 +14,9 @@
 // License for the specific language governing permissions and limitations 
 // under the License.
 
-using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using Topten.RichTextKit.Utils;
 
 namespace Topten.RichTextKit
@@ -634,8 +632,8 @@ namespace Topten.RichTextKit
             }
 
             // Coalesc if necessary
-            if ((newRunIndex > 0 && _styleRuns[newRunIndex - 1].Style == style) ||
-                (newRunIndex + 1 < _styleRuns.Count && _styleRuns[newRunIndex + 1].Style == style))
+            if ((newRunIndex > 0 && _styleRuns[newRunIndex - 1].Style.IsSame(style)) ||
+                (newRunIndex + 1 < _styleRuns.Count && _styleRuns[newRunIndex + 1].Style.IsSame(style)))
             {
                 CoalescStyleRuns();
             }
@@ -677,7 +675,7 @@ namespace Topten.RichTextKit
                 _hasTextDirectionOverrides |= run.Style.TextDirection != TextDirection.Auto;
 
                 // Can run be coalesced?
-                if (run.Style == prev.Style)
+                if (run.Style.IsSame(prev.Style))
                 {
                     // Yes
                     prev.Length += run.Length;

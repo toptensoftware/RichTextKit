@@ -17,7 +17,6 @@
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Topten.RichTextKit.Utils;
 
@@ -235,7 +234,6 @@ namespace Topten.RichTextKit
             base.OnChanged();
         }
 
-
         /// <summary>
         /// Appends an ellipsis to this text block
         /// </summary>
@@ -319,6 +317,8 @@ namespace Topten.RichTextKit
             }
         }
 
+        private static object _lck = new object();
+
         /// <summary>
         /// Updates the internal layout of the text block
         /// </summary>
@@ -331,38 +331,42 @@ namespace Topten.RichTextKit
             // Needed?
             if (!_needsLayout)
                 return;
-            _needsLayout = false;
 
-            // Resolve max width/height
-            _maxWidthResolved = _maxWidth ?? float.MaxValue;
-            _maxHeightResolved = _maxHeight ?? float.MaxValue;
-            _maxLinesResolved = _maxLines ?? int.MaxValue;
-
-            // Reset layout state
-            _textShapingBuffers.Clear();
-            _fontRuns.Clear();
-            _lines.Clear();
-            _caretIndicies.Clear();
-            _wordBoundaryIndicies.Clear();
-            _measuredHeight = 0;
-            _measuredWidth = 0;
-            _leftOverhang = null;
-            _rightOverhang = null;
-            _topOverhang = null;
-            _bottomOverhang = null;
-            _truncated = false;
-
-            // Only layout if actually have some text
-            if (_codePoints.Length != 0)
+            lock (_lck)
             {
-                // Build font runs
-                BuildFontRuns();
+                if (!_needsLayout) return; //double check
 
-                // Break font runs into lines
-                BreakLines();
+                _needsLayout = false;
+                
+                // Resolve max width/height
+                _maxWidthResolved = (_maxWidth ?? float.MaxValue);
+                _maxHeightResolved = _maxHeight ?? float.MaxValue;
+                _maxLinesResolved = _maxLines ?? int.MaxValue;
 
-                // Finalize lines
-                FinalizeLines();
+                // Reset layout state
+                _textShapingBuffers.Clear();
+                _fontRuns.Clear();
+                _lines.Clear();
+                _caretIndicies.Clear();
+                _wordBoundaryIndicies.Clear();
+                _measuredHeight = 0;
+                _measuredWidth = 0;
+                _leftOverhang = null;
+                _rightOverhang = null;
+                _truncated = false;
+
+                // Only layout if actually have some text
+                if (_codePoints.Length != 0)
+                {
+                    // Build font runs
+                    BuildFontRuns();
+
+                    // Break font runs into lines
+                    BreakLines();
+
+                    // Finalize lines
+                    FinalizeLines();
+                }
             }
         }
 
@@ -440,8 +444,10 @@ namespace Topten.RichTextKit
             }
 
             // Paint each line
-            foreach (var l in _lines)
+            //TODO:  Switched to for/i instead of foreach - but still could be a race condition - might have to implement custom thread safe collections
+            for (var i = 0; i < _lines.Count; i++)
             {
+                var l = _lines[i];
                 l.Paint(ctx);
             }
 
@@ -466,6 +472,28 @@ namespace Topten.RichTextKit
 
             // Restore and done!
             canvas.Restore();
+        }
+
+        /// <summary>
+        /// The indent amount for the first line of the paragraph text
+        /// </summary>
+        public float FirstLineIndent
+        {
+            get => _firstLineIndent;
+            set => _firstLineIndent = value;
+        }
+
+        /// <summary>
+        /// The line height multiplier (1.0 = normal line height) for the entire paragraph
+        /// </summary>
+        public float LineSpacing
+        {
+            get => _lineSpacing;
+            set
+            {
+                _lineSpacing = value;
+                InvalidateLayout();
+            }
         }
 
         /// <summary>
@@ -498,7 +526,6 @@ namespace Topten.RichTextKit
                 return _lines[_lines.Count - 1].End;
             }
         }
-
 
         /// <summary>
         /// The number of lines in the text
@@ -539,7 +566,6 @@ namespace Topten.RichTextKit
                 return _truncated;
             }
         }
-
 
         /// <summary>
         /// Gets the size of any unused space around the text.
@@ -593,7 +619,6 @@ namespace Topten.RichTextKit
             }
         }
 
-
         /// <summary>
         /// Gets the actual measured overhang in each direction based on the 
         /// fonts used, and the supplied text.
@@ -612,20 +637,14 @@ namespace Topten.RichTextKit
                     var right = _maxWidth ?? MeasuredWidth;
                     float leftOverhang = 0;
                     float rightOverhang = 0;
-                    float topOverhang = 0;
-                    float bottomOverhang = 0;
-                    for (int l = 0; l < _lines.Count; l++)
+                    foreach (var l in _lines)
                     {
-                        bool updateTop = l == 0;
-                        bool updateBottom = l == (_lines.Count - 1);
-                        _lines[l].UpdateOverhang(right, updateTop, updateBottom, ref leftOverhang, ref rightOverhang, ref topOverhang, ref bottomOverhang);
+                        l.UpdateOverhang(right, ref leftOverhang, ref rightOverhang);
                     }
                     _leftOverhang = leftOverhang;
                     _rightOverhang = rightOverhang;
-                    _topOverhang = topOverhang;
-                    _bottomOverhang = bottomOverhang;
                 }
-                return new SKRect(_leftOverhang.Value, _topOverhang.Value, _rightOverhang.Value, _bottomOverhang.Value);
+                return new SKRect(_leftOverhang.Value, 0, _rightOverhang.Value, 0);
             }
         }
 
@@ -655,10 +674,38 @@ namespace Topten.RichTextKit
             // Work out which line number we're over
             htr.OverLine = -1;
             htr.OverCodePointIndex = -1;
+
             for (int i = 0; i < _lines.Count; i++)
             {
                 var l = _lines[i];
-                if (y >= l.YCoord && y < l.YCoord + l.Height)
+
+                var yCoord = l.YCoord;
+                
+                var adjustedHeight = l.Height * _lineSpacing;
+
+                if(i == 0)
+                {
+                    //First line, just reduce the hit height by a quarter of the line height
+                    adjustedHeight *= 0.75f;
+                }
+                else
+                { 
+                    //Adjust the Y-Coord by a quarter of the previous line height
+                    var prevLine = _lines[i - 1];
+                    var prevLineQuarterHeight = prevLine.Height * _lineSpacing * 0.25f;
+                    var quarterHeight = l.Height * _lineSpacing * 0.25f;
+
+                    yCoord -= prevLineQuarterHeight;
+
+                    //Fix the adjusted height to account for taller previous lines due to font size changes as they
+                    //will result in a bigger shift in the Y-Coord than the height accounts for.
+                    if (quarterHeight < prevLineQuarterHeight)
+                    {
+                        adjustedHeight += (prevLineQuarterHeight - quarterHeight);
+                    }
+                }
+
+                if (y >= yCoord && y < yCoord + adjustedHeight)
                 {
                     htr.OverLine = i;
                 }
@@ -700,7 +747,6 @@ namespace Topten.RichTextKit
 
             return htr;
         }
-
 
         /// <summary>
         /// Build map of all caret positions 
@@ -750,7 +796,6 @@ namespace Topten.RichTextKit
             }
         }
 
-
         /// <summary>
         /// Retrieves a list of the indicies of the first code point in each line
         /// </summary>
@@ -761,7 +806,6 @@ namespace Topten.RichTextKit
                 return _lines.Select(x => x.Start).ToList();
             }
         }
-
 
         /// <summary>
         /// Given a code point index, find the index in the CaretIndicies
@@ -862,7 +906,7 @@ namespace Topten.RichTextKit
             rect.Bottom = fr.Line.YCoord + fr.Line.BaseLine + fr.Descent;
 
             // Apply slant if italic
-            if (fr.Style.FontItalic)
+            if (fr.Style.FontItalic ?? default)
             {
                 rect.Left -= rect.Height / 14;
                 rect.Right = rect.Left + rect.Height / 5;
@@ -896,7 +940,6 @@ namespace Topten.RichTextKit
             // Use the previous font run
             return lineRuns[index - 1];
         }
-
 
         /// <summary>
         /// Find the font run holding a code point index
@@ -946,6 +989,13 @@ namespace Topten.RichTextKit
         /// Set if the current layout is dirty
         /// </summary>
         bool _needsLayout = true;
+
+        /// <summary>
+        /// Amount to indent the first line of the paragraph text.
+        /// </summary>
+        float _firstLineIndent = 0;
+
+        float _lineSpacing = 1;
 
         /// <summary>
         /// Maximum width (wrap point, or null for no wrapping)
@@ -1041,16 +1091,6 @@ namespace Topten.RichTextKit
         /// The required left overhang
         /// </summary>
         float? _rightOverhang = null;
-
-        /// <summary>
-        /// The required top overhang
-        /// </summary>
-        float? _topOverhang = null;
-
-        /// <summary>
-        /// The required bottom overhang
-        /// </summary>
-        float? _bottomOverhang = null;
 
         /// <summary>
         /// Indicates if the text was truncated by max height/max lines limitations
@@ -1252,7 +1292,7 @@ namespace Topten.RichTextKit
             var codePointsSlice = _codePoints.SubSlice(start, length);
 
             // Split into font fallback runs
-            foreach (var fontRun in FontFallback.GetFontRuns(codePointsSlice, typeface, style.ReplacementCharacter))
+            foreach (var fontRun in FontFallback.GetFontRuns(codePointsSlice, typeface, style.ReplacementCharacter ?? '\0'))
             {
                 // Add this run
                 AddFontRun(styleRun, start + fontRun.Start, fontRun.Length, direction, style, fontRun.Typeface, typeface);
@@ -1296,7 +1336,7 @@ namespace Topten.RichTextKit
             _unshapedRuns.Add(usr);
         }
 
-        void FlushUnshapedRuns() 
+        void FlushUnshapedRuns()
         {
             // Quit if nothing to do?
             if (_unshapedRuns.Count == 0)
@@ -1308,7 +1348,7 @@ namespace Topten.RichTextKit
                 var usr = _unshapedRuns[0];
                 _fontRuns.Add(CreateFontRun(usr.styleRun, _codePoints.SubSlice(usr.start, usr.length), usr.direction, usr.style, usr.typeface, usr.asFallbackFor));
             }
-            else 
+            else
             {
                 // There are multiple styled runs, but they're all using the exact same type face
                 // so shape them all together to maintain correct kerning, but then break them
@@ -1327,8 +1367,8 @@ namespace Topten.RichTextKit
                     _fontRuns.Add(spanningRun);
                     spanningRun = newRun;
                 }
-                spanningRun.StyleRun = _unshapedRuns[_unshapedRuns.Count-1].styleRun;
-                spanningRun.Style = _unshapedRuns[_unshapedRuns.Count-1].style;
+                spanningRun.StyleRun = _unshapedRuns[_unshapedRuns.Count - 1].styleRun;
+                spanningRun.Style = _unshapedRuns[_unshapedRuns.Count - 1].style;
                 _fontRuns.Add(spanningRun);
             }
 
@@ -1352,9 +1392,6 @@ namespace Topten.RichTextKit
             {
                 return typeface == next.typeface &&
                        style.FontSize == next.style.FontSize &&
-                       style.LetterSpacing == next.style.LetterSpacing &&
-                       style.FontVariant == next.style.FontVariant &&
-                       style.LineHeight == next.style.LineHeight &&
                         asFallbackFor == next.asFallbackFor &&
                         direction == next.direction &&
                         start + length == next.start;
@@ -1419,6 +1456,8 @@ namespace Topten.RichTextKit
             int codePointIndexSplit = -1;   // Code point index of the last fitting break point measure position
             int codePointIndexWrap = -1;    // Code point index of the last fitting breaj point wrap position
 
+            bool firstLineRun = true;
+
             if (!CheckHeightConstraints())
                 return;
 
@@ -1428,13 +1467,20 @@ namespace Topten.RichTextKit
                 // and move to next
                 var fr = _fontRuns[frIndex];
                 fr.XCoord = consumedWidth;
+
+                //TODO:  Fix to account for RTL and Text Alignment
+                if (firstLineRun)
+                {
+                    fr.XCoord += FirstLineIndent;
+                    firstLineRun = false;
+                }
+
                 consumedWidth += fr.Width;
 
                 float totalWidthToThisBreakPoint = 0;
 
                 // Skip line breaks
                 bool breakLine = false;
-                bool isRequired = false;
                 while (lbrIndex < lineBreakPositions.Count)
                 {
                     // Past this run?
@@ -1469,7 +1515,6 @@ namespace Topten.RichTextKit
                     if (lbr.Required)
                     {
                         breakLine = true;
-                        isRequired = true;
                         break;
                     }
                 }
@@ -1494,28 +1539,14 @@ namespace Topten.RichTextKit
                     {
                         frIndex--;
                     }
-//                    frIndex = frIndexStartOfLine;
+                    //                    frIndex = frIndexStartOfLine;
                     fr = _fontRuns[frIndex];
                     var room = _maxWidthResolved - fr.XCoord;
                     frSplitIndex = frIndex;
-
-                    var hasValidLinebreak = codePointIndexSplit >= fr.Start && codePointIndexSplit <= fr.End;
-
-                    // Only break at character if there is no required line break we can use.
-                    if (!(isRequired && hasValidLinebreak))
-                    {
-                        var breakPosition = fr.FindBreakPosition(room, frSplitIndex == frIndexStartOfLine);
-
-                        // Prefer breaking at a character rather than a line break position.
-                        if (!hasValidLinebreak || breakPosition > codePointIndexSplit)
-                        {
-                            codePointIndexSplit = breakPosition;
-                            codePointIndexWrap = codePointIndexSplit;
-                            while (codePointIndexWrap < _codePoints.Length &&
-                                   UnicodeClasses.LineBreakClass(_codePoints[codePointIndexWrap]) == LineBreakClass.SP)
-                                codePointIndexWrap++;
-                        }
-                    }
+                    codePointIndexSplit = fr.FindBreakPosition(room, frSplitIndex == frIndexStartOfLine);
+                    codePointIndexWrap = codePointIndexSplit;
+                    while (codePointIndexWrap < _codePoints.Length && UnicodeClasses.LineBreakClass(_codePoints[codePointIndexWrap]) == LineBreakClass.SP)
+                        codePointIndexWrap++;
                 }
 
                 // Split it
@@ -1613,7 +1644,7 @@ namespace Topten.RichTextKit
             LayoutLine(line);
 
             // Update y position
-            _measuredHeight += line.Height;
+            _measuredHeight += line.Height * _lineSpacing;
         }
 
         /// <summary>
@@ -1860,10 +1891,18 @@ namespace Topten.RichTextKit
             {
                 // Work out x-alignement adjust for this line
                 float xAdjust = 0;
+
+                //TODO:  Calculate xAdjust here to render indent of the first line of a paragraph
+                //TODO:  Do an index iteration instead of a foreach and check for i == 0 instead of reference equality
+                if (line == _lines[0])
+                {
+                    xAdjust = FirstLineIndent;
+                }
+
                 switch (ta)
                 {
                     case TextAlignment.Right:
-                        xAdjust = (_maxWidth ?? _renderWidth ??_measuredWidth) - line.Width;
+                        xAdjust = (_maxWidth ?? _renderWidth ?? _measuredWidth) - line.Width;
                         break;
 
                     case TextAlignment.Center:
@@ -1883,7 +1922,7 @@ namespace Topten.RichTextKit
 
             // Remove the font runs that weren't assigned to a line because the text
             // was truncated
-            while (_fontRuns.Count > 0 && _fontRuns[_fontRuns.Count-1].Line == null)
+            while (_fontRuns.Count > 0 && _fontRuns[_fontRuns.Count - 1].Line == null)
             {
                 _fontRuns.RemoveAt(_fontRuns.Count - 1);
             }
@@ -1989,7 +2028,7 @@ namespace Topten.RichTextKit
             }
 
             // Get the new last run (if any)
-            if (line.Runs.Count> 0)
+            if (line.Runs.Count > 0)
                 lastRun = line.Runs[line.Runs.Count - 1];
 
             // Create a new run for the ellipsis
@@ -2004,7 +2043,7 @@ namespace Topten.RichTextKit
             var removeWidth = totalWidth + ellipsisRun.Width - maxWidth;
             if (removeWidth > 0)
             {
-                for (int i = line.Runs.Count-1; i>=0; i--)
+                for (int i = line.Runs.Count - 1; i >= 0; i--)
                 {
                     var fr = line.Runs[i];
 
@@ -2038,7 +2077,7 @@ namespace Topten.RichTextKit
                         if (!postLayout)
                         {
                             _fontRuns.Insert(_fontRuns.IndexOf(fr) + 1, remaining);
-//                            _fontRuns.Remove(fr);
+                            //                            _fontRuns.Remove(fr);
                         }
                     }
 

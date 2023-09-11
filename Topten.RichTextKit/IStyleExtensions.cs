@@ -31,7 +31,7 @@ namespace Topten.RichTextKit
         /// <returns>A key string</returns>
         public static string Key(this IStyle This)
         {
-            return $"{This.FontFamily}.{This.FontSize}.{This.FontWeight}.{This.FontWidth}.{This.FontItalic}.{This.Underline}.{This.StrikeThrough}.{This.LineHeight}.{This.TextColor}.{This.BackgroundColor}.{This.LetterSpacing}.{This.FontVariant}.{This.TextDirection}.{This.ReplacementCharacter}.{This.HaloWidth}.{This.HaloColor}.{This.HaloBlur}";
+            return $"{This.FontFamily}.{This.FontSize}.{This.FontWeight}.{This.FontWidth}.{This.FontItalic}.{This.Underline}.{This.StrikeThrough}.{This.LineHeight}.{This.TextColor}.{This.BackgroundColor}.{This.LetterSpacing}.{This.FontVariant}.{This.TextDirection}.{This.ReplacementCharacter}";
         }
 
         /// <summary>
@@ -89,13 +89,31 @@ namespace Topten.RichTextKit
                 return false;
             if (This.StrikeThrough != other.StrikeThrough)
                 return false;
-            if (This.HaloBlur != other.HaloBlur)
-                return false;
-            if (This.HaloColor != other.HaloColor)
-                return false;
-            if (This.HaloWidth != other.HaloWidth)
-                return false;
             return true;
+        }
+
+        internal static IStyle Apply(this IStyle style, IStyle overrides)
+        {
+            return new Style
+            {
+                BackgroundColor = overrides.BackgroundColor ?? style.BackgroundColor,
+                FontFamily = overrides.FontFamily ?? style.FontFamily,
+                FontItalic = overrides.FontItalic ?? style.FontItalic,
+                FontSize = overrides.FontSize ?? style.FontSize,
+                FontVariant = overrides.FontVariant ?? style.FontVariant,
+                FontWeight = overrides.FontWeight ?? style.FontWeight,
+                FontWidth = overrides.FontWidth ?? style.FontWidth,
+                HaloBlur = overrides.HaloBlur ?? style.HaloBlur,
+                HaloColor = overrides.HaloColor ?? style.HaloColor,
+                HaloWidth = overrides.HaloWidth ?? style.HaloWidth,
+                LetterSpacing = overrides.LetterSpacing ?? style.LetterSpacing,
+                LineHeight = overrides.LineHeight ?? style.LineHeight,
+                ReplacementCharacter = overrides.ReplacementCharacter ?? style.ReplacementCharacter,
+                StrikeThrough = overrides.StrikeThrough ?? style.StrikeThrough,
+                TextColor = overrides.TextColor ?? style.TextColor,
+                TextDirection = overrides.TextDirection ?? style.TextDirection,
+                Underline = overrides.Underline ?? style.Underline,
+            };
         }
     }
 }

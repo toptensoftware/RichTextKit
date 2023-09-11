@@ -43,7 +43,8 @@ namespace Topten.RichTextKit
         /// </summary>
         public StyleManager()
         {
-            _currentStyle = FromStyle(new Style());
+            _currentStyle = new DefaultStyle();
+            _currentStyle = FromStyle(_currentStyle);
             _defaultStyle = _currentStyle;
         }
 
@@ -265,7 +266,7 @@ namespace Topten.RichTextKit
                string fontFamily = null,
                float? fontSize = null,
                int? fontWeight = null,
-               SKFontStyleWidth? fontWidth = null,
+               SKFontStyleWidth? fontWidth = 0,
                bool? fontItalic = null,
                UnderlineStyle? underline = null,
                StrikeThroughStyle? strikeThrough = null,
@@ -356,7 +357,7 @@ namespace Topten.RichTextKit
 
         Dictionary<string, Style> _styleMap = new Dictionary<string, Style>();
         Stack<IStyle> _userStack = new Stack<IStyle>();
-        IStyle _defaultStyle = new Style();
+        IStyle _defaultStyle = new DefaultStyle();
         IStyle _currentStyle;
     }
 }

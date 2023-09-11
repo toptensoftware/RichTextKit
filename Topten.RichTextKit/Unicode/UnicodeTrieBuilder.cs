@@ -15,8 +15,6 @@
 
 using System;
 using System.IO;
-using System.IO.Compression;
-using System.Text;
 
 // Ported from: https://github.com/foliojs/unicode-trie
 

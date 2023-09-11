@@ -14,11 +14,6 @@
 // under the License.
 
 using SkiaSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Topten.RichTextKit
 {
@@ -35,82 +30,82 @@ namespace Topten.RichTextKit
         /// <summary>
         /// The font size for text in this run.
         /// </summary>
-        float FontSize { get; }
+        float? FontSize { get; }
 
         /// <summary>
         /// The font weight for text in this run.
         /// </summary>
-        int FontWeight { get; }
+        int? FontWeight { get; }
 
         /// <summary>
         /// The font weight for text in this run.
         /// </summary>
-        SKFontStyleWidth FontWidth { get; }
+        SKFontStyleWidth? FontWidth { get; }
 
         /// <summary>
         /// True if the text in this run should be displayed in an italic
         /// font; otherwise False.
         /// </summary>
-        bool FontItalic { get; }
+        bool? FontItalic { get; }
 
         /// <summary>
         /// The underline style for text in this run.
         /// </summary>
-        UnderlineStyle Underline { get; }
+        UnderlineStyle? Underline { get; }
 
         /// <summary>
         /// The strike through style for the text in this run
         /// </summary>
-        StrikeThroughStyle StrikeThrough { get; }
+        StrikeThroughStyle? StrikeThrough { get; }
 
         /// <summary>
         /// The line height for text in this run as a multiplier (defaults to 1)
         /// </summary>
-        float LineHeight { get; }
+        float? LineHeight { get; }
 
         /// <summary>
         /// The text color for text in this run.
         /// </summary>
-        SKColor TextColor { get; }
+        SKColor? TextColor { get; }
         
         /// <summary>
         /// The background color of this run.
         /// </summary>
-        SKColor BackgroundColor { get; }
+        SKColor? BackgroundColor { get; }
 
         /// <summary>
         /// Color of the halo
         /// </summary>
-        SKColor HaloColor { get; }
+        SKColor? HaloColor { get; }
 
         /// <summary>
         /// Width of halo
         /// </summary>
-        float HaloWidth { get; }
+        float? HaloWidth { get; }
 
         /// <summary>
         /// Blur of halo
         /// </summary>
-        float HaloBlur { get; }
+        float? HaloBlur { get; }
 
         /// <summary>
         /// Extra spacing between each character
         /// </summary>
-        float LetterSpacing { get; }
+        float? LetterSpacing { get; }
 
         /// <summary>
         /// The font variant (ie: super/sub-script) for text in this run.
         /// </summary>
-        FontVariant FontVariant { get; }
+        FontVariant? FontVariant { get; }
 
         /// <summary>
         /// Text direction override for this span
         /// </summary>
-        TextDirection TextDirection { get; }
+        TextDirection? TextDirection { get; }
 
         /// <summary>
         /// Specifies a replacement character to be displayed (password mode)
         /// </summary>
-        char ReplacementCharacter { get; }
+        char? ReplacementCharacter { get; }
     }
 }

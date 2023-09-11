@@ -14,7 +14,6 @@
 // License for the specific language governing permissions and limitations 
 // under the License.
 
-using HarfBuzzSharp;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -62,7 +61,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// The user supplied style for this run
         /// </summary>
-        public IStyle Style;
+        public IStyle Style { get; set; }
 
         /// <summary>
         /// The direction of this run
@@ -145,7 +144,7 @@ namespace Topten.RichTextKit
         /// <summary>
         /// Calculate the half leading height for text in this run
         /// </summary>
-        public float HalfLeading => (TextHeight * (Style.LineHeight - 1) + Leading) / 2;
+        public float HalfLeading => (TextHeight * (Style.LineHeight.Value - 1) + Leading) / 2;
 
         /// <summary>
         /// Width of this typeface run
@@ -464,36 +463,15 @@ namespace Topten.RichTextKit
         /// Calculate any overhang for this text line
         /// </summary>
         /// <param name="right"></param>
-        /// <param name="updateTop">True to update topOverhang.</param>
-        /// <param name="updateBottom">True to update bottomOverhang.</param>
         /// <param name="leftOverhang"></param>
         /// <param name="rightOverhang"></param>
-        /// <param name="topOverhang"></param>
-        /// <param name="bottomOverhang"></param>
-        internal void UpdateOverhang(float right, bool updateTop, bool updateBottom, ref float leftOverhang, ref float rightOverhang, ref float topOverhang, ref float bottomOverhang)
+        internal void UpdateOverhang(float right, ref float leftOverhang, ref float rightOverhang)
         {
             if (RunKind == FontRunKind.TrailingWhitespace)
                 return;
 
             if (Glyphs.Length == 0)
                 return;
- 
-            if (Style.LineHeight < 1)
-            {
-                // If LineHeight is less than 100%, the line can have top and bottom overhang
-                if (updateTop)
-                {
-                    var toh = -(TextHeight * (Style.LineHeight - 1) / 2);
-                    if (toh > topOverhang)
-                        topOverhang = toh;
-                }
-                if (updateBottom)
-                {
-                    var boh = -(TextHeight * (Style.LineHeight - 1) / 2);
-                    if (boh > bottomOverhang)
-                        bottomOverhang = boh;
-                }
-            }
 
             using (var paint = new SKPaint())
             {
@@ -509,7 +487,7 @@ namespace Topten.RichTextKit
 
                 paint.TextEncoding = SKTextEncoding.GlyphId;
                 paint.Typeface = Typeface;
-                paint.TextSize = Style.FontSize * glyphScale;
+                paint.TextSize = Style.FontSize.Value * glyphScale;
                 paint.SubpixelText = true;
                 paint.IsAntialias = true;
                 paint.LcdRenderText = false;
@@ -530,7 +508,7 @@ namespace Topten.RichTextKit
                                     leftOverhang = loh;
 
                                 var roh = (gx + bounds[i].Right + 1) - right;
-                                if (roh > rightOverhang)
+                                if (roh > rightOverhang) 
                                     rightOverhang = roh;
                             }
                         }
@@ -578,22 +556,11 @@ namespace Topten.RichTextKit
 
                 if (selStartXCoord != selEndXCoord)
                 {
-                    var tl = new SKPoint(selStartXCoord + this.XCoord, Line.YCoord);
-                    var br = new SKPoint(selEndXCoord + this.XCoord, Line.YCoord + Line.Height);
+                    var adjustedHeight = Line.Height * Line.TextBlock.LineSpacing;
 
-                    // Align coords to pixel boundaries
-                    // Not needed - disabled antialias on SKPaint instead
-                    /*
-                    if (ctx.Canvas.TotalMatrix.TryInvert(out var inverse))
-                    {
-                        tl = ctx.Canvas.TotalMatrix.MapPoint(tl);
-                        br = ctx.Canvas.TotalMatrix.MapPoint(br);
-                        tl = new SKPoint((float)Math.Round(tl.X), (float)Math.Round(tl.Y));
-                        br = new SKPoint((float)Math.Round(br.X), (float)Math.Round(br.Y));
-                        tl = inverse.MapPoint(tl);
-                        br = inverse.MapPoint(br);
-                    }
-                    */
+                    var tl = new SKPoint(selStartXCoord + this.XCoord, Line.YCoord);
+                    var br = new SKPoint(selEndXCoord + this.XCoord, Line.YCoord + adjustedHeight);
+
 
                     var rect = new SKRect(tl.X, tl.Y, br.X, br.Y);
                     ctx.Canvas.DrawRect(rect, ctx.PaintSelectionBackground);
@@ -631,25 +598,25 @@ namespace Topten.RichTextKit
                 if (Style.FontVariant == FontVariant.SuperScript)
                 {
                     glyphScale = 0.65f;
-                    glyphVOffset = -Style.FontSize * 0.35f;
+                    glyphVOffset = -Style.FontSize.Value * 0.35f;
                 }
                 if (Style.FontVariant == FontVariant.SubScript)
                 {
                     glyphScale = 0.65f;
-                    glyphVOffset = Style.FontSize * 0.1f;
+                    glyphVOffset = Style.FontSize.Value * 0.1f;
                 }
 
                 // Setup SKPaint
-                paint.Color = Style.TextColor;
+                paint.Color = Style.TextColor.Value;
 
-                if (Style.HaloColor != SKColor.Empty)
+                if (Style.HaloColor.Value != SKColor.Empty)
                 {
-                    paintHalo.Color = Style.HaloColor;
+                    paintHalo.Color = Style.HaloColor.Value;
                     paintHalo.Style = SKPaintStyle.Stroke;
-                    paintHalo.StrokeWidth = Style.HaloWidth;
+                    paintHalo.StrokeWidth = Style.HaloWidth.Value;
                     paintHalo.StrokeCap = SKStrokeCap.Square;
                     if (Style.HaloBlur > 0)
-                        paintHalo.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, Style.HaloBlur);
+                        paintHalo.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, Style.HaloBlur.Value);
                 }
 
                 unsafe
@@ -659,18 +626,11 @@ namespace Topten.RichTextKit
                         // Get glyph positions
                         var glyphPositions = GlyphPositions.ToArray();
 
-                        var scaledFontSize = this.Style.FontSize * glyphScale;
-
                         // Create the font
                         if (_font == null)
                         {
-                            _font = new SKFont(this.Typeface, scaledFontSize);
+                            _font = new SKFont(this.Typeface, this.Style.FontSize.Value * glyphScale);
                         }
-                        else if (_font.Size != scaledFontSize)
-                        {
-                            _font.Size = scaledFontSize;
-                        }
-
                         _font.Hinting = ctx.Options.Hinting;
                         _font.Edging = ctx.Options.Edging;
                         _font.Subpixel = ctx.Options.SubpixelPositioning;
@@ -699,7 +659,7 @@ namespace Topten.RichTextKit
                             paint.StrokeWidth = _font.Metrics.UnderlineThickness ?? 1;
                             if (paint.StrokeWidth < 1)
                                 paint.StrokeWidth = 1;
-                            paintHalo.StrokeWidth = paint.StrokeWidth + Style.HaloWidth;
+                            paintHalo.StrokeWidth = paint.StrokeWidth + Style.HaloWidth.Value;
 
                             if (Style.Underline == UnderlineStyle.Gapped)
                             {
@@ -765,14 +725,14 @@ namespace Topten.RichTextKit
                                 paintHalo.StrokeWidth = _font.Metrics.StrikeoutThickness ?? 1;
                                 if (paintHalo.StrokeWidth < 1)
                                     paintHalo.StrokeWidth = 1;
-                                paintHalo.StrokeWidth += Style.HaloWidth;
+                                paintHalo.StrokeWidth += Style.HaloWidth.Value;
                                 float strikeYPos = Line.YCoord + Line.BaseLine + (_font.Metrics.StrikeoutPosition ?? 0) + glyphVOffset;
                                 ctx.Canvas.DrawLine(new SKPoint(XCoord, strikeYPos), new SKPoint(XCoord + Width, strikeYPos), paintHalo);
                             }
-                            ctx.Canvas.DrawText(_textBlob, 0, glyphVOffset, paintHalo);
+                            ctx.Canvas.DrawText(_textBlob, 0, 0, paintHalo);
                         }
 
-                        ctx.Canvas.DrawText(_textBlob, 0, glyphVOffset, paint);
+                        ctx.Canvas.DrawText(_textBlob, 0, 0, paint);
                     }
                 }
 
@@ -798,7 +758,7 @@ namespace Topten.RichTextKit
             {
                 var rect = new SKRect(XCoord , Line.YCoord, 
                     XCoord + Width, Line.YCoord + Line.Height);
-                using (var skPaint = new SKPaint {Style = SKPaintStyle.Fill, Color = Style.BackgroundColor})
+                using (var skPaint = new SKPaint {Style = SKPaintStyle.Fill, Color = Style.BackgroundColor.Value })
                 {
                     ctx.Canvas.DrawRect(rect, skPaint);
                 }

@@ -14,9 +14,6 @@
 // under the License.
 
 using SkiaSharp;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Topten.RichTextKit
 {
@@ -51,9 +48,9 @@ namespace Topten.RichTextKit
             // Get the typeface
             return SKTypeface.FromFamilyName(
                 style.FontFamily, 
-                (SKFontStyleWeight)(style.FontWeight + extraWeight), 
-                style.FontWidth, 
-                style.FontItalic ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright
+                (style.FontWeight ?? 100 + extraWeight),
+                (int)(style.FontWidth ?? default), 
+                style.FontItalic ?? false ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright
                 ) ?? SKTypeface.CreateDefault();
         }
 

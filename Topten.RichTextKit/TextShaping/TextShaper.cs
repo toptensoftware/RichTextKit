@@ -18,7 +18,6 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Topten.RichTextKit.Utils;
 
@@ -219,9 +218,9 @@ namespace Topten.RichTextKit
         public Result ShapeReplacement(ResultBufferSet bufferSet, Slice<int> codePoints, IStyle style, int clusterAdjustment)
         {
             var clusters = GraphemeClusterAlgorithm.GetBoundaries(codePoints).ToArray();
-            var glyph = _typeface.GetGlyph(style.ReplacementCharacter);
+            var glyph = _typeface.GetGlyph(style.ReplacementCharacter.Value);
             var font = new SKFont(_typeface, overScale);
-            float glyphScale = style.FontSize / overScale;
+            float glyphScale = style.FontSize.Value / overScale;
 
             float[] widths = new float[1];
             SKRect[] bounds = new SKRect[1];
@@ -247,13 +246,13 @@ namespace Topten.RichTextKit
                     r.CodePointXCoords[j] = r.GlyphPositions[i].X;
                 }
 
-                xCoord += widths[0] + style.LetterSpacing / glyphScale; 
+                xCoord += widths[0] + style.LetterSpacing.Value / glyphScale; 
             }
 
             // Also return the end cursor position
             r.EndXCoord = new SKPoint(xCoord * glyphScale, 0);
             
-            ApplyFontMetrics(ref r, style.FontSize);
+            ApplyFontMetrics(ref r, style.FontSize.Value);
 
             return r;
         }
@@ -293,11 +292,11 @@ namespace Topten.RichTextKit
             switch (textAlignment)
             {
                 case TextAlignment.Right:
-                    glyphLetterSpacingAdjustment = style.LetterSpacing;
+                    glyphLetterSpacingAdjustment = style.LetterSpacing.Value;
                     break;
 
                 case TextAlignment.Center:
-                    glyphLetterSpacingAdjustment = style.LetterSpacing / 2;
+                    glyphLetterSpacingAdjustment = style.LetterSpacing.Value / 2;
                     break;
             }
 
@@ -332,17 +331,17 @@ namespace Topten.RichTextKit
                 bool rtl = buffer.Direction == Direction.RightToLeft;
 
                 // Work out glyph scaling and offsetting for super/subscript
-                float glyphScale = style.FontSize / overScale;
+                float glyphScale = style.FontSize.Value / overScale;
                 float glyphVOffset = 0;
                 if (style.FontVariant == FontVariant.SuperScript)
                 {
                     glyphScale *= 0.65f;
-                    glyphVOffset -= style.FontSize * 0.35f;
+                    glyphVOffset -= style.FontSize.Value * 0.35f;
                 }
                 if (style.FontVariant == FontVariant.SubScript)
                 {
                     glyphScale *= 0.65f;
-                    glyphVOffset += style.FontSize * 0.1f;
+                    glyphVOffset += style.FontSize.Value * 0.1f;
                 }
 
                 // Create results and get buffes
@@ -394,12 +393,12 @@ namespace Topten.RichTextKit
                     // width so it can be seen as part of the selection in the editor.
                     if (pos.XAdvance == 0 && codePoints[(int)gi[i].Cluster] == 0x2029)
                     {
-                        cursorX += style.FontSize * 2 / 3;
+                        cursorX += style.FontSize.Value * 2 / 3;
                     }
 
                     if (i+1 == gi.Length || gi[i].Cluster != gi[i+1].Cluster)
                     {
-                        cursorX += style.LetterSpacing;
+                        cursorX += style.LetterSpacing.Value;
                     }
 
                     // Are we falling back for a fixed pitch font and is the next character a 
@@ -469,7 +468,7 @@ namespace Topten.RichTextKit
                 r.EndXCoord = new SKPoint(cursorX, cursorY);
 
                 // And some other useful metrics
-                ApplyFontMetrics(ref r, style.FontSize);
+                ApplyFontMetrics(ref r, style.FontSize.Value);
 
                 // Done
                 return r;

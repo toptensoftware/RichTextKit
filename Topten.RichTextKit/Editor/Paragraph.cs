@@ -172,6 +172,11 @@ namespace Topten.RichTextKit.Editor
         /// </summary>
         public float MarginBottom { get; internal set; }
 
+        /// <summary>
+        /// The block indent of the paragraph
+        /// </summary>
+        public float BlockIndent { get; internal set; }
+
         // Explicit implementation of IRun so we can use RunExtensions
         // with the paragraphs collection.
         int IRun.Offset => CodePointIndex;
