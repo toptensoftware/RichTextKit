@@ -529,7 +529,9 @@ navTree:
               - text: MarginLeft|./ref/Topten.RichTextKit.Editor.TextDocument.MarginLeft
               - text: MarginRight|./ref/Topten.RichTextKit.Editor.TextDocument.MarginRight
               - text: MarginTop|./ref/Topten.RichTextKit.Editor.TextDocument.MarginTop
+              - text: MeasuredContentWidth|./ref/Topten.RichTextKit.Editor.TextDocument.MeasuredContentWidth
               - text: MeasuredHeight|./ref/Topten.RichTextKit.Editor.TextDocument.MeasuredHeight
+              - text: MeasuredOverhang|./ref/Topten.RichTextKit.Editor.TextDocument.MeasuredOverhang
               - text: MeasuredWidth|./ref/Topten.RichTextKit.Editor.TextDocument.MeasuredWidth
               - text: PageWidth|./ref/Topten.RichTextKit.Editor.TextDocument.PageWidth
               - text: PlainTextMode|./ref/Topten.RichTextKit.Editor.TextDocument.PlainTextMode
@@ -538,6 +540,7 @@ navTree:
               - text: UndoManager|./ref/Topten.RichTextKit.Editor.TextDocument.UndoManager
           - text: Methods
             subItems:
+              - text: Extract|./ref/Topten.RichTextKit.Editor.TextDocument.Extract
               - text: FinishImeComposition|./ref/Topten.RichTextKit.Editor.TextDocument.FinishImeComposition
               - text: GetCaretInfo|./ref/Topten.RichTextKit.Editor.TextDocument.GetCaretInfo
               - text: GetOvertypeRange|./ref/Topten.RichTextKit.Editor.TextDocument.GetOvertypeRange

@@ -348,6 +348,8 @@ namespace Topten.RichTextKit
             _measuredWidth = 0;
             _leftOverhang = null;
             _rightOverhang = null;
+            _topOverhang = null;
+            _bottomOverhang = null;
             _truncated = false;
 
             // Only layout if actually have some text
@@ -610,14 +612,20 @@ namespace Topten.RichTextKit
                     var right = _maxWidth ?? MeasuredWidth;
                     float leftOverhang = 0;
                     float rightOverhang = 0;
-                    foreach (var l in _lines)
+                    float topOverhang = 0;
+                    float bottomOverhang = 0;
+                    for (int l = 0; l < _lines.Count; l++)
                     {
-                        l.UpdateOverhang(right, ref leftOverhang, ref rightOverhang);
+                        bool updateTop = l == 0;
+                        bool updateBottom = l == (_lines.Count - 1);
+                        _lines[l].UpdateOverhang(right, updateTop, updateBottom, ref leftOverhang, ref rightOverhang, ref topOverhang, ref bottomOverhang);
                     }
                     _leftOverhang = leftOverhang;
                     _rightOverhang = rightOverhang;
+                    _topOverhang = topOverhang;
+                    _bottomOverhang = bottomOverhang;
                 }
-                return new SKRect(_leftOverhang.Value, 0, _rightOverhang.Value, 0);
+                return new SKRect(_leftOverhang.Value, _topOverhang.Value, _rightOverhang.Value, _bottomOverhang.Value);
             }
         }
 
@@ -1035,6 +1043,16 @@ namespace Topten.RichTextKit
         float? _rightOverhang = null;
 
         /// <summary>
+        /// The required top overhang
+        /// </summary>
+        float? _topOverhang = null;
+
+        /// <summary>
+        /// The required bottom overhang
+        /// </summary>
+        float? _bottomOverhang = null;
+
+        /// <summary>
         /// Indicates if the text was truncated by max height/max lines limitations
         /// </summary>
         bool _truncated;
@@ -1334,6 +1352,9 @@ namespace Topten.RichTextKit
             {
                 return typeface == next.typeface &&
                        style.FontSize == next.style.FontSize &&
+                       style.LetterSpacing == next.style.LetterSpacing &&
+                       style.FontVariant == next.style.FontVariant &&
+                       style.LineHeight == next.style.LineHeight &&
                         asFallbackFor == next.asFallbackFor &&
                         direction == next.direction &&
                         start + length == next.start;
@@ -1413,6 +1434,7 @@ namespace Topten.RichTextKit
 
                 // Skip line breaks
                 bool breakLine = false;
+                bool isRequired = false;
                 while (lbrIndex < lineBreakPositions.Count)
                 {
                     // Past this run?
@@ -1447,6 +1469,7 @@ namespace Topten.RichTextKit
                     if (lbr.Required)
                     {
                         breakLine = true;
+                        isRequired = true;
                         break;
                     }
                 }
@@ -1475,10 +1498,24 @@ namespace Topten.RichTextKit
                     fr = _fontRuns[frIndex];
                     var room = _maxWidthResolved - fr.XCoord;
                     frSplitIndex = frIndex;
-                    codePointIndexSplit = fr.FindBreakPosition(room, frSplitIndex == frIndexStartOfLine);
-                    codePointIndexWrap = codePointIndexSplit;
-                    while (codePointIndexWrap < _codePoints.Length && UnicodeClasses.LineBreakClass(_codePoints[codePointIndexWrap]) == LineBreakClass.SP)
-                        codePointIndexWrap++;
+
+                    var hasValidLinebreak = codePointIndexSplit >= fr.Start && codePointIndexSplit <= fr.End;
+
+                    // Only break at character if there is no required line break we can use.
+                    if (!(isRequired && hasValidLinebreak))
+                    {
+                        var breakPosition = fr.FindBreakPosition(room, frSplitIndex == frIndexStartOfLine);
+
+                        // Prefer breaking at a character rather than a line break position.
+                        if (!hasValidLinebreak || breakPosition > codePointIndexSplit)
+                        {
+                            codePointIndexSplit = breakPosition;
+                            codePointIndexWrap = codePointIndexSplit;
+                            while (codePointIndexWrap < _codePoints.Length &&
+                                   UnicodeClasses.LineBreakClass(_codePoints[codePointIndexWrap]) == LineBreakClass.SP)
+                                codePointIndexWrap++;
+                        }
+                    }
                 }
 
                 // Split it

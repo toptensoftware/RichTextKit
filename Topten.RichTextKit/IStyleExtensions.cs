@@ -31,7 +31,7 @@ namespace Topten.RichTextKit
         /// <returns>A key string</returns>
         public static string Key(this IStyle This)
         {
-            return $"{This.FontFamily}.{This.FontSize}.{This.FontWeight}.{This.FontWidth}.{This.FontItalic}.{This.Underline}.{This.StrikeThrough}.{This.LineHeight}.{This.TextColor}.{This.BackgroundColor}.{This.LetterSpacing}.{This.FontVariant}.{This.TextDirection}.{This.ReplacementCharacter}";
+            return $"{This.FontFamily}.{This.FontSize}.{This.FontWeight}.{This.FontWidth}.{This.FontItalic}.{This.Underline}.{This.StrikeThrough}.{This.LineHeight}.{This.TextColor}.{This.BackgroundColor}.{This.LetterSpacing}.{This.FontVariant}.{This.TextDirection}.{This.ReplacementCharacter}.{This.HaloWidth}.{This.HaloColor}.{This.HaloBlur}";
         }
 
         /// <summary>
@@ -89,10 +89,13 @@ namespace Topten.RichTextKit
                 return false;
             if (This.StrikeThrough != other.StrikeThrough)
                 return false;
+            if (This.HaloBlur != other.HaloBlur)
+                return false;
+            if (This.HaloColor != other.HaloColor)
+                return false;
+            if (This.HaloWidth != other.HaloWidth)
+                return false;
             return true;
         }
-
-
-
     }
 }
