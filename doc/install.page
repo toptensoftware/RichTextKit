@@ -4,7 +4,7 @@ isMarkdown: false
 ---
 <h1 id="installation">Installation</h1>
 <h2 id="nuget">NuGet</h2>
-<p>RichTextKit is available as a NuGet package for <code>net45</code> and <code>netcoreapp2.1</code> frameworks:</p>
+<p>RichTextKit is available as a NuGet package for <code>net462</code> and <code>net5.0</code> frameworks:</p>
 <pre class="language-txt"><code class="language-txt">Install-Package Topten.RichTextKit
 </code></pre>
 <p><em>Note that RichTextKit is currently still under development and has only been tested on

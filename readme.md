@@ -25,8 +25,8 @@ RichTextKit is a rich-text layout, measurement and rendering library for SkiaSha
 
 ## Under Development
 
-RichTextKit is still under development.  It works fine on Windows under net45 and 
-netcoreapp2.1 but hasn't been tested on other platforms.
+RichTextKit is still under development.  It works fine on Windows under net462 and 
+net5.0 but hasn't been tested on other platforms.
 
 Also, text layout in general and Unicode and international text specifically are a 
 complicated topics - almost certainly there are issues I'm unaware of and I'm 
