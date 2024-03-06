@@ -23,7 +23,7 @@ if (bt.options.official)
     // Build docs
     if (!bt.options.nodoc)
     {
-        bt.run(`docsanity`);
+        bt.run(`docsanity-net5`);
         bt.run(`git add doc`);
         bt.run(`git commit --allow-empty -m "Updated documentation"`);
     }
