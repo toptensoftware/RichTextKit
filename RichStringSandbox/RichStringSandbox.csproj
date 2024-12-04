@@ -97,7 +97,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="SkiaSharp" Version="2.88.7" />
+    <PackageReference Include="SkiaSharp" Version="3.116.0" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

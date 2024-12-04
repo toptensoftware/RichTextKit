@@ -25,9 +25,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SkiaSharp" Version="2.88.7" />
-    <PackageReference Include="SkiaSharp.HarfBuzz" Version="2.88.7" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.7" />
+    <PackageReference Include="SkiaSharp" Version="3.116.0" />
+    <PackageReference Include="SkiaSharp.HarfBuzz" Version="3.116.0" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.116.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
