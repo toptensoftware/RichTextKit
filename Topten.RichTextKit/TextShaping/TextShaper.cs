@@ -75,21 +75,20 @@ namespace Topten.RichTextKit
             }
 
             // Get font metrics for this typeface
-            using (var paint = new SKPaint())
+            using (var font = new SKFont())
             {
-                paint.Typeface = typeface;
-                paint.TextSize = overScale;
-                _fontMetrics = paint.FontMetrics;
+                font.Typeface = typeface;
+                font.Size = overScale;
+                _fontMetrics = font.Metrics;
 
                 // This is a temporary hack until SkiaSharp exposes
                 // a way to check if a font is fixed pitch.  For now
                 // we just measure and `i` and a `w` and see if they're
                 // the same width.
-                float[] widths = paint.GetGlyphWidths("iw", out var rects);
+                float[] widths = font.GetGlyphWidths("iw", out var rects);
                 _isFixedPitch = widths != null && widths.Length > 1 && widths[0] == widths[1];
                 if (_isFixedPitch)
                     _fixedCharacterWidth = widths[0];
-
             }
         }
 

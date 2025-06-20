@@ -497,45 +497,49 @@ namespace Topten.RichTextKit
 
             using (var paint = new SKPaint())
             {
-                float glyphScale = 1;
-                if (Style.FontVariant == FontVariant.SuperScript)
+                using (var font = new SKFont())
                 {
-                    glyphScale = 0.65f;
-                }
-                if (Style.FontVariant == FontVariant.SubScript)
-                {
-                    glyphScale = 0.65f;
-                }
-
-                paint.TextEncoding = SKTextEncoding.GlyphId;
-                paint.Typeface = Typeface;
-                paint.TextSize = Style.FontSize * glyphScale;
-                paint.SubpixelText = true;
-                paint.IsAntialias = true;
-                paint.LcdRenderText = false;
-
-                unsafe
-                {
-                    fixed (ushort* pGlyphs = Glyphs.Underlying)
+                    float glyphScale = 1;
+                    if (Style.FontVariant == FontVariant.SuperScript)
                     {
-                        paint.GetGlyphWidths((IntPtr)(pGlyphs + Start), sizeof(ushort) * Glyphs.Length, out var bounds);
-                        if (bounds != null)
+                        glyphScale = 0.65f;
+                    }
+                    if (Style.FontVariant == FontVariant.SubScript)
+                    {
+                        glyphScale = 0.65f;
+                    }
+
+                    paint.IsAntialias = true;
+                    font.Typeface = Typeface;
+                    font.Size = Style.FontSize * glyphScale;
+                    font.Subpixel = true;
+                    font.Edging = SKFontEdging.Antialias;
+
+                    unsafe
+                    {
+                        fixed (ushort* pGlyphs = Glyphs.Underlying)
                         {
-                            for (int i = 0; i < bounds.Length; i++)
+
+                            font.GetGlyphWidths((IntPtr)(pGlyphs + Start), sizeof(ushort) * Glyphs.Length, SKTextEncoding.GlyphId, out var bounds, paint);
+                            if (bounds != null)
                             {
-                                float gx = GlyphPositions[i].X;
+                                for (int i = 0; i < bounds.Length; i++)
+                                {
+                                    float gx = GlyphPositions[i].X;
 
-                                var loh = -(gx + bounds[i].Left);
-                                if (loh > leftOverhang)
-                                    leftOverhang = loh;
+                                    var loh = -(gx + bounds[i].Left);
+                                    if (loh > leftOverhang)
+                                        leftOverhang = loh;
 
-                                var roh = (gx + bounds[i].Right + 1) - right;
-                                if (roh > rightOverhang)
-                                    rightOverhang = roh;
+                                    var roh = (gx + bounds[i].Right + 1) - right;
+                                    if (roh > rightOverhang)
+                                        rightOverhang = roh;
+                                }
                             }
                         }
                     }
                 }
+
             }
         }
 

@@ -334,33 +334,29 @@ namespace SandboxDriver
                     canvas.DrawLine(rect.Right, rect.Top, rect.Left, rect.Bottom, paint);
                 }
             }
-
-            var state = $"Size: {width} x {height} Base Direction: {BaseDirection} Alignment: {TextAlignment} Content: {ContentMode} scale: {Scale} time: {elapsed} subpixel: {SubpixelPositioning} hinting: {Hinting} edging: {Edging}";
-            canvas.DrawText(state, margin, 20, new SKPaint()
+            using (var font = new SKFont(SKTypeface.FromFamilyName("Arial"), 12))
             {
-                Typeface = SKTypeface.FromFamilyName("Arial"),
-                TextSize = 12,
-                IsAntialias = true,
-            });
+                var state = $"Size: {width} x {height} Base Direction: {BaseDirection} Alignment: {TextAlignment} Content: {ContentMode} scale: {Scale} time: {elapsed} subpixel: {SubpixelPositioning} hinting: {Hinting} edging: {Edging}";
+                canvas.DrawText(state, margin, 20, font, new SKPaint()
+                {
+                    IsAntialias = true,
+                });
 
-            if (options.Selection.HasValue)
-                state = $"Selection: {options.Selection.Value.Start}-{options.Selection.Value.End} Closest: {(htr.HasValue ? htr.Value.ClosestCodePointIndex.ToString() : "-")}";
-            else
-                state = $"Selection: none";
-            canvas.DrawText(state, margin, 40, new SKPaint()
-            {
-                Typeface = SKTypeface.FromFamilyName("Arial"),
-                TextSize = 12,
-                IsAntialias = true,
-            });
+                if (options.Selection.HasValue)
+                    state = $"Selection: {options.Selection.Value.Start}-{options.Selection.Value.End} Closest: {(htr.HasValue ? htr.Value.ClosestCodePointIndex.ToString() : "-")}";
+                else
+                    state = $"Selection: none";
+                canvas.DrawText(state, margin, 40, font, new SKPaint()
+                {
+                    IsAntialias = true,
+                });
 
-            state = $"Measured: {_textBlock.MeasuredWidth} x {_textBlock.MeasuredHeight} Lines: {_textBlock.Lines.Count} Truncated: {_textBlock.Truncated}";
-            canvas.DrawText(state, margin, 60, new SKPaint()
-            {
-                Typeface = SKTypeface.FromFamilyName("Arial"),
-                TextSize = 12,
-                IsAntialias = true,
-            });
+                state = $"Measured: {_textBlock.MeasuredWidth} x {_textBlock.MeasuredHeight} Lines: {_textBlock.Lines.Count} Truncated: {_textBlock.Truncated}";
+                canvas.DrawText(state, margin, 60, font, new SKPaint()
+                {
+                    IsAntialias = true,
+                });
+            } 
         }
 
         float _hitTestX;

@@ -108,20 +108,19 @@ namespace RichStringSandbox
             _richString.MaxHeight = height;
 
             var state = $"Measured: {_richString.MeasuredWidth} x {_richString.MeasuredHeight} Lines: {_richString.LineCount} Truncated: {_richString.Truncated} Length: {_richString.MeasuredLength} Revision: {_richString.Revision}";
-            canvas.DrawText(state, margin, 20, new SKPaint()
+            using (var font = new SKFont(SKTypeface.FromFamilyName("Arial"),12))
             {
-                Typeface = SKTypeface.FromFamilyName("Arial"),
-                TextSize = 12,
-                IsAntialias = true,
-            });
+                canvas.DrawText(state, margin, 20, font, new SKPaint()
+                {
+                    IsAntialias = true,
+                });
 
-            state = $"Hit Test: Over {_htr.OverCodePointIndex} Line {_htr.OverLine}.  Closest: {_htr.ClosestCodePointIndex} Line {_htr.ClosestLine}";
-            canvas.DrawText(state, margin, 40, new SKPaint()
-            {
-                Typeface = SKTypeface.FromFamilyName("Arial"),
-                TextSize = 12,
-                IsAntialias = true,
-            });
+                state = $"Hit Test: Over {_htr.OverCodePointIndex} Line {_htr.OverLine}.  Closest: {_htr.ClosestCodePointIndex} Line {_htr.ClosestLine}";
+                canvas.DrawText(state, margin, 40,font, new SKPaint()
+                {
+                    IsAntialias = true,
+                });
+            }
 
             var options = new TextPaintOptions()
             {
