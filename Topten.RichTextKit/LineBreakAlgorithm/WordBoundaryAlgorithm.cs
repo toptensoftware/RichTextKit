@@ -77,6 +77,8 @@ namespace Topten.RichTextKit
                         // Switch to a different word kind without a space
                         // just emit a word boundary here
                         yield return i;
+                        // Update wordGroup to the new boundary class
+                        wordGroup = bg;
                     }
                 }
             }
