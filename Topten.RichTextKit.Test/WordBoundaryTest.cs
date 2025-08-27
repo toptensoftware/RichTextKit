@@ -92,6 +92,32 @@ namespace Topten.RichTextKit.Test
         }
 
         [Fact]
+        public void Punctuation3()
+        {
+            var str = ".Hello World";
+            var boundaries = WordBoundaryAlgorithm.FindWordBoundaries(new Utf32Buffer(str).AsSlice()).ToList();
+
+            Assert.Equal(3, boundaries.Count);
+            Assert.Equal(0, boundaries[0]);
+            Assert.Equal(1, boundaries[1]);
+            Assert.Equal(7, boundaries[2]);
+        }
+
+        [Fact]
+        public void Punctuation4()
+        {
+            var str = ".Hello.World.";
+            var boundaries = WordBoundaryAlgorithm.FindWordBoundaries(new Utf32Buffer(str).AsSlice()).ToList();
+
+            Assert.Equal(5, boundaries.Count);
+            Assert.Equal(0, boundaries[0]);
+            Assert.Equal(1, boundaries[1]);
+            Assert.Equal(6, boundaries[2]);
+            Assert.Equal(7, boundaries[3]);
+            Assert.Equal(12, boundaries[4]);
+        }
+
+        [Fact]
         public void TestIsWordBoundary()
         {
             var str = new Utf32Buffer("Hello () World").AsSlice();
