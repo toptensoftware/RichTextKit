@@ -648,6 +648,7 @@ namespace Topten.RichTextKit
                     paintHalo.Style = SKPaintStyle.Stroke;
                     paintHalo.StrokeWidth = Style.HaloWidth;
                     paintHalo.StrokeCap = SKStrokeCap.Square;
+                    paintHalo.StrokeJoin = SKStrokeJoin.Round;
                     if (Style.HaloBlur > 0)
                         paintHalo.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, Style.HaloBlur);
                 }
