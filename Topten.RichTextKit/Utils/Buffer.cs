@@ -110,7 +110,7 @@ namespace Topten.RichTextKit.Utils
                 newLength = requiredLength;
 
             // Allocate new buffer, only copying _length, not Data.Length
-            var newData = new T[requiredLength];
+            var newData = new T[newLength];
             Array.Copy(_data, 0, newData, 0, _length);
             _data = newData;
 
