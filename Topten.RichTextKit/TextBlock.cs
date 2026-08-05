@@ -1,4 +1,4 @@
-﻿
+
 // RichTextKit
 // Copyright © 2019-2020 Topten Software. All Rights Reserved.
 // 
@@ -447,6 +447,7 @@ namespace Topten.RichTextKit
 
             // Clean up
             ctx.PaintSelectionBackground?.Dispose();
+            ctx.PaintSelectionHandle?.Dispose();
         }
 
         /// <summary>
