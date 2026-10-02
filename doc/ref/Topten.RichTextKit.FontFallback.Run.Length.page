@@ -19,7 +19,6 @@ import: "../.common.page"
 
 
 
-<p>The length of this run in code points</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public int Length;</code></pre>

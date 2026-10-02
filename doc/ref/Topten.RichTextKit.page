@@ -112,8 +112,7 @@ style.</p>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.FontFallback.Run"> FontFallback.Run</a></td>
-                <td><p>Specified details about a font fallback run</p>
-</td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.HitTestResult"> HitTestResult</a></td>

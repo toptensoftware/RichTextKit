@@ -1,6 +1,6 @@
 ---
 projectTitle: RichTextKit
-projectSubTitle: v0.4
+projectSubTitle: v0.5
 projectUrlPrefix: /richtextkit/
 prismLanguages:
   - csharp

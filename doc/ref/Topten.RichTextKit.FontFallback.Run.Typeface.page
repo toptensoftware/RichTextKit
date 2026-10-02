@@ -19,7 +19,6 @@ import: "../.common.page"
 
 
 
-<p>The typeface to be used for this run</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public SkiaSharp.SKTypeface Typeface;</code></pre>

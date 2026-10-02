@@ -19,7 +19,6 @@ import: "../.common.page"
 
 
 
-<p>The starting code point index of this run</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public int Start;</code></pre>

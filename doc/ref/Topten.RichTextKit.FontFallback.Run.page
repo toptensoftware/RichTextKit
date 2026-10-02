@@ -17,7 +17,6 @@ import: "../.common.page"
 </p>
 
 
-<p>Specified details about a font fallback run</p>
 
 
 <pre class="language-csharp"><code class="language-csharp">public struct FontFallback.Run</code></pre>
@@ -38,18 +37,15 @@ import: "../.common.page"
     <table class="name-description">
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.FontFallback.Run.Length">Length</a></td>
-                <td><p>The length of this run in code points</p>
-</td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.FontFallback.Run.Start">Start</a></td>
-                <td><p>The starting code point index of this run</p>
-</td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.FontFallback.Run.Typeface">Typeface</a></td>
-                <td><p>The typeface to be used for this run</p>
-</td>
+                <td></td>
             </tr>
     </table>
 

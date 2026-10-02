@@ -70,8 +70,7 @@ fallback font.</p>
     <table class="name-description">
             <tr>
                 <td><a href="./../ref/Topten.RichTextKit.FontFallback.Run">FontFallback.Run</a></td>
-                <td><p>Specified details about a font fallback run</p>
-</td>
+                <td></td>
             </tr>
     </table>
 
