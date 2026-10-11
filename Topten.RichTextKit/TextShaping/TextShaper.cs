@@ -75,17 +75,15 @@ namespace Topten.RichTextKit
             }
 
             // Get font metrics for this typeface
-            using (var paint = new SKPaint())
+            using (var font = new SKFont(typeface, overScale))
             {
-                paint.Typeface = typeface;
-                paint.TextSize = overScale;
-                _fontMetrics = paint.FontMetrics;
+                _fontMetrics = font.Metrics;
 
                 // This is a temporary hack until SkiaSharp exposes
                 // a way to check if a font is fixed pitch.  For now
                 // we just measure and `i` and a `w` and see if they're
                 // the same width.
-                float[] widths = paint.GetGlyphWidths("iw", out var rects);
+                float[] widths = font.GetGlyphWidths("iw", out var rects);
                 _isFixedPitch = widths != null && widths.Length > 1 && widths[0] == widths[1];
                 if (_isFixedPitch)
                     _fixedCharacterWidth = widths[0];
@@ -219,13 +217,16 @@ namespace Topten.RichTextKit
         public Result ShapeReplacement(ResultBufferSet bufferSet, Slice<int> codePoints, IStyle style, int clusterAdjustment)
         {
             var clusters = GraphemeClusterAlgorithm.GetBoundaries(codePoints).ToArray();
-            var glyph = _typeface.GetGlyph(style.ReplacementCharacter);
-            var font = new SKFont(_typeface, overScale);
             float glyphScale = style.FontSize / overScale;
 
+            ushort glyph;
             float[] widths = new float[1];
             SKRect[] bounds = new SKRect[1];
-            font.GetGlyphWidths((new ushort[] { glyph }).AsSpan(), widths.AsSpan(), bounds.AsSpan());
+            using (var font = new SKFont(_typeface, overScale))
+            {
+                glyph = font.GetGlyph(style.ReplacementCharacter);
+                font.GetGlyphWidths((new ushort[] { glyph }).AsSpan(), widths.AsSpan(), bounds.AsSpan());
+            }
 
             var r = new Result();
             r.GlyphIndicies = bufferSet.GlyphIndicies.Add((int)clusters.Length-1, false);

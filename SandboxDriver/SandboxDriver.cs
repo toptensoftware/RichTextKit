@@ -336,31 +336,27 @@ namespace SandboxDriver
             }
 
             var state = $"Size: {width} x {height} Base Direction: {BaseDirection} Alignment: {TextAlignment} Content: {ContentMode} scale: {Scale} time: {elapsed} subpixel: {SubpixelPositioning} hinting: {Hinting} edging: {Edging}";
-            canvas.DrawText(state, margin, 20, new SKPaint()
-            {
-                Typeface = SKTypeface.FromFamilyName("Arial"),
-                TextSize = 12,
-                IsAntialias = true,
-            });
+            DrawState(canvas, state, margin, 20);
 
             if (options.Selection.HasValue)
                 state = $"Selection: {options.Selection.Value.Start}-{options.Selection.Value.End} Closest: {(htr.HasValue ? htr.Value.ClosestCodePointIndex.ToString() : "-")}";
             else
                 state = $"Selection: none";
-            canvas.DrawText(state, margin, 40, new SKPaint()
-            {
-                Typeface = SKTypeface.FromFamilyName("Arial"),
-                TextSize = 12,
-                IsAntialias = true,
-            });
+            DrawState(canvas, state, margin, 40);
 
             state = $"Measured: {_textBlock.MeasuredWidth} x {_textBlock.MeasuredHeight} Lines: {_textBlock.Lines.Count} Truncated: {_textBlock.Truncated}";
-            canvas.DrawText(state, margin, 60, new SKPaint()
+            DrawState(canvas, state, margin, 60);
+        }
+
+        // Draws a line of small status text; text members moved from SKPaint to SKFont in SkiaSharp 3/4
+        static void DrawState(SKCanvas canvas, string text, float x, float y)
+        {
+            using (var typeface = SKTypeface.FromFamilyName("Arial"))
+            using (var font = new SKFont(typeface, 12))
+            using (var paint = new SKPaint() { IsAntialias = true })
             {
-                Typeface = SKTypeface.FromFamilyName("Arial"),
-                TextSize = 12,
-                IsAntialias = true,
-            });
+                canvas.DrawText(text, x, y, SKTextAlign.Left, font, paint);
+            }
         }
 
         float _hitTestX;
