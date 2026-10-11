@@ -1,4 +1,4 @@
-﻿#define USE_SKTEXTBLOB
+#define USE_SKTEXTBLOB
 // RichTextKit
 // Copyright © 2019-2020 Topten Software. All Rights Reserved.
 // 
@@ -518,7 +518,7 @@ namespace Topten.RichTextKit
                 {
                     fixed (ushort* pGlyphs = Glyphs.Underlying)
                     {
-                        paint.GetGlyphWidths((IntPtr)(pGlyphs + Start), sizeof(ushort) * Glyphs.Length, out var bounds);
+                        paint.GetGlyphWidths((IntPtr)(pGlyphs + Glyphs.Start), sizeof(ushort) * Glyphs.Length, out var bounds);
                         if (bounds != null)
                         {
                             for (int i = 0; i < bounds.Length; i++)
