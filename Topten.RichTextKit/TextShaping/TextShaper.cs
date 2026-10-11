@@ -79,7 +79,8 @@ namespace Topten.RichTextKit
             {
                 paint.Typeface = typeface;
                 paint.TextSize = overScale;
-                _fontMetrics = paint.FontMetrics;
+                _fontXMin = paint.FontMetrics.XMin;
+                _verticalMetrics = FontMetricsMapper.Default.GetVerticalMetrics(typeface, overScale);
 
                 // This is a temporary hack until SkiaSharp exposes
                 // a way to check if a font is fixed pitch.  For now
@@ -116,9 +117,14 @@ namespace Topten.RichTextKit
         SKTypeface _typeface;
 
         /// <summary>
-        /// Font metrics for the font
+        /// The minimum bounding box x value for the font.
         /// </summary>
-        SKFontMetrics _fontMetrics;
+        float _fontXMin;
+
+        /// <summary>
+        /// The vertical font metrics as provided by the metrics mapper.
+        /// </summary>
+        readonly VerticalFontMetrics _verticalMetrics;
 
         /// <summary>
         /// True if this font face is fixed pitch
@@ -479,10 +485,10 @@ namespace Topten.RichTextKit
         private void ApplyFontMetrics(ref Result result, float fontSize)
         {
             // And some other useful metrics
-            result.Ascent = _fontMetrics.Ascent * fontSize / overScale;
-            result.Descent = _fontMetrics.Descent * fontSize / overScale;
-            result.Leading = _fontMetrics.Leading * fontSize / overScale;
-            result.XMin = _fontMetrics.XMin * fontSize / overScale;
+            result.Ascent = _verticalMetrics.Ascent * fontSize / overScale;
+            result.Descent = _verticalMetrics.Descent * fontSize / overScale;
+            result.Leading = _verticalMetrics.Leading * fontSize / overScale;
+            result.XMin = _fontXMin * fontSize / overScale;
         }
 
         private static Blob GetHarfBuzzBlob(SKStreamAsset asset)
