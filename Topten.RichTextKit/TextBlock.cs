@@ -1253,12 +1253,19 @@ namespace Topten.RichTextKit
             var codePointsSlice = _codePoints.SubSlice(start, length);
 
             // Split into font fallback runs
-            foreach (var fontRun in FontFallback.GetFontRuns(codePointsSlice, typeface, style.ReplacementCharacter))
+            _fontFallbackRuns.Clear();
+            FontFallback.GetFontRuns(codePointsSlice, typeface, style.ReplacementCharacter, _fontFallbackRuns);
+            foreach (var fontRun in _fontFallbackRuns)
             {
                 // Add this run
                 AddFontRun(styleRun, start + fontRun.Start, fontRun.Length, direction, style, fontRun.Typeface, typeface);
             }
         }
+
+        /// <summary>
+        /// Re-usable list for the font fallback runs of a directional run
+        /// </summary>
+        List<FontFallback.Run> _fontFallbackRuns = new List<FontFallback.Run>();
 
         /// <summary>
         /// Adds a run of single font text
