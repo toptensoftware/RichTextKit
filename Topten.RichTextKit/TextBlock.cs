@@ -404,12 +404,18 @@ namespace Topten.RichTextKit
             // Ensure layout done
             Layout();
 
-            // Create context
-            var ctx = new PaintTextContext()
+            // Get the re-usable context for this thread
+            var ctx = _paintContext;
+            if (ctx == null)
             {
-                Canvas = canvas,
-                Options = options,
-            };
+                ctx = new PaintTextContext();
+                _paintContext = ctx;
+            }
+            ctx.Canvas = canvas;
+            ctx.Options = options;
+            ctx.SelectionHandleScale = 1.0f;
+            ctx.PaintSelectionBackground = null;
+            ctx.PaintSelectionHandle = null;
 
             // Prepare selection
             if (options.Selection.HasValue)
@@ -448,7 +454,17 @@ namespace Topten.RichTextKit
             // Clean up
             ctx.PaintSelectionBackground?.Dispose();
             ctx.PaintSelectionHandle?.Dispose();
+            ctx.PaintSelectionBackground = null;
+            ctx.PaintSelectionHandle = null;
+            ctx.Canvas = null;
+            ctx.Options = null;
         }
+
+        /// <summary>
+        /// The paint context re-used by all paint operations on a thread
+        /// </summary>
+        [ThreadStatic]
+        static PaintTextContext _paintContext;
 
         /// <summary>
         /// Paint this text block
