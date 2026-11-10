@@ -303,7 +303,15 @@ namespace Topten.RichTextKit
             }
 
 
-            using (var buffer = new HarfBuzzSharp.Buffer())
+            // Get the re-usable buffer for this thread
+            var buffer = _buffer;
+            if (buffer == null)
+            {
+                buffer = new HarfBuzzSharp.Buffer();
+                _buffer = buffer;
+            }
+
+            try
             {
                 // Setup buffer
                 buffer.AddUtf32(codePoints.AsSpan(), 0, -1);
@@ -355,8 +363,8 @@ namespace Topten.RichTextKit
                 r.CodePointXCoords.Fill(0);
                 
                 // Convert points
-                var gp = buffer.GlyphPositions;
-                var gi = buffer.GlyphInfos;
+                var gp = buffer.GetGlyphPositionSpan();
+                var gi = buffer.GetGlyphInfoSpan();
                 float cursorX = 0;
                 float cursorY = 0;
                 float cursorXCluster = 0;
@@ -475,7 +483,35 @@ namespace Topten.RichTextKit
                 // Done
                 return r;
             }
+            finally
+            {
+                if (codePoints.Length > maxRetainedBufferLength)
+                {
+                    // Don't hold on to the memory of a very long run
+                    buffer.Dispose();
+                    _buffer = null;
+                }
+                else
+                {
+                    // Reset the buffer to its initial state, ready for next time
+                    buffer.Reset();
+                }
+            }
         }
+
+        /// <summary>
+        /// A HarfBuzz buffer re-used by all shaping operations on a thread.  (Shapers
+        /// are shared between threads, so this can't be per shaper).
+        /// </summary>
+        [ThreadStatic]
+        static HarfBuzzSharp.Buffer _buffer;
+
+        /// <summary>
+        /// The longest run (in code points) after which the buffer is kept for re-use.
+        /// HarfBuzz keeps about 42 bytes per code point, so this caps a thread's
+        /// buffer at about 43KB.
+        /// </summary>
+        const int maxRetainedBufferLength = 1024;
 
         private void ApplyFontMetrics(ref Result result, float fontSize)
         {
