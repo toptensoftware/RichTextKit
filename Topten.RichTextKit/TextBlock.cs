@@ -340,8 +340,8 @@ namespace Topten.RichTextKit
 
             // Reset layout state
             _textShapingBuffers.Clear();
-            _fontRuns.Clear();
-            _lines.Clear();
+            FontRun.Pool.Value.ReturnAndClear(_fontRuns);
+            TextLine.Pool.Value.ReturnAndClear(_lines);
             _caretIndicies.Clear();
             _wordBoundaryIndicies.Clear();
             _measuredHeight = 0;
