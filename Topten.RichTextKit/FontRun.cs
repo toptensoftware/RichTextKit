@@ -510,27 +510,20 @@ namespace Topten.RichTextKit
                 font.Subpixel = true;
                 font.Edging = SKFontEdging.Antialias;
 
-                unsafe
+                font.GetGlyphWidths(Glyphs.AsSpan(), out var bounds);
+                if (bounds != null)
                 {
-                    fixed (ushort* pGlyphs = Glyphs.Underlying)
+                    for (int i = 0; i < bounds.Length; i++)
                     {
-                        var glyphs = new ReadOnlySpan<ushort>(pGlyphs + Start, Glyphs.Length);
-                        font.GetGlyphWidths(glyphs, out var bounds);
-                        if (bounds != null)
-                        {
-                            for (int i = 0; i < bounds.Length; i++)
-                            {
-                                float gx = GlyphPositions[i].X;
+                        float gx = GlyphPositions[i].X;
 
-                                var loh = -(gx + bounds[i].Left);
-                                if (loh > leftOverhang)
-                                    leftOverhang = loh;
+                        var loh = -(gx + bounds[i].Left);
+                        if (loh > leftOverhang)
+                            leftOverhang = loh;
 
-                                var roh = (gx + bounds[i].Right + 1) - right;
-                                if (roh > rightOverhang)
-                                    rightOverhang = roh;
-                            }
-                        }
+                        var roh = (gx + bounds[i].Right + 1) - right;
+                        if (roh > rightOverhang)
+                            rightOverhang = roh;
                     }
                 }
             }
