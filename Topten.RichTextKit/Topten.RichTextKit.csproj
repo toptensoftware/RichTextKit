@@ -5,6 +5,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
+    <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../releasenotes.txt"))</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

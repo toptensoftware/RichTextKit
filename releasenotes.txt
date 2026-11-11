@@ -1,0 +1,12 @@
+Bug fixes:
+- MeasuredOverhang measured the wrong glyphs after composed characters or ligatures
+- StyleManager could lose an inherited font width
+- HitTestLine threw if called before layout
+- Buffers reallocated on every grow instead of doubling
+- ResetPooledMemory stopped pooled objects being reset
+
+Performance:
+- Much less memory allocated during layout and paint (paint now allocates nothing)
+- Fonts used for font fallback are now disposed
+
+Full changelog: https://github.com/toptensoftware/RichTextKit/blob/main/CHANGELOG.md

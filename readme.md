@@ -67,6 +67,10 @@ Text layout, and Unicode and international text in particular, are complicated
 topics. If you find something that doesn't lay out or render correctly, please
 open an issue or a pull request.
 
+## Release Notes
+
+See the [changelog](https://github.com/toptensoftware/RichTextKit/blob/main/CHANGELOG.md).
+
 ## Documentation
 
 See here for [documentation](https://www.toptensoftware.com/richtextkit).
