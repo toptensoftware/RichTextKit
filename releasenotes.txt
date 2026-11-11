@@ -1,3 +1,5 @@
+RichTextKit 0.6.171
+
 Bug fixes:
 - MeasuredOverhang measured the wrong glyphs after composed characters or ligatures
 - StyleManager could lose an inherited font width
@@ -6,7 +8,11 @@ Bug fixes:
 - ResetPooledMemory stopped pooled objects being reset
 
 Performance:
-- Much less memory allocated during layout and paint (paint now allocates nothing)
+- Much less memory allocated during layout, and none during paint
 - Fonts used for font fallback are now disposed
+
+Other:
+- Removed the unneeded System.ValueTuple dependency
+- The package now includes the readme and these release notes
 
 Full changelog: https://github.com/toptensoftware/RichTextKit/blob/main/CHANGELOG.md

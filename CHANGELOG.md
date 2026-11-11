@@ -5,6 +5,8 @@ All notable changes to RichTextKit. For versions before 0.6.170, see the
 
 ## Next release
 
+## 0.6.171
+
 ### Fixed
 
 - `TextBlock.MeasuredOverhang` measured the wrong glyphs for any run after a
