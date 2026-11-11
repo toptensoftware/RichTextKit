@@ -2161,9 +2161,9 @@ namespace Topten.RichTextKit
         /// /// </remarks>
         public static void ResetPooledMemory()
         {
-            TextLine.Pool.Value = new ObjectPool<TextLine>();
-            FontRun.Pool.Value = new ObjectPool<FontRun>();
-            StyleRun.Pool.Value = new ObjectPool<StyleRun>();
+            TextLine.Pool.Value.Clear();
+            FontRun.Pool.Value.Clear();
+            StyleRun.Pool.Value.Clear();
             Bidi.Instance.Value = new Bidi();
         }
 

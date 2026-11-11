@@ -82,6 +82,15 @@ namespace Topten.RichTextKit.Utils
             objs.Clear();
         }
 
+        /// <summary>
+        /// Drops all pooled objects, releasing their memory.  The pool keeps its
+        /// Cleaner, so it still resets objects returned to it afterwards.
+        /// </summary>
+        public void Clear()
+        {
+            _pool = new List<T>();
+        }
+
         public Action<T> Cleaner;
 
         List<T> _pool = new List<T>();
