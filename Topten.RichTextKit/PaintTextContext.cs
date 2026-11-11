@@ -49,5 +49,13 @@ namespace Topten.RichTextKit
         public SKPaint PaintSelectionHandle;
         public float SelectionHandleScale = 1.0f;
         public TextPaintOptions Options;
+
+        /// <summary>
+        /// Paints re-used by each font run to draw its text and halo.  Font runs
+        /// reset them after use.  The context is kept per thread, so there's one
+        /// pair of these per painting thread.
+        /// </summary>
+        public SKPaint PaintText = new SKPaint();
+        public SKPaint PaintHalo = new SKPaint();
     }
 }

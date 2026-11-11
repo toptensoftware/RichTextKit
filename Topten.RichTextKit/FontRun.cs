@@ -618,9 +618,10 @@ namespace Topten.RichTextKit
             if (RunKind == FontRunKind.TrailingWhitespace)
                 return;
 
-            // Text 
-            using (var paint = new SKPaint())
-            using (var paintHalo = new SKPaint())
+            // Text
+            var paint = ctx.PaintText;
+            var paintHalo = ctx.PaintHalo;
+            try
             {
                 // Work out font variant adjustments
                 float glyphScale = 1;
@@ -654,9 +655,6 @@ namespace Topten.RichTextKit
                 {
                     fixed (ushort* pGlyphs = Glyphs.Underlying)
                     {
-                        // Get glyph positions
-                        var glyphPositions = GlyphPositions.ToArray();
-
                         var scaledFontSize = this.Style.FontSize * glyphScale;
 
                         // Create the font
@@ -783,6 +781,12 @@ namespace Topten.RichTextKit
                     float strikeYPos = Line.YCoord + Line.BaseLine + (_font.Metrics.StrikeoutPosition ?? 0) + glyphVOffset;
                     ctx.Canvas.DrawLine(new SKPoint(XCoord, strikeYPos), new SKPoint(XCoord + Width, strikeYPos), paint);
                 }
+            }
+            finally
+            {
+                // Reset the paints to their defaults, ready for the next run
+                paint.Reset();
+                paintHalo.Reset();
             }
         }
         

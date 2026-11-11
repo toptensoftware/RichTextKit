@@ -162,12 +162,13 @@ namespace Topten.RichTextKit
         /// <param name="ctx">The paint context</param>
         internal void Paint(PaintTextContext ctx)
         {
-            foreach (var r in Runs)
+            // Iterate the list directly (not the IReadOnlyList) so the enumerator isn't boxed
+            foreach (var r in RunsInternal)
             {
                 r.PaintBackground(ctx);
             }
-            
-            foreach (var r in Runs)
+
+            foreach (var r in RunsInternal)
             {
                 r.Paint(ctx);
             }
