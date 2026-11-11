@@ -5,6 +5,13 @@ All notable changes to RichTextKit. For versions before 0.6.170, see the
 
 ## Next release
 
+### Added
+
+- `TextPaintOptions.ConfigurePaint`: a callback to change the paint each text
+  run (and its halo) is drawn with. For example, draw a fast blurred drop
+  shadow by painting the block once with a shadow color and blur mask filter,
+  instead of using a `SaveLayer` (#130)
+
 ## 0.6.171
 
 ### Fixed

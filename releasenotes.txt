@@ -1,18 +1,7 @@
-RichTextKit 0.6.171
+RichTextKit (next release)
 
-Bug fixes:
-- MeasuredOverhang measured the wrong glyphs after composed characters or ligatures
-- StyleManager could lose an inherited font width
-- HitTestLine threw if called before layout
-- Buffers reallocated on every grow instead of doubling
-- ResetPooledMemory stopped pooled objects being reset
-
-Performance:
-- Much less memory allocated during layout, and none during paint
-- Fonts used for font fallback are now disposed
-
-Other:
-- Removed the unneeded System.ValueTuple dependency
-- The package now includes the readme and these release notes
+New:
+- TextPaintOptions.ConfigurePaint lets you change the paint each text run is
+  drawn with, e.g. for fast blurred drop shadows without a SaveLayer
 
 Full changelog: https://github.com/toptensoftware/RichTextKit/blob/main/CHANGELOG.md

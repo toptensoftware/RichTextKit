@@ -57,10 +57,10 @@ namespace Topten.RichTextKit.Test
         {
             // Arrange
             var tb = BuildBlock();
-            var calls = new List<(uint color, bool isHalo)>();
+            var calls = new List<(uint color, IStyle style, bool isHalo)>();
             var options = new TextPaintOptions()
             {
-                ConfigurePaint = (paint, isHalo) => calls.Add(((uint)paint.Color, isHalo))
+                ConfigurePaint = (paint, style, isHalo) => calls.Add(((uint)paint.Color, style, isHalo))
             };
 
             // Act
@@ -75,6 +75,46 @@ namespace Topten.RichTextKit.Test
             Assert.Single(calls.FindAll(c => c.isHalo));
             Assert.All(calls.FindAll(c => !c.isHalo), c => Assert.Equal((uint)SKColors.Black, c.color));
             Assert.All(calls.FindAll(c => c.isHalo), c => Assert.Equal((uint)SKColors.Yellow, c.color));
+
+            // Each call gets the style of the run being painted
+            Assert.All(calls.FindAll(c => c.isHalo), c => Assert.Equal(SKColors.Yellow, c.style.HaloColor));
+            Assert.Contains(calls, c => !c.isHalo && c.style.HaloColor == SKColor.Empty);
+            Assert.Contains(calls, c => !c.isHalo && c.style.HaloColor == SKColors.Yellow);
+        }
+
+        [Fact]
+        void ConfigurePaintCanTargetRunsByStyle()
+        {
+            // Arrange: recolor only the run with a halo
+            var tb = BuildBlock();
+            var options = new TextPaintOptions()
+            {
+                ConfigurePaint = (paint, style, isHalo) =>
+                {
+                    if (!isHalo && style.HaloColor != SKColor.Empty)
+                        paint.Color = SKColors.Red;
+                }
+            };
+
+            // Act
+            var bytes = Render(tb, options);
+
+            // Assert: red pixels only appear right of the plain run
+            float plainRunEnd = 10 + tb.FontRuns[0].XCoord + tb.FontRuns[0].Width;
+            int redLeft = 0, redRight = 0;
+            for (int y = 0; y < 80; y++)
+            {
+                for (int x = 0; x < 200; x++)
+                {
+                    int i = (y * 200 + x) * 4;
+                    if (bytes[i + 2] > 200 && bytes[i + 1] < 100 && bytes[i] < 100)
+                    {
+                        if (x < plainRunEnd) redLeft++; else redRight++;
+                    }
+                }
+            }
+            Assert.Equal(0, redLeft);
+            Assert.True(redRight > 0, "Expected the halo run to be red");
         }
 
         [Fact]
@@ -83,14 +123,18 @@ namespace Topten.RichTextKit.Test
             // Arrange
             var tb = BuildBlock();
             var plain = Render(tb, null);
-            var shadow = Render(tb, new TextPaintOptions()
+            byte[] shadow;
+            using (var blur = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 4))
             {
-                ConfigurePaint = (paint, isHalo) =>
+                shadow = Render(tb, new TextPaintOptions()
                 {
-                    paint.Color = SKColors.Red;
-                    paint.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 4);
-                }
-            });
+                    ConfigurePaint = (paint, style, isHalo) =>
+                    {
+                        paint.Color = SKColors.Red;
+                        paint.MaskFilter = blur;
+                    }
+                });
+            }
 
             // Assert: red pixels exist, and the blur covers more area than plain text
             bool anyRed = false;
@@ -112,7 +156,7 @@ namespace Topten.RichTextKit.Test
 
             // Act
             var unset = Render(tb, new TextPaintOptions());
-            var noOp = Render(tb, new TextPaintOptions() { ConfigurePaint = (p, h) => { } });
+            var noOp = Render(tb, new TextPaintOptions() { ConfigurePaint = (p, s, h) => { } });
             var defaults = Render(tb, null);
 
             // Assert

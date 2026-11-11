@@ -134,13 +134,26 @@ namespace Topten.RichTextKit
         /// An optional callback to change the paint a text run draws with.
         /// </summary>
         /// <remarks>
+        /// <para>
         /// Called once per drawn run just before its text is drawn, with the run's
-        /// text paint and <c>false</c>, and again with the halo paint and <c>true</c>
-        /// for runs that have a halo.  The paint is reset after each run, so changes
-        /// (for example <c>Color</c> or <c>MaskFilter</c>) don't carry over.
-        /// Don't keep a reference to the paint.
+        /// text paint, the run's style and <c>false</c>, and again with the halo
+        /// paint, the style and <c>true</c> for runs that have a halo.  The paint
+        /// also draws the run's underline and strikethrough.  The paint is reset
+        /// after each run, so changes (for example <c>Color</c> or
+        /// <c>MaskFilter</c>) don't carry over.  Don't keep a reference to the paint.
+        /// </para>
+        /// <para>
+        /// Background colors and the selection highlight aren't drawn with this
+        /// paint, so they are unaffected.  For a shadow pass, use a separate
+        /// options object with no <see cref="Selection"/>.
+        /// </para>
+        /// <para>
+        /// The callback is called for every run on every paint, so create any
+        /// Skia objects it uses (such as mask filters) once and reuse them,
+        /// rather than creating them in the callback.
+        /// </para>
         /// </remarks>
-        public Action<SKPaint, bool> ConfigurePaint
+        public Action<SKPaint, IStyle, bool> ConfigurePaint
         {
             get;
             set;

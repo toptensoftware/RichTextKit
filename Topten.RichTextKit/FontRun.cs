@@ -648,9 +648,9 @@ namespace Topten.RichTextKit
                 var configurePaint = ctx.Options.ConfigurePaint;
                 if (configurePaint != null)
                 {
-                    configurePaint(paint, false);
+                    configurePaint(paint, Style, false);
                     if (Style.HaloColor != SKColor.Empty)
-                        configurePaint(paintHalo, true);
+                        configurePaint(paintHalo, Style, true);
                 }
 
                 unsafe
