@@ -644,6 +644,15 @@ namespace Topten.RichTextKit
                         paintHalo.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, Style.HaloBlur);
                 }
 
+                // Let the caller change the paints
+                var configurePaint = ctx.Options.ConfigurePaint;
+                if (configurePaint != null)
+                {
+                    configurePaint(paint, false);
+                    if (Style.HaloColor != SKColor.Empty)
+                        configurePaint(paintHalo, true);
+                }
+
                 unsafe
                 {
                     fixed (ushort* pGlyphs = Glyphs.Underlying)
