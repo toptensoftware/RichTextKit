@@ -131,6 +131,22 @@ namespace Topten.RichTextKit
         } = SKFontHinting.Normal;
 
         /// <summary>
+        /// An optional callback to change the paint a text run draws with.
+        /// </summary>
+        /// <remarks>
+        /// Called once per drawn run just before its text is drawn, with the run's
+        /// text paint and <c>false</c>, and again with the halo paint and <c>true</c>
+        /// for runs that have a halo.  The paint is reset after each run, so changes
+        /// (for example <c>Color</c> or <c>MaskFilter</c>) don't carry over.
+        /// Don't keep a reference to the paint.
+        /// </remarks>
+        public Action<SKPaint, bool> ConfigurePaint
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// A default set of paint options that renders text blocks without 
         /// a selection range.
         /// </summary>
