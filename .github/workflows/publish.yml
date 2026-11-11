@@ -12,6 +12,13 @@ name: Publish to NuGet
 on:
   release:
     types: [published]
+  # Manual run, to publish an existing release (e.g. one whose tag predates
+  # this workflow, since release events use the workflow from the tagged commit)
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to publish (e.g. b0.6.171)
+        required: true
 
 jobs:
   publish:
@@ -26,7 +33,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: >
-          gh release download "${{ github.event.release.tag_name }}"
+          gh release download "${{ github.event.release.tag_name || inputs.tag }}"
           --repo "${{ github.repository }}"
           --pattern "*.nupkg"
           --dir packages

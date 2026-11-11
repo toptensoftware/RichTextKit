@@ -135,6 +135,8 @@ When:
   matching policy is on nuget.org under the `toptensoftware` account.
 - If the workflow fails, re-run it from the Actions tab. `--skip-duplicate`
   makes re-runs safe.
+- Release events use the workflow file from the tagged commit. To publish an
+  existing release by hand, run `gh workflow run publish.yml -f tag=b<version>`.
 
 
 ## Preventing Permission Prompts
