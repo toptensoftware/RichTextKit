@@ -31,12 +31,20 @@ if (bt.options.official)
     // Tag and commit
     bt.git_tag();
 
-    // Push nuget package
-    //var pushTo = bt.options.version.suffix ? "\"Topten GitHub\"" : "\"nuget.org\"";
-    var pushTo = "\"nuget.org\"";
-    bt.run(`dotnet nuget push`,
-           `.\\Build\\Release\\*.${bt.options.version.build}${bt.options.version.suffix}.nupkg`,
-           `--source ${pushTo}`);
+    // Create a GitHub Release for the tag with the signed package attached. The
+    // "Publish to NuGet" workflow (.github/workflows/publish.yml) then pushes it
+    // to nuget.org using Trusted Publishing.
+    var ver = bt.options.version;
+    var version = `${ver.major}.${ver.minor}.${ver.build}${ver.suffix}`;
+    var releaseArgs = [
+        "release", "create", `b${ver.major}.${ver.minor}.${ver.build}`,     // tag made by bt.git_tag()
+        `./Build/Release/Topten.RichTextKit.${version}.nupkg`,
+        "--title", `RichTextKit ${version}`,
+        "--notes-file", "releasenotes.txt",
+    ];
+    if (ver.suffix)
+        releaseArgs.push("--prerelease");
+    bt.run_args("gh", releaseArgs);
 }
 
 

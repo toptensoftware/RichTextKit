@@ -125,6 +125,18 @@ When:
      The csproj reads it into `PackageReleaseNotes`.
 
 
+## Publishing
+
+- `node build.js --official` (run by the user) builds and code signs locally,
+  tags `b<version>`, then runs `gh release create` with the signed `.nupkg`
+  attached and `releasenotes.txt` as the notes.
+- The GitHub Release triggers `.github/workflows/publish.yml`, which pushes the
+  package to nuget.org using Trusted Publishing (no stored API key). The
+  matching policy is on nuget.org under the `toptensoftware` account.
+- If the workflow fails, re-run it from the Actions tab. `--skip-duplicate`
+  makes re-runs safe.
+
+
 ## Preventing Permission Prompts
 
 - Use the Read/Edit/Grep tools rather than sed/awk/cat for file work.

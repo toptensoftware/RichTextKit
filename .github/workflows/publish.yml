@@ -1,0 +1,46 @@
+# Publishes the signed package attached to a GitHub Release to nuget.org.
+#
+# The package is built and code signed locally by `node build.js --official`,
+# which then creates the GitHub Release. This workflow only pushes it, using
+# NuGet Trusted Publishing (a short-lived key, so no API key is stored).
+#
+# Needs a Trusted Publishing policy on nuget.org (owner toptensoftware,
+# repository RichTextKit, workflow file publish.yml, environment release).
+
+name: Publish to NuGet
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write   # lets NuGet/login request an OIDC token
+      contents: read    # lets gh download the release's files
+
+    steps:
+      - name: Download the package from the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >
+          gh release download "${{ github.event.release.tag_name }}"
+          --repo "${{ github.repository }}"
+          --pattern "*.nupkg"
+          --dir packages
+
+      # Get the key just before pushing: it's only valid for an hour
+      - name: NuGet login (OIDC to temporary API key)
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: toptensoftware   # nuget.org profile name of the package owner
+
+      - name: Push to NuGet
+        run: >
+          dotnet nuget push "packages/*.nupkg"
+          --api-key "${{ steps.login.outputs.NUGET_API_KEY }}"
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate
