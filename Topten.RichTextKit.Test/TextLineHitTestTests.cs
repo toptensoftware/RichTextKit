@@ -25,6 +25,21 @@ namespace Topten.RichTextKit.Test
             Assert.Equal(5, htr.ClosestCodePointIndex);
         }
 
+        // HitTestLine is public, so like HitTest it must lay out the block first
+        [Fact]
+        void HitTestLineLaysOutBlock()
+        {
+            // Arrange
+            var tb = new TextBlock();
+            tb.AddText("Hello", new Style() { FontSize = 16 });
+
+            // Act
+            var htr = tb.HitTestLine(0, 10000);
+
+            // Assert
+            Assert.Equal(5, htr.ClosestCodePointIndex);
+        }
+
         // Clicking past the end of a line that wraps without a line break puts the
         // caret at the end of the line's trailing whitespace
         [Fact]

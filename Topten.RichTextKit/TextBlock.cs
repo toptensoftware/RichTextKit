@@ -654,6 +654,7 @@ namespace Topten.RichTextKit
         /// <returns>A HitTestResult</returns>
         public HitTestResult HitTestLine(int lineIndex, float x)
         {
+            Layout();
             return _lines[lineIndex].HitTest(x);
         }
 
