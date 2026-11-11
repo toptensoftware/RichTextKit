@@ -88,5 +88,30 @@ namespace Topten.RichTextKit.Test
 
             Assert.Equal("ae", FromSlice(buffer.AsSlice()));
         }
+
+        // The buffer should grow geometrically, so adding items one at a time only
+        // reallocates a handful of times (32 -> 64 -> ... -> 1024), not on every add.
+        [Fact]
+        public void GrowsGeometrically()
+        {
+            // Arrange
+            var buffer = new Buffer<int>();
+            var underlying = buffer.Underlying;
+            int reallocations = 0;
+
+            // Act
+            for (int i = 0; i < 1000; i++)
+            {
+                buffer.Add(1);
+                if (buffer.Underlying != underlying)
+                {
+                    reallocations++;
+                    underlying = buffer.Underlying;
+                }
+            }
+
+            // Assert
+            Assert.True(reallocations <= 10, $"Adding 1000 items one at a time reallocated {reallocations} times");
+        }
     }
 }
