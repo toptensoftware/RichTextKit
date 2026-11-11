@@ -6,14 +6,11 @@ title: Installation
 
 ## NuGet
 
-RichTextKit is available as a NuGet package for `net462` and `net8.0` frameworks:
+RichTextKit is available as a NuGet package for `netstandard2.0` and `net8.0`:
 
 ~~~
-Install-Package Topten.RichTextKit
+dotnet add package Topten.RichTextKit
 ~~~
-
-*Note that RichTextKit is currently still under development and has only been tested on
-Windows*
 
 ## Source Repository
 
