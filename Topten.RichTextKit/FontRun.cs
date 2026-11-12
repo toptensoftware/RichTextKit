@@ -819,7 +819,9 @@ namespace Topten.RichTextKit
             Style = null;
             Typeface = null;
             Line = null;
+            _textBlob?.Dispose();
             _textBlob = null;
+            _font?.Dispose();
             _font = null;
         }
 
