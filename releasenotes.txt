@@ -1,7 +1,7 @@
 RichTextKit (next release)
 
-New:
-- TextPaintOptions.ConfigurePaint lets you change the paint each text run is
-  drawn with, e.g. for fast blurred drop shadows without a SaveLayer
+Bug fixes:
+- Relayout left native font objects for the garbage collector to finalize
+  instead of disposing them
 
 Full changelog: https://github.com/toptensoftware/RichTextKit/blob/main/CHANGELOG.md

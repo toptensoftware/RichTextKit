@@ -5,6 +5,13 @@ All notable changes to RichTextKit. For versions before 0.6.170, see the
 
 ## Next release
 
+### Fixed
+
+- Relayout no longer leaves each font run's native font and text blob for the
+  garbage collector to finalize; they're disposed when the run is reused (#132)
+
+## 0.6.172
+
 ### Added
 
 - `TextPaintOptions.ConfigurePaint`: a callback to change the paint each text

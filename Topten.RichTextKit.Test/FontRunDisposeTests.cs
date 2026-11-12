@@ -5,6 +5,14 @@ using Xunit;
 
 namespace Topten.RichTextKit.Test
 {
+    // The pending finalizer count is process wide, so other test classes running
+    // in parallel would add to it.  Run this one on its own.
+    [CollectionDefinition(nameof(FontRunDisposeTests), DisableParallelization = true)]
+    public class FontRunDisposeTestsCollection
+    {
+    }
+
+    [Collection(nameof(FontRunDisposeTests))]
     public class FontRunDisposeTests
     {
         // An SKFont or SKTextBlob that is never disposed is finalizable garbage, so the
