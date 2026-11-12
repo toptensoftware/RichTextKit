@@ -1,5 +1,3 @@
-RichTextKit (next release)
-
 Bug fixes:
 - Relayout left native font objects for the garbage collector to finalize
   instead of disposing them

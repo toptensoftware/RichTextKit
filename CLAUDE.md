@@ -96,9 +96,12 @@ Release notes live in two files at the repo root:
 
 - `CHANGELOG.md`: full history in markdown, one `## <version>` section per
   release, newest first. Shown on GitHub and linked from the readme.
-- `releasenotes.txt`: plain-text summary of the upcoming release only. The
-  csproj reads it into `PackageReleaseNotes`, shown on nuget.org's Release
-  Notes tab.
+- `releasenotes.txt`: plain-text summary of the upcoming release only, with
+  no heading or version number. The csproj reads it into
+  `PackageReleaseNotes` (shown on nuget.org's Release Notes tab) and adds a
+  `RichTextKit <version>` heading from `version.props`, so a re-run with the
+  same build number needs no changes. `build.js` uses it as the GitHub
+  Release notes, whose title already has the version.
 
 What to include:
 
@@ -114,15 +117,15 @@ When:
 - When a change affects users, add a line under `## Next release` in
   `CHANGELOG.md`, citing the PR (#n) if there is one, and update
   `releasenotes.txt` to match.
+- Keep `releasenotes.txt` a short plain-text summary (nuget.org doesn't
+  render markdown) of everything under `## Next release`, with the changelog
+  link at the end.
 - The version number is chosen when `build.js` runs (it prompts for the build
-  number), so ask the user for it if it isn't known.
-- Before each release, the user runs `node build.js --official` themselves.
-  Beforehand:
-  1. Rename `## Next release` in `CHANGELOG.md` to the new version number
-     and start a fresh empty `## Next release` section above it.
-  2. Rewrite `releasenotes.txt` as a short plain-text summary of that version
-     (nuget.org doesn't render markdown), keeping the changelog link at the end.
-     The csproj reads it into `PackageReleaseNotes`.
+  number), so the `CHANGELOG.md` section can't be named in advance.
+- After a release (the user runs `node build.js --official`), rename
+  `## Next release` in `CHANGELOG.md` to the released version, start a fresh
+  empty `## Next release` above it, and empty `releasenotes.txt` apart from
+  the changelog link. Check `version.json` for the released build number.
 
 
 ## Publishing
