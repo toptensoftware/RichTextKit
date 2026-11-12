@@ -412,6 +412,7 @@ navTree:
               - text: Default|./ref/Topten.RichTextKit.TextPaintOptions.Default
           - text: Properties
             subItems:
+              - text: ConfigurePaint|./ref/Topten.RichTextKit.TextPaintOptions.ConfigurePaint
               - text: Edging|./ref/Topten.RichTextKit.TextPaintOptions.Edging
               - text: Hinting|./ref/Topten.RichTextKit.TextPaintOptions.Hinting
               - text: IsAntialias|./ref/Topten.RichTextKit.TextPaintOptions.IsAntialias
