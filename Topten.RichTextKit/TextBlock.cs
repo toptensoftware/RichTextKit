@@ -1373,7 +1373,7 @@ namespace Topten.RichTextKit
 
         List<UnshapedRun> _unshapedRuns = new List<UnshapedRun>();
 
-        class UnshapedRun
+        struct UnshapedRun
         {
             public StyleRun styleRun;
             public int start;
