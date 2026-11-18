@@ -3,7 +3,7 @@
 All notable changes to RichTextKit. For versions before 0.6.170, see the
 `b<version>` tags in the git history.
 
-## Next release
+## 0.6.174
 
 ### Performance
 
