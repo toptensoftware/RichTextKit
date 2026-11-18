@@ -66,7 +66,17 @@ namespace Topten.RichTextKit
         /// <returns>A sequence of runs with unsupported code points replaced by a selected font fallback</returns>
         public static IEnumerable<Run> GetFontRuns(Slice<int> codePoints, SKTypeface typeface, char replacementCharacter = '\0')
         {
-            return EnumerateFontRuns(codePoints, typeface, replacementCharacter, null);
+            return EnumerateFontRuns(codePoints, typeface, replacementCharacter);
+        }
+
+        static IEnumerable<Run> EnumerateFontRuns(Slice<int> codePoints, SKTypeface typeface, char replacementCharacter)
+        {
+            var runs = new List<Run>();
+            AddFontRuns(codePoints, typeface, replacementCharacter, null, runs);
+            foreach (var run in runs)
+            {
+                yield return run;
+            }
         }
 
         /// <summary>
@@ -92,10 +102,7 @@ namespace Topten.RichTextKit
                 }
             }
 
-            foreach (var run in EnumerateFontRuns(codePoints, typeface, replacementCharacter, glyphs))
-            {
-                runs.Add(run);
-            }
+            AddFontRuns(codePoints, typeface, replacementCharacter, glyphs, runs);
         }
 
         /// <summary>
@@ -109,9 +116,18 @@ namespace Topten.RichTextKit
         /// </summary>
         const int maxSharedGlyphs = 1024;
 
-        static IEnumerable<Run> EnumerateFontRuns(Slice<int> codePoints, SKTypeface typeface, char replacementCharacter, ushort[] glyphBuffer)
+        /// <summary>
+        /// Re-usable font for the preferred typeface.  The typeface is cleared after
+        /// each call so the font doesn't keep it alive.
+        /// </summary>
+        [ThreadStatic]
+        static SKFont _font;
+
+        static void AddFontRuns(Slice<int> codePoints, SKTypeface typeface, char replacementCharacter, ushort[] glyphBuffer, List<Run> runs)
         {
-            using (var font = new SKFont(typeface))
+            var font = _font ?? (_font = new SKFont());
+            font.Typeface = typeface;
+            try
             {
                 if (replacementCharacter != '\0')
                 {
@@ -123,13 +139,13 @@ namespace Topten.RichTextKit
                             typeface = fallbackTypeface;
                     }
 
-                    yield return new Run()
+                    runs.Add(new Run()
                     {
                         Start = 0,
                         Length = codePoints.Length,
                         Typeface = typeface,
-                    };
-                    yield break;
+                    });
+                    return;
                 }
 
                 // Get glyphs using the top-level typeface
@@ -161,12 +177,12 @@ namespace Topten.RichTextKit
                         // Flush the current top-level run
                         if (i > runStart)
                         {
-                            yield return new Run()
+                            runs.Add(new Run()
                             {
                                 Start = runStart,
                                 Length = i - runStart,
                                 Typeface = typeface,
-                            };
+                            });
                         }
 
                         // Count how many unmatched characters
@@ -210,13 +226,13 @@ namespace Topten.RichTextKit
                                 fallbackEnd++;
                             var fallbackLength = fallbackEnd - fallbackStart;
 
-                            // Yield this font fallback run
-                            yield return new Run()
+                            // Add this font fallback run
+                            runs.Add(new Run()
                             {
                                 Start = fallbackStart,
                                 Length = fallbackLength,
                                 Typeface = subSpanTypeface,
-                            };
+                            });
 
                             // Continue selecting font fallbacks until the entire unmatched ranges has been matched
                             unmatchedStart += fallbackLength;
@@ -232,13 +248,17 @@ namespace Topten.RichTextKit
                 // Flush find run
                 if (codePoints.Length > runStart)
                 {
-                    yield return new Run()
+                    runs.Add(new Run()
                     {
                         Start = runStart,
                         Length = codePoints.Length - runStart,
                         Typeface = typeface,
-                    };
+                    });
                 }
+            }
+            finally
+            {
+                font.Typeface = null;
             }
         }
     }
