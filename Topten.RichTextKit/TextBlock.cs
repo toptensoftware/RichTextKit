@@ -1184,7 +1184,8 @@ namespace Topten.RichTextKit
                 }
 
                 // Get the list of directional runs
-                var bidiRuns = BidiRun.CoalescLevels(resolvedLevels).ToList();
+                var bidiRuns = _bidiRuns;
+                BidiRun.CoalescLevels(resolvedLevels, bidiRuns);
 
                 // Split...
                 var pos = 0;
@@ -1283,6 +1284,11 @@ namespace Topten.RichTextKit
         /// Re-usable list for the font fallback runs of a directional run
         /// </summary>
         List<FontFallback.Run> _fontFallbackRuns = new List<FontFallback.Run>();
+
+        /// <summary>
+        /// Re-usable list for the bidi runs of the whole text
+        /// </summary>
+        List<BidiRun> _bidiRuns = new List<BidiRun>();
 
         /// <summary>
         /// Adds a run of single font text
