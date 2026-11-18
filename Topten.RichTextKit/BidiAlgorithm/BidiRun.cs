@@ -32,10 +32,17 @@ namespace Topten.RichTextKit
             return $"{Start} - {End} - {Direction}";
         }
 
-        public static IEnumerable<BidiRun> CoalescLevels(Slice<sbyte> levels)
+        /// <summary>
+        /// Clears a list and fills it with the runs of equal embedding level
+        /// </summary>
+        /// <param name="levels">The resolved embedding levels</param>
+        /// <param name="runs">The list to receive the runs</param>
+        public static void CoalescLevels(Slice<sbyte> levels, List<BidiRun> runs)
         {
+            runs.Clear();
+
             if (levels.Length == 0)
-                yield break;
+                return;
 
             int startRun = 0;
             sbyte runLevel = levels[0];
@@ -45,24 +52,24 @@ namespace Topten.RichTextKit
                     continue;
 
                 // End of this run
-                yield return new BidiRun()
+                runs.Add(new BidiRun()
                 {
                     Direction = (runLevel & 0x01) == 0 ? Directionality.L : Directionality.R,
                     Start = startRun,
                     Length = i - startRun,
-                };
+                });
 
                 // Move to next run
                 startRun = i;
                 runLevel = levels[i];
             }
 
-            yield return new BidiRun()
+            runs.Add(new BidiRun()
             {
                 Direction = (runLevel & 0x01) == 0 ? Directionality.L : Directionality.R,
                 Start = startRun,
                 Length = levels.Length - startRun,
-            };
+            });
         }
     }
 }
