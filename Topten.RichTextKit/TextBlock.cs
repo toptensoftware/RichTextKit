@@ -1041,6 +1041,11 @@ namespace Topten.RichTextKit
         LineBreaker _lineBreaker = new LineBreaker();
 
         /// <summary>
+        /// Reused list of line break positions
+        /// </summary>
+        List<LineBreak> _lineBreakPositions = new List<LineBreak>();
+
+        /// <summary>
         /// The measured height
         /// </summary>
         float _measuredHeight;
@@ -1440,7 +1445,8 @@ namespace Topten.RichTextKit
         {
             // Work out possible line break positions
             _lineBreaker.Reset(_codePoints.AsSlice());
-            var lineBreakPositions = _lineBreaker.GetBreaks(!_maxWidth.HasValue);
+            var lineBreakPositions = _lineBreakPositions;
+            _lineBreaker.GetBreaks(lineBreakPositions, !_maxWidth.HasValue);
 
             int frIndexStartOfLine = 0;     // Index of the first font run in the current line
             int frIndex = 0;                // Index of the current font run

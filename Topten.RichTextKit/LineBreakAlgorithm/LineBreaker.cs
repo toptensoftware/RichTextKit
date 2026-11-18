@@ -73,16 +73,27 @@ namespace Topten.RichTextKit
         public List<LineBreak> GetBreaks(bool mandatoryOnly = false)
         {
             var list = new List<LineBreak>();
+            GetBreaks(list, mandatoryOnly);
+            return list;
+        }
+
+        /// <summary>
+        /// Clear a list and fill it with all line breaks
+        /// </summary>
+        /// <param name="list">The list to receive the line break positions</param>
+        /// <param name="mandatoryOnly">Only find mandatory breaks</param>
+        public void GetBreaks(List<LineBreak> list, bool mandatoryOnly = false)
+        {
+            list.Clear();
             if (mandatoryOnly)
             {
-                list.AddRange(FindMandatoryBreaks());
+                FindMandatoryBreaks(list);
             }
             else
             {
                 while (NextBreak(out var lb))
                     list.Add(lb);
             }
-            return list;
         }
 
         LineBreakClass mapClass(LineBreakClass c)
@@ -277,7 +288,7 @@ namespace Topten.RichTextKit
                 return false;
             }
         }
-        public IEnumerable<LineBreak> FindMandatoryBreaks()
+        void FindMandatoryBreaks(List<LineBreak> list)
         {
             for (int i = 0; i < _codePoints.Length; i++)
             {
@@ -285,22 +296,22 @@ namespace Topten.RichTextKit
                 switch (cls)
                 {
                     case LineBreakClass.BK:
-                        yield return new LineBreak(i, i + 1, true);
+                        list.Add(new LineBreak(i, i + 1, true));
                         break;
 
                     case LineBreakClass.CR:
                         if (i + 1 < _codePoints.Length && UnicodeClasses.LineBreakClass(_codePoints[i + 1]) == LineBreakClass.LF)
                         {
-                            yield return new LineBreak(i, i + 2, true);
+                            list.Add(new LineBreak(i, i + 2, true));
                         }
                         else
                         {
-                            yield return new LineBreak(i, i + 1, true);
+                            list.Add(new LineBreak(i, i + 1, true));
                         }
                         break;
 
                     case LineBreakClass.LF:
-                        yield return new LineBreak(i, i + 1, true);
+                        list.Add(new LineBreak(i, i + 1, true));
                         break;
                 }
             }
