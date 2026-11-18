@@ -1384,7 +1384,7 @@ namespace Topten.RichTextKit
             public SKTypeface asFallbackFor;
 
             // Check if this unshaped run can be shaped with the next one
-            public bool CanShapeWith(UnshapedRun next)
+            public bool CanShapeWith(in UnshapedRun next)
             {
                 return typeface == next.typeface &&
                        style.FontSize == next.style.FontSize &&

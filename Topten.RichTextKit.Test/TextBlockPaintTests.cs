@@ -4,6 +4,7 @@ using Xunit;
 
 namespace Topten.RichTextKit.Test
 {
+    [Collection(FinalizerCountCollection.Name)]
     public class TextBlockPaintTests
     {
         // An SKPaint that is never disposed is finalizable garbage, so the number of

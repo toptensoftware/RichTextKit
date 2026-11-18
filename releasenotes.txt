@@ -1,5 +1,9 @@
-Bug fixes:
-- Relayout left native font objects for the garbage collector to finalize
-  instead of disposing them
+Performance:
+- TextBlock.Layout allocates less memory on every layout (bidi runs, line
+  breaks, font fallback and unshaped font runs no longer allocate)
+
+Changes:
+- FontFallback.GetFontRuns works out all its runs on the first MoveNext
+  instead of one at a time
 
 Full changelog: https://github.com/toptensoftware/RichTextKit/blob/main/CHANGELOG.md

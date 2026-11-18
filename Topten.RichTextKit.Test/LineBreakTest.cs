@@ -49,7 +49,8 @@ namespace Topten.RichTextKit.Test
         {
             var lineBreaker = new LineBreaker();
             lineBreaker.Reset(" Apples Pears Bananas   ");
-            var positionsF = lineBreaker.GetBreaks().ToList();
+            var positionsF = new List<LineBreak>();
+            lineBreaker.GetBreaks(positionsF);
             Assert.Equal(1, positionsF[0].PositionWrap);
             Assert.Equal(0, positionsF[0].PositionMeasure);
             Assert.Equal(8, positionsF[1].PositionWrap);
@@ -66,7 +67,8 @@ namespace Topten.RichTextKit.Test
             var lineBreaker = new LineBreaker();
 
             lineBreaker.Reset("Apples Pears Bananas");
-            var positionsF = lineBreaker.GetBreaks().ToList();
+            var positionsF = new List<LineBreak>();
+            lineBreaker.GetBreaks(positionsF);
             Assert.Equal(7, positionsF[0].PositionWrap);
             Assert.Equal(6, positionsF[0].PositionMeasure);
             Assert.Equal(13, positionsF[1].PositionWrap);

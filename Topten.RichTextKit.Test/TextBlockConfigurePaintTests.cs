@@ -174,14 +174,8 @@ namespace Topten.RichTextKit.Test
             using (var bitmap = new SKBitmap(200, 80))
             using (var canvas = new SKCanvas(bitmap))
             {
-                for (int i = 0; i < 100; i++)
-                    tb.Paint(canvas, options);
-
                 // Act
-                long before = GC.GetAllocatedBytesForCurrentThread();
-                for (int i = 0; i < paintCount; i++)
-                    tb.Paint(canvas, options);
-                long bytesPerPaint = (GC.GetAllocatedBytesForCurrentThread() - before) / paintCount;
+                long bytesPerPaint = Allocations.BytesPerCall(paintCount, i => tb.Paint(canvas, options));
 
                 // Assert
                 Assert.True(bytesPerPaint < 16, $"Painting allocated {bytesPerPaint} bytes per paint");

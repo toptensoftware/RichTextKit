@@ -18,18 +18,12 @@ namespace Topten.RichTextKit.Test
             // Arrange
             var levels = new Slice<sbyte>(MixedLevels);
             var runs = new List<BidiRun>();
-            for (int i = 0; i < 100; i++)
-                BidiRun.CoalescLevels(levels, runs);
 
             // Act
-            const int count = 1000;
-            long before = GC.GetAllocatedBytesForCurrentThread();
-            for (int i = 0; i < count; i++)
-                BidiRun.CoalescLevels(levels, runs);
-            long bytes = GC.GetAllocatedBytesForCurrentThread() - before;
+            long bytesPerCall = Allocations.BytesPerCall(1000, i => BidiRun.CoalescLevels(levels, runs));
 
             // Assert
-            Assert.Equal(0, bytes / count);
+            Assert.Equal(0, bytesPerCall);
         }
 
         [Fact]

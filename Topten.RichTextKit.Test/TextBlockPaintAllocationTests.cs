@@ -22,19 +22,8 @@ namespace Topten.RichTextKit.Test
             using (var bitmap = new SKBitmap(200, 200))
             using (var canvas = new SKCanvas(bitmap))
             {
-                // Warm up so layout, text blobs and fonts are already created
-                for (int i = 0; i < 100; i++)
-                {
-                    tb.Paint(canvas);
-                }
-
                 // Act
-                long before = GC.GetAllocatedBytesForCurrentThread();
-                for (int i = 0; i < paintCount; i++)
-                {
-                    tb.Paint(canvas);
-                }
-                long bytesPerPaint = (GC.GetAllocatedBytesForCurrentThread() - before) / paintCount;
+                long bytesPerPaint = Allocations.BytesPerCall(paintCount, i => tb.Paint(canvas));
 
                 // Assert
                 // A single SKPaint per run would cost far more than this

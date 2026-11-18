@@ -33,21 +33,12 @@ namespace Topten.RichTextKit.Test
             var tb = new TextBlock();
             tb.AddText(text, new Style() { FontSize = 16 });
 
-            // Warm up so pools and buffers are already grown.  The wide
-            // MaxWidth keeps the text on a single line.
-            for (int i = 0; i < 100; i++)
+            // The wide MaxWidth keeps the text on a single line
+            return Allocations.BytesPerCall(layoutCount, i =>
             {
                 tb.MaxWidth = 100000 + (i & 1);
                 tb.Layout();
-            }
-
-            long before = GC.GetAllocatedBytesForCurrentThread();
-            for (int i = 0; i < layoutCount; i++)
-            {
-                tb.MaxWidth = 100000 + (i & 1);
-                tb.Layout();
-            }
-            return (GC.GetAllocatedBytesForCurrentThread() - before) / layoutCount;
+            });
         }
 
         static string Repeat(string str, int count)

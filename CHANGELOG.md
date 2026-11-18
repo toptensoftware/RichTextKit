@@ -5,6 +5,21 @@ All notable changes to RichTextKit. For versions before 0.6.170, see the
 
 ## Next release
 
+### Performance
+
+- `TextBlock.Layout` allocates less memory on every layout: it reuses its
+  lists for bidi runs (#134) and line breaks (#136), font fallback reuses one
+  font per thread instead of creating one per run (#138), and font runs waiting
+  to be shaped no longer allocate an object each (#140)
+
+### Changed
+
+- `FontFallback.GetFontRuns` still returns its runs lazily, but now works them
+  all out on the first `MoveNext` rather than one at a time. Only a custom
+  `ICharacterMatcher` with side effects could notice (#138)
+
+## 0.6.173
+
 ### Fixed
 
 - Relayout no longer leaves each font run's native font and text blob for the

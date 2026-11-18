@@ -5,6 +5,7 @@ using Xunit;
 
 namespace Topten.RichTextKit.Test
 {
+    [Collection(FinalizerCountCollection.Name)]
     public class FontFallbackTests
     {
         // An SKFont that is never disposed is finalizable garbage, so the number of

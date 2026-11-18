@@ -67,17 +67,6 @@ namespace Topten.RichTextKit
         int _LB30a = 0;
 
         /// <summary>
-        /// Enumerate all line breaks
-        /// </summary>
-        /// <returns>A collection of line break positions</returns>
-        public List<LineBreak> GetBreaks(bool mandatoryOnly = false)
-        {
-            var list = new List<LineBreak>();
-            GetBreaks(list, mandatoryOnly);
-            return list;
-        }
-
-        /// <summary>
         /// Clear a list and fill it with all line breaks
         /// </summary>
         /// <param name="list">The list to receive the line break positions</param>

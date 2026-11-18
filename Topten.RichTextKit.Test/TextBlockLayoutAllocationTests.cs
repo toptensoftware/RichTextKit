@@ -36,20 +36,11 @@ namespace Topten.RichTextKit.Test
 
             long MeasureBytesPerLayout(int count, Action<int> invalidate)
             {
-                // Warm up so pools and buffers are already grown
-                for (int i = 0; i < 100; i++)
+                return Allocations.BytesPerCall(count, i =>
                 {
                     invalidate(i);
                     tb.Layout();
-                }
-
-                long before = GC.GetAllocatedBytesForCurrentThread();
-                for (int i = 0; i < count; i++)
-                {
-                    invalidate(i);
-                    tb.Layout();
-                }
-                return (GC.GetAllocatedBytesForCurrentThread() - before) / count;
+                });
             }
         }
 

@@ -18,26 +18,16 @@ namespace Topten.RichTextKit.Test
             var lineBreaker = new LineBreaker();
             var list = new List<LineBreak>();
             var codePoints = new Slice<int>(Utf32Utils.ToUtf32("The quick brown fox\njumps over\r\nthe lazy dog."));
-            for (int i = 0; i < 10; i++)
+            // Act
+            long bytes = Allocations.BytesPerCall(1000, i =>
             {
                 lineBreaker.Reset(codePoints);
-                GetBreaks(lineBreaker, list, mandatoryOnly);
-            }
-
-            // Act
-            lineBreaker.Reset(codePoints);
-            long before = GC.GetAllocatedBytesForCurrentThread();
-            GetBreaks(lineBreaker, list, mandatoryOnly);
-            long bytes = GC.GetAllocatedBytesForCurrentThread() - before;
+                lineBreaker.GetBreaks(list, mandatoryOnly);
+            });
 
             // Assert
             Assert.NotEmpty(list);
             Assert.Equal(0, bytes);
-        }
-
-        static void GetBreaks(LineBreaker lineBreaker, List<LineBreak> list, bool mandatoryOnly)
-        {
-            lineBreaker.GetBreaks(list, mandatoryOnly);
         }
     }
 }

@@ -14,26 +14,16 @@ namespace Topten.RichTextKit.Test
         void GetFontRunsIntoListDoesNotAllocate()
         {
             // Arrange
-            const int callCount = 1000;
             var codePoints = new Utf32Buffer(Text).AsSlice();
             var typeface = SKTypeface.FromFamilyName("Arial");
             var runs = new List<FontFallback.Run>();
 
-            // Warm up so the list and the shared buffers have grown
-            for (int i = 0; i < 100; i++)
-            {
-                runs.Clear();
-                FontFallback.GetFontRuns(codePoints, typeface, '\0', runs);
-            }
-
             // Act
-            long before = GC.GetAllocatedBytesForCurrentThread();
-            for (int i = 0; i < callCount; i++)
+            long bytesPerCall = Allocations.BytesPerCall(1000, i =>
             {
                 runs.Clear();
                 FontFallback.GetFontRuns(codePoints, typeface, '\0', runs);
-            }
-            long bytesPerCall = (GC.GetAllocatedBytesForCurrentThread() - before) / callCount;
+            });
 
             // Assert
             Assert.Single(runs);
