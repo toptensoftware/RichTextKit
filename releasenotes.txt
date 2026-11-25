@@ -1,9 +1,5 @@
-Performance:
-- TextBlock.Layout allocates less memory on every layout (bidi runs, line
-  breaks, font fallback and unshaped font runs no longer allocate)
-
-Changes:
-- FontFallback.GetFontRuns works out all its runs on the first MoveNext
-  instead of one at a time
+Fixes:
+- TextRange.UpdateForEdit turned a backward range into a forward one when the
+  edit was inside it, moving the caret to the wrong end of the selection
 
 Full changelog: https://github.com/toptensoftware/RichTextKit/blob/main/CHANGELOG.md

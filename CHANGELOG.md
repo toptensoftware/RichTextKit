@@ -3,6 +3,14 @@
 All notable changes to RichTextKit. For versions before 0.6.170, see the
 `b<version>` tags in the git history.
 
+## Next release
+
+### Fixed
+
+- `TextRange.UpdateForEdit` turned a backward range (`Start > End`) into a
+  forward one when the edit was inside it, moving the caret to the wrong end
+  of the selection. It now keeps the range's direction (#141)
+
 ## 0.6.174
 
 ### Performance
