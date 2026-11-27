@@ -1188,6 +1188,10 @@ namespace Topten.RichTextKit
                     }
                 }
 
+                // Keep the levels for line layout, which orders runs by them (UAX #9 rule L2)
+                _levels.Clear();
+                _levels.Add(resolvedLevels);
+
                 // Get the list of directional runs
                 var bidiRuns = _bidiRuns;
                 BidiRun.CoalescLevels(resolvedLevels, bidiRuns);
@@ -1294,6 +1298,16 @@ namespace Topten.RichTextKit
         /// Re-usable list for the bidi runs of the whole text
         /// </summary>
         List<BidiRun> _bidiRuns = new List<BidiRun>();
+
+        /// <summary>
+        /// The resolved bidi level of each code point, as line layout needs it
+        /// </summary>
+        Buffer<sbyte> _levels = new Buffer<sbyte>();
+
+        /// <summary>
+        /// Re-usable list for the runs of a line in visual order
+        /// </summary>
+        List<FontRun> _visualRuns = new List<FontRun>();
 
         /// <summary>
         /// Adds a run of single font text
@@ -1662,23 +1676,15 @@ namespace Topten.RichTextKit
             // How much to x-adjust all runs by to position correctly
             float xAdjust;
 
-            // Which direction?
-            if (_resolvedBaseDirection == TextDirection.LTR)
+            /*
+            if (_resolvedBaseDirection == TextDirection.RTL && _useMSWordStyleRtlLayout)
             {
-                xAdjust = LayoutLineLTR(line);
+                xAdjust = LayoutLineRTLWordStyle(line);
             }
             else
+            */
             {
-                /*
-                if (_useMSWordStyleRtlLayout)
-                {
-                    xAdjust = LayoutLineRTLWordStyle(line);
-                }
-                else
-                */
-                {
-                    xAdjust = LayoutLineRTL(line);
-                }
+                xAdjust = LayoutLineByLevel(line);
             }
 
             // Process all runs, setting their final left-aligned x-position and 
@@ -1717,104 +1723,76 @@ namespace Topten.RichTextKit
         }
 
         /// <summary>
-        /// Layout a line (LTR edition)
+        /// Layout a line, placing its runs in visual order by their bidi levels (UAX #9 rule L2)
         /// </summary>
         /// <param name="line">The line to be laid out</param>
         /// <returns>A final x-adjustment to be applied to the line's font runs</returns>
-        private float LayoutLineLTR(TextLine line)
+        private float LayoutLineByLevel(TextLine line)
         {
-            float x = 0;
-            float trailingWhitespaceWidth = 0;
+            // Runs in logical order, and their highest and lowest odd levels
+            var runs = _visualRuns;
+            runs.Clear();
+            int highestLevel = 0;
+            int lowestOddLevel = int.MaxValue;
             for (int i = 0; i < line.Runs.Count; i++)
             {
                 var fr = line.Runs[i];
-                if (fr.Direction == TextDirection.LTR)
-                {
-                    fr.XCoord = x;
-                    x += fr.Width;
+                runs.Add(fr);
+                int level = LevelOf(fr);
+                highestLevel = Math.Max(highestLevel, level);
+                if ((level & 1) != 0)
+                    lowestOddLevel = Math.Min(lowestOddLevel, level);
+            }
 
-                    if (fr.RunKind == FontRunKind.TrailingWhitespace)
-                        trailingWhitespaceWidth += fr.Width;
-                }
-                else
+            // From the highest level down to the lowest odd one, reverse every sequence
+            // of runs at that level or higher
+            for (int level = highestLevel; level >= lowestOddLevel; level--)
+            {
+                for (int i = 0; i < runs.Count; i++)
                 {
-                    System.Diagnostics.Debug.Assert(fr.RunKind == FontRunKind.Normal);
+                    if (LevelOf(runs[i]) < level)
+                        continue;
 
                     int j = i;
-                    while (j + 1 < line.Runs.Count && line.Runs[j + 1].Direction == TextDirection.RTL)
+                    while (j + 1 < runs.Count && LevelOf(runs[j + 1]) >= level)
                         j++;
 
-                    int continueFrom = j;
-
-                    while (j >= i)
-                    {
-                        fr = line.Runs[j];
-                        fr.XCoord = x;
-                        x += fr.Width;
-                        j--;
-                    }
-
-                    i = continueFrom;
+                    runs.Reverse(i, j - i + 1);
+                    i = j;
                 }
             }
+
+            // Place the runs left to right
+            float x = 0;
+            float trailingWhitespaceWidth = 0;
+            for (int i = 0; i < runs.Count; i++)
+            {
+                var fr = runs[i];
+                fr.XCoord = x;
+                x += fr.Width;
+
+                if (fr.RunKind == FontRunKind.TrailingWhitespace)
+                    trailingWhitespaceWidth += fr.Width;
+            }
+            runs.Clear();
 
             // Store content width
             line.Width = x - trailingWhitespaceWidth;
 
-            return 0;
+            // Trailing whitespace is at the paragraph level, so in a right-to-left
+            // paragraph it comes first: shift it out to the left of the content
+            return _resolvedBaseDirection == TextDirection.RTL ? -trailingWhitespaceWidth : 0;
         }
 
         /// <summary>
-        /// Layout a line (RTL edition)
+        /// The bidi level of a run.  Trailing whitespace and the ellipsis are at the
+        /// paragraph level (UAX #9 rule L1); a normal run has one level for all its code points.
         /// </summary>
-        /// <param name="line">The line to be laid out</param>
-        /// <returns>A final x-adjustment to be applied to the line's font runs</returns>
-        private float LayoutLineRTL(TextLine line)
+        /// <param name="fr">The font run</param>
+        /// <returns>Its bidi level</returns>
+        private int LevelOf(FontRun fr)
         {
-            float x = 0;
-            float trailingWhitespaceWidth = 0;
-            for (int i = 0; i < line.Runs.Count; i++)
-            {
-                var fr = line.Runs[i];
-                if (fr.Direction == TextDirection.RTL)
-                {
-                    x -= fr.Width;
-                    fr.XCoord = x;
-
-                    if (fr.RunKind == FontRunKind.TrailingWhitespace)
-                        trailingWhitespaceWidth += fr.Width;
-                }
-                else
-                {
-                    System.Diagnostics.Debug.Assert(fr.RunKind == FontRunKind.Normal);
-
-                    int j = i;
-                    while (j + 1 < line.Runs.Count && line.Runs[j + 1].Direction == TextDirection.LTR)
-                        j++;
-
-                    int continueFrom = j;
-
-                    while (j >= i)
-                    {
-                        fr = line.Runs[j];
-                        x -= fr.Width;
-                        fr.XCoord = x;
-                        j--;
-                    }
-
-                    i = continueFrom;
-                }
-            }
-
-            // Work out final width
-            float totalWidth = -x - trailingWhitespaceWidth;
-
-            // Store content width
-            line.Width = totalWidth;
-
-            // Everything is currently laid out from 0 to the left, so we 
-            // need to shift right to make it left aligned
-            return totalWidth;
+            return fr.RunKind == FontRunKind.Normal ? _levels[fr.Start] : (int)_resolvedBaseDirection;
         }
 
         /// <summary>
