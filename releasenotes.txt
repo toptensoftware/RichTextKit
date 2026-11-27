@@ -1,5 +1,1 @@
-Fixes:
-- TextRange.UpdateForEdit turned a backward range into a forward one when the
-  edit was inside it, moving the caret to the wrong end of the selection
-
 Full changelog: https://github.com/toptensoftware/RichTextKit/blob/main/CHANGELOG.md

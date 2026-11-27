@@ -122,10 +122,16 @@ When:
   link at the end.
 - The version number is chosen when `build.js` runs (it prompts for the build
   number), so the `CHANGELOG.md` section can't be named in advance.
-- After a release (the user runs `node build.js --official`), rename
-  `## Next release` in `CHANGELOG.md` to the released version, start a fresh
-  empty `## Next release` above it, and empty `releasenotes.txt` apart from
-  the changelog link. Check `version.json` for the released build number.
+- `node build.js --official` handles the release housekeeping itself (see
+  `buildscripts/releaseNotes.js`), so don't do it by hand:
+  - Before anything else it stops if `## Next release` is missing or empty,
+    or `releasenotes.txt` has only the changelog link.
+  - After the build number prompt it renames `## Next release` to the
+    version, which goes into the `b<version>` commit.
+  - After `gh release create` it adds a fresh empty `## Next release` and
+    cuts `releasenotes.txt` down to the link, then commits ("Start next
+    release notes") and pushes.
+- Test the housekeeping with `node --test buildscripts/releaseNotes.test.js`.
 
 
 ## Publishing
